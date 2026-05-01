@@ -1,6 +1,6 @@
-﻿using MyShope.Services;
+﻿using Project.Services;
 
-namespace Services.Services
+namespace Project.Services
 {
     public class UploadDocxFile:IUploadFils
     {
