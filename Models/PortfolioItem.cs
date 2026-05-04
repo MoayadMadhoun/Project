@@ -6,15 +6,30 @@ namespace Project.Models
     public class PortfolioItem
     {
         [Key]
-        public string PortfolioItemID { get; set; }
-        [ForeignKey(nameof(StudentID))]
-        public int StudentID { get; set; }
-        public Student Student { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public string FilePath { get; set; }
-        public string Url { get; set; }
-        public string ItemType { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public int PortfolioItemId { get; set; }
+
+        [Required(ErrorMessage = "Student is required")]
+        public int StudentId { get; set; }
+        [ForeignKey(nameof(StudentId))]
+        public Student Student { get; set; } = null!;
+
+        [Required(ErrorMessage = "Title is required")]
+        [MaxLength(300, ErrorMessage = "Title cannot be more than 300 characters")]
+        [MinLength(2, ErrorMessage = "Title must be at least 2 characters")]
+        public string Title { get; set; } = string.Empty;
+
+        [MaxLength(1000, ErrorMessage = "Description cannot be more than 1000 characters")]
+        public string? Description { get; set; }
+        public string? FilePath { get; set; }
+        [Url(ErrorMessage = "Invalid URL format")]
+        public string? Url { get; set; }
+
+        [Required(ErrorMessage = "Item type is required")]
+        [RegularExpression("^(Project|Certificate|Report|Presentation|Link|Other)$",
+            ErrorMessage = "Invalid item type")]
+        public string ItemType { get; set; } = string.Empty;
+
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
     }
+
 }

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Project.Pages;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Project.Models
@@ -8,26 +9,37 @@ namespace Project.Models
 
         [Key]
         public string RequestID { get; set; }
+        [Required(ErrorMessage="Title is requied")]
+        [MaxLength(300, ErrorMessage = "Title can't be more than 200 characters")]
+        [MinLength(3, ErrorMessage = "Title can't be less than 3 characters")]
         public string Title { get; set; }
-        public string Description { get; set; }
-        public string RequestedSeats { get; set; }
+        [MaxLength(1000, ErrorMessage = "Description can't be more than 1000 characters")]
+        public string? Description { get; set; }
+        [Required(ErrorMessage = "Requested seats number is requied")]
+        
+        public int RequestedSeats { get; set; }
 
-        public DateTime PreferredStartDate { get; set; }
-        public DateTime PreferredEndDate { get; set; }
+        public DateTime? PreferredStartDate { get; set; }
+        public DateTime? PreferredEndDate { get; set; }
 
-        public DateTime ApplicationDeadline { get; set; }
-        public string Status { get; set; }
+        public DateTime? ApplicationDeadline { get; set; }
+        
+        [RegularExpression("^(Draft|Published|Closed|Cancelled)$", ErrorMessage = "Status must be Draft, Published, Closed, or Cancelled")]
+        public string Status { get; set; } = "Draft";
         public DateTime CreatedAt { get; set; }
-        public string Notes { get; set; }
-
+        [MaxLength(1000, ErrorMessage = "Notes can't be more than 1000 characters")]
+        public string? Notes { get; set; }
+        //DeptID Fk
         [ForeignKey(nameof(DepartmentID))]
         public int? DepartmentID { get; set; }
         public Department? Department { get; set; }
-
+        //UniID FK
+        [Required(ErrorMessage="University is required")]
         [ForeignKey(nameof(UniversityID))]
         public int UniversityID { get; set; }
         public University University { get; set; }
-
+        //TermID Fk
+        [Required(ErrorMessage = "Training term is required")]
         [ForeignKey(nameof(TermID))]
         public int TermID { get; set; }
         public TrainingTerm TrainingTerm { get; set; }
