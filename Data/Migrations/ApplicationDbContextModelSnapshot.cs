@@ -1330,9 +1330,12 @@ namespace Project.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+<<<<<<< HEAD
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
+=======
+>>>>>>> f255f9cd1e4400b7ba0e876f7a325b06a24b8492
                     b.HasDiscriminator().HasValue("AspNetUser");
                 });
 
