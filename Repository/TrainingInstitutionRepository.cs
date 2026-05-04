@@ -96,7 +96,7 @@ namespace Project.Repository
 
         }
 
-        // Soft Delete { I will Keep The University But Make It Not Active }
+        // Soft Delete { I will Keep The Institution But Make It Not Active }
         public async Task<bool> DeleteSoftAsync(int InstituationID)
         {
             var instituation = await GetByIdModifyAsync(InstituationID);
