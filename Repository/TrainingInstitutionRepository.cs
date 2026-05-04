@@ -119,8 +119,8 @@ namespace Project.Repository
 
         }
 
-        // Full Delete { I Will Delete The University From The DataBase }
-        public async Task FullDeleteUniversity(int InstituationID)
+        // Full Delete { I Will Delete The institution From The DataBase }
+        public async Task FullDeleteInstitution(int InstituationID)
         {
             var instituation = await GetByIdAsync(InstituationID);
 
