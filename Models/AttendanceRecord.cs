@@ -13,7 +13,7 @@ namespace Project.Models
         [ForeignKey(nameof(PlacementID))]
         public int PlacementID { get; set; }
         public TrainingPlacement TrainingPlacement { get; set; }
-        [Required(ErrorMesssage= "Attendance date is required")]
+        [Required(ErrorMessage= "Attendance date is required")]
         public DateTime AttendanceDate { get; set; }
         public TimeSpan? CheckInTime { get; set; }
         public TimeSpan? CheckOutTime { get; set; }

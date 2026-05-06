@@ -8,7 +8,7 @@ namespace Project.Models
         public int UniversityID { get; set; }
         [Required(ErrorMessage = "University name is required")]
         [MaxLength(200, ErrorMessage = "University name can't be more than 200 characters")]
-        [MinLenght(2, ErrorMessage = "University name can't be less than 2 characters")]
+        [MinLength(2, ErrorMessage = "University name can't be less than 2 characters")]
         public string Name { get; set; }
         [MaxLength(300, ErrorMessage = "Address can't be more than 300 characters")]
         public string? Address { get; set; }

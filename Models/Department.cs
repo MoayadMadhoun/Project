@@ -9,7 +9,7 @@ namespace Project.Models
         public int DepartmentID { get; set; }
         [Required(ErrorMessage = "Department name is required")]
         [MaxLength(200, ErrorMessage = "Department name can't be more than 200 characters")]
-        [MinLenght(2, ErrorMessage = "Department name can't be less than 2 characters")]
+        [MinLength(2, ErrorMessage = "Department name can't be less than 2 characters")]
         public string Name { get; set; }  
         public bool IsActive { get; set; }
         [Required(ErrorMessage="University is required")]

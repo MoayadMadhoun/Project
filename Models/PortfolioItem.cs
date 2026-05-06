@@ -6,11 +6,11 @@ namespace Project.Models
     public class PortfolioItem
     {
         [Key]
-        public int PortfolioItemId { get; set; }
+        public int PortfolioItemID { get; set; }
 
         [Required(ErrorMessage = "Student is required")]
-        public int StudentId { get; set; }
-        [ForeignKey(nameof(StudentId))]
+        public int StudentID { get; set; }
+        [ForeignKey(nameof(StudentID))]
         public Student Student { get; set; } = null!;
 
         [Required(ErrorMessage = "Title is required")]

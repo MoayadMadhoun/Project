@@ -8,7 +8,7 @@ namespace Project.Models
         public int SpecialtyID { get; set; }
         [Required(ErrorMessage = "Specialty name is required")]
         [MaxLength(200, ErrorMessage = "Specialty name can't be more than 200 characters")]
-        [MinLenght(2, ErrorMessage = "Specialty name can't be less than 2 characters")]
+        [MinLength(2, ErrorMessage = "Specialty name can't be less than 2 characters")]
         public string Name { get; set; }
         [MaxLength(500, ErrorMessage = "Description can't be more than 200 characters")]
         public string? Description { get; set; }

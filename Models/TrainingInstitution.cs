@@ -8,7 +8,7 @@ namespace Project.Models
         public int InstituationID {  get; set; }
         [Required(ErrorMessage = "Instituation name is required")]
         [MaxLength(200, ErrorMessage = "Instituation name can't be more than 200 characters")]
-        [MinLenght(2, ErrorMessage = "Instituation name can't be less than 2 characters")]
+        [MinLength(2, ErrorMessage = "Instituation name can't be less than 2 characters")]
         public string Name { get;  set; }
         [MaxLength(100, ErrorMessage = "Type can't be more than 200 characters")]
         public string? Type { get; set; }

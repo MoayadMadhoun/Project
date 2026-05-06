@@ -6,16 +6,16 @@ namespace Project.Models
     public class StudentReport
     {
         [Key]
-        public int ReportId { get; set; }
+        public int ReportID { get; set; }
 
         [Required(ErrorMessage = "Placement is required")]
-        [ForeignKey(nameof(PlacementId))]
-        public int PlacementId { get; set; }
+        [ForeignKey(nameof(PlacementID))]
+        public int PlacementID { get; set; }
         public TrainingPlacement Placement { get; set; }
 
         [Required(ErrorMessage = "Student is required")]
-        [ForeignKey(nameof(StudentId))]
-        public int StudentId { get; set; }
+        [ForeignKey(nameof(StudentID))]
+        public int StudentID { get; set; }
 
         public Student Student { get; set; }
 
@@ -42,8 +42,8 @@ namespace Project.Models
         [RegularExpression("^(Submitted|Reviewed|Approved|Rejected)$", ErrorMessage = "Invalid status value")]
         public string Status { get; set; } = "Submitted";
 
-        public string? UniversitySupervisorId { get; set; }
-        [ForeignKey(nameof(UniversitySupervisorId))]
+        public string? UniversitySupervisorID { get; set; }
+        [ForeignKey(nameof(UniversitySupervisorID))]
         public AspNetUser? UniversitySupervisor { get; set; }
 
         [MaxLength(1000, ErrorMessage = "Review notes cannot be more than 1000 characters")]

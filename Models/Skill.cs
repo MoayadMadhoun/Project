@@ -8,7 +8,7 @@ namespace   Project.Models
         public int SkillID {  get; set; }
         [Required(ErrorMessage = "Skill name is required")]
         [MaxLength(200, ErrorMessage = "Skill name can't be more than 200 characters")]
-        [MinLenght(2, ErrorMessage = "Skill name can't be less than 2 characters")]
+        [MinLength(2, ErrorMessage = "Skill name can't be less than 2 characters")]
         public string Name {  get; set; }
         [MaxLength(100, ErrorMessage = "Category can't be more than 200 characters")]
         public string? Category { get; set; }
