@@ -18,8 +18,8 @@ namespace Project.Repository
         // This is Queryable [Use In Pagination]
         public IQueryable<TrainingInstitution> GetAllQueryable() => _dbContext
             .TrainingInstitutions.Include(ti => ti.TrainingOpportunities)
-            .AsNoTracking()
-            .AsQueryable();
+            .AsNoTracking();
+            
 
 
         // CRUD Methode ....
@@ -29,6 +29,7 @@ namespace Project.Repository
             .AsNoTracking()
             .ToListAsync();
 
+        
         public async Task<List<TrainingInstitution>> GetAllAsyncWithOpportunity()=> await _dbContext
             .TrainingInstitutions
             .Include(ti=>ti.TrainingOpportunities)
@@ -122,7 +123,7 @@ namespace Project.Repository
         // Full Delete { I Will Delete The institution From The DataBase }
         public async Task FullDeleteInstitution(int InstituationID)
         {
-            var instituation = await GetByIdAsync(InstituationID);
+            var instituation = await GetByIdModifyAsync(InstituationID);
 
             if (instituation is not null)
             {
@@ -148,8 +149,12 @@ namespace Project.Repository
         // Filtring Methode .....
         public async Task<IEnumerable<TrainingInstitution?>> GetBySearchAsync(string query)
         {
+            if (String.IsNullOrWhiteSpace(query))
+                return Enumerable.Empty<TrainingInstitution?>();
+
             return await _dbContext.TrainingInstitutions
                 .Where(u => EF.Functions.Like(u.Name, $"%{query}%"))
+                .AsNoTracking()
                 .ToListAsync();
 
         }
@@ -191,7 +196,7 @@ namespace Project.Repository
         // Toggle Statuse 
         public async Task<bool> ToggleStatusAsync(int InstituationID)
         {
-            var instituation = await GetByIdAsync(InstituationID);
+            var instituation = await GetByIdModifyAsync(InstituationID);
 
             if (instituation is null)
                 return false;
