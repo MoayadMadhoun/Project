@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Project.Data;
 using Project.Models;
 namespace Project.Repostory
@@ -16,8 +17,8 @@ namespace Project.Repostory
         // This is Queryable [Use In Pagination]
         public IQueryable<University> GetAllQueryable() => _dbContext
             .Universities.Include(u => u.Departments)
-            .AsNoTracking()
-            .AsQueryable();
+            .AsNoTracking();
+            
 
 
         // CRUD Methode ....
@@ -90,7 +91,7 @@ namespace Project.Repostory
         // Full Delete { I Will Delete The University From The DataBase }
         public async Task FullDeleteUniversity(int UniversityID)
         {
-            var university = await GetByIdAsync(UniversityID);
+            var university = await GetByIdModifyAsync(UniversityID);
 
             if(university is not null )
             {
@@ -114,13 +115,20 @@ namespace Project.Repostory
         // Filtring Methode .....
         public async Task<IEnumerable<University?>> GetBySearchAsync(string query)
         {
+            if (string.IsNullOrWhiteSpace(query))
+                return Enumerable.Empty<University?>();
+
+
+
             return await _dbContext.Universities
-                .Where(u => EF.Functions.Like(u.Name, $"%{query}%"))
-                .ToListAsync();
+            .Where(u => EF.Functions.Like(u.Name, $"%{query}%"))
+            .AsNoTracking()
+            .ToListAsync();
         }
 
         public async Task<IEnumerable<University>> GetByStatusAsync(bool isActive)
-        {
+        {           
+
             return await _dbContext.Universities
                 .Where(u => u.IsActive == isActive)
                 .ToListAsync();
@@ -150,7 +158,7 @@ namespace Project.Repostory
         // Toggle Statuse 
         public async Task<bool> ToggleStatusAsync(int UniversityID)
         {
-            var university = await GetByIdAsync(UniversityID);
+            var university = await GetByIdModifyAsync(UniversityID);
 
             if (university is null)
                 return false;
