@@ -11,18 +11,20 @@ namespace Project.Models
         [Required(ErrorMessage = "Placement is required")]
         [ForeignKey(nameof(PlacementID))]
         public int PlacementID { get; set; }
-        public TrainingPlacement Placement { get; set; }
+        public TrainingPlacement Placement { get; set; } = new TrainingPlacement(); 
 
         [Required(ErrorMessage = "Student is required")]
         [ForeignKey(nameof(StudentID))]
         public int StudentID { get; set; }
 
-        public Student Student { get; set; }
+        public Student Student { get; set; }= new Student();
 
-
-        [Required(ErrorMessage = "Report type is required")]
-        [RegularExpression("^(Weekly|Final)$", ErrorMessage = "Report type must be Weekly or Final")]
-        public string ReportType { get; set; } = string.Empty;
+        [Column(TypeName = "nvarchar(50)")]
+        public ReportType Type { get; set; }
+        public enum ReportType
+        {
+            Weekly, Final
+        }
 
         [Required(ErrorMessage = "Title is required")]
         [MaxLength(300, ErrorMessage = "Title cannot be more than 300 characters")]
@@ -37,10 +39,12 @@ namespace Project.Models
 
         public DateTime SubmittedAt { get; set; } = DateTime.Now;
 
-       
-        [Required(ErrorMessage = "Status is required")]
-        [RegularExpression("^(Submitted|Reviewed|Approved|Rejected)$", ErrorMessage = "Invalid status value")]
-        public string Status { get; set; } = "Submitted";
+        [Column(TypeName = "nvarchar(50)")]
+        public StudentReportStatus Status { get; set; } = StudentReportStatus.Submitted;
+        public enum StudentReportStatus
+        {
+            Submitted, Reviewed, Approved, Rejected
+        }
 
         public string? UniversitySupervisorID { get; set; }
         [ForeignKey(nameof(UniversitySupervisorID))]

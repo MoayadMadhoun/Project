@@ -9,7 +9,7 @@ namespace Project.Models
         [Required(ErrorMessage = "Instituation name is required")]
         [MaxLength(200, ErrorMessage = "Instituation name can't be more than 200 characters")]
         [MinLength(2, ErrorMessage = "Instituation name can't be less than 2 characters")]
-        public string Name { get;  set; }
+        public string Name { get; set; } = string.Empty;
         [MaxLength(100, ErrorMessage = "Type can't be more than 200 characters")]
         public string? Type { get; set; }
         [MaxLength(300, ErrorMessage = "Address can't be more than 200 characters")]
@@ -22,7 +22,7 @@ namespace Project.Models
         [MaxLength(200, ErrorMessage = "Contant person name can't be more than 200 characters")]
         public string? ContactPersonName { get; set; }
         public bool IsActive {  get; set; }
-        public ICollection<TrainingOpportunity> TrainingOpportunities { get; set; }
+        public ICollection<TrainingOpportunity> TrainingOpportunities { get; set; }=new HashSet<TrainingOpportunity>();
 
 
 

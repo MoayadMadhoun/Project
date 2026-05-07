@@ -11,12 +11,12 @@ namespace Project.Models
         [Required(ErrorMessage = "Request is required")]
         [ForeignKey(nameof(RequestID))]
         public int RequestID { get; set; }
-        public TrainingOpportunityRequest Request { get; set; }
+        public TrainingOpportunityRequest Request { get; set; }= new TrainingOpportunityRequest();
         //SkillID FK
         [Required(ErrorMessage = "Skill is required")]
         [ForeignKey(nameof(SkillID))]
         public int SkillID { get; set; }
-        public Skill Skill { get; set; }
+        public Skill Skill { get; set; }=new Skill();
         public bool IsRequired { get; set; } = true;
     }
 }

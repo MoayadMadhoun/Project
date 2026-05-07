@@ -11,12 +11,12 @@ namespace Project.Models
         [Required(ErrorMessage = "Institution is required")]
         [ForeignKey(nameof(InstitutionID))]
         public int InstitutionID { get; set; }
-        public TrainingInstitution TrainingInstitution { get; set; }
+        public TrainingInstitution TrainingInstitution { get; set; } = new TrainingInstitution();
         //TermID Fk
         [Required(ErrorMessage = "Training term is required")]
         [ForeignKey(nameof(TermID))]
         public int TermID { get; set; }
-        public TrainingTerm TrainingTerm { get; set; }
+        public TrainingTerm TrainingTerm { get; set; } = new TrainingTerm();
         //RequestID FK
         [Required(ErrorMessage = "Request is required")]
 
@@ -26,7 +26,7 @@ namespace Project.Models
         [Required(ErrorMessage = "Title is required")]
         [MaxLength(200, ErrorMessage = "Title can't be more than 200 characters")]
         [MinLength(2, ErrorMessage = "Title can't be less than 2 characters")]
-        public string Title { get; set; }
+        public string Title { get; set; } = string.Empty;
         [MaxLength(500, ErrorMessage = "Description can't be more than 500 characters")]
         public string? Description { get; set; }
         [Required(ErrorMessage = "Capicity is required")]
@@ -41,10 +41,14 @@ namespace Project.Models
         //InstitutionOfficerID FK
         [Required(ErrorMessage = "InstitutionOfficer is required")]
         [ForeignKey(nameof(InstitutionOfficerID))]
-        public string InstitutionOfficerID { get; set; } 
-        public AspNetUser InstitutionOfficer { get; set; }
-        [RegularExpression("^(Open|Closed|Concelled)$", ErrorMessage = "Status must be Open, Closed, or Cancelled")]
-        public string Status { get; set; } = "Open";
+        public string InstitutionOfficerID { get; set; } = string.Empty;
+        public AspNetUser InstitutionOfficer { get; set; } = new AspNetUser();
+        [Column(TypeName = "nvarchar(50)")]
+        public Opportunity Status { get; set; } = Opportunity.Open;
+        public enum Opportunity
+        {
+            Open, Closed, Concelled
+        }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
     }
 }

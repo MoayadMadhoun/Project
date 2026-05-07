@@ -10,14 +10,14 @@ namespace Project.Models
         [Required(ErrorMessage = "Department name is required")]
         [MaxLength(200, ErrorMessage = "Department name can't be more than 200 characters")]
         [MinLength(2, ErrorMessage = "Department name can't be less than 2 characters")]
-        public string Name { get; set; }  
+        public string Name { get; set; }  = string.Empty;
         public bool IsActive { get; set; }
         [Required(ErrorMessage="University is required")]
         [ForeignKey(nameof(UniversityID))]
         public int UniversityID { get; set; }
-        public University University { get; set; }
+        public University University { get; set; }= new University();
 
-        public ICollection<Student> Students { get; set; }
+        public ICollection<Student> Students { get; set; }=new HashSet<Student>();
 
     }
 }

@@ -24,10 +24,13 @@ namespace Project.Models
         [Url(ErrorMessage = "Invalid URL format")]
         public string? Url { get; set; }
 
-        [Required(ErrorMessage = "Item type is required")]
-        [RegularExpression("^(Project|Certificate|Report|Presentation|Link|Other)$",
-            ErrorMessage = "Invalid item type")]
-        public string ItemType { get; set; } = string.Empty;
+        [Column(TypeName = "nvarchar(50)")]
+        public ItemType Type { get; set; } = ItemType.Other;
+
+        public enum ItemType
+        {
+            Project, Certificate, Report, Presentation, Link, Other
+        }
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
     }

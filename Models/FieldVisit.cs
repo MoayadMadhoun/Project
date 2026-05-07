@@ -10,16 +10,19 @@ namespace Project.Models
         [Required(ErrorMessage = "Placement is required")]
         [ForeignKey(nameof(PlacementID))]
         public int PlacementID { get; set; }
-        public TrainingPlacement TrainingPlacement { get; set; }
+        public TrainingPlacement TrainingPlacement { get; set; }= new TrainingPlacement();
         [Required(ErrorMessage = "University supervisor is required")]
         [ForeignKey(nameof(UniversitySupervisorID))]
-        public string UniversitySupervisorID { get; set; }
-        public AspNetUser UniversitySupervisor { get; set; }
+        public string UniversitySupervisorID { get; set; }=string.Empty;
+        public AspNetUser UniversitySupervisor { get; set; }=new AspNetUser();
         [Required(ErrorMessage = "Visit date is required")]
         public DateTime VisitDate { get; set; }
-        [RegularExpression("^(Initial|Final|FollowUp)$", ErrorMessage = "Decision must be Initial, Final, or FollowUp")]
-        [Required(ErrorMessage="Visit type is required")]
-        public string VisitType { get; set; } = "Initial";
+        [Column(TypeName = "nvarchar(50)")]
+        public VisitType Type { get; set; } = VisitType.Initial;
+        public enum VisitType
+        {
+            Initial, Final, FollowUp
+        }
         public decimal? Score { get; set; }
         public decimal? MaxScore { get; set; }
         [MaxLength(1000, ErrorMessage = "Notes can't be more than 1000 characters")]

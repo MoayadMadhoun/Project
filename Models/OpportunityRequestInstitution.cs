@@ -7,9 +7,13 @@ namespace Project.Models
     {
         [Key]
         public int RequestInstitutionID { get; set; }
-        [Required(ErrorMessage = "Start date is required")]
-        [RegularExpression("^(Invited|Viewed|Reponded|Declined)$", ErrorMessage = "Status must be Invited, Viewed, Reponded or Declined")]
-        public string Status { get; set; } = "Invited";
+        [Column(TypeName = "nvarchar(50)")]
+        public OpportunityRequestInstitutionStatus Status { get; set; } = OpportunityRequestInstitutionStatus.Invited;
+        public enum OpportunityRequestInstitutionStatus
+        {
+            Invited, Viewed, Reponded, Declined
+        }
+
 
         public DateTime SentAt { get; set; }=DateTime.Now;
         public DateTime? RespondedAt { get; set; }
@@ -19,12 +23,12 @@ namespace Project.Models
         [Required(ErrorMessage = "Request is required")]
         [ForeignKey(nameof(RequestID))]
         public int RequestID { get; set; }
-        public TrainingOpportunityRequest Request { get; set; }
+        public TrainingOpportunityRequest Request { get; set; } = new TrainingOpportunityRequest();         
 
         [Required(ErrorMessage = "Institution is required")]
         [ForeignKey(nameof(InstitutionID))]
         public int InstitutionID { get; set; }
-        public TrainingInstitution TrainingInstitution { get; set; }
+        public TrainingInstitution TrainingInstitution { get; set; } = new TrainingInstitution();
 
 
     }

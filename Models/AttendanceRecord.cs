@@ -17,9 +17,13 @@ namespace Project.Models
         public DateTime AttendanceDate { get; set; }
         public TimeSpan? CheckInTime { get; set; }
         public TimeSpan? CheckOutTime { get; set; }
-        [RegularExpression("^(Present|Absent|Late|Excused)$", ErrorMessage = "Status must be Present, Absent, Late, or Excused")]
+        [Column(TypeName = "nvarchar(50)")]
+        public AttendanceStatus Status { get; set; } = AttendanceStatus.Present;
 
-        public string Status { get; set; } = "Present";
+        public enum AttendanceStatus
+        {
+            Present, Absent, Late, Excused
+        }
         [Required(ErrorMessage = "Institution supervisor is required")]
 
         [ForeignKey(nameof(InstitutionSupervisorID))]
