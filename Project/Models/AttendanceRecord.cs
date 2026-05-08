@@ -12,7 +12,7 @@ namespace Project.Models
         [Required(ErrorMessage = "Placement is required")]
         [ForeignKey(nameof(PlacementID))]
         public int PlacementID { get; set; }
-        public TrainingPlacement TrainingPlacement { get; set; }
+        public TrainingPlacement TrainingPlacement { get; set; }= new TrainingPlacement();
         [Required(ErrorMessage= "Attendance date is required")]
         public DateTime AttendanceDate { get; set; }
         public TimeSpan? CheckInTime { get; set; }
@@ -27,8 +27,8 @@ namespace Project.Models
         [Required(ErrorMessage = "Institution supervisor is required")]
 
         [ForeignKey(nameof(InstitutionSupervisorID))]
-        public string InstitutionSupervisorID { get; set; }
-        public AspNetUser InstitutionSupervisor { get; set; }
+        public string InstitutionSupervisorID { get; set; }= string.Empty;
+        public AspNetUser InstitutionSupervisor { get; set; }= new AspNetUser();
         [MaxLength(500, ErrorMessage = "Notes can't be more than 500 characters")]
         public string? Notes { get; set; }
     }

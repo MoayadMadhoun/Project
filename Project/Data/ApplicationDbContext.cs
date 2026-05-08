@@ -37,6 +37,7 @@ public class ApplicationDbContext : IdentityDbContext<AspNetUser>
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
+        
 
         //Uniqe Constrains
 
@@ -238,6 +239,60 @@ public class ApplicationDbContext : IdentityDbContext<AspNetUser>
             .WithMany()
             .HasForeignKey(s => s.InstitutionID)
             .OnDelete(DeleteBehavior.Restrict);
+
+
+        //Converting the enum based values from int (default) to string for better readability and maintainability
+        builder.Entity<Student>()
+            .Property(s => s.Status).HasConversion<string>().HasMaxLength(50);
+
+        builder.Entity<FieldVisit>()
+            .Property(s => s.Type).HasConversion<string>().HasMaxLength(50);
+
+        builder.Entity<StudentReport>()
+            .Property(s => s.Status).HasConversion<string>().HasMaxLength(50);
+
+        builder.Entity<StudentReport>()
+            .Property(s => s.Type).HasConversion<string>().HasMaxLength(50);
+
+        builder.Entity<TrainingApplication>()
+            .Property(s => s.Status).HasConversion<string>().HasMaxLength(50);
+
+        builder.Entity<TrainingApplication>()
+            .Property(s => s.DepartmentDecision).HasConversion<string>().HasMaxLength(50);
+
+        builder.Entity<TrainingApplication>()
+            .Property(s => s.UniversityAdminDecision).HasConversion<string>().HasMaxLength(50);
+
+        builder.Entity<TrainingApplication>()
+            .Property(s => s.InstitutionDecision).HasConversion<string>().HasMaxLength(50);
+
+        builder.Entity<TrainingOpportunity>()
+            .Property(s => s.Status).HasConversion<string>().HasMaxLength(50);
+
+        builder.Entity<TrainingOpportunityRequest>()
+            .Property(r => r.Status).HasConversion<string>().HasMaxLength(50);
+
+        builder.Entity<TrainingPlacement>()
+             .Property(s => s.Status).HasConversion<string>().HasMaxLength(50);
+
+        builder.Entity<AttendanceRecord>()
+            .Property(a => a.Status).HasConversion<string>().HasMaxLength(50);
+
+        builder.Entity<PortfolioItem>()
+            .Property(p => p.Type).HasConversion<string>().HasMaxLength(50);
+
+        builder.Entity<OpportunityRequestInstitution>()
+            .Property(r => r.Status).HasConversion<string>().HasMaxLength(50);
+
+        builder.Entity<StudentSkill>()
+            .Property(s => s.Level).HasConversion<string>().HasMaxLength(50);
+
+        builder.Entity<StudentEvaluation>()
+            .Property(s => s.Type).HasConversion<string>().HasMaxLength(50);
+
+        builder.Entity<StudentEvaluation>()
+            .Property(s => s.Status).HasConversion<string>().HasMaxLength(50);
+
 
 
 

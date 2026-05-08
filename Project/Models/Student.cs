@@ -9,10 +9,10 @@ namespace Project.Models
         public int StudentID { get; set; }
         [Required(ErrorMessage = "Student Name is required")]
         [MaxLength(50, ErrorMessage = "Student Name can't be more than 200 characters")]
-        public string Name { get; set; }
+        public string Name { get; set; }=string.Empty;
         [Required(ErrorMessage="Student number is required")]
         [MaxLength(50, ErrorMessage = "Student number can't be more than 50 characters")]
-        public string StudentNumber {  get; set; }
+        public string StudentNumber {  get; set; }=string.Empty;
         [MaxLength(20, ErrorMessage = "Level can't be more than 20 characters")]
         public string? Level { get; set; }
         
