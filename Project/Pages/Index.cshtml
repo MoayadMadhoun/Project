@@ -2,9 +2,654 @@
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
+    Layout = "";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spaceara - منصة إدارة التدريب الميداني</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="Styles/main.css">
+    <!--Link to Swiper-->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css" />
+
+
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet" />
+    <style>
+
+    </style>
+</head>
+<body>
+
+    <!-- ═══════════════════════════════════════════════════════
+     NAVBAR
+═══════════════════════════════════════════════════════ -->
+    <nav class="navbar navbar-expand-lg navbar-spaceard  d-flex align-items-center justify-content-between flex-wrap gap-2">
+        <div class="container">
+            <!--logo-->
+            <img src="images/Logos/NavBarLogo.svg" class=" z-2 logo" alt="logo" />
+            <!--toggle-->
+            <button class="navbar-toggler shadow-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <!--side bar-->
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link active">الرئيسية</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">فرص التدريب</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">للجامعات</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">للمؤسسات</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">للطلبة</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">تواصل معنا</a>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center gap-2">
+                    <a class="btn-login text-decoration-none" asp-area="Identity" asp-page="/Account/Login"> تسجيل الدخول </a>
+                    <a class="btn-register text-decoration-none" asp-area="Identity" asp-page="/Account/Register">إنشاء حساب</a>
+                    <span style="font-size:.8rem;color:var(--navy);border:1px solid #c8d8e8;border-radius:6px;padding:4px 8px;cursor:pointer;">
+                        🌐 العربية
+                    </span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+
+
+    <!-- ═══════════════════════════════════════════════════════
+     HERO
+═══════════════════════════════════════════════════════ -->
+    <section class="hero-section">
+        <div class="wave-bottom">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#00B894" fill-opacity="1" d="M0,96L60,80C120,64,240,32,360,26.7C480,21,600,43,720,96C840,149,960,235,1080,272C1200,309,1320,299,1380,293.3L1440,288L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path></svg>
+            
+        </div>
+        <div class="container">
+            <div class="row align-items-center py-5 g-4">
+                <!-- RIGHT (visually in RTL = first col): Dashboard image -->
+                <div class="col-lg-6 position-relative order-lg-last">
+
+        
+                    <div class="hero-img-wrap d-flex justify-content-center">
+
+                        <!-- Dashboard Mock -->
+                        <div class="dashboard-mock">
+                            <div class="mock-topbar">
+                                <div class="mock-dot r"></div>
+                                <div class="mock-dot y"></div>
+                                <div class="mock-dot g"></div>
+                                <span style="font-size:.7rem;color:#aaa;margin-right:auto;">لوحة التحكم</span>
+                            </div>
+            
+                            <div class="mock-stat-row">
+                                <div class="mock-stat">
+                                    <div class="val" style="color:var(--teal);">8</div>
+                                    <div class="lbl">الجامعات</div>
+                                </div>
+                                <div class="mock-stat">
+                                    <div class="val">18</div>
+                                    <div class="lbl">المؤسسات</div>
+                                </div>
+                                <div class="mock-stat">
+                                    <div class="val">120</div>
+                                    <div class="lbl">الطلاب</div>
+                                </div>
+                                <div class="mock-stat">
+                                    <div class="val">35</div>
+                                    <div class="lbl">الفرص</div>
+                                </div>
+                            </div>
+
+                            <div class="mb-2" style="font-size:.72rem;font-weight:700;color:var(--navy);">
+                                طلبات قائمة على التدريب
+                            </div>
+
+                            <div class="mock-chart-area">
+                                <!-- Line Chart -->
+                                <div class="mock-chart-box">
+                                    <div class="mock-chart-title">من هنا يبدأ نجاحك</div>
+                                    <svg class="chart-svg" viewBox="0 0 220 70" xmlns="http://www.w3.org/2000/svg">
+                                        <defs>
+                                            <linearGradient id="cg" x1="0" y1="0" x2="0" y2="1">
+                                                <stop offset="0" stop-color="#00B793" stop-opacity=".3" />
+                                                <stop offset="1" stop-color="#00B793" stop-opacity="0" />
+                                            </linearGradient>
+                                        </defs>
+                                        <path d="M5,55 C30,50 45,30 70,35 S100,20 120,25 S160,10 185,18 S210,22 215,15" stroke="#00B793" stroke-width="2" fill="none" />
+                                        <path d="M5,55 C30,50 45,30 70,35 S100,20 120,25 S160,10 185,18 S210,22 215,15 V70 H5Z" fill="url(#cg)" />
+                                        <!-- x axis labels -->
+                                        <text x="5" y="68" font-size="7" fill="#aaa">يناير</text>
+                                        <text x="40" y="68" font-size="7" fill="#aaa">فراير</text>
+                                        <text x="80" y="68" font-size="7" fill="#aaa">مارس</text>
+                                        <text x="120" y="68" font-size="7" fill="#aaa">ابريل</text>
+                                        <text x="160" y="68" font-size="7" fill="#aaa">مايو</text>
+                                        <text x="198" y="68" font-size="7" fill="#aaa">يونيو</text>
+                                    </svg>
+                                </div>
+
+                                <!-- Donut Chart -->
+                                <div class="mock-chart-box">
+                                    <div class="mock-chart-title"> طلبات التدريب</div>
+                                    <div class="donut-wrap">
+                                        <svg viewBox="0 0 80 80" width="70" height="70" xmlns="http://www.w3.org/2000/svg">
+                                            <!-- background circle -->
+                                            <circle cx="40" cy="40" r="30" fill="none" stroke="#eee" stroke-width="14" />
+                                            <!-- segments -->
+                                            <circle cx="40" cy="40" r="30" fill="none" stroke="#00B793" stroke-width="14"
+                                                    stroke-dasharray="42 146" stroke-dashoffset="0" transform="rotate(-90 40 40)" />
+                                            <circle cx="40" cy="40" r="30" fill="none" stroke="#1665D7" stroke-width="14"
+                                                    stroke-dasharray="37 151" stroke-dashoffset="-42" transform="rotate(-90 40 40)" />
+                                            <circle cx="40" cy="40" r="30" fill="none" stroke="#f0a500" stroke-width="14"
+                                                    stroke-dasharray="25 163" stroke-dashoffset="-79" transform="rotate(-90 40 40)" />
+                                            <circle cx="40" cy="40" r="30" fill="none" stroke="#e84040" stroke-width="14"
+                                                    stroke-dasharray="20 168" stroke-dashoffset="-104" transform="rotate(-90 40 40)" />
+                                            <text x="40" y="45" text-anchor="middle" font-size="12" font-weight="800" fill="#0F2D52">65%</text>
+                                        </svg>
+                                        <div style="font-size:.6rem;color:#888;line-height:1.8;">
+                                            <div><span style="color:#00B793">■</span> مقبولة 12 &nbsp; <span style="color:#1665D7">■</span> قيد الدراسة 15</div>
+                                            <div><span style="color:#f0a500">■</span> متوقفة 10 &nbsp; <span style="color:#e84040">■</span> فيد التدريب 08</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Phone Mock -->
+                        <div class="phone-mock">
+                            <div class="phone-mock-title">الفرص التدريبية</div>
+                            <div class="phone-row">
+                                <span>مقبولة</span>
+                                <span class="phone-badge pb-green">12</span>
+                            </div>
+                            <div class="phone-row">
+                                <span>قيد الدراسة</span>
+                                <span class="phone-badge pb-blue">15</span>
+                            </div>
+                            <div class="phone-row">
+                                <span>قيد التنفيذ</span>
+                                <span class="phone-badge pb-orange">10</span>
+                            </div>
+                            <div class="phone-row">
+                                <span>فيد التدريب</span>
+                                <span class="phone-badge pb-orange">08</span>
+                            </div>
+                            <div class="phone-row">
+                                <span>متوقفة</span>
+                                <span class="phone-badge pb-red">20</span>
+                            </div>
+                            <button class="btn-register mt-2 w-100" style="font-size:.7rem;padding:.3rem;">الفرص المتاحة</button>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- LEFT (visually in RTL = second col): Text content -->
+                <div class="col-lg-6 order-lg-first">
+                    <h1 class="hero-title">
+                        منصة موحدة لإدارة التدريب الميداني<br>
+                        <span>بين الجامعات والمؤسسات والطلبة</span>
+                    </h1>
+                    <p class="hero-sub mt-3">
+                        تربط جميع أطراف العملية التدريبية في نظام واحد متكامل. تطلب الجامعات فرص التدريب، تقدم المؤسسات الفرص، يتقدم الطلبة. تتابع الجامعات الطلبات، الزيارات والتقارير والتقييمات.
+                    </p>
+                    <div class="d-flex gap-3 mt-4 flex-wrap">
+                        <button class="btn btn-hero-primary">ابدأ الآن ←</button>
+                        <button class="btn btn-hero-secondary">
+                            <i class="fas fa-play-circle"></i> استكشف المنصة
+                        </button>
+                    </div>
+                    <div class="hero-badges">
+                        <div class="hero-badge"><i class="fas fa-shield-alt"></i> أمن وموثوق</div>
+                        <div class="hero-badge"><i class="fas fa-check-circle"></i> سهل الاستخدام</div>
+                        <div class="hero-badge"><i class="fas fa-users"></i> مصمم لجميع الجهات</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════════════════
+     FEATURES BAR
+═══════════════════════════════════════════════════════ -->
+    <section class="features-bar">
+        <div class="container">
+            <div class="row g-4 justify-content-center">
+                <div class="col-6 col-md-3">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-university"></i></div>
+                        <h6>طلبيات فرص التدريب</h6>
+                        <p>تطلب الجامعات فرص التدريب حسب التخصص والموقع</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-building"></i></div>
+                        <h6>فرص من المؤسسات</h6>
+                        <p>تضيف المؤسسات فرصها وتحدد المتطلبات والشروط</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-file-alt"></i></div>
+                        <h6>تقديم واعتماد الطلبات</h6>
+                        <p>يقدم الطلبة الطلبات المتاحة وتراجعها الجامعات وتعتمدها</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                        <h6>متابعة التدريب</h6>
+                        <p>متابعة الحضور والزيارات والتقارير حتى إتمام التدريب</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════════════════
+     HOW IT WORKS
+═══════════════════════════════════════════════════════ -->
+    <section class="how-section">
+        <div class="container">
+            <h2 class="section-title">كيف يعمل النظام؟</h2>
+            <div class="row g-4 justify-content-center position-relative">
+
+                <div class="col-6 col-md-4 col-lg-2">
+                    <div class="step-card">
+                        <div class="step-num">1</div>
+                        <div class="step-icon"><i class="fas fa-university"></i></div>
+                        <h6>طلب فرص من الجامعة</h6>
+                        <p>تطلب الجامعة فرص التدريب المناسبة</p>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-2">
+                    <div class="step-card">
+                        <div class="step-num">2</div>
+                        <div class="step-icon"><i class="fas fa-plus-circle"></i></div>
+                        <h6>إضافة فرص من المؤسسة</h6>
+                        <p>تضيف المؤسسة فرصها المتاحة</p>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-2">
+                    <div class="step-card">
+                        <div class="step-num">3</div>
+                        <div class="step-icon"><i class="fas fa-user-graduate"></i></div>
+                        <h6>تقديم الطلبة للفرص</h6>
+                        <p>يتقدم الطلبة لفرص التدريب المتاحة</p>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-2">
+                    <div class="step-card">
+                        <div class="step-num">4</div>
+                        <div class="step-icon"><i class="fas fa-clipboard-check"></i></div>
+                        <h6>مراجعة واعتماد ومتابعة</h6>
+                        <p>تراجع الجامعة وتعتمد الطلبات</p>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-2">
+                    <div class="step-card">
+                        <div class="step-num">5</div>
+                        <div class="step-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+                        <h6>تدريب فعلي ومتابعة</h6>
+                        <p>يبدأ التدريب مع المتابعة المستمرة</p>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-2">
+                    <div class="step-card">
+                        <div class="step-num">6</div>
+                        <div class="step-icon"><i class="fas fa-chart-bar"></i></div>
+                        <h6>متابعة وتقييم وإصدار التقارير</h6>
+                        <p>تقييم شامل وتقارير نهائية</p>
+                    </div>
+                </div>
+
+            </div>
+            <div class="text-center mt-4">
+                <a href="#" style="color:var(--teal);font-size:.9rem;font-weight:600;text-decoration:none;">
+                    عرض جميع الفرص ←
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+     STATS BAR
+═══════════════════════════════════════════════════════ -->
+    <section class="stats-bar">
+        <div class="status-photo1">
+            <img src="images/illustration/illustration2.svg">
+        </div>
+        <div class="status-photo2">
+            <img src="images/illustration/illustrarion1.svg">
+        </div>
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-6 col-md-3">
+                    <div class="stat-item">
+          
+                        <div class="stat-value"><span>+</span>50</div>
+                        <div class="stat-label">جهة تدريب</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="stat-item">
+                        <div class="stat-value"><span>+</span>120</div>
+                        <div class="stat-label">طالب ومتدرب</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="stat-item">
+                        <div class="stat-value"><span>+</span>35</div>
+                        <div class="stat-label">فرصة نشطة</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="stat-item">
+                        <div class="stat-value"><span>+</span>12</div>
+                        <div class="stat-label">قسم أكاديمي</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════════════════
+     TRAINING OPPORTUNITIES
+═══════════════════════════════════════════════════════ -->
+    <section class="opps-section">
+        <div class="container swiper">
+            <div class="slider-wrapper mx-auto">
+                <h2 class="section-title">فرص تدريب ميداني</h2>
+                <div class="swiper-wrapper">
+
+                    <!-- Card 1 -->
+        
+                    <div class="opp-card swiper-slide ">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <span class="opp-badge badge-company">فرصة شركة</span>
+                            <div class="opp-logo" style="background:#e8f0fb;">
+                                <span style="font-size:.7rem;font-weight:800;color:#1665D7;">STC</span>
+                            </div>
+                        </div>
+                        <div class="opp-title">تدريب في تقنية المعلومات</div>
+                        <div class="opp-meta">
+                            <span><i class="fas fa-graduation-cap"></i> علوم حاسوب</span>
+                            <span><i class="fas fa-clock"></i> 3 أشهر</span>
+                            <span><i class="fas fa-users"></i> 1</span>
+                            <span><i class="fas fa-map-marker-alt"></i> الرياض</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mt-2">
+                            <span style="font-size:.75rem;color:var(--text-muted);">عدد الطلاب: 6</span>
+                            <button class="btn-opp" style="width:auto;padding:.3rem .9rem;">عرض التفاصيل ←</button>
+                        </div>
+                    </div>
+
+       
+                    <!-- Card 2 -->
+       
+                    <div class="opp-card swiper-slide">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <span class="opp-badge badge-open">فرصة نشطة</span>
+                            <div class="opp-logo" style="background:#e8f8f3;">
+                                <i class="fas fa-calculator" style="color:var(--teal);"></i>
+                            </div>
+                        </div>
+                        <div class="opp-title">تدريب في المحاسبة</div>
+                        <div class="opp-meta">
+                            <span><i class="fas fa-graduation-cap"></i> محاسبة</span>
+                            <span><i class="fas fa-clock"></i> 2 أشهر</span>
+                            <span><i class="fas fa-users"></i> 1</span>
+                            <span><i class="fas fa-map-marker-alt"></i> الرياض</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mt-2">
+                            <span style="font-size:.75rem;color:var(--text-muted);">عدد الطلاب: 2</span>
+                            <button class="btn-opp" style="width:auto;padding:.3rem .9rem;">عرض التفاصيل ←</button>
+                        </div>
+                    </div>
+
+     
+                    <!-- Card 3 -->
+        
+                    <div class="opp-card swiper-slide">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <span class="opp-badge badge-company">فرصة شركة</span>
+                            <div class="opp-logo" style="background:#fff3e8;">
+                                <i class="fas fa-oil-can" style="color:#f0a500;"></i>
+                            </div>
+                        </div>
+                        <div class="opp-title">تدريب في إدارة المشاريع</div>
+                        <div class="opp-meta">
+                            <span><i class="fas fa-graduation-cap"></i> إدارة أعمال</span>
+                            <span><i class="fas fa-clock"></i> 3 أشهر</span>
+                            <span><i class="fas fa-users"></i> 1</span>
+                            <span><i class="fas fa-map-marker-alt"></i> الظهران</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mt-2">
+                            <span style="font-size:.75rem;color:var(--text-muted);">عدد الطلاب: 2</span>
+                            <button class="btn-opp" style="width:auto;padding:.3rem .9rem;">عرض التفاصيل ←</button>
+                        </div>
+                    </div>
+
+        
+
+                    <!-- Card 4 -->
+       
+                    <div class="opp-card swiper-slide">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <span class="opp-badge badge-company">فرصة شركة</span>
+                            <div class="opp-logo" style="background:#fff3e8;">
+                                <i class="fas fa-oil-can" style="color:#f0a500;"></i>
+                            </div>
+                        </div>
+                        <div class="opp-title">تدريب في إدارة المشاريع</div>
+                        <div class="opp-meta">
+                            <span><i class="fas fa-graduation-cap"></i> إدارة أعمال</span>
+                            <span><i class="fas fa-clock"></i> 3 أشهر</span>
+                            <span><i class="fas fa-users"></i> 1</span>
+                            <span><i class="fas fa-map-marker-alt"></i> الظهران</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mt-2">
+                            <span style="font-size:.75rem;color:var(--text-muted);">عدد الطلاب: 2</span>
+                            <button class="btn-opp" style="width:auto;padding:.3rem .9rem;">عرض التفاصيل ←</button>
+                        </div>
+                    </div>
+
+        
+
+                    <!-- Card 5 -->
+       
+                    <div class="opp-card swiper-slide">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <span class="opp-badge badge-company">فرصة شركة</span>
+                            <div class="opp-logo" style="background:#fff3e8;">
+                                <i class="fas fa-oil-can" style="color:#f0a500;"></i>
+                            </div>
+                        </div>
+                        <div class="opp-title">تدريب في إدارة المشاريع</div>
+                        <div class="opp-meta">
+                            <span><i class="fas fa-graduation-cap"></i> إدارة أعمال</span>
+                            <span><i class="fas fa-clock"></i> 3 أشهر</span>
+                            <span><i class="fas fa-users"></i> 1</span>
+                            <span><i class="fas fa-map-marker-alt"></i> الظهران</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mt-2">
+                            <span style="font-size:.75rem;color:var(--text-muted);">عدد الطلاب: 2</span>
+                            <button class="btn-opp" style="width:auto;padding:.3rem .9rem;">عرض التفاصيل ←</button>
+                        </div>
+                    </div>
+
+       
+          
+                </div>
+                <div class="swiper-pagination"></div>
+                <div class="swiper-slide-button swiper-button-prev"></div>
+                <div class="swiper-slide-button swiper-button-next"></div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════════════════
+     PLATFORM FEATURES
+═══════════════════════════════════════════════════════ -->
+    <section class="platform-section">
+        <div class="container">
+            <h2 class="section-title">مميزات المنصة</h2>
+            <div class="row g-3 justify-content-center">
+
+                <div class="col-6 col-md-4 col-lg-2">
+                    <div class="platform-feature">
+                        <div class="pf-icon"><i class="fas fa-file-pdf"></i></div>
+                        <h6>تقارير PDF</h6>
+                        <p>تقارير تفصيلية وجاهزة للطباعة</p>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-2">
+                    <div class="platform-feature">
+                        <div class="pf-icon"><i class="fas fa-star"></i></div>
+                        <h6>التقييمات PDF</h6>
+                        <p>نماذج تقييم شاملة وقابلة للتصدير</p>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-2">
+                    <div class="platform-feature">
+                        <div class="pf-icon"><i class="fas fa-map-marked-alt"></i></div>
+                        <h6>الزيارات الميدانية</h6>
+                        <p>جدولة وتسجيل الزيارات بسهولة</p>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-2">
+                    <div class="platform-feature">
+                        <div class="pf-icon"><i class="fas fa-fingerprint"></i></div>
+                        <h6>الحضور</h6>
+                        <p>تسجيل حضور المتدربين إلكترونياً</p>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-2">
+                    <div class="platform-feature">
+                        <div class="pf-icon"><i class="fas fa-user-tie"></i></div>
+                        <h6>تعيين المشرفين</h6>
+                        <p>ربط المتدربين بمشرفين متخصصين</p>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-2">
+                    <div class="platform-feature">
+                        <div class="pf-icon"><i class="fas fa-tasks"></i></div>
+                        <h6>إدارة الفرص والطلبات</h6>
+                        <p>متابعة شاملة لجميع مراحل التدريب</p>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-2">
+                    <div class="platform-feature">
+                        <div class="pf-icon"><i class="fas fa-chart-pie"></i></div>
+                        <h6>التقارير ومعرض الأعمال</h6>
+                        <p>تقارير تحليلية ومعرض بأعمال المتدربين</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- ═══════════════════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════════════════ -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row g-4">
+
+                <!-- Brand -->
+                <div class="col-md-3">
+        
+                    <img src="images/Logos/logoBottomnavbar.svg" class="w-50" alt="logo">
+                    <p class="footer-brand-desc mt-3">
+                        منصة سبيسارا لإدارة التدريب الميداني بين الجامعات والمؤسسات والطلبة
+                    </p>
+                    <div class="footer-social mt-3">
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+
+                <!-- للمؤسسات -->
+                <div class="col-6 col-md-2">
+                    <div class="footer-heading">للمؤسسات</div>
+                    <a href="#" class="footer-link">إضافة فرصة تدريب</a>
+                    <a href="#" class="footer-link">إدارة الفرص</a>
+                    <a href="#" class="footer-link">الأسئلة الشائعة</a>
+                </div>
+
+                <!-- للجامعات -->
+                <div class="col-6 col-md-2">
+                    <div class="footer-heading">للجامعات</div>
+                    <a href="#" class="footer-link">طلب فرص تدريب</a>
+                    <a href="#" class="footer-link">إدارة الطلبات</a>
+                    <a href="#" class="footer-link">تقارير التدريب</a>
+                    <a href="#" class="footer-link">الدعم والمساعدة</a>
+                </div>
+
+                <!-- للطلبة -->
+                <div class="col-6 col-md-2">
+                    <div class="footer-heading">للطلبة</div>
+                    <a href="#" class="footer-link">البحث عن فرص</a>
+                    <a href="#" class="footer-link">طلباتي</a>
+                    <a href="#" class="footer-link">إدارة التدريب</a>
+                    <a href="#" class="footer-link">الأسئلة الشائعة</a>
+                </div>
+
+                <!-- الشركة -->
+                <div class="col-6 col-md-2">
+                    <div class="footer-heading">الشركة</div>
+                    <a href="#" class="footer-link">من نحن</a>
+                    <a href="#" class="footer-link">الرؤية</a>
+                    <a href="#" class="footer-link">سياسة الخصوصية</a>
+                    <a href="#" class="footer-link">الشروط والأحكام</a>
+                </div>
+
+            </div>
+
+            <div class="footer-bottom">
+                جميع الحقوق محفوظة © 2026 – Spaceara
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
+    <script src="Scripts/script.js"></script>
+</body>
+</html>
