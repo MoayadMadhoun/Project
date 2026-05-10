@@ -1,0 +1,57 @@
+body {
+    font-family: 'Tajawal', sans-serif;
+    background-color: #f8f9fa;
+    background: linear-gradient(135deg, #EAF4FF 0%, #F0FBF7 60%, #E8F4FD 100%);
+   
+}
+
+a{
+  text-decoration: none;
+}
+.navbar-brand { font-size: 1.1rem; }
+.card {
+    border: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    border-radius: 12px;
+    width: 40%;
+  
+   
+}
+.card-header {
+    border-radius: 12px 12px 0 0 !important;
+    font-weight: 600;
+    background-color: white;
+}
+.btn { border-radius: 8px; }
+.auth-btn {
+  
+  background: var(--teal);
+   color: #fff; font-weight: 800; font-size: 1rem;
+   display: flex; align-items: center; justify-content: center;
+   margin: 0 auto 14px;
+   box-shadow: 0 4px 16px rgba(0,183,147,.35);
+}
+.main-color {color: var(--teal) ;}
+.login-screen {
+    
+    position: relative;
+}
+.wave-bottom {
+    position: absolute;
+    size: 1.5rem;
+    left: 0;
+    bottom: 0;
+   
+   height: 50%;
+   
+    z-index: -1;
+    opacity: 0.3;
+    }
+ @media screen and (max-width: 768px) {
+     .card {
+      width: 100%;
+      padding: 0, 5%;
+      
+     }
+     
+    }
