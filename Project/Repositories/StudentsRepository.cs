@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Project.Data;
 using Project.Models;
+using static Project.Models.Student;
+using static Project.Models.TrainingApplication;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace Project.Repositories
@@ -30,46 +32,54 @@ namespace Project.Repositories
         // Get all student With Details
         public async Task <List<Student>> GetAllStudents()
         {
-           
             return await  StudentDetails().AsNoTracking().ToListAsync();  
         }
 
-        // Search student by id 
-        public async Task <Student?> SearchStudentById(int StudentId) 
-        {
-           
-            return await StudentDetails().AsNoTracking().
-                FirstOrDefaultAsync(s => s.StudentID == StudentId);
+        // Search student
+        public async Task<List<Student>> SearchStudent
+            (int? studentId = null,string? name = null,string? department = null,string? skill = null , string? specialty = null )
+          {
+            var query = StudentDetails().AsNoTracking();
+
+            // Search by Student ID
+            if (studentId != null)
+            {
+                query = query.Where(s => s.StudentID == studentId);
+            }
+
+            // Search by Name
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                query = query.Where(s =>
+                    EF.Functions.Like(s.Name, $"%{name}%"));
+            }
+
+            // Search by Department
+            if (!string.IsNullOrWhiteSpace(department))
+            {
+                query = query.Where(s =>
+                    EF.Functions.Like(s.Department.Name, $"%{department}%"));
+            }
+
+            // Search by Skill
+            if (!string.IsNullOrWhiteSpace(skill))
+            {
+                query = query.Where(s =>
+                    s.Skills.Any(ss =>
+                        EF.Functions.Like(ss.Skill.Name, $"%{skill}%")));
+            }
+
+            // Search by Specialty
+            if (!string.IsNullOrWhiteSpace(specialty))
+            {
+                query = query.Where(s =>
+                    s.Specialty != null &&
+                    EF.Functions.Like(s.Specialty.Name, $"%{specialty}%"));
+            }
+
+            return await query.ToListAsync();
         }
-
-        // Search student by Name
-
-         public async Task <List<Student>> SearchStudentsByName(string StrSearch)  
-         {
-                 return await StudentDetails().AsNoTracking().
-                 Where(s => EF.Functions.Like(s.Name, $"%{StrSearch}%")).ToListAsync();
-         }
-
-        //Search student by skills name 
-        public async Task< List<Student> > GetStudentsBySkillName(string StrSearch) 
-        {    
-            return await StudentDetails().AsNoTracking().
-           Where(st => st.Skills.Any(ss => EF.Functions.Like(ss.Skill.Name, $"%{StrSearch}%"))).ToListAsync();
-        }
-
-        //Search student by Department  name
-        public async Task<List<Student>> GetStudentByDepartmentName(string StrSearch) 
-        {
-            return await StudentDetails().AsNoTracking().
-            Where(s =>  EF.Functions.Like(s.Department.Name, $"%{StrSearch}%")).ToListAsync();
-        }
-        // Search student by specialty name
-        public async Task<List<Student>> GetStudentsBySpecialtyName(string StrSearch) 
-        {
-            return await StudentDetails().AsNoTracking().
-            Where(s => s.Specialty != null && EF.Functions.Like(s.Specialty.Name, $"%{StrSearch}%")).ToListAsync();
-        }
-
+      
         //add student 
         public async Task AddStudent(Student newStudent)
         {
@@ -150,7 +160,7 @@ namespace Project.Repositories
            _context.StudentSkills.Remove(StudentSkill);
             await _context.SaveChangesAsync();
         }
-        public async Task<bool> DeleteStudentSkill(int studentId, string studentSkillId)
+        public async Task<bool> DeleteStudentSkill(int studentId, int studentSkillId)
         {
             var studentSkill = await _context.StudentSkills
                 .FirstOrDefaultAsync(s => s.StudentID == studentId && s.StudentSkillID == studentSkillId);
@@ -263,7 +273,7 @@ namespace Project.Repositories
         }
 
         // show a evaluation for  Opportunity by OpportunityId
-        public async Task<StudentEvaluation?> GetEvaluationStudent(int TrainingPlacementId, int studentId)
+        public async Task<StudentEvaluation?> GetEvaluationStudent(int TrainingPlacementId , int studentId)
         {
             return await _context.StudentEvaluations.Include(se => se.TrainingPlacement).
            FirstOrDefaultAsync(se => se.TrainingPlacement.PlacementID == TrainingPlacementId && se.TrainingPlacement.StudentID== studentId);   
@@ -275,18 +285,29 @@ namespace Project.Repositories
             Where(se => se.TrainingPlacement.StudentID == studentId).ToListAsync();
         }
 
-        // Show attendance records for the training opportunities you participated in
-        public async Task <List<AttendanceRecord>> GetAllAttendanceRecordByStudentId(int studentId)
+
+
+        // View the attendance schedule 
+        public async Task<List<AttendanceRecord>> GetAttendanceRecord(int studentId, int? placementId = null)
         {
-            return await _context.AttendanceRecords.Include(ar => ar.TrainingPlacement).
-            Where(se => se.TrainingPlacement.StudentID == studentId).ToListAsync();
+            var query = _context.AttendanceRecords
+                .Include(ar => ar.TrainingPlacement)
+                .AsQueryable();
+
+            // Filter by Student
+            query = query.Where(ar =>
+                ar.TrainingPlacement.StudentID == studentId);
+
+            // Filter by Placement if exists
+            if (placementId != null)
+            {
+                query = query.Where(ar =>
+                    ar.TrainingPlacement.PlacementID == placementId);
+            }
+
+            return await query.ToListAsync();
         }
-        // View the attendance schedule for a specific training program
-        public async Task<List<AttendanceRecord>> GetAttendanceRecord(int PlacementID , int StudentId )
-        {
-            return await _context.AttendanceRecords.Include(ar => ar.TrainingPlacement).
-            Where(se => se.TrainingPlacement.PlacementID == PlacementID && se.TrainingPlacement.StudentID == StudentId).ToListAsync();
-        }
+
         // remove  student image 
         private void DeleteImage(string imgPath)
         {
@@ -350,24 +371,6 @@ namespace Project.Repositories
             }
             return false;
         }
-        // Get Active Students 
-        public async Task<List<Student>> GetActiveStudents() 
-        {
-          return await StudentDetails().AsNoTracking().
-                 Where(s => s.Status == "Active").ToListAsync();  
-        }
-        // Get InActive  Students
-        public async Task<List<Student>> GetInActiveStudents()
-        {
-            return await StudentDetails().AsNoTracking().
-                   Where(s => s.Status == "InActive").ToListAsync();
-        }
-        //Get Graduated Students
-        public async Task<List<Student>> GetGraduatedStudents()
-        {
-            return await StudentDetails().AsNoTracking().
-                   Where(s => s.Status == "Graduated").ToListAsync();
-        }
         //delete report File  
         private void DeleteReportFile(string ReportPath)
         {
@@ -375,35 +378,23 @@ namespace Project.Repositories
             var filePath = Path.Combine(_environment.WebRootPath, ReportPath.TrimStart('/'));
             if (File.Exists(filePath)) { File.Delete(filePath); }
         }
-        // Get approved applications for a student by student ID
-        public async Task <List<TrainingApplication>> GetApprovedApplicationsByStudentId(int studentId ) 
-        { 
-           return await _context.TrainingApplications.Include(tp=>tp.TrainingOpportunity).
-                AsNoTracking().Where(tp=> tp.StudentID == studentId && tp.Status== "Approved").ToListAsync();      
-        }
-        // Get pending applications for a student by student ID
-        public async Task<List<TrainingApplication>> GetPendingApplicationsByStudentId(int studentId)
+        // Get students By Status 
+        public async Task<List<Student>> GetStudentsByStatus(StudentStatus status)
         {
-            return await _context.TrainingApplications.Include(tp => tp.TrainingOpportunity).
-                 AsNoTracking().Where(tp => tp.StudentID == studentId && tp.Status == "Pending").ToListAsync();
+            return await StudentDetails()
+                .AsNoTracking()
+                .Where(s => s.Status == status)
+                .ToListAsync();
         }
-
-        // Get rejected applications for a student by student ID
-        public async Task<List<TrainingApplication>> GetRejectedApplicationsByStudentId(int studentId)
-        {
-            return await _context.TrainingApplications.Include(tp => tp.TrainingOpportunity).
-                 AsNoTracking().Where(tp => tp.StudentID == studentId && tp.Status == "rejected").ToListAsync();
-        }
-        public async Task<List<TrainingApplication>> GetApplicationsByStudentIdAndStatus(int studentId, string status)
+        // Get Application Training  By Status and student Id
+        public async Task<List<TrainingApplication>> GetApplicationsByStatus(int studentId, ApplicationStatus status)
         {
             return await _context.TrainingApplications
                 .Include(tp => tp.TrainingOpportunity)
                 .AsNoTracking()
-                .Where(tp => tp.StudentID == studentId && EF.Functions.Like(tp.Status, $"%{status}%"))
+                .Where(tp => tp.StudentID == studentId && tp.Status == status)
                 .ToListAsync();
-           
         }
-
 
     }
 }
