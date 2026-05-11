@@ -1,53 +1,280 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html class="light" dir="rtl" lang="ar">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Project</title>
-    <script type="importmap"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Project.styles.css" asp-append-version="true" />
+    <title>@ViewData["Title"] - بوابة التدريب الميداني</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Almarai', sans-serif; background-color: #f8f9fa; }
+        #mobile-overlay.active { display: block; }
+        #sidebar.active { transform: translateX(0); }
+    </style>
+    <script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                "secondary-fixed-dim":"#b5c8df","surface-container":"#edeeef","background":"#f8f9fa",
+                "surface-bright":"#f8f9fa","tertiary-fixed":"#cce5ff","on-background":"#191c1d",
+                "surface-container-lowest":"#ffffff","surface":"#f8f9fa","surface-container-high":"#e7e8e9",
+                "on-primary-fixed-variant":"#005141","on-secondary-fixed-variant":"#36485b",
+                "on-tertiary-fixed-variant":"#004b73","on-tertiary-fixed":"#001d31",
+                "surface-container-highest":"#e1e3e4","on-tertiary-container":"#004063",
+                "on-surface-variant":"#3c4a45","primary-container":"#1abc9c","on-primary":"#ffffff",
+                "secondary-fixed":"#d1e4fb","primary-fixed":"#6ff9d6","surface-dim":"#d9dadb",
+                "surface-variant":"#e1e3e4","surface-tint":"#006b58","surface-container-low":"#f3f4f5",
+                "tertiary-fixed-dim":"#92ccff","on-secondary-fixed":"#091d2e","inverse-surface":"#2e3132",
+                "secondary":"#4e6073","tertiary":"#006397","on-error":"#ffffff","primary-fixed-dim":"#4eddbb",
+                "on-secondary":"#ffffff","on-tertiary":"#ffffff","outline-variant":"#bbcac3",
+                "on-primary-fixed":"#002019","outline":"#6c7a75","on-secondary-container":"#526478",
+                "on-surface":"#191c1d","error-container":"#ffdad6","on-error-container":"#93000a",
+                "inverse-on-surface":"#f0f1f2","on-primary-container":"#004538","inverse-primary":"#4eddbb",
+                "tertiary-container":"#51aef2","secondary-container":"#cfe2f9","error":"#ba1a1a","primary":"#006b58"
+              },
+              "borderRadius": { "DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px" },
+              "spacing": {
+                "lg":"24px","xs":"4px","unit":"8px","md":"16px","xl":"32px",
+                "gutter":"20px","xxl":"48px","container-max":"1440px","sm":"8px"
+              },
+              "fontFamily": {
+                "body-md":["Almarai"],"button":["Almarai"],"h3":["Almarai"],
+                "label-caps":["Almarai"],"body-sm":["Almarai"],"h2":["Almarai"],
+                "body-lg":["Almarai"],"h1":["Almarai"]
+              },
+              "fontSize": {
+                "body-md":["16px",{"lineHeight":"1.5","fontWeight":"400"}],
+                "button":["16px",{"lineHeight":"1","fontWeight":"700"}],
+                "h3":["20px",{"lineHeight":"1.4","fontWeight":"700"}],
+                "label-caps":["12px",{"lineHeight":"1","letterSpacing":"0.05em","fontWeight":"700"}],
+                "body-sm":["14px",{"lineHeight":"1.5","fontWeight":"400"}],
+                "h2":["24px",{"lineHeight":"1.3","fontWeight":"700"}],
+                "body-lg":["18px",{"lineHeight":"1.6","fontWeight":"400"}],
+                "h1":["32px",{"lineHeight":"1.2","fontWeight":"800"}]
+              }
+            }
+          }
+        }
+    </script>
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">Project</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                    <partial name="_LoginPartial" />
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+<body class="bg-surface text-on-surface">
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - Project - <a asp-area="" asp-page="/Privacy">Privacy</a>
+    @* Mobile Overlay *@
+    <div class="hidden fixed inset-0 bg-black/50 z-40 transition-opacity duration-300 lg:hidden" id="mobile-overlay"></div>
+
+    @* ===== TopNavBar ===== *@
+    <header class="fixed top-0 left-0 z-50 flex items-center h-16 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md shadow-sm border-b border-slate-100 dark:border-slate-800 lg:right-[280px] right-0 px-4 md:px-6 justify-between">
+        <div class="flex items-center gap-sm lg:hidden">
+            <button class="p-2 text-slate-600 hover:bg-slate-100 rounded-lg" id="menu-toggle">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+            <div class="flex items-center gap-xs">
+                <div class="w-8 h-8 rounded bg-primary-container flex items-center justify-center">
+                    <span class="material-symbols-outlined text-white text-lg">school</span>
+                </div>
+                <span class="font-bold text-slate-900 text-sm hidden sm:block">@ViewData["PortalTitle"]</span>
+            </div>
+        </div>
+        <div class="flex-1 max-w-md mx-4 lg:mx-0">
+            <div class="relative flex items-center">
+                <span class="material-symbols-outlined absolute right-3 text-slate-400">search</span>
+                <input class="w-full pr-10 pl-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20"
+                       placeholder="@ViewData["SearchPlaceholder"]" type="text" />
+            </div>
+        </div>
+        <div class="flex items-center gap-md">
+            <span class="text-slate-700 dark:text-slate-200 font-bold text-sm hidden sm:block">@ViewData["UserName"]</span>
+            <div class="w-8 h-8 rounded-full overflow-hidden border-2 border-primary-container">
+                <img alt="User Profile"
+                     src="./images/Logos/logoBottomnavbar" />
+            </div>
+        </div>
+    </header>
+
+    @* ===== SideNavBar ===== *@
+    <aside class="fixed top-0 right-0 h-full w-[280px] z-[60] bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 shadow-xl transition-transform duration-300 translate-x-full lg:translate-x-0 flex flex-col" id="sidebar">
+        <div class="px-6 mb-8 pt-4">
+            <div class="flex justify-center mb-6">
+                <img alt="Spaceara Logo" class="w-auto object-contain h-24"
+                     src="../../../../images/Logos/NavBarLogo.svg"/>
+            </div>
+            <div class="flex items-center justify-between lg:justify-start gap-md mb-4 mt-4">
+                <div class="flex items-center gap-md">
+                    <div class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center">
+                        <span class="material-symbols-outlined text-white">school</span>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-900 dark:text-white">@ViewData["PortalTitle"]</h2>
+                        <p class="text-xs text-slate-500">@ViewData["PortalSubtitle"]</p>
+                    </div>
+                </div>
+                <button class="lg:hidden p-2 text-slate-400 hover:bg-slate-100 rounded-lg" id="close-menu">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+        </div>
+
+        <nav class="flex-1 px-4 space-y-1 overflow-y-auto">
+            @if ((string?)ViewData["UserType"] == "Institution")
+            {
+                @* ===== قائمة بوابة المؤسسة ===== *@
+                <a class="flex items-center gap-md px-4 py-3 rounded-xl bg-teal-50 text-teal-600 border-r-4 border-teal-500 transition-all hover:bg-teal-100/50 font-bold font-body-md text-body-md" href="/Student/Institution">
+                    <span class="material-symbols-outlined">dashboard</span>الرئيسية
+                </a>
+                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" href="#">
+                    <span class="material-symbols-outlined">explore</span>الفرص التدريبية
+                </a>
+                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" href="#">
+                    <span class="material-symbols-outlined">group</span>المتدربون
+                </a>
+                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" href="#">
+                    <span class="material-symbols-outlined">work</span>التدريب الحالي
+                </a>
+                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" href="#">
+                    <span class="material-symbols-outlined">manage_accounts</span>المشرفون
+                </a>
+                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" href="#">
+                    <span class="material-symbols-outlined">description</span>التقارير
+                </a>
+                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" href="#">
+                    <span class="material-symbols-outlined">grading</span>التقييمات
+                </a>
+                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" href="#">
+                    <span class="material-symbols-outlined">settings</span>الإعدادات
+                </a>
+            }
+            else if ((string?)ViewData["UserType"] == "University")
+            {
+                @* ===== قائمة بوابة الجامعة ===== *@
+                <a class="flex items-center gap-md px-4 py-3 rounded-xl bg-teal-50 text-teal-600 border-r-4 border-teal-500 transition-all hover:bg-teal-100/50 font-bold font-body-md text-body-md" href="/Student/Univirsity">
+                    <span class="material-symbols-outlined">dashboard</span>الرئيسية
+                </a>
+                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" href="#">
+                    <span class="material-symbols-outlined">explore</span>الفرص التدريبية
+                </a>
+                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" href="#">
+                    <span class="material-symbols-outlined">school</span>الطلاب
+                </a>
+                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" href="#">
+                    <span class="material-symbols-outlined">business</span>المؤسسات
+                </a>
+                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" href="#">
+                    <span class="material-symbols-outlined">manage_accounts</span>المشرفون
+                </a>
+                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" href="#">
+                    <span class="material-symbols-outlined">description</span>التقارير
+                </a>
+                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" href="#">
+                    <span class="material-symbols-outlined">grading</span>التقييمات
+                </a>
+                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" href="#">
+                    <span class="material-symbols-outlined">settings</span>الإعدادات
+                </a>
+            }
+            else
+            {
+                @* ===== قائمة بوابة الطالب (الافتراضية) ===== *@
+                <a class="flex items-center gap-md px-4 py-3 rounded-xl bg-teal-50 text-teal-600 border-r-4 border-teal-500 transition-all hover:bg-teal-100/50 font-bold font-body-md text-body-md" href="/Student/Index">
+                    <span class="material-symbols-outlined">dashboard</span>الرئيسية
+                </a>
+                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" href="#">
+                    <span class="material-symbols-outlined">explore</span>الفرص التدريبية
+                </a>
+                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" href="#">
+                    <span class="material-symbols-outlined">assignment</span>طلباتي
+                </a>
+                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" href="#">
+                    <span class="material-symbols-outlined">work</span>التدريب الحالي
+                </a>
+                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" href="#">
+                    <span class="material-symbols-outlined">event_available</span>الحضور
+                </a>
+                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" href="#">
+                    <span class="material-symbols-outlined">description</span>التقارير
+                </a>
+                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" href="#">
+                    <span class="material-symbols-outlined">grading</span>التقييمات
+                </a>
+                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" href="#">
+                    <span class="material-symbols-outlined">person</span>الملف الشخصي
+                </a>
+                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" href="#">
+                    <span class="material-symbols-outlined">settings</span>الإعدادات
+                </a>
+            }
+        </nav>
+
+        <div class="p-4 border-t border-slate-100">
+            <a class="flex items-center gap-md px-4 py-3 rounded-xl text-error hover:bg-error-container/10 transition-transform hover:translate-x-1 font-body-md text-body-md" href="#">
+                <span class="material-symbols-outlined">logout</span>تسجيل الخروج
+            </a>
+        </div>
+    </aside>
+
+    @* ===== Main Content (RenderBody) ===== *@
+    <main class="lg:mr-[280px] pt-20 md:pt-24 pb-24 lg:pb-12 px-4 md:px-6 min-h-screen">
+        @RenderBody()
+    </main>
+
+    @* ===== Mobile Bottom Navigation ===== *@
+    <nav class="fixed bottom-0 left-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-lg flex justify-around items-center px-4 py-3 pb-safe border-t border-slate-100 dark:border-slate-800 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] rounded-t-2xl hidden">
+        <a class="flex flex-col items-center justify-center text-teal-600 bg-teal-50 rounded-xl px-4 py-1 scale-110 duration-300" href="#">
+            <span class="material-symbols-outlined">home</span>
+            <span class="text-[10px] font-bold uppercase tracking-wider mt-1">الرئيسية</span>
+        </a>
+        <a class="flex flex-col items-center justify-center text-slate-400 active:bg-slate-100 px-4" href="#">
+            <span class="material-symbols-outlined">work_outline</span>
+            <span class="text-[10px] font-bold uppercase tracking-wider mt-1">الميدان</span>
+        </a>
+        <a class="flex flex-col items-center justify-center text-slate-400 active:bg-slate-100 px-4" href="#">
+            <span class="material-symbols-outlined">notifications_none</span>
+            <span class="text-[10px] font-bold uppercase tracking-wider mt-1">تنبيهات</span>
+        </a>
+        <a class="flex flex-col items-center justify-center text-slate-400 active:bg-slate-100 px-4" href="#">
+            <span class="material-symbols-outlined">account_circle</span>
+            <span class="text-[10px] font-bold uppercase tracking-wider mt-1">الملف</span>
+        </a>
+    </nav>
+
+    @* ===== Footer ===== *@
+    <footer class="lg:mr-[280px] w-full flex flex-col md:flex-row justify-between items-center px-8 py-8 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 space-y-4 md:space-y-0 text-center md:text-right">
+        <div class="text-[10px] md:text-xs font-normal text-slate-500">University Field Training Portal. All Rights Reserved 2024 ©</div>
+        <div class="flex flex-wrap justify-center gap-4 md:gap-lg">
+            <a class="text-slate-500 hover:text-teal-500 underline underline-offset-4 opacity-80 hover:opacity-100 text-[10px] md:text-xs" href="#">Technical Support</a>
+            <a class="text-slate-500 hover:text-teal-500 underline underline-offset-4 opacity-80 hover:opacity-100 text-[10px] md:text-xs" href="#">Terms of Service</a>
+            <a class="text-slate-500 hover:text-teal-500 underline underline-offset-4 opacity-80 hover:opacity-100 text-[10px] md:text-xs" href="#">Privacy Policy</a>
         </div>
     </footer>
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-
+    @* ===== JavaScript ===== *@
+    <script>
+        const menuToggle = document.getElementById('menu-toggle');
+        const closeMenu = document.getElementById('close-menu');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('mobile-overlay');
+        const toggleSidebar = () => {
+            sidebar.classList.toggle('active');
+            sidebar.classList.toggle('translate-x-full');
+            overlay.classList.toggle('hidden');
+            overlay.classList.toggle('active');
+            document.body.classList.toggle('overflow-hidden');
+        };
+        menuToggle.addEventListener('click', toggleSidebar);
+        closeMenu.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+        const navLinks = sidebar.querySelectorAll('nav a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 1024) toggleSidebar();
+            });
+        });
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
