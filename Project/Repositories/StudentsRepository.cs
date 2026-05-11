@@ -34,18 +34,16 @@ namespace Project.Repositories
         {
             return await  StudentDetails().AsNoTracking().ToListAsync();  
         }
+        // get student By Id 
+        public async Task<Student?> GetStudentById(int studentId) {
 
+            return await StudentDetails().FirstOrDefaultAsync(s => s.StudentID == studentId);
+        }
         // Search student
         public async Task<List<Student>> SearchStudent
-            (int? studentId = null,string? name = null,string? department = null,string? skill = null , string? specialty = null )
+            (string? name = null,string? department = null,string? skill = null , string? specialty = null )
           {
             var query = StudentDetails().AsNoTracking();
-
-            // Search by Student ID
-            if (studentId != null)
-            {
-                query = query.Where(s => s.StudentID == studentId);
-            }
 
             // Search by Name
             if (!string.IsNullOrWhiteSpace(name))
@@ -394,6 +392,18 @@ namespace Project.Repositories
                 .AsNoTracking()
                 .Where(tp => tp.StudentID == studentId && tp.Status == status)
                 .ToListAsync();
+        }
+
+        // Soft Delete  Make student Not Active 
+        public async Task<bool> DeleteSoftAsync(int StudentId)
+        {
+            var student = await _context.Students.FirstOrDefaultAsync(s => s.StudentID == StudentId);
+            if (student == null)
+                return false;
+            student.Status = StudentStatus.Inactive;
+            await _context.SaveChangesAsync();
+            return true;
+
         }
 
     }
