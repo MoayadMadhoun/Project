@@ -103,7 +103,7 @@ namespace Project.Repositories
                     await DeleteAllStudentReportByStudentId(id, false);
                     _context.Students.Remove(Student);
                     await _context.SaveChangesAsync();
-                    DeleteImage(Student.ProfileImagePath );
+                 DeleteImage(Student.ProfileImagePath ); 
                     DeleteCvFile(Student.CVPath);
                     return true;
         }
@@ -307,14 +307,14 @@ namespace Project.Repositories
         }
 
         // remove  student image 
-        private void DeleteImage(string imgPath)
+        private void DeleteImage(string? imgPath)
         {
             if (string.IsNullOrEmpty(imgPath)) return;
             var filePath = Path.Combine(_environment.WebRootPath, imgPath.TrimStart('/'));
             if (File.Exists(filePath)) { File.Delete(filePath); }
         }
         // Delete Cv File
-        private void DeleteCvFile(string CvPath)
+        private void DeleteCvFile(string? CvPath)
         {
             if (string.IsNullOrEmpty(CvPath)) return;
             var filePath = Path.Combine(_environment.WebRootPath, CvPath.TrimStart('/'));
@@ -361,6 +361,7 @@ namespace Project.Repositories
             var StudentReport = await  _context.StudentReports.FirstOrDefaultAsync(sr => sr.ReportID == id);
             if (StudentReport != null )
             {
+                
                  DeleteReportFile(StudentReport.FilePath);
                 _context.StudentReports.Remove(StudentReport);
                 await _context.SaveChangesAsync();
@@ -370,7 +371,7 @@ namespace Project.Repositories
             return false;
         }
         //delete report File  
-        private void DeleteReportFile(string ReportPath)
+        private void DeleteReportFile(string? ReportPath)
         {
             if (string.IsNullOrEmpty(ReportPath)) return;
             var filePath = Path.Combine(_environment.WebRootPath, ReportPath.TrimStart('/'));
