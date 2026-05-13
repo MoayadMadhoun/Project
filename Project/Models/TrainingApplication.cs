@@ -9,13 +9,15 @@ namespace Project.Models
         public int ApplicationID { get; set; }
         //OpportunityID Fk
         [Required(ErrorMessage= "Training opportunity is required")]
-        [ForeignKey(nameof(OpportunityID))]
+        
         public int OpportunityID { get; set; }
+        [ForeignKey(nameof(OpportunityID))]
         public TrainingOpportunity TrainingOpportunity { get; set; }= new TrainingOpportunity();
         //StudentID FK
         [Required(ErrorMessage = "Student is required")]
-        [ForeignKey(nameof(StudentID))]
+        
         public int StudentID { get; set; }
+        [ForeignKey(nameof(StudentID))]
         public Student Student { get; set; }=new Student();
 
         public DateTime AppliedAt { get; set; } = DateTime.Now;
@@ -31,8 +33,9 @@ namespace Project.Models
         [Column(TypeName = "nvarchar(50)")]
         public Decision DepartmentDecision { get; set; } = Decision.Pending ;
         //
-        [ForeignKey(nameof(DepartmentHeadID))]
+        
         public string? DepartmentHeadID { get; set; }
+        [ForeignKey(nameof(DepartmentHeadID))]
         public AspNetUser? DepartmentHead { get; set; }
         //
   
@@ -42,8 +45,9 @@ namespace Project.Models
         [Column(TypeName = "nvarchar(50)")]
         public Decision UniversityAdminDecision { get; set; } = Decision.Pending ;
         //
-        [ForeignKey(nameof(UniversityAdminID))]
+        
         public string? UniversityAdminID { get; set; }
+        [ForeignKey(nameof(UniversityAdminID))]
         public AspNetUser? UniversityAdmin { get; set; }
         //
         public DateTime? UniversityAdminReviewedAt { get; set; }
@@ -52,8 +56,9 @@ namespace Project.Models
         [Column(TypeName = "nvarchar(50)")]
         public Decision InstitutionDecision { get; set; } =  Decision.Pending ;
         //
-        [ForeignKey(nameof(InstitutionOfficerID))]
+       
         public string? InstitutionOfficerID { get; set; }
+        [ForeignKey(nameof(InstitutionOfficerID))]
         public AspNetUser? InstitutionOfficer { get; set; }
         //
         public DateTime? InstitutionReviewedAt { get; set; }

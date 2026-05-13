@@ -31,17 +31,20 @@ namespace Project.Models
         }
         //DeptID FK
         [Required(ErrorMessage = "Department is required")]
-        [ForeignKey(nameof(DepartmentID))]
+        
         public int DepartmentID { get; set; }
+        [ForeignKey(nameof(DepartmentID))]
         public Department Department { get; set; }= new Department();   
         //SpecialtyID Fk
-        [ForeignKey(nameof(SpecialtyID))]
+        
         public int? SpecialtyID { get; set; }
+        [ForeignKey(nameof(SpecialtyID))]
         public Specialty? Specialty { get; set; }
         //UserID FK
         [Required(ErrorMessage = "User account is required")]
-        [ForeignKey(nameof(UserID))]
+        
         public string UserID { get; set; } = string.Empty;
+        [ForeignKey(nameof(UserID))]
         public AspNetUser User { get; set; }=new AspNetUser();  
 
         public ICollection<StudentSkill> Skills { get; set; } = new HashSet<StudentSkill>();                    

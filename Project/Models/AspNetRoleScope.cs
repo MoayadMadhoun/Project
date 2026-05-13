@@ -9,24 +9,29 @@ namespace Project.Models
         [Key]
         public int UserRoleScopeID { get; set; }
         //UserID FK
-        [ForeignKey(nameof(UserID))]
+        
         public string UserID { get; set; } = string.Empty;
+        [ForeignKey(nameof(UserID))]
         public AspNetUser User { get; set; } = new AspNetUser();
         //RoleID FK
-        [ForeignKey(nameof(RoleID))]
+       
         public string RoleID { get; set; } = string.Empty;
+        [ForeignKey(nameof(RoleID))]
         public IdentityRole Role { get; set; } = new IdentityRole();
         //UniID FK
-        [ForeignKey(nameof(UniversityID))]
+        
         public int UniversityID { get; set; }
+        [ForeignKey(nameof(UniversityID))]
         public University University { get; set; } = new University();
         //DeptID FK
-        [ForeignKey(nameof(DepartmentID))]
+        
         public int DepartmentID { get; set; }
+        [ForeignKey(nameof(DepartmentID))]
         public Department Department { get; set; } = new Department();
         //InstitID FK
+        
+        public int InstitutionID { get; set; }
         [ForeignKey(nameof(InstitutionID))]
-        public int InstitutionID { get; set; } 
         public TrainingInstitution TrainingInstitution { get; set; } = new TrainingInstitution();
         public bool IsActive {  get; set; }
     }

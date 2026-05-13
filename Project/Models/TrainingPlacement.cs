@@ -10,36 +10,43 @@ namespace Project.Models
         public int PlacementID { get; set; }
         //OpportunityID FK
         [Required(ErrorMessage= "Training opportunity is required") ]
-        [ForeignKey(nameof(OpportunityID))]
+        
         public int OpportunityID { get; set; }
+        [ForeignKey(nameof(OpportunityID))]
         public TrainingOpportunity TrainingOpportunity { get; set; }= new TrainingOpportunity();
         //TrainingApplication FK
         [Required(ErrorMessage = "Training application is required")]
-        [ForeignKey(nameof(ApplicationID))]
+        
         public int ApplicationID { get; set; }
+        [ForeignKey(nameof(ApplicationID))]
         public TrainingApplication TrainingApplication { get; set; } = new TrainingApplication();   
         //StudentID FK
         [Required(ErrorMessage = "Student is required")]
-        [ForeignKey(nameof(StudentID))]
+        
         public int StudentID { get; set; }
+        [ForeignKey(nameof(StudentID))]
         public Student Student { get; set; } = new Student();
         //InstitutionID FK
         [Required(ErrorMessage = "Institution opportunity is required")]
-        [ForeignKey(nameof(InstitutionID))]
+        
         public int InstitutionID { get; set; }
+        [ForeignKey(nameof(InstitutionID))]
         public TrainingInstitution TrainingInstitution { get; set; } = new TrainingInstitution();
         //TermID FK
         [Required(ErrorMessage = "Training Term is required")]
-        [ForeignKey(nameof(TermID))]
+        
         public int TermID { get; set; }
+        [ForeignKey(nameof(TermID))]
         public TrainingTerm TrainingTerm { get; set; } = new TrainingTerm();
         //
-        [ForeignKey(nameof(UniversitySupervisorID))]
+        
         public string? UniversitySupervisorID { get; set; }
+        [ForeignKey(nameof(UniversitySupervisorID))]
         public AspNetUser? UniversitySupervisor { get; set; }
         //
-        [ForeignKey(nameof(InstitutionSupervisorID))]
+        
         public string? InstitutionSupervisorID {get; set;}
+        [ForeignKey(nameof(InstitutionSupervisorID))]
         public AspNetUser? InstitutionSupervisor { get; set; }
         [Required(ErrorMessage = "Start date is required")]
         public DateTime StartDate { get; set; }

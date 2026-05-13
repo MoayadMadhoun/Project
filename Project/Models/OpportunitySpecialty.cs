@@ -9,13 +9,15 @@ namespace Project.Models
         public int OpportunitySpecialtyID { get; set; }
         //OpportunityID FK
         [Required(ErrorMessage = "Training opportunity is required")]
-        [ForeignKey(nameof(OpportunityID))]
+        
         public int OpportunityID { get; set; }
+        [ForeignKey(nameof(OpportunityID))]
         public TrainingOpportunity TrainingOpportunity { get; set; } = new TrainingOpportunity();   
         //SpecialtyID FK    
         [Required(ErrorMessage = "Specialty is required")]
-        [ForeignKey(nameof(SpecialtyID))]
+        
         public int SpecialtyID { get; set; }
+        [ForeignKey(nameof(SpecialtyID))]
         public Specialty Specialty { get; set; } = new Specialty();
     }
 }

@@ -15,13 +15,15 @@ namespace Project.Models
         }
         //StudentID FK
         [Required(ErrorMessage="Student is required")]
-        [ForeignKey(nameof(StudentID))]
+        
         public int StudentID { get; set; }
+        [ForeignKey(nameof(StudentID))]
         public Student Student { get; set; }= new Student();
         //SkillID FK
         [Required(ErrorMessage = "Skill is required")]
-        [ForeignKey(nameof(SkillID))]
+       
         public int SkillID { get; set; }
+        [ForeignKey(nameof(SkillID))]
         public Skill Skill { get; set; }=new Skill();
 
     }

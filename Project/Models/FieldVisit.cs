@@ -8,12 +8,14 @@ namespace Project.Models
         [Key]
         public int VisitID { get; set; }
         [Required(ErrorMessage = "Placement is required")]
-        [ForeignKey(nameof(PlacementID))]
+        
         public int PlacementID { get; set; }
+        [ForeignKey(nameof(PlacementID))]
         public TrainingPlacement TrainingPlacement { get; set; }= new TrainingPlacement();
         [Required(ErrorMessage = "University supervisor is required")]
-        [ForeignKey(nameof(UniversitySupervisorID))]
+        
         public string UniversitySupervisorID { get; set; }=string.Empty;
+        [ForeignKey(nameof(UniversitySupervisorID))]
         public AspNetUser UniversitySupervisor { get; set; }=new AspNetUser();
         [Required(ErrorMessage = "Visit date is required")]
         public DateTime VisitDate { get; set; }

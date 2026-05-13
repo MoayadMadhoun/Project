@@ -9,14 +9,15 @@ namespace Project.Models
         public int ReportID { get; set; }
 
         [Required(ErrorMessage = "Placement is required")]
-        [ForeignKey(nameof(PlacementID))]
+        
         public int PlacementID { get; set; }
+        [ForeignKey(nameof(PlacementID))]
         public TrainingPlacement Placement { get; set; } = new TrainingPlacement(); 
 
         [Required(ErrorMessage = "Student is required")]
-        [ForeignKey(nameof(StudentID))]
+        
         public int StudentID { get; set; }
-
+        [ForeignKey(nameof(StudentID))]
         public Student Student { get; set; }= new Student();
 
         [Column(TypeName = "nvarchar(50)")]
@@ -47,8 +48,9 @@ namespace Project.Models
         }
 
         public string? UniversitySupervisorID { get; set; }
-        [ForeignKey(nameof(UniversitySupervisorID))]
+        
         public AspNetUser? UniversitySupervisor { get; set; }
+        [ForeignKey(nameof(UniversitySupervisorID))]
 
         [MaxLength(1000, ErrorMessage = "Review notes cannot be more than 1000 characters")]
         public string? ReviewNotes { get; set; }

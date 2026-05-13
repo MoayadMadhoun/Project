@@ -13,8 +13,9 @@ namespace Project.Models
         public string Name { get; set; }  = string.Empty;
         public bool IsActive { get; set; }
         [Required(ErrorMessage="University is required")]
-        [ForeignKey(nameof(UniversityID))]
+        
         public int UniversityID { get; set; }
+        [ForeignKey(nameof(UniversityID))]
         public University University { get; set; }= new University();
 
         public ICollection<Student> Students { get; set; }=new HashSet<Student>();
