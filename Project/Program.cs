@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Project.Data;
 using Project.Models;
+using Project.Repository;
+using Project.Repostory;
 
 namespace Project
 {
@@ -22,7 +24,8 @@ namespace Project
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultUI()
                 .AddDefaultTokenProviders();
-
+            builder.Services.AddScoped<TrainingInstitutionRepository>();
+            builder.Services.AddScoped<UniversityRepository>();
             builder.Services.AddRazorPages();
 
             var app = builder.Build();

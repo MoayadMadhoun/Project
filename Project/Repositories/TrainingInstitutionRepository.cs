@@ -207,14 +207,23 @@ namespace Project.Repository
 
 
         }
+        //Get Applications for Institution
+        public IQueryable<TrainingApplication> GetApplicationsForInstitution(int InstituationID)
+        {
+            return _dbContext.TrainingApplications
+                .Include(a => a.Student)
+                .ThenInclude(s => s.Department)
+                .ThenInclude(d => d.University)
+                .Include(a => a.TrainingOpportunity)
+                .Where(a => a.TrainingOpportunity.InstitutionID == InstituationID)
+                .AsNoTracking();
+        }
 
 
 
 
-       
 
 
-        
 
 
     }
