@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Project.Models
 {
@@ -15,6 +16,11 @@ namespace Project.Models
         [MaxLength(100, ErrorMessage = "Category can't be more than 200 characters")]
         public string? Category { get; set; }
         public bool IsActive { get; set; }
+
+        [ForeignKey("Department")]
+        public int DepartmentID { get; set; }
+
+        public Department Department { get; set; }
 
         public ICollection<Student> Students { get; set; } = new HashSet<Student>();
         public ICollection<OpportunitySpecialty> OpportunitySpecialties { get; set; } = new HashSet<OpportunitySpecialty>();

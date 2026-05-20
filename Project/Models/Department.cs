@@ -18,6 +18,8 @@ namespace Project.Models
         [ForeignKey(nameof(UniversityID))]
         public University University { get; set; }= new University();
 
+        public ICollection<Specialty?> Specialties { get; set; }
+
         public ICollection<Student> Students { get; set; }=new HashSet<Student>();
 
     }
