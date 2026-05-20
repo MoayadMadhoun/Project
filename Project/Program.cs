@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Project.Data;
 using Project.Models;
+using Project.Repositories;
 using Project.Repository;
 using Project.Repostory;
 
@@ -26,6 +27,7 @@ namespace Project
                 .AddDefaultTokenProviders();
             builder.Services.AddScoped<TrainingInstitutionRepository>();
             builder.Services.AddScoped<UniversityRepository>();
+            builder.Services.AddScoped<StudentsRepository>();
             builder.Services.AddRazorPages();
 
             var app = builder.Build();
