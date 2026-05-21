@@ -1,0 +1,85 @@
+﻿
+
+
+
+body {
+        background-color: #f8f9fb;
+       
+}
+.card{
+    transition: all 0.3s ease;
+    background-color:#ffffff !important;
+}
+.card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12) !important;
+}
+
+.icon-circle {
+    width: 70px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin-bottom: 20px;
+}
+.btn-student {
+    background-color: #006b59 !important;
+    color :white;
+}
+.circle-institution {
+    background-color: rgba(245, 248, 253);
+}
+.circle-un {
+    background-color: rgba(235, 248, 254);
+}
+.circle-std {
+    background-color: rgba(232, 248, 245);
+}
+.ico-std {
+    color: rgba(8, 104, 81);
+
+}
+.ico-un {
+    color: rgba(21, 88, 154);
+}
+.ico-in {
+    color: rgba(86, 103, 118);
+}
+
+.input-icon {
+    position: relative;
+    width: 50%;
+}
+
+    .input-icon i {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: gray;
+    }
+
+a.ico-std {
+    text-decoration: none;
+    font-weight:bold;
+}
+
+    a.ico-std:hover {
+        text-decoration: underline;
+        font-weight: bolder;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+

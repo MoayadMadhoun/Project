@@ -1,0 +1,112 @@
+﻿* {
+    box-sizing: border-box;
+    caret-color: #0eb6bf;
+}
+:root {
+    direction: rtl;
+}
+
+body {
+    background-color: #f7f7f7;
+}
+
+.form-body {
+    background-color: #fff;
+    border-radius: 10px !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+    position: relative;
+}
+
+.btn-register {
+    background-color: #0eb6bf;
+    color: white;
+    text-align: center;
+    font-weight: bold;
+    box-shadow: 0 3px 3px #0a868c;
+    transition: .3s ease;
+}
+
+    .btn-register:hover {
+        background-color: rgba(7, 139, 141);
+        transform: translateY(-2px);
+        color: white;
+        text-align: center;
+        font-weight: bold;
+        box-shadow: 0 3px 3px #083440;
+        
+    }
+@property --angle {
+    syntax: '<angle>';
+    initial-value:0deg;
+    inherits:false;
+}
+.form-body::after, .form-body::before {
+    content: '';
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-image: conic-gradient(from var(--angle),rgba(7, 139, 141),#fff,rgba(7, 139, 141),#fff);
+    inset: 0;
+    z-index: -1;
+    padding: 4px;
+    animation: 6s spin linear infinite;
+    border-radius: 10px;
+}
+a{
+    text-decoration: none;
+    font-weight: bold;
+    color: #0eb6bf;
+
+}
+a:hover{
+    text-decoration:underline;
+    font-weight:bolder;
+    
+
+}
+
+.form-body::after {
+    filter: blur(14px);
+    opacity: 1;
+}
+@keyframes spin{
+    from{
+        --angle:0deg;
+    }
+    to{
+        --angle:360deg;
+    }
+}
+
+
+/*-----------------------Partial(Universty And Ininstituation)-------------------------------------------------*/
+.form-control:focus {
+    border: 1.5px solid #0eb6bf;
+    box-shadow: 0 2px 2px #0eb6bf !important;
+    outline: none;
+}
+
+.form-select:focus {
+    border: 1.5px solid #0eb6bf;
+    box-shadow: 0 2px 2px #0eb6bf !important;
+    outline: none;
+}
+
+.input-icon:focus-within i {
+    color: #0eb6bf;
+    font-size: 18px;
+}
+
+.input-icon {
+    position: relative;
+    width: 100%;
+}
+
+    .input-icon i {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        bottom: -10px;
+        transform: translateY(-50%);
+        color: gray;
+    }
