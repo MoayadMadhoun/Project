@@ -43,13 +43,6 @@ namespace Project.Repository
                 .Include(ti => ti.TrainingOpportunities)
                 .FirstOrDefaultAsync(ti => ti.InstituationID == InstituationID);
         }
-
-        public async Task<TrainingInstitution?> GetInstitutionWithUser(string userId)
-        {
-           return await _dbContext.TrainingInstitutions
-            .FirstOrDefaultAsync(i => i.UserID == userId);
-
-        } 
           
         //To Performance in Soft Delete { Take The University Without Include}
         public async Task<TrainingInstitution?> GetByIdModifyAsync(int InstituationID)

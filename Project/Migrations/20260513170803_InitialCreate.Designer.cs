@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Project.Data;
 
@@ -11,9 +12,11 @@ using Project.Data;
 namespace Project.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260513170803_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -211,10 +214,10 @@ namespace Project.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserRoleScopeID"));
 
-                    b.Property<int?>("DepartmentID")
+                    b.Property<int>("DepartmentID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("InstitutionID")
+                    b.Property<int>("InstitutionID")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsActive")
@@ -224,10 +227,7 @@ namespace Project.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("StudentID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UniversityID")
+                    b.Property<int>("UniversityID")
                         .HasColumnType("int");
 
                     b.Property<string>("UserID")
@@ -256,9 +256,6 @@ namespace Project.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AccountType")
                         .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -359,7 +356,6 @@ namespace Project.Migrations
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("AttendanceID");
@@ -429,7 +425,6 @@ namespace Project.Migrations
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("UniversitySupervisorID")
@@ -474,7 +469,6 @@ namespace Project.Migrations
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("RequestInstitutionID");
@@ -565,7 +559,6 @@ namespace Project.Migrations
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Url")
@@ -673,9 +666,6 @@ namespace Project.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("DepartmentID")
-                        .HasColumnType("int");
-
                     b.Property<string>("Description")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
@@ -689,8 +679,6 @@ namespace Project.Migrations
                         .HasColumnType("nvarchar(200)");
 
                     b.HasKey("SpecialtyID");
-
-                    b.HasIndex("DepartmentID");
 
                     b.HasIndex("Name")
                         .IsUnique();
@@ -730,9 +718,6 @@ namespace Project.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ProfileImagePath")
                         .HasColumnType("nvarchar(max)");
 
@@ -741,16 +726,12 @@ namespace Project.Migrations
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("StudentNumber")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<int>("UniversityID")
-                        .HasColumnType("int");
 
                     b.Property<string>("UserID")
                         .IsRequired()
@@ -764,8 +745,6 @@ namespace Project.Migrations
 
                     b.HasIndex("StudentNumber")
                         .IsUnique();
-
-                    b.HasIndex("UniversityID");
 
                     b.HasIndex("UserID")
                         .IsUnique();
@@ -812,12 +791,10 @@ namespace Project.Migrations
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("UniversitySupervisorID")
@@ -858,7 +835,6 @@ namespace Project.Migrations
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("StudentID")
@@ -874,7 +850,6 @@ namespace Project.Migrations
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("UniversitySupervisorID")
@@ -901,7 +876,6 @@ namespace Project.Migrations
 
                     b.Property<string>("Level")
                         .IsRequired()
-                        .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("SkillID")
@@ -933,7 +907,6 @@ namespace Project.Migrations
 
                     b.Property<string>("DepartmentDecision")
                         .IsRequired()
-                        .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("DepartmentHeadID")
@@ -948,7 +921,6 @@ namespace Project.Migrations
 
                     b.Property<string>("InstitutionDecision")
                         .IsRequired()
-                        .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("InstitutionNotes")
@@ -966,7 +938,6 @@ namespace Project.Migrations
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("StudentID")
@@ -978,7 +949,6 @@ namespace Project.Migrations
 
                     b.Property<string>("UniversityAdminDecision")
                         .IsRequired()
-                        .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("UniversityAdminID")
@@ -1049,8 +1019,7 @@ namespace Project.Migrations
 
                     b.HasKey("InstituationID");
 
-                    b.HasIndex("UserID")
-                        .IsUnique();
+                    b.HasIndex("UserID");
 
                     b.ToTable("TrainingInstitutions");
                 });
@@ -1095,7 +1064,6 @@ namespace Project.Migrations
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("TermID")
@@ -1163,7 +1131,6 @@ namespace Project.Migrations
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("TermID")
@@ -1227,7 +1194,6 @@ namespace Project.Migrations
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("StudentID")
@@ -1324,8 +1290,7 @@ namespace Project.Migrations
 
                     b.HasKey("UniversityID");
 
-                    b.HasIndex("UserID")
-                        .IsUnique();
+                    b.HasIndex("UserID");
 
                     b.ToTable("Universities");
                 });
@@ -1386,12 +1351,14 @@ namespace Project.Migrations
                     b.HasOne("Project.Models.Department", "Department")
                         .WithMany()
                         .HasForeignKey("DepartmentID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("Project.Models.TrainingInstitution", "TrainingInstitution")
                         .WithMany()
                         .HasForeignKey("InstitutionID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", "Role")
                         .WithMany()
@@ -1402,7 +1369,8 @@ namespace Project.Migrations
                     b.HasOne("Project.Models.University", "University")
                         .WithMany()
                         .HasForeignKey("UniversityID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("Project.Models.AspNetUser", "User")
                         .WithOne("RoleScope")
@@ -1576,17 +1544,6 @@ namespace Project.Migrations
                     b.Navigation("Specialty");
                 });
 
-            modelBuilder.Entity("Project.Models.Specialty", b =>
-                {
-                    b.HasOne("Project.Models.Department", "Department")
-                        .WithMany("Specialties")
-                        .HasForeignKey("DepartmentID")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Department");
-                });
-
             modelBuilder.Entity("Project.Models.Student", b =>
                 {
                     b.HasOne("Project.Models.Department", "Department")
@@ -1599,12 +1556,6 @@ namespace Project.Migrations
                         .WithMany("Students")
                         .HasForeignKey("SpecialtyID");
 
-                    b.HasOne("Project.Models.University", "University")
-                        .WithMany("Students")
-                        .HasForeignKey("UniversityID")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.HasOne("Project.Models.AspNetUser", "User")
                         .WithOne("Student")
                         .HasForeignKey("Project.Models.Student", "UserID")
@@ -1614,8 +1565,6 @@ namespace Project.Migrations
                     b.Navigation("Department");
 
                     b.Navigation("Specialty");
-
-                    b.Navigation("University");
 
                     b.Navigation("User");
                 });
@@ -1733,8 +1682,8 @@ namespace Project.Migrations
             modelBuilder.Entity("Project.Models.TrainingInstitution", b =>
                 {
                     b.HasOne("Project.Models.AspNetUser", "User")
-                        .WithOne("TrainingInstitution")
-                        .HasForeignKey("Project.Models.TrainingInstitution", "UserID")
+                        .WithMany()
+                        .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1877,8 +1826,8 @@ namespace Project.Migrations
             modelBuilder.Entity("Project.Models.University", b =>
                 {
                     b.HasOne("Project.Models.AspNetUser", "User")
-                        .WithOne("University")
-                        .HasForeignKey("Project.Models.University", "UserID")
+                        .WithMany()
+                        .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1890,16 +1839,10 @@ namespace Project.Migrations
                     b.Navigation("RoleScope");
 
                     b.Navigation("Student");
-
-                    b.Navigation("TrainingInstitution");
-
-                    b.Navigation("University");
                 });
 
             modelBuilder.Entity("Project.Models.Department", b =>
                 {
-                    b.Navigation("Specialties");
-
                     b.Navigation("Students");
                 });
 
@@ -1967,8 +1910,6 @@ namespace Project.Migrations
             modelBuilder.Entity("Project.Models.University", b =>
                 {
                     b.Navigation("Departments");
-
-                    b.Navigation("Students");
 
                     b.Navigation("TrainingOpportunityRequests");
                 });
