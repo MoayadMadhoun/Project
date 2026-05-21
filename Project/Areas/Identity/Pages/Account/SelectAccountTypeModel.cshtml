@@ -1,0 +1,378 @@
+﻿@page
+@model Project.Areas.Identity.Pages.Account.SelectAccountTypeModelModel
+@{
+    ViewData["Title"] = "اختر نوع حسابك";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --primary:        #006b58;
+            --primary-hover:  #005141;
+            --tertiary:       #006397;
+            --tertiary-hover: #004b73;
+            --secondary:      #4e6073;
+            --secondary-hover:#36485b;
+            --surface:        #f8f9fa;
+            --on-surface:     #191c1d;
+            --muted:          #64748b;
+            --border:         #e5e7eb;
+        }
+
+        body {
+            font-family: 'Almarai', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(160deg, #f0faf8 0%, #f8f9fa 40%, #eff6ff 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 5rem 1.5rem 4rem;
+            position: relative;
+            overflow-x: hidden;
+            color: var(--on-surface);
+        }
+
+        /* ── Background blobs ── */
+        body::before,
+        body::after {
+            content: '';
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        body::before {
+            top: -100px; right: -120px;
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(0,99,151,.09) 0%, transparent 70%);
+        }
+        body::after {
+            bottom: -120px; left: -120px;
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(26,188,156,.11) 0%, transparent 70%);
+        }
+
+        /* ── Back button ── */
+        .btn-back {
+            position: fixed;
+            top: 1.25rem;
+            right: 1.25rem;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,255,255,.85);
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            padding: 8px 14px;
+            font-family: 'Almarai', sans-serif;
+            font-size: .875rem;
+            font-weight: 700;
+            color: var(--muted);
+            cursor: pointer;
+            text-decoration: none;
+            backdrop-filter: blur(8px);
+            transition: color .2s, border-color .2s, box-shadow .2s;
+        }
+        .btn-back:hover {
+            color: var(--primary);
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(0,107,88,.12);
+        }
+        .btn-back .material-symbols-outlined { font-size: 1.15rem; }
+
+        /* ── Header ── */
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+            z-index: 1;
+            animation: fadeUp .5s cubic-bezier(.4,0,.2,1) both;
+        }
+        header h1 {
+            font-size: clamp(1.75rem, 5vw, 2.4rem);
+            font-weight: 800;
+            color: var(--on-surface);
+            letter-spacing: -.02em;
+            margin-bottom: .85rem;
+        }
+        header p {
+            font-size: 1rem;
+            color: var(--muted);
+            max-width: 540px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        /* ── Grid ── */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 1.75rem;
+            width: 100%;
+            max-width: 1080px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ── Card ── */
+        .account-card {
+            background: rgba(255,255,255,.97);
+            border: 1.5px solid var(--border);
+            border-radius: 18px;
+            padding: 2.5rem 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            box-shadow: 0 2px 16px rgba(0,0,0,.06);
+            transition: transform .32s cubic-bezier(.4,0,.2,1),
+                        box-shadow .32s cubic-bezier(.4,0,.2,1),
+                        border-color .32s,
+                        background .32s;
+            position: relative;
+            overflow: hidden;
+            animation: fadeUp .55s cubic-bezier(.4,0,.2,1) both;
+        }
+
+        /* Shimmer top border */
+        .account-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--card-accent), transparent);
+            opacity: 0;
+            transition: opacity .3s;
+            border-radius: 18px 18px 0 0;
+        }
+        .account-card:hover::before { opacity: 1; }
+
+        .account-card:hover {
+            transform: translateY(-10px) scale(1.01);
+            border-color: var(--card-accent);
+            box-shadow: 0 24px 48px var(--card-shadow), 0 4px 16px var(--card-shadow);
+        }
+        .account-card:active {
+            transform: translateY(-2px) scale(.98);
+        }
+
+        /* Icon */
+        .card-icon-wrap {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--card-icon-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            transition: background .3s, box-shadow .3s;
+        }
+        .account-card:hover .card-icon-wrap {
+            background: var(--card-accent);
+            box-shadow: 0 8px 24px var(--card-shadow);
+        }
+        .card-icon-wrap .material-symbols-outlined {
+            font-size: 2.75rem;
+            color: var(--card-accent);
+            font-variation-settings: 'FILL' 1, 'wght' 400;
+            transition: color .3s;
+        }
+        .account-card:hover .card-icon-wrap .material-symbols-outlined {
+            color: #fff;
+        }
+
+        /* Text */
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--card-accent);
+            margin-bottom: .65rem;
+        }
+        .card-desc {
+            font-size: .93rem;
+            color: var(--muted);
+            line-height: 1.75;
+            flex-grow: 1;
+            margin-bottom: 1.75rem;
+        }
+
+        /* CTA button inside card */
+        .card-btn {
+            width: 100%;
+            padding: .8rem 1rem;
+            border: 2px solid var(--card-accent);
+            border-radius: 10px;
+            background: transparent;
+            color: var(--card-accent);
+            font-family: 'Almarai', sans-serif;
+            font-size: .95rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background .3s, color .3s, box-shadow .3s;
+            pointer-events: none; /* card itself is the link */
+        }
+        .account-card:hover .card-btn {
+            background: var(--card-accent);
+            color: #fff;
+            box-shadow: 0 4px 16px var(--card-shadow);
+        }
+        .card-btn .material-symbols-outlined { font-size: 1.1rem; }
+
+        /* ── Card themes ── */
+        .card-student {
+            --card-accent:   #006b58;
+            --card-icon-bg:  rgba(26,188,156,.09);
+            --card-shadow:   rgba(0,107,88,.22);
+        }
+        .card-university {
+            --card-accent:   #006397;
+            --card-icon-bg:  rgba(81,174,242,.09);
+            --card-shadow:   rgba(0,99,151,.22);
+        }
+        .card-institution {
+            --card-accent:   #4e6073;
+            --card-icon-bg:  rgba(78,96,115,.09);
+            --card-shadow:   rgba(78,96,115,.22);
+        }
+
+        /* Staggered animation delays */
+        .account-card:nth-child(1) { animation-delay: .08s; }
+        .account-card:nth-child(2) { animation-delay: .18s; }
+        .account-card:nth-child(3) { animation-delay: .28s; }
+
+        /* ── Footer ── */
+        .footer-note {
+            margin-top: 3rem;
+            text-align: center;
+            color: var(--muted);
+            font-size: .93rem;
+            position: relative;
+            z-index: 1;
+            animation: fadeUp .55s .4s cubic-bezier(.4,0,.2,1) both;
+        }
+        .footer-note a {
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+            border-bottom: 2px solid rgba(0,107,88,.25);
+            padding-bottom: 1px;
+            transition: border-color .2s;
+        }
+        .footer-note a:hover { border-color: var(--primary); }
+
+        /* ── Keyframes ── */
+        @@keyframes fadeUp {
+            from { opacity: 0; transform: translateY(28px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── Responsive ── */
+        @@media (max-width: 640px) {
+            body { padding: 4rem 1rem 3rem; }
+            .cards-grid { gap: 1.25rem; }
+            .account-card { padding: 2rem 1.5rem; }
+        }
+
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined';
+            font-style: normal;
+            line-height: 1;
+            display: inline-block;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+
+    @* ── Back button ── *@
+    <a asp-page="/Index" class="btn-back">
+        <span class="material-symbols-outlined">arrow_forward</span>
+        العودة
+    </a>
+
+    @* ── Header ── *@
+    <header>
+        <h1>اختر نوع حسابك</h1>
+        <p>حدد نوع الحساب الذي ترغب في إنشائه لبدء رحلتك في نظام إدارة التدريب الميداني</p>
+    </header>
+
+    @* ── Cards ── *@
+    <div class="cards-grid">
+
+        @* Student *@
+        <a asp-area="Identity" asp-page="/Account/Register"
+           asp-route-role="Student"
+           class="account-card card-student">
+            <div class="card-icon-wrap">
+                <span class="material-symbols-outlined">school</span>
+            </div>
+            <h3 class="card-title">حساب طالب</h3>
+            <p class="card-desc">سجل كطالب للتقديم على الفرص التدريبية وبناء ملفك الشخصي المهني</p>
+            <div class="card-btn">
+                متابعة
+                <span class="material-symbols-outlined">arrow_back</span>
+            </div>
+        </a>
+
+        @* University *@
+        <a asp-area="Identity" asp-page="/Account/Register"
+           asp-route-role="University"
+           class="account-card card-university">
+            <div class="card-icon-wrap">
+                <span class="material-symbols-outlined">account_balance</span>
+            </div>
+            <h3 class="card-title">حساب جامعة</h3>
+            <p class="card-desc">سجل كجامعة لإدارة ترشيحات الطلاب والإشراف على الشراكات الأكاديمية</p>
+            <div class="card-btn">
+                متابعة
+                <span class="material-symbols-outlined">arrow_back</span>
+            </div>
+        </a>
+
+        @* Institution *@
+        <a asp-area="Identity" asp-page="/Account/Register" 
+           asp-route-role="Institution"
+           class="account-card card-institution">
+            <div class="card-icon-wrap">
+                <span class="material-symbols-outlined">business</span>
+            </div>
+            <h3 class="card-title">حساب جهة تدريب</h3>
+            <p class="card-desc">سجل كجهة تدريب لنشر الفرص التدريبية وإدارة المتدربين وعمليات التقييم</p>
+            <div class="card-btn">
+                متابعة
+                <span class="material-symbols-outlined">arrow_back</span>
+            </div>
+        </a>
+
+    </div>
+
+    @* ── Footer ── *@
+    <p class="footer-note">
+        لديك حساب بالفعل؟
+        <a asp-area="Identity" asp-page="/Account/Login">سجل دخولك من هنا</a>
+    </p>
+
+</body>
+</html>
