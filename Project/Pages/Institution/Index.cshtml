@@ -11,24 +11,23 @@
 }
 
 @functions {
-    public IHtmlContent SortingIcon(string Column, string CurrentSort)
+    public IHtmlContent SortingIcon(string column, string currentSort)
     {
-        if (CurrentSort == Column)
-        {
-            return new HtmlString("</span> <span class='material - symbols - outlined'>sort_up</span>");
-        }
-        if (CurrentSort == (Column + "_desc"))
-        {
-            return new HtmlString("</span> <span class='material - symbols - outlined'>sort_down</span>");
-        }
-        return new HtmlString("<</span> <span class='material - symbols - outlined'>arrow_down_up</span>");
+        if (currentSort == column)
+            return new HtmlString("<span><i class=\"bi bi-caret-up-fill\"></i></span>");
+
+        if (currentSort == column + "_desc")
+            return new HtmlString("<span><i class=\"bi bi-caret-down-fill\"></i></span>");
+
+        return new HtmlString("<span><i class=\"bi bi-arrow-down-up\"></i></span>");
     }
+
 }
 
 @* ===== Hero Section ===== *@
 <section class="mb-lg md:mb-xl relative rounded-xl md:rounded-xxl overflow-hidden bg-primary-container p-6 md:p-xl text-on-primary">
     <div class="relative z-10 max-w-2xl">
-        <h1 class="font-h1 text-2xl md:text-h1 mb-md">مرحباً بك، شركة التقنية المتقدمة</h1>
+        <h1 class="font-h1 text-2xl md:text-h1 mb-md">مرحباً بك،  @Model.CurrentInstitution.Name</h1>
         <p class="font-body-lg text-sm md:text-body-lg opacity-90 mb-lg md:mb-xl">
             أهلاً، يمكنك إدارة طلبات التدريب الواردة، متابعة المتدربين الحاليين، وتواصل مع الجامعة بكل سهولة.
         </p>
@@ -82,7 +81,7 @@
                 <button type="submit" class="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-xl text-slate-600 hover:bg-slate-50 transition-colors text-sm font-bold">
                     <span class="material-symbols-outlined text-lg">filter_list</span>تصفية
                 </button>
-                <select asp-for="UniversityId" class="form-select" asp-items="@Model.Universities">
+                <select asp-for="UniversityId" class="form-select flex items-center gap-2 px-5 py-2 bg-white border border-slate-200 rounded-xl text-slate-600 hover:bg-slate-50 transition-colors text-sm font-bold" asp-items="@Model.Universities">
                     <option value="0">
                         All Universities
                     </option>
