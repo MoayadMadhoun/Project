@@ -36,7 +36,7 @@ namespace Project.Repository
             .AsNoTracking()
             .ToListAsync();
 
-        public async Task<TrainingInstitution?> GetByIdAsync(int InstituationID)
+        public async Task<TrainingInstitution?> GetByIdAsync(int? InstituationID)
         {
             return await _dbContext
                 .TrainingInstitutions
@@ -44,6 +44,13 @@ namespace Project.Repository
                 .FirstOrDefaultAsync(ti => ti.InstituationID == InstituationID);
         }
 
+        public async Task<TrainingInstitution?> GetInstitutionWithUser(string userId)
+        {
+           return await _dbContext.TrainingInstitutions
+            .FirstOrDefaultAsync(i => i.UserID == userId);
+
+        } 
+          
         //To Performance in Soft Delete { Take The University Without Include}
         public async Task<TrainingInstitution?> GetByIdModifyAsync(int InstituationID)
         {
@@ -208,7 +215,7 @@ namespace Project.Repository
 
         }
         //Get Applications for Institution
-        public IQueryable<TrainingApplication> GetApplicationsForInstitution(int InstituationID)
+        public IQueryable<TrainingApplication> GetApplicationsForInstitution(int? InstituationID)
         {
             return _dbContext.TrainingApplications
                 .Include(a => a.Student)
