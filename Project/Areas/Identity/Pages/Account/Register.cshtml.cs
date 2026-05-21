@@ -195,7 +195,6 @@ namespace Project.Areas.Identity.Pages.Account
                     user.PhoneNumberConfirmed = true;
 
                     UserRole = "InstitutionTrainingOfficer";
-                    //await _userManager.AddToRoleAsync(user, "InstitutionTrainingOfficer");
 
                 }
                 if (AccountType == AccountType.University)
@@ -205,7 +204,6 @@ namespace Project.Areas.Identity.Pages.Account
                     user.PhoneNumberConfirmed = true;
 
                     UserRole = "UniversityTrainingAdmin";
-                    //await _userManager.AddToRoleAsync(user, "UniversityTrainingAdmin");
 
                 }
                 if (AccountType == AccountType.Student)
@@ -215,14 +213,9 @@ namespace Project.Areas.Identity.Pages.Account
                     user.PhoneNumberConfirmed = true;
 
                     UserRole = "Student";
-                    //await _userManager.AddToRoleAsync(user, "Student");
 
                 }
 
-                // var user = CreateUser();
-
-                //await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
-                //await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
@@ -286,7 +279,6 @@ namespace Project.Areas.Identity.Pages.Account
             }
 
 
-            // If we got this far, something failed, redisplay form
             return Page();
 
 
@@ -373,25 +365,7 @@ namespace Project.Areas.Identity.Pages.Account
             return student;
         }
 
-        //private async Task CreateAcocount(AccountType accountType, string userId)
-        //{
-
-        //    if (accountType == AccountType.Institution)
-        //    {
-        //        await CreateInstitutionAccount(userId);
-        //    }
-
-
-        //    if (accountType == AccountType.University)
-        //    {
-        //        await CreateUniversityAccount(userId);
-        //    }
-        //    if (accountType == AccountType.Student)
-        //    {
-        //        await CreateStudentAccount(userId);
-        //    }
-
-        //}
+     
 
         private async Task CreateRoleScope(
      AccountType type,
