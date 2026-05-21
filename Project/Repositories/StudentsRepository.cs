@@ -214,6 +214,13 @@ namespace Project.Repositories
             return false;
         }
 
+        public async Task AddAsync(Student student)
+        {
+
+            await _context.Students.AddAsync(student);
+            await _context.SaveChangesAsync();
+        }
+
         // delete  all Student Skills By student id 
         public async Task DeleteAllStudentSkill(int studentId, bool saveChange = true)
         {

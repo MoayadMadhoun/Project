@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Project.Data;
 using Project.Models;
@@ -18,14 +19,14 @@ namespace Project.Repostory
         public IQueryable<University> GetAllQueryable() => _dbContext
             .Universities.Include(u => u.Departments)
             .AsNoTracking();
-            
+
 
 
         // CRUD Methode ....
 
         public async Task<List<University>> GetAllAsync() => await _dbContext
             .Universities
-            .Include(u=>u.Departments)
+            .Include(u => u.Departments)
             .AsNoTracking()
             .ToListAsync();
 
@@ -49,9 +50,9 @@ namespace Project.Repostory
         {
             university.IsActive = true;
 
-           await _dbContext.Universities.AddAsync(university);
+            await _dbContext.Universities.AddAsync(university);
 
-           await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
 
         }
 
@@ -74,7 +75,7 @@ namespace Project.Repostory
             if (university is null)
                 return false;
 
-            if(!university.IsActive)
+            if (!university.IsActive)
                 return false;
 
 
@@ -93,10 +94,10 @@ namespace Project.Repostory
         {
             var university = await GetByIdModifyAsync(UniversityID);
 
-            if(university is not null )
+            if (university is not null)
             {
 
-                _dbContext.Universities.Remove(university); 
+                _dbContext.Universities.Remove(university);
                 await _dbContext.SaveChangesAsync();
             }
             else
@@ -127,7 +128,7 @@ namespace Project.Repostory
         }
 
         public async Task<IEnumerable<University>> GetByStatusAsync(bool isActive)
-        {           
+        {
 
             return await _dbContext.Universities
                 .Where(u => u.IsActive == isActive)
@@ -135,7 +136,7 @@ namespace Project.Repostory
 
         }
 
-        
+
         // Count 
         public async Task<int> GetTotalCountAsync()
         {
@@ -145,13 +146,13 @@ namespace Project.Repostory
 
         public async Task<int> GetActiveCountAsync()
         {
-            
-            return await _dbContext.Universities.CountAsync(u=>u.IsActive);
+
+            return await _dbContext.Universities.CountAsync(u => u.IsActive);
         }
 
         public async Task<int> GetInActiveCountAsync()
         {
-            return await _dbContext.Universities.CountAsync(u=>!u.IsActive);
+            return await _dbContext.Universities.CountAsync(u => !u.IsActive);
         }
 
 
@@ -168,6 +169,13 @@ namespace Project.Repostory
             return true;
         }
 
+
+        public async Task<SelectList> CreateUniversitySelectList()
+        {
+            return new SelectList(await GetByStatusAsync(true), "UniversityID", "Name");
+
+            //return new SelectList(await GetByStatusAsync(true), nameof(University.UniversityID), nameof(University.Name));
+        }
 
 
     }

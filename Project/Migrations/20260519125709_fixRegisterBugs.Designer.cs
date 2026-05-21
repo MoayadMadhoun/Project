@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Project.Data;
 
@@ -11,9 +12,11 @@ using Project.Data;
 namespace Project.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260519125709_fixRegisterBugs")]
+    partial class fixRegisterBugs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -211,10 +214,10 @@ namespace Project.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserRoleScopeID"));
 
-                    b.Property<int?>("DepartmentID")
+                    b.Property<int>("DepartmentID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("InstitutionID")
+                    b.Property<int>("InstitutionID")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsActive")
@@ -224,10 +227,7 @@ namespace Project.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("StudentID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UniversityID")
+                    b.Property<int>("UniversityID")
                         .HasColumnType("int");
 
                     b.Property<string>("UserID")
@@ -1386,12 +1386,14 @@ namespace Project.Migrations
                     b.HasOne("Project.Models.Department", "Department")
                         .WithMany()
                         .HasForeignKey("DepartmentID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("Project.Models.TrainingInstitution", "TrainingInstitution")
                         .WithMany()
                         .HasForeignKey("InstitutionID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", "Role")
                         .WithMany()
@@ -1402,7 +1404,8 @@ namespace Project.Migrations
                     b.HasOne("Project.Models.University", "University")
                         .WithMany()
                         .HasForeignKey("UniversityID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("Project.Models.AspNetUser", "User")
                         .WithOne("RoleScope")

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Project.Data;
 using Project.Extensions;
 using Project.Models;
@@ -53,18 +54,29 @@ namespace Project.Pages.Institution
                 {
                     return RedirectToPage("/Identity/Account/Login");
                 }
-                var scope = _dbContext.AspNetRoleScopes.FirstOrDefault(s => s.UserID == user.Id);
+
+                var scope = await _dbContext.AspNetRoleScopes.FirstOrDefaultAsync(s => s.UserID == user.Id);
+                        //.FirstOrDefaultAsync(s => s.UserID == user.Id && s.IsActive);
+
                 if (scope == null)
                 {
                     return RedirectToPage("/Identity/Account/Login");
                 }
-                int InstituationID = scope.InstitutionID;
-                CurrentInstitution = await _institutionRepo.GetByIdAsync(InstituationID);
+              //int InstituationID = scope.InstitutionID;
+
+                if (scope.InstitutionID == null)
+                {
+                    return RedirectToPage("/Identity/Account/Login");
+                }
+
+                int institutionId = scope.InstitutionID.Value;
+
+                CurrentInstitution = await _institutionRepo.GetByIdAsync(institutionId);
                 if (CurrentInstitution == null)
                 {
                     return RedirectToPage("/Index");
                 }
-                var query = _institutionRepo.GetApplicationsForInstitution(InstituationID);
+                var query = _institutionRepo.GetApplicationsForInstitution(institutionId);
 
                 var unis = await _universityRepo.GetAllAsync();
 
@@ -96,6 +108,6 @@ namespace Project.Pages.Institution
             {
                 return RedirectToPage("/Index");
             }
-        }      
+        }
     }
 }
