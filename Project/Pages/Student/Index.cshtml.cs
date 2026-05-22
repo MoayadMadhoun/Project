@@ -38,6 +38,7 @@ namespace Project.Pages.Student
             Active,
             Inactive
         }
+        public int TotalApplication { get; set; }
         public TrainingStatusEnum statusTrain { get; set; }
         public int CurrentCount => TrainingApplication?.Count() ?? 0;
         public int TotalCount => TrainingApplication?.TotalCount ?? 0;
@@ -72,7 +73,7 @@ namespace Project.Pages.Student
             userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (string.IsNullOrEmpty(userId)) { return RedirectToPage("/Identity/Account/Login"); }
-
+           
             student = await _studentRepo.GetStudentByUserId(userId);
             if (student == null) return NotFound();
 
@@ -80,8 +81,9 @@ namespace Project.Pages.Student
 
             ProfileStatus = await _studentRepo.GetProfileStatus(student.StudentID);
 
-            var trainingApplication = _studentRepo.GetTrainingApplications(student.StudentID).Where(
+            var trainingApplication =   _studentRepo.GetTrainingApplications(student.StudentID).Where(
                ta => ta.Status != Models.TrainingApplication.ApplicationStatus.Withdrawn);
+             TotalApplication = await trainingApplication.CountAsync() ;
             if (!string.IsNullOrEmpty(search))
             {
 
@@ -91,7 +93,7 @@ namespace Project.Pages.Student
 
             TrainingApplication = await PaginatedList<TrainingApplication>.CreateAsync(trainingApplication, PageSize, pageIndex);
 
-            OpportunitiesCount = _context.TrainingOpportunities.Count();// all TrainingOpportunities
+            OpportunitiesCount = await _context.TrainingOpportunities.CountAsync(); // all TrainingOpportunities
             bool participates = await HasActiveTrainingPlacement(student.StudentID);
             if (participates) statusTrain = TrainingStatusEnum.Active;
             else statusTrain = TrainingStatusEnum.Inactive;
