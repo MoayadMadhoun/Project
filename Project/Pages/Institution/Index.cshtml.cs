@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Shared;
 using Project.Data;
 using Project.Extensions;
 using Project.Models;
@@ -47,12 +48,12 @@ namespace Project.Pages.Institution
             {
                 if (User == null)
                 {
-                    return RedirectToPage("/Identity/Account/Login");
+                    return RedirectToPage("Identity/Account/Login");
                 }
                 var user = await _userManager.GetUserAsync(User);
                 if (user == null)
                 {
-                    return RedirectToPage("/Identity/Account/Login");
+                    return RedirectToPage("Identity/Account/Login");
                 }
 
                 var scope = await _dbContext.AspNetRoleScopes.FirstOrDefaultAsync(s => s.UserID == user.Id);
@@ -60,13 +61,14 @@ namespace Project.Pages.Institution
 
                 if (scope == null)
                 {
-                    return RedirectToPage("/Identity/Account/Login");
+                  
+                    return RedirectToPage("Identity/Account/Login");
                 }
               //int InstituationID = scope.InstitutionID;
 
                 if (scope.InstitutionID == null)
                 {
-                    return RedirectToPage("/Identity/Account/Login");
+                    return RedirectToPage("Identity/Account/Login");
                 }
 
                 int institutionId = scope.InstitutionID.Value;

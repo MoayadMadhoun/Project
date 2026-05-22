@@ -177,6 +177,17 @@ namespace Project.Repostory
             //return new SelectList(await GetByStatusAsync(true), nameof(University.UniversityID), nameof(University.Name));
         }
 
+        public IQueryable<TrainingApplication> GetApplicationsForUniversity(int? UniversityId)
+        {
+            return _dbContext.TrainingApplications
+                .Include(a => a.Student)
+                .ThenInclude(s => s.Department)
+                .ThenInclude(d => d.University.UniversityID== UniversityId)
+                .Include(a => a.TrainingOpportunity)
+                .ThenInclude(t=>t.TrainingInstitution)
+                .AsNoTracking();
+        }
+
 
     }
 }

@@ -69,7 +69,7 @@
 <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] overflow-hidden">
     <div class="p-4 md:p-lg border-b border-slate-100 flex justify-between items-center">
         <h3 class="font-h3 text-lg md:text-h3 text-slate-900">سجل الطلبات التدريبية</h3>
-        <button class="text-primary text-sm font-bold hover:underline">عرض الكل</button>
+        <a class="text-primary text-sm font-bold text-decoration-none hover:underline " asp-route-PageSize="@Model.TrainingApplications.TotalCount">عرض الكل</a>
     </div>
     <div class="p-4 md:px-lg md:py-4 flex flex-col sm:flex-row gap-4 items-center justify-between border-b border-slate-50">
         <div>
