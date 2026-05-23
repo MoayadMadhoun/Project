@@ -218,16 +218,14 @@ namespace Project.Repository
                 .Where(a => a.TrainingOpportunity.InstitutionID == InstituationID)
                 .AsNoTracking();
         }
-
-
-
-
-
-
-
-
+        public IQueryable<TrainingOpportunity> GetTrainingOpportunitiesQueryable(int? InstituationID)
+        {
+            return _dbContext.TrainingOpportunities
+               .Include(t=>t.OpportunitySpecialty)
+               .ThenInclude(os=>os.Specialty)
+               .Where(t=>t.InstitutionID== InstituationID)
+               .AsNoTracking();
+        }
     }
-
-
 }
 

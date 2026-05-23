@@ -139,6 +139,7 @@ public class ApplicationDbContext : IdentityDbContext<AspNetUser>
             .HasConversion<string>()
             .HasMaxLength(50);
 
+
         builder.Entity<TrainingOpportunityRequest>()
             .Property(r => r.Status)
             .HasConversion<string>()
@@ -331,6 +332,11 @@ public class ApplicationDbContext : IdentityDbContext<AspNetUser>
             .HasOne(o => o.InstitutionOfficer)
             .WithMany()
             .HasForeignKey(o => o.InstitutionOfficerID)
+            .OnDelete(DeleteBehavior.Restrict);
+        builder.Entity<TrainingOpportunity>()
+            .HasOne(o => o.OpportunitySpecialty)
+            .WithMany()
+            .HasForeignKey(o => o.OpportunitySpecialtyID)
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.Entity<AspNetRoleScope>()

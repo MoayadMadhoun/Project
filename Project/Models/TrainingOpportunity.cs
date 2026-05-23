@@ -20,12 +20,12 @@ namespace Project.Models
         [ForeignKey(nameof(TermID))]
         public TrainingTerm TrainingTerm { get; set; } = new TrainingTerm();
         //RequestID FK
-        
-
-        
         public int? RequestID { get; set; }
         [ForeignKey(nameof(RequestID))]
         public TrainingOpportunityRequest? Request { get; set; }
+        public int OpportunitySpecialtyID { get; set; }
+        [ForeignKey(nameof(RequestID))]
+        public OpportunitySpecialty OpportunitySpecialty { get; set; }
         [Required(ErrorMessage = "Title is required")]
         [MaxLength(200, ErrorMessage = "Title can't be more than 200 characters")]
         [MinLength(2, ErrorMessage = "Title can't be less than 2 characters")]
@@ -51,7 +51,7 @@ namespace Project.Models
         public Opportunity Status { get; set; } = Opportunity.Open;
         public enum Opportunity
         {
-            Open, Closed, Concelled
+            Open, Closed, Cancelled
         }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
     }
