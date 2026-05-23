@@ -34,6 +34,7 @@ public class ApplicationDbContext : IdentityDbContext<AspNetUser>
     public DbSet<TrainingTerm> TrainingTerms { get; set; }
     public DbSet<University> Universities { get; set; }
 
+    public DbSet<EmailVerificationCode> EmailVerificationCodes { get; set; }
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
