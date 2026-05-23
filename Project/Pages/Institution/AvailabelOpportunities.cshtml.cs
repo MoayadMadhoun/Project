@@ -28,7 +28,11 @@ namespace Project.Pages.Institution
 
         [BindProperty(SupportsGet = true)]
         public int StatusId { get; set; }
-        public SelectList StatusList { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public int SpecialtyId { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public int PeriodMonths { get; set; }
+        public SelectList Specialities { get; set; }
         private readonly UserManager<AspNetUser> _userManager;
 
         public PaginatedList<TrainingOpportunity> TrainingOpportunities { get; set; }
@@ -52,7 +56,7 @@ namespace Project.Pages.Institution
                     return RedirectToPage("Identity/Account/Login");
                 }
 
-                var scope = await _dbContext.AspNetRoleScopes.FirstOrDefaultAsync(s => s.UserID == user.Id && s.IsActive);
+                var scope = _dbContext.AspNetRoleScopes.FirstOrDefault(s => s.UserID == user.Id && s.IsActive);
 
                 if (scope == null)
                 {
@@ -78,9 +82,8 @@ namespace Project.Pages.Institution
                 //var selectList = Enum.GetValues(typeof(TrainingApplication.ApplicationStatus))
                 //  .Cast<TrainingApplication.ApplicationStatus>()
                 //  .Select(s => new { Value = s.ToString(), Text = s.ToString() });
-
-                //StatusList = new SelectList(selectList, "Value", "Text");
-
+                var specialities = _dbContext.Specialties.ToList();
+                Specialities = new SelectList(specialities, "Id", "Name");
                 if (StatusId > 0)
                 {
                     query = query.Where(a => a.Status == (TrainingOpportunity.Opportunity)StatusId);
@@ -89,7 +92,10 @@ namespace Project.Pages.Institution
                 {
                     query = query.Where(a => a.Title.Contains(SearchTerm));
                 }
-
+                if(PeriodMonths > 0)
+                {
+                    query = query.Where(a => (a.EndDate.Month-a.StartDate.Month)+12*(a.EndDate.Year-a.StartDate.Year) == PeriodMonths);
+                }
                 query = SortOrder switch
                 {
                     "CreatedAt" => query.OrderBy(a => a.CreatedAt),

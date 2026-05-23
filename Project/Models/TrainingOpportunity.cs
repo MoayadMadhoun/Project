@@ -51,7 +51,7 @@ namespace Project.Models
         public Opportunity Status { get; set; } = Opportunity.Open;
         public enum Opportunity
         {
-            Open, Closed, Cancelled
+            Open =1, Closed=2, Cancelled=3
         }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
     }
