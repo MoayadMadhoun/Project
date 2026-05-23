@@ -1,0 +1,62 @@
+﻿@model Project.Areas.Identity.Pages.Account.RegisterModel;
+
+@section RegisterStyle {
+
+    <link href="~/css/regester-style.css" rel="stylesheet" />
+}
+
+
+<div class="input-icon ">
+    <i class="fa-solid fa-building-columns"></i>
+    <input asp-for="InistitutionInput.FullName" class="form-control shadow-sm" autocomplete="username" aria-required="true" placeholder="اسم المؤسسة" />
+    <label class="form-label "></label>
+    <span class="text-danger" asp-validation-for="InistitutionInput.FullName"></span>
+    
+</div>
+@* <div class=" input-icon ">
+    <select asp-for="Input.InstituationType" class="form-select shadow-sm" autocomplete="username" aria-required="true">
+        <option value="" class="text-light">نوع المؤسسة </option>
+    </select>
+    <label class="form-label">  </label>
+    <span class="text-danger" asp-validation-for="Input.InstituationType"></span>
+
+</div> *@
+<div class="input-icon  ">
+    <i class="fa-solid fa-envelope"></i>
+    <input asp-for="Input.Email" class="form-control shadow-sm" autocomplete="username" aria-required="true" placeholder="البريد الالكتروني المؤسسي" />
+    <label class="form-label"> </label>
+    <span class="text-danger" asp-validation-for="Input.Email"></span>
+
+</div>
+
+<div class=" input-icon ">
+    <i class="fa-solid fa-lock"></i>
+    <input asp-for="Input.Password" class="form-control shadow-sm" autocomplete="username" aria-required="true" placeholder="كلمة المرور" />
+    <label class="form-label">  </label>
+    <span class="text-danger" asp-validation-for="Input.Password"></span>
+
+</div>
+<div class=" input-icon ">
+    <i class="fa-solid fa-phone"></i>
+    <input asp-for="InistitutionInput.PhoneNumber" class="form-control shadow-sm" autocomplete="username" aria-required="true" placeholder="رقم الهاتف" />
+    <label class="form-label">  </label>
+    <span class="text-danger" asp-validation-for="InistitutionInput.PhoneNumber"></span>
+
+</div>
+<div class="input-icon  ">
+    <i class="fa-solid fa-location-dot"></i>
+    <input asp-for="InistitutionInput.Address" class="form-control shadow-sm" autocomplete="username" aria-required="true" placeholder=" عنوان المقر الرئيسي" />
+    <label class="form-label">
+        
+        
+    </label>
+    <span class="text-danger " asp-validation-for="InistitutionInput.Address"></span>
+
+</div>
+
+
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

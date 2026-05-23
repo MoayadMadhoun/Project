@@ -36,14 +36,14 @@ namespace Project.Repository
             .AsNoTracking()
             .ToListAsync();
 
-        public async Task<TrainingInstitution?> GetByIdAsync(int InstituationID)
+        public async Task<TrainingInstitution?> GetByIdAsync(int? InstituationID)
         {
             return await _dbContext
                 .TrainingInstitutions
                 .Include(ti => ti.TrainingOpportunities)
                 .FirstOrDefaultAsync(ti => ti.InstituationID == InstituationID);
         }
-
+          
         //To Performance in Soft Delete { Take The University Without Include}
         public async Task<TrainingInstitution?> GetByIdModifyAsync(int InstituationID)
         {
@@ -208,7 +208,7 @@ namespace Project.Repository
 
         }
         //Get Applications for Institution
-        public IQueryable<TrainingApplication> GetApplicationsForInstitution(int InstituationID)
+        public IQueryable<TrainingApplication> GetApplicationsForInstitution(int? InstituationID)
         {
             return _dbContext.TrainingApplications
                 .Include(a => a.Student)
@@ -218,16 +218,14 @@ namespace Project.Repository
                 .Where(a => a.TrainingOpportunity.InstitutionID == InstituationID)
                 .AsNoTracking();
         }
-
-
-
-
-
-
-
-
+        public IQueryable<TrainingOpportunity> GetTrainingOpportunitiesQueryable(int? InstituationID)
+        {
+            return _dbContext.TrainingOpportunities
+               .Include(t=>t.OpportunitySpecialty)
+               .ThenInclude(os=>os.Specialty)
+               .Where(t=>t.InstitutionID== InstituationID)
+               .AsNoTracking();
+        }
     }
-
-
 }
 

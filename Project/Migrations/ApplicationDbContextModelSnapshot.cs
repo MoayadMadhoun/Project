@@ -211,10 +211,10 @@ namespace Project.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserRoleScopeID"));
 
-                    b.Property<int>("DepartmentID")
+                    b.Property<int?>("DepartmentID")
                         .HasColumnType("int");
 
-                    b.Property<int>("InstitutionID")
+                    b.Property<int?>("InstitutionID")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsActive")
@@ -224,7 +224,10 @@ namespace Project.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("UniversityID")
+                    b.Property<int?>("StudentID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UniversityID")
                         .HasColumnType("int");
 
                     b.Property<string>("UserID")
@@ -253,6 +256,9 @@ namespace Project.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AccountType")
                         .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -353,16 +359,12 @@ namespace Project.Migrations
 
                     b.Property<string>("Status")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<int>("TrainingPlacementPlacementID")
-                        .HasColumnType("int");
 
                     b.HasKey("AttendanceID");
 
                     b.HasIndex("InstitutionSupervisorID");
-
-                    b.HasIndex("TrainingPlacementPlacementID");
 
                     b.HasIndex("PlacementID", "AttendanceDate")
                         .IsUnique();
@@ -396,6 +398,38 @@ namespace Project.Migrations
                     b.ToTable("Departments");
                 });
 
+            modelBuilder.Entity("Project.Models.EmailVerificationCode", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ExpireAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("EmailVerificationCodes");
+                });
+
             modelBuilder.Entity("Project.Models.FieldVisit", b =>
                 {
                     b.Property<int>("VisitID")
@@ -411,7 +445,8 @@ namespace Project.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal?>("MaxScore")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(5, 2)
+                        .HasColumnType("decimal(5,2)");
 
                     b.Property<string>("Notes")
                         .HasMaxLength(1000)
@@ -421,13 +456,12 @@ namespace Project.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal?>("Score")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("TrainingPlacementPlacementID")
-                        .HasColumnType("int");
+                        .HasPrecision(5, 2)
+                        .HasColumnType("decimal(5,2)");
 
                     b.Property<string>("Type")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("UniversitySupervisorID")
@@ -439,7 +473,7 @@ namespace Project.Migrations
 
                     b.HasKey("VisitID");
 
-                    b.HasIndex("TrainingPlacementPlacementID");
+                    b.HasIndex("PlacementID");
 
                     b.HasIndex("UniversitySupervisorID");
 
@@ -472,16 +506,14 @@ namespace Project.Migrations
 
                     b.Property<string>("Status")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<int>("TrainingInstitutionInstituationID")
-                        .HasColumnType("int");
 
                     b.HasKey("RequestInstitutionID");
 
-                    b.HasIndex("RequestID");
+                    b.HasIndex("InstitutionID");
 
-                    b.HasIndex("TrainingInstitutionInstituationID");
+                    b.HasIndex("RequestID");
 
                     b.ToTable("OpportunityRequestInstitutions");
                 });
@@ -503,14 +535,9 @@ namespace Project.Migrations
                     b.Property<int>("SkillID")
                         .HasColumnType("int");
 
-                    b.Property<int>("TrainingOpportunityOpportunityID")
-                        .HasColumnType("int");
-
                     b.HasKey("OpportunitySkillID");
 
                     b.HasIndex("SkillID");
-
-                    b.HasIndex("TrainingOpportunityOpportunityID");
 
                     b.HasIndex("OpportunityID", "SkillID")
                         .IsUnique();
@@ -532,14 +559,9 @@ namespace Project.Migrations
                     b.Property<int>("SpecialtyID")
                         .HasColumnType("int");
 
-                    b.Property<int>("TrainingOpportunityOpportunityID")
-                        .HasColumnType("int");
-
                     b.HasKey("OpportunitySpecialtyID");
 
                     b.HasIndex("SpecialtyID");
-
-                    b.HasIndex("TrainingOpportunityOpportunityID");
 
                     b.HasIndex("OpportunityID", "SpecialtyID")
                         .IsUnique();
@@ -575,6 +597,7 @@ namespace Project.Migrations
 
                     b.Property<string>("Type")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Url")
@@ -682,6 +705,9 @@ namespace Project.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<int>("DepartmentID")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
@@ -695,6 +721,8 @@ namespace Project.Migrations
                         .HasColumnType("nvarchar(200)");
 
                     b.HasKey("SpecialtyID");
+
+                    b.HasIndex("DepartmentID");
 
                     b.HasIndex("Name")
                         .IsUnique();
@@ -722,7 +750,8 @@ namespace Project.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal?>("GPA")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(5, 2)
+                        .HasColumnType("decimal(5,2)");
 
                     b.Property<string>("Level")
                         .HasMaxLength(20)
@@ -733,6 +762,9 @@ namespace Project.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ProfileImagePath")
                         .HasColumnType("nvarchar(max)");
 
@@ -741,12 +773,16 @@ namespace Project.Migrations
 
                     b.Property<string>("Status")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("StudentNumber")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("UniversityID")
+                        .HasColumnType("int");
 
                     b.Property<string>("UserID")
                         .IsRequired()
@@ -760,6 +796,8 @@ namespace Project.Migrations
 
                     b.HasIndex("StudentNumber")
                         .IsUnique();
+
+                    b.HasIndex("UniversityID");
 
                     b.HasIndex("UserID")
                         .IsUnique();
@@ -789,7 +827,8 @@ namespace Project.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal>("MaxScore")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(5, 2)
+                        .HasColumnType("decimal(5,2)");
 
                     b.Property<string>("Notes")
                         .IsRequired()
@@ -800,17 +839,17 @@ namespace Project.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Score")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(5, 2)
+                        .HasColumnType("decimal(5,2)");
 
                     b.Property<string>("Status")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<int>("TrainingPlacementPlacementID")
-                        .HasColumnType("int");
 
                     b.Property<string>("Type")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("UniversitySupervisorID")
@@ -820,7 +859,7 @@ namespace Project.Migrations
 
                     b.HasIndex("InstitutionSupervisorID");
 
-                    b.HasIndex("TrainingPlacementPlacementID");
+                    b.HasIndex("PlacementID");
 
                     b.HasIndex("UniversitySupervisorID");
 
@@ -851,6 +890,7 @@ namespace Project.Migrations
 
                     b.Property<string>("Status")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("StudentID")
@@ -866,6 +906,7 @@ namespace Project.Migrations
 
                     b.Property<string>("Type")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("UniversitySupervisorID")
@@ -892,6 +933,7 @@ namespace Project.Migrations
 
                     b.Property<string>("Level")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("SkillID")
@@ -923,6 +965,7 @@ namespace Project.Migrations
 
                     b.Property<string>("DepartmentDecision")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("DepartmentHeadID")
@@ -937,6 +980,7 @@ namespace Project.Migrations
 
                     b.Property<string>("InstitutionDecision")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("InstitutionNotes")
@@ -954,6 +998,7 @@ namespace Project.Migrations
 
                     b.Property<string>("Status")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("StudentID")
@@ -963,11 +1008,9 @@ namespace Project.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<int>("TrainingOpportunityOpportunityID")
-                        .HasColumnType("int");
-
                     b.Property<string>("UniversityAdminDecision")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("UniversityAdminID")
@@ -987,8 +1030,6 @@ namespace Project.Migrations
                     b.HasIndex("InstitutionOfficerID");
 
                     b.HasIndex("StudentID");
-
-                    b.HasIndex("TrainingOpportunityOpportunityID");
 
                     b.HasIndex("UniversityAdminID");
 
@@ -1034,7 +1075,14 @@ namespace Project.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("UserID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("InstituationID");
+
+                    b.HasIndex("UserID")
+                        .IsUnique();
 
                     b.ToTable("TrainingInstitutions");
                 });
@@ -1071,7 +1119,7 @@ namespace Project.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
 
-                    b.Property<int>("RequestID")
+                    b.Property<int?>("RequestID")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("StartDate")
@@ -1079,6 +1127,7 @@ namespace Project.Migrations
 
                     b.Property<string>("Status")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("TermID")
@@ -1089,21 +1138,18 @@ namespace Project.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<int>("TrainingInstitutionInstituationID")
-                        .HasColumnType("int");
-
                     b.Property<int?>("TrainingTermTermID")
                         .HasColumnType("int");
 
                     b.HasKey("OpportunityID");
+
+                    b.HasIndex("InstitutionID");
 
                     b.HasIndex("InstitutionOfficerID");
 
                     b.HasIndex("RequestID");
 
                     b.HasIndex("TermID");
-
-                    b.HasIndex("TrainingInstitutionInstituationID");
 
                     b.HasIndex("TrainingTermTermID");
 
@@ -1125,7 +1171,6 @@ namespace Project.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DepartmentHeadID")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("DepartmentID")
@@ -1150,6 +1195,7 @@ namespace Project.Migrations
 
                     b.Property<string>("Status")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("TermID")
@@ -1160,11 +1206,7 @@ namespace Project.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
 
-                    b.Property<int>("TrainingTermTermID")
-                        .HasColumnType("int");
-
                     b.Property<string>("UniversityAdminID")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("UniversityID")
@@ -1176,7 +1218,7 @@ namespace Project.Migrations
 
                     b.HasIndex("DepartmentID");
 
-                    b.HasIndex("TrainingTermTermID");
+                    b.HasIndex("TermID");
 
                     b.HasIndex("UniversityAdminID");
 
@@ -1217,15 +1259,13 @@ namespace Project.Migrations
 
                     b.Property<string>("Status")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("StudentID")
                         .HasColumnType("int");
 
                     b.Property<int>("TermID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TrainingApplicationApplicationID")
                         .HasColumnType("int");
 
                     b.Property<string>("UniversitySupervisorID")
@@ -1245,8 +1285,6 @@ namespace Project.Migrations
                     b.HasIndex("StudentID");
 
                     b.HasIndex("TermID");
-
-                    b.HasIndex("TrainingApplicationApplicationID");
 
                     b.HasIndex("UniversitySupervisorID");
 
@@ -1312,7 +1350,14 @@ namespace Project.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("UserID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("UniversityID");
+
+                    b.HasIndex("UserID")
+                        .IsUnique();
 
                     b.ToTable("Universities");
                 });
@@ -1373,14 +1418,12 @@ namespace Project.Migrations
                     b.HasOne("Project.Models.Department", "Department")
                         .WithMany()
                         .HasForeignKey("DepartmentID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Project.Models.TrainingInstitution", "TrainingInstitution")
                         .WithMany()
                         .HasForeignKey("InstitutionID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", "Role")
                         .WithMany()
@@ -1391,8 +1434,7 @@ namespace Project.Migrations
                     b.HasOne("Project.Models.University", "University")
                         .WithMany()
                         .HasForeignKey("UniversityID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Project.Models.AspNetUser", "User")
                         .WithOne("RoleScope")
@@ -1421,7 +1463,7 @@ namespace Project.Migrations
 
                     b.HasOne("Project.Models.TrainingPlacement", "TrainingPlacement")
                         .WithMany("AttendanceRecords")
-                        .HasForeignKey("TrainingPlacementPlacementID")
+                        .HasForeignKey("PlacementID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1435,17 +1477,28 @@ namespace Project.Migrations
                     b.HasOne("Project.Models.University", "University")
                         .WithMany("Departments")
                         .HasForeignKey("UniversityID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("University");
+                });
+
+            modelBuilder.Entity("Project.Models.EmailVerificationCode", b =>
+                {
+                    b.HasOne("Project.Models.AspNetUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Project.Models.FieldVisit", b =>
                 {
                     b.HasOne("Project.Models.TrainingPlacement", "TrainingPlacement")
                         .WithMany("FieldVisits")
-                        .HasForeignKey("TrainingPlacementPlacementID")
+                        .HasForeignKey("PlacementID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1462,15 +1515,15 @@ namespace Project.Migrations
 
             modelBuilder.Entity("Project.Models.OpportunityRequestInstitution", b =>
                 {
+                    b.HasOne("Project.Models.TrainingInstitution", "TrainingInstitution")
+                        .WithMany()
+                        .HasForeignKey("InstitutionID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Project.Models.TrainingOpportunityRequest", "Request")
                         .WithMany("OpportunityRequests")
                         .HasForeignKey("RequestID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Project.Models.TrainingInstitution", "TrainingInstitution")
-                        .WithMany()
-                        .HasForeignKey("TrainingInstitutionInstituationID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1481,15 +1534,15 @@ namespace Project.Migrations
 
             modelBuilder.Entity("Project.Models.OpportunitySkill", b =>
                 {
-                    b.HasOne("Project.Models.Skill", "Skill")
-                        .WithMany("OpportunitySkills")
-                        .HasForeignKey("SkillID")
+                    b.HasOne("Project.Models.TrainingOpportunity", "TrainingOpportunity")
+                        .WithMany()
+                        .HasForeignKey("OpportunityID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Project.Models.TrainingOpportunity", "TrainingOpportunity")
-                        .WithMany()
-                        .HasForeignKey("TrainingOpportunityOpportunityID")
+                    b.HasOne("Project.Models.Skill", "Skill")
+                        .WithMany("OpportunitySkills")
+                        .HasForeignKey("SkillID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1500,15 +1553,15 @@ namespace Project.Migrations
 
             modelBuilder.Entity("Project.Models.OpportunitySpecialty", b =>
                 {
-                    b.HasOne("Project.Models.Specialty", "Specialty")
-                        .WithMany("OpportunitySpecialties")
-                        .HasForeignKey("SpecialtyID")
+                    b.HasOne("Project.Models.TrainingOpportunity", "TrainingOpportunity")
+                        .WithMany()
+                        .HasForeignKey("OpportunityID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Project.Models.TrainingOpportunity", "TrainingOpportunity")
-                        .WithMany()
-                        .HasForeignKey("TrainingOpportunityOpportunityID")
+                    b.HasOne("Project.Models.Specialty", "Specialty")
+                        .WithMany("OpportunitySpecialties")
+                        .HasForeignKey("SpecialtyID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1566,17 +1619,34 @@ namespace Project.Migrations
                     b.Navigation("Specialty");
                 });
 
+            modelBuilder.Entity("Project.Models.Specialty", b =>
+                {
+                    b.HasOne("Project.Models.Department", "Department")
+                        .WithMany("Specialties")
+                        .HasForeignKey("DepartmentID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Department");
+                });
+
             modelBuilder.Entity("Project.Models.Student", b =>
                 {
                     b.HasOne("Project.Models.Department", "Department")
                         .WithMany("Students")
                         .HasForeignKey("DepartmentID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Project.Models.Specialty", "Specialty")
                         .WithMany("Students")
                         .HasForeignKey("SpecialtyID");
+
+                    b.HasOne("Project.Models.University", "University")
+                        .WithMany("Students")
+                        .HasForeignKey("UniversityID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("Project.Models.AspNetUser", "User")
                         .WithOne("Student")
@@ -1587,6 +1657,8 @@ namespace Project.Migrations
                     b.Navigation("Department");
 
                     b.Navigation("Specialty");
+
+                    b.Navigation("University");
 
                     b.Navigation("User");
                 });
@@ -1600,7 +1672,7 @@ namespace Project.Migrations
 
                     b.HasOne("Project.Models.TrainingPlacement", "TrainingPlacement")
                         .WithMany("StudentEvaluations")
-                        .HasForeignKey("TrainingPlacementPlacementID")
+                        .HasForeignKey("PlacementID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1673,16 +1745,16 @@ namespace Project.Migrations
                         .HasForeignKey("InstitutionOfficerID")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("Project.Models.TrainingOpportunity", "TrainingOpportunity")
+                        .WithMany()
+                        .HasForeignKey("OpportunityID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Project.Models.Student", "Student")
                         .WithMany("Applications")
                         .HasForeignKey("StudentID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Project.Models.TrainingOpportunity", "TrainingOpportunity")
-                        .WithMany()
-                        .HasForeignKey("TrainingOpportunityOpportunityID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Project.Models.AspNetUser", "UniversityAdmin")
@@ -1701,8 +1773,25 @@ namespace Project.Migrations
                     b.Navigation("UniversityAdmin");
                 });
 
+            modelBuilder.Entity("Project.Models.TrainingInstitution", b =>
+                {
+                    b.HasOne("Project.Models.AspNetUser", "User")
+                        .WithOne("TrainingInstitution")
+                        .HasForeignKey("Project.Models.TrainingInstitution", "UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Project.Models.TrainingOpportunity", b =>
                 {
+                    b.HasOne("Project.Models.TrainingInstitution", "TrainingInstitution")
+                        .WithMany("TrainingOpportunities")
+                        .HasForeignKey("InstitutionID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Project.Models.AspNetUser", "InstitutionOfficer")
                         .WithMany()
                         .HasForeignKey("InstitutionOfficerID")
@@ -1711,20 +1800,12 @@ namespace Project.Migrations
 
                     b.HasOne("Project.Models.TrainingOpportunityRequest", "Request")
                         .WithMany("Opportunities")
-                        .HasForeignKey("RequestID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RequestID");
 
                     b.HasOne("Project.Models.TrainingTerm", "TrainingTerm")
                         .WithMany()
                         .HasForeignKey("TermID")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Project.Models.TrainingInstitution", "TrainingInstitution")
-                        .WithMany("TrainingOpportunities")
-                        .HasForeignKey("TrainingInstitutionInstituationID")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Project.Models.TrainingTerm", null)
@@ -1745,8 +1826,7 @@ namespace Project.Migrations
                     b.HasOne("Project.Models.AspNetUser", "DepartmentHead")
                         .WithMany()
                         .HasForeignKey("DepartmentHeadID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Project.Models.Department", "Department")
                         .WithMany()
@@ -1754,15 +1834,14 @@ namespace Project.Migrations
 
                     b.HasOne("Project.Models.TrainingTerm", "TrainingTerm")
                         .WithMany()
-                        .HasForeignKey("TrainingTermTermID")
+                        .HasForeignKey("TermID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Project.Models.AspNetUser", "UniversityAdmin")
                         .WithMany()
                         .HasForeignKey("UniversityAdminID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Project.Models.University", "University")
                         .WithMany("TrainingOpportunityRequests")
@@ -1783,6 +1862,12 @@ namespace Project.Migrations
 
             modelBuilder.Entity("Project.Models.TrainingPlacement", b =>
                 {
+                    b.HasOne("Project.Models.TrainingApplication", "TrainingApplication")
+                        .WithMany()
+                        .HasForeignKey("ApplicationID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Project.Models.TrainingInstitution", "TrainingInstitution")
                         .WithMany()
                         .HasForeignKey("InstitutionID")
@@ -1812,12 +1897,6 @@ namespace Project.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Project.Models.TrainingApplication", "TrainingApplication")
-                        .WithMany()
-                        .HasForeignKey("TrainingApplicationApplicationID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Project.Models.AspNetUser", "UniversitySupervisor")
                         .WithMany()
                         .HasForeignKey("UniversitySupervisorID")
@@ -1838,15 +1917,32 @@ namespace Project.Migrations
                     b.Navigation("UniversitySupervisor");
                 });
 
+            modelBuilder.Entity("Project.Models.University", b =>
+                {
+                    b.HasOne("Project.Models.AspNetUser", "User")
+                        .WithOne("University")
+                        .HasForeignKey("Project.Models.University", "UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Project.Models.AspNetUser", b =>
                 {
                     b.Navigation("RoleScope");
 
                     b.Navigation("Student");
+
+                    b.Navigation("TrainingInstitution");
+
+                    b.Navigation("University");
                 });
 
             modelBuilder.Entity("Project.Models.Department", b =>
                 {
+                    b.Navigation("Specialties");
+
                     b.Navigation("Students");
                 });
 
@@ -1914,6 +2010,8 @@ namespace Project.Migrations
             modelBuilder.Entity("Project.Models.University", b =>
                 {
                     b.Navigation("Departments");
+
+                    b.Navigation("Students");
 
                     b.Navigation("TrainingOpportunityRequests");
                 });

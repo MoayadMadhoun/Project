@@ -22,11 +22,13 @@ namespace Project.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<AspNetUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly UserManager<AspNetUser> _user;
 
-        public LoginModel(SignInManager<AspNetUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<AspNetUser> signInManager, ILogger<LoginModel> logger ,UserManager<AspNetUser> user)
         {
             _signInManager = signInManager;
             _logger = logger;
+            this._user = user;
         }
 
         /// <summary>
@@ -116,6 +118,21 @@ namespace Project.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
+
+                    var user = await _user.FindByEmailAsync(Input.Email);
+                    if (await _user.IsInRoleAsync(user, "Student"))
+                    {
+                        returnUrl = Url.Content("~/Student/Index");
+                    }
+                    else if (await _user.IsInRoleAsync(user, "UniversityTrainingAdmin"))
+                    {
+                        returnUrl = Url.Content("~/University/Index");
+                    }
+                    else if (await _user.IsInRoleAsync(user, "InstitutionTrainingOfficer"))
+                    {
+                        returnUrl = Url.Content("~/Institution/Index");
+                    }
+
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)

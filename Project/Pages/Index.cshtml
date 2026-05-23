@@ -22,6 +22,136 @@
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet" />
     <style>
 
+            /* =========================
+                   SCROLL ANIMATION
+                ========================== */
+
+            .scroll-animate {
+                opacity: 0;
+                transform: translateY(60px);
+                transition: all .9s ease;
+                will-change: transform, opacity;
+            }
+
+                .scroll-animate.show {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+
+            /* من اليمين */
+            .fade-right {
+                transform: translateX(80px);
+            }
+
+            .scroll-animate.show.fade-right {
+                transform: translateX(0);
+            }
+
+            /* من اليسار */
+            .fade-left {
+                transform: translateX(-80px);
+            }
+
+            .scroll-animate.show.fade-left {
+                transform: translateX(0);
+            }
+
+            /* تكبير */
+            .zoom-in {
+                transform: scale(.8);
+            }
+
+            .scroll-animate.show.zoom-in {
+                transform: scale(1);
+            }
+
+            /* =========================
+                   HERO FIRST LOAD ANIMATION
+                   بدون تحريك الشعار
+                ========================== */
+
+            .hero-title,
+            .hero-sub,
+            .hero-badges,
+            .dashboard-mock,
+            .phone-mock,
+            .btn-hero-primary,
+            .btn-hero-secondary {
+                opacity: 0;
+            }
+
+            .hero-title {
+                animation: fadeUp 1s ease forwards;
+            }
+
+            .hero-sub {
+                animation: fadeUp 1s ease forwards;
+                animation-delay: .3s;
+            }
+
+            .btn-hero-primary {
+                animation: fadeUp 1s ease forwards;
+                animation-delay: .5s;
+            }
+
+            .btn-hero-secondary {
+                animation: fadeUp 1s ease forwards;
+                animation-delay: .7s;
+            }
+
+            .hero-badges {
+                animation: fadeUp 1s ease forwards;
+                animation-delay: .9s;
+            }
+
+            .dashboard-mock {
+                animation: fadeRight 1.2s ease forwards;
+                animation-delay: .4s;
+            }
+
+            .phone-mock {
+                animation: floatPhone 4s ease-in-out infinite;
+                opacity: 1;
+            }
+
+            @@keyframes fadeUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(40px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            @@keyframes fadeRight {
+                from {
+                    opacity: 0;
+                    transform: translateX(80px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+
+            @@keyframes floatPhone {
+                0% {
+                    transform: translateY(0px);
+                }
+
+                50% {
+                    transform: translateY(-10px);
+                }
+
+                100% {
+                    transform: translateY(0px);
+                }
+            }
+
     </style>
 </head>
 <body>
@@ -61,7 +191,7 @@
                 </ul>
                 <div class="d-flex align-items-center gap-2">
                     <a class="btn-login text-decoration-none" asp-area="Identity" asp-page="/Account/Login"> تسجيل الدخول </a>
-                    <a class="btn-register text-decoration-none" asp-area="Identity" asp-page="/Account/Register">إنشاء حساب</a>
+                    <a class="btn-register text-decoration-none" asp-page="/Auth/ChooseAccountType">إنشاء حساب</a>
                     <span style="font-size:.8rem;color:var(--navy);border:1px solid #c8d8e8;border-radius:6px;padding:4px 8px;cursor:pointer;">
                         🌐 العربية
                     </span>
@@ -75,7 +205,7 @@
     <!-- ═══════════════════════════════════════════════════════
      HERO
 ═══════════════════════════════════════════════════════ -->
-    <section class="hero-section">
+    <section class="hero-section ">
         <div class="wave-bottom">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#00B894" fill-opacity="1" d="M0,96L60,80C120,64,240,32,360,26.7C480,21,600,43,720,96C840,149,960,235,1080,272C1200,309,1320,299,1380,293.3L1440,288L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path></svg>
             
@@ -228,7 +358,7 @@
     <!-- ═══════════════════════════════════════════════════════
      FEATURES BAR
 ═══════════════════════════════════════════════════════ -->
-    <section class="features-bar">
+    <section class="features-bar scroll-animate">
         <div class="container">
             <div class="row g-4 justify-content-center">
                 <div class="col-6 col-md-3">
@@ -267,7 +397,7 @@
     <!-- ═══════════════════════════════════════════════════════
      HOW IT WORKS
 ═══════════════════════════════════════════════════════ -->
-    <section class="how-section">
+    <section class="how-section scroll-animate">
         <div class="container">
             <h2 class="section-title">كيف يعمل النظام؟</h2>
             <div class="row g-4 justify-content-center position-relative">
@@ -338,7 +468,7 @@
     <!-- ═══════════════════════════════════════════════════════
      STATS BAR
 ═══════════════════════════════════════════════════════ -->
-    <section class="stats-bar">
+    <section class="stats-bar scroll-animate">
         <div class="status-photo1">
             <img src="images/illustration/illustration2.svg">
         </div>
@@ -380,7 +510,7 @@
     <!-- ═══════════════════════════════════════════════════════
      TRAINING OPPORTUNITIES
 ═══════════════════════════════════════════════════════ -->
-    <section class="opps-section">
+    <section class="opps-section scroll-animate">
         <div class="container swiper">
             <div class="slider-wrapper mx-auto">
                 <h2 class="section-title">فرص تدريب ميداني</h2>
@@ -516,7 +646,7 @@
     <!-- ═══════════════════════════════════════════════════════
      PLATFORM FEATURES
 ═══════════════════════════════════════════════════════ -->
-    <section class="platform-section">
+    <section class="platform-section scroll-animate">
         <div class="container">
             <h2 class="section-title">مميزات المنصة</h2>
             <div class="row g-3 justify-content-center">
@@ -651,5 +781,43 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
     <script src="Scripts/script.js"></script>
+    <script>
+
+        // Scroll Animation
+        const scrollElements = document.querySelectorAll(".scroll-animate");
+
+        const elementInView = (el, offset = 100) => {
+        const elementTop = el.getBoundingClientRect().top;
+        return (
+        elementTop <=
+        (window.innerHeight || document.documentElement.clientHeight) - offset
+        );
+        };
+
+        const displayScrollElement = (element) => {
+        element.classList.add("show");
+        };
+
+        const hideScrollElement = (element) => {
+        element.classList.remove("show");
+        };
+
+        const handleScrollAnimation = () => {
+        scrollElements.forEach((el) => {
+        if (elementInView(el, 100)) {
+        displayScrollElement(el);
+        } else {
+        hideScrollElement(el);
+        }
+        });
+        };
+
+        window.addEventListener("scroll", () => {
+        handleScrollAnimation();
+        });
+
+        handleScrollAnimation();
+
+    </script>
 </body>
 </html>
