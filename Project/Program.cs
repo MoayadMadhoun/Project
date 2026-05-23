@@ -1,10 +1,13 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Project.Data;
 using Project.Models;
+using Project.Options;
 using Project.Repositories;
 using Project.Repository;
 using Project.Repostory;
+using Project.Services;
 
 namespace Project
 {
@@ -31,9 +34,17 @@ namespace Project
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultUI()
                 .AddDefaultTokenProviders();
+
+            builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection("SMTP"));
+            builder.Services.AddTransient<IEmailSender, EmailSender>();
+
             builder.Services.AddScoped<TrainingInstitutionRepository>();
             builder.Services.AddScoped<UniversityRepository>();
             builder.Services.AddScoped<StudentsRepository>();
+            builder.Services.AddScoped<DepartmentRepository>();
+            builder.Services.AddScoped<SpecialtyRepository>();
+            builder.Services.AddScoped<OptService>();
+
             builder.Services.AddRazorPages();
 
             var app = builder.Build();
