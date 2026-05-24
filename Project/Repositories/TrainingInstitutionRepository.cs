@@ -54,12 +54,12 @@ namespace Project.Repository
 
 
 
-        public async Task<string?> GetTypeInstitution(int InstituationID)
+        public async Task<Enum?> GetTypeInstitution(int InstituationID)
         {
             return await _dbContext
                 .TrainingInstitutions
                 .Where(ti => ti.InstituationID == InstituationID)
-                .Select(ti => ti.Type)
+                .Select(ti => ti.InstitutionType)
                 .FirstOrDefaultAsync();
         }
 
