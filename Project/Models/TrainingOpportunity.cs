@@ -24,7 +24,7 @@ namespace Project.Models
         [ForeignKey(nameof(RequestID))]
         public TrainingOpportunityRequest? Request { get; set; }
         public int OpportunitySpecialtyID { get; set; }
-        [ForeignKey(nameof(RequestID))]
+        [ForeignKey(nameof(OpportunitySpecialtyID))]
         public OpportunitySpecialty OpportunitySpecialty { get; set; }
         [Required(ErrorMessage = "Title is required")]
         [MaxLength(200, ErrorMessage = "Title can't be more than 200 characters")]
