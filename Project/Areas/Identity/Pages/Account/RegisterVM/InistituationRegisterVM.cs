@@ -11,5 +11,9 @@ namespace Project.Areas.Identity.Pages.Account.RegisterVM
 
         public int? InstitutionID { get; set; }
 
+        [Required(ErrorMessage = "Address is required field")]
+        [StringLength(50)]
+        public string InstituationType { get; set; }
+
     }
 }

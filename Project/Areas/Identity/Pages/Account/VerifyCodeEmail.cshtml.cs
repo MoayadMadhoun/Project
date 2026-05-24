@@ -7,6 +7,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using Project.Data;
 using Project.Models;
+using Project.Models.Enums;
 using Project.Services;
 using static System.Net.WebRequestMethods;
 
@@ -38,6 +39,10 @@ namespace Project.Areas.Identity.Pages.Account
 
         [BindProperty(SupportsGet = true)]
         public string Email { get; set; }
+
+        [BindProperty(SupportsGet =true)]
+        public AccountType AccountType { get; set; }
+
 
         [BindProperty]  
         public string Code { get; set; }
@@ -89,7 +94,18 @@ namespace Project.Areas.Identity.Pages.Account
 
             await _signInManager.SignInAsync(user, isPersistent: false);
 
+            if (AccountType == AccountType.Institution)
+                return RedirectToPage("/Institution/Index");
+            if (AccountType == AccountType.University)
+                return RedirectToPage("/University/Index");
+            if (AccountType == AccountType.Student)
+                return RedirectToPage("/Student/Index");
+            
+
             return RedirectToPage("/Index");
+
+        
+
         }
 
         public async Task<IActionResult> OnPostResendAsync()

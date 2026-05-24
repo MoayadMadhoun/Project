@@ -113,10 +113,10 @@ namespace Project.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            //[DataType(DataType.Password)]
-            //[Display(Name = "Confirm password")]
-            //[Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
-            //public string ConfirmPassword { get; set; }
+            [DataType(DataType.Password)]
+            [Display(Name = "Confirm password")]
+            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            public string ConfirmPassword { get; set; }
 
         }
 
@@ -137,12 +137,12 @@ namespace Project.Areas.Identity.Pages.Account
 
         public SelectList UniversityList { get; set; }
 
-
+        public SelectList InstitutionTypeList { get; set; }
         public async Task OnGetAsync(string returnUrl = null)
         {
 
             UniversityList = await _universityRepository.CreateUniversitySelectList();
-
+            InstitutionTypeList = EnumExtensions.GetInstitutionTypes();
 
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
@@ -180,7 +180,17 @@ namespace Project.Areas.Identity.Pages.Account
 
             RemoveUnusedValidation();
             UniversityList = await _universityRepository.CreateUniversitySelectList();
+            InstitutionTypeList = EnumExtensions.GetInstitutionTypes();
+            foreach (var item in ModelState)
+            {
+                var field = item.Key;
+                var errors = item.Value.Errors;
 
+                foreach (var error in errors)
+                {
+                    Console.WriteLine($"{field}: {error.ErrorMessage}");
+                }
+            }
             if (ModelState.IsValid)
             {
                 var user = new AspNetUser
@@ -279,7 +289,7 @@ namespace Project.Areas.Identity.Pages.Account
                     await _dbContext.SaveChangesAsync();
                     await _emailSender.SendEmailAsync(Input.Email, "Your Veriviction Code is ", $"Your code is <h2>{otp}</h2>");
 
-                    return RedirectToPage("/Account/VerifyCodeEmail", new { email = Input.Email });
+                    return RedirectToPage("/Account/VerifyCodeEmail", new { email = Input.Email,accountType=AccountType });
 
 
                     //if (_userManager.Options.SignIn.RequireConfirmedAccount)
@@ -342,7 +352,8 @@ namespace Project.Areas.Identity.Pages.Account
                 Email = Input.Email,
                 PhoneNumber = InistitutionInput.PhoneNumber,
                 IsActive = true,
-                UserID = userId
+                UserID = userId,
+                InstitutionType = Enum.Parse<InstitutionType>(InistitutionInput.InstituationType)
             };
 
             await _trainingInstitutionRepository.AddAsync(institution);
@@ -430,6 +441,7 @@ namespace Project.Areas.Identity.Pages.Account
             ModelState.Remove("FullName");
             ModelState.Remove("PhoneNumber");
             ModelState.Remove("StudentNumber");
+            ModelState.Remove("InstituationType");
         }
 
 
