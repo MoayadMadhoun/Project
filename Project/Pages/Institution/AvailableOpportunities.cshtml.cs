@@ -10,7 +10,7 @@ using Project.Repostory;
 
 namespace Project.Pages.Institution
 {
-    public class AvailabelOpportunitiesModel : PageModel
+    public class AvailableOpportunitiesModel : PageModel
     {
         private readonly TrainingInstitutionRepository _institutionRepo;
         private readonly ApplicationDbContext _dbContext;
@@ -36,7 +36,7 @@ namespace Project.Pages.Institution
         private readonly UserManager<AspNetUser> _userManager;
 
         public PaginatedList<TrainingOpportunity> TrainingOpportunities { get; set; }
-        public AvailabelOpportunitiesModel(TrainingInstitutionRepository institutionRepo, ApplicationDbContext dbContext, UserManager<AspNetUser> userManager)
+        public AvailableOpportunitiesModel(TrainingInstitutionRepository institutionRepo, ApplicationDbContext dbContext, UserManager<AspNetUser> userManager)
         {
             _institutionRepo = institutionRepo;
             _dbContext = dbContext;
