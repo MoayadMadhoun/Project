@@ -177,14 +177,14 @@ namespace Project.Repostory
             //return new SelectList(await GetByStatusAsync(true), nameof(University.UniversityID), nameof(University.Name));
         }
 
-        public IQueryable<TrainingApplication> GetApplicationsForUniversity(int? UniversityId)
+        public IQueryable<TrainingApplication> GetApplicationsForUniversity(int universityId)
         {
             return _dbContext.TrainingApplications
+                .Where(a => a.Student.Department.University.UniversityID == universityId)
                 .Include(a => a.Student)
-                .ThenInclude(s => s.Department)
-                .ThenInclude(d => d.University.UniversityID== UniversityId)
+                .Include(a => a.Student.Department)
                 .Include(a => a.TrainingOpportunity)
-                .ThenInclude(t=>t.TrainingInstitution)
+                    .ThenInclude(t => t.TrainingInstitution)
                 .AsNoTracking();
         }
 
