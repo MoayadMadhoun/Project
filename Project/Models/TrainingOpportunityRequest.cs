@@ -58,9 +58,9 @@ namespace Project.Models
         [ForeignKey(nameof(DepartmentHeadID))]
         public AspNetUser? DepartmentHead { get; set; } = new AspNetUser();
 
-        public ICollection<OpportunityRequestInstitution> OpportunityRequests { get; set; } = new HashSet<OpportunityRequestInstitution>();
-        public ICollection<RequestSpecialty> Specialties { get; set; } = new HashSet<RequestSpecialty>();   
-        public ICollection<RequestSkill> Skills { get; set; }= new HashSet<RequestSkill>();
-        public ICollection<TrainingOpportunity> Opportunities { get; set; } = new HashSet<TrainingOpportunity>();
+        public ICollection<OpportunityRequestInstitution> OpportunityRequests { get; set; } = new List<OpportunityRequestInstitution>();
+        public ICollection<RequestSpecialty> Specialties { get; set; } = new List<RequestSpecialty>();   
+        public ICollection<RequestSkill> Skills { get; set; }= new List<RequestSkill>();
+        public ICollection<TrainingOpportunity> Opportunities { get; set; } = new List<TrainingOpportunity>();
     }
 }

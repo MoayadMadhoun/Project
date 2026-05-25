@@ -113,7 +113,11 @@
                 {
                     <tr class="hover:bg-slate-50 transition-colors">
                         <td class="px-4 py-3 text-sm text-slate-900 font-bold">@opportunity.Title</td>
-                        <td class="px-4 py-3 text-sm text-slate-600">@opportunity.OpportunitySpecialty.Specialty</td>
+                        <td class="px-4 py-3 text-sm text-slate-600">@foreach (var sp in opportunity.Specialties)
+                            {
+                                <span>@sp.Specialty.Name </span>
+                            }
+                        </td>
                         <td class="px-4 py-3 text-sm text-slate-600">@opportunity.Capacity</td>
                         <td class="px-4 py-3 text-sm text-slate-600">@opportunity.Location</td>
                         <td class="px-4 py-3 text-sm text-slate-600 whitespace-nowrap">@opportunity.StartDate ← @opportunity.EndDate</td>

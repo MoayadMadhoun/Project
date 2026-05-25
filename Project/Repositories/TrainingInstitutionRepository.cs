@@ -216,15 +216,15 @@ namespace Project.Repository
                 .ThenInclude(d => d.University)
                 .Include(a => a.TrainingOpportunity)
                 .Where(a => a.TrainingOpportunity.InstitutionID == InstituationID)
-                .AsNoTracking();
+                .AsNoTracking().AsQueryable();
         }
         public IQueryable<TrainingOpportunity> GetTrainingOpportunitiesQueryable(int? InstituationID)
         {
             return _dbContext.TrainingOpportunities
-               .Include(t=>t.OpportunitySpecialty)
-               .ThenInclude(os=>os.Specialty)
-               .Where(t=>t.InstitutionID== InstituationID)
-               .AsNoTracking();
+                .Include(tr=>tr.Specialties)
+                .ThenInclude(s=>s.Specialty)
+                .Where(t=>t.InstitutionID== InstituationID)
+                .AsNoTracking().AsQueryable();
         }
     }
 }

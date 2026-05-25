@@ -23,9 +23,6 @@ namespace Project.Models
         public int? RequestID { get; set; }
         [ForeignKey(nameof(RequestID))]
         public TrainingOpportunityRequest? Request { get; set; }
-        public int OpportunitySpecialtyID { get; set; }
-        [ForeignKey(nameof(RequestID))]
-        public OpportunitySpecialty OpportunitySpecialty { get; set; }
         [Required(ErrorMessage = "Title is required")]
         [MaxLength(200, ErrorMessage = "Title can't be more than 200 characters")]
         [MinLength(2, ErrorMessage = "Title can't be less than 2 characters")]
@@ -54,5 +51,6 @@ namespace Project.Models
             Open =1, Closed=2, Cancelled=3
         }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public ICollection<RequestSpecialty> Specialties { get; set; } = new List<RequestSpecialty>();
     }
 }

@@ -182,12 +182,23 @@ namespace Project.Repostory
             return _dbContext.TrainingApplications
                 .Include(a => a.Student)
                 .ThenInclude(s => s.Department)
-                .ThenInclude(d => d.University.UniversityID== UniversityId)
+                .ThenInclude(d => d.University)
+                .Where(app => app.Student.Department.UniversityID== UniversityId)
                 .Include(a => a.TrainingOpportunity)
                 .ThenInclude(t=>t.TrainingInstitution)
-                .AsNoTracking();
+                .AsNoTracking().AsQueryable();
         }
-
+        //include institution
+        public IQueryable<TrainingOpportunityRequest> GetOpportunityRequestForUniversity(int? UniversityId)
+        {
+            return _dbContext.TrainingOpportunityRequests
+                .Include(r => r.Specialties)
+                .ThenInclude(rs => rs.Specialty)
+                .Include(r => r.OpportunityRequests)
+                .ThenInclude(ti => ti.TrainingInstitution)
+                .Where(or => or.UniversityID == UniversityId)
+                .AsNoTracking().AsQueryable();
+        }
 
     }
 }

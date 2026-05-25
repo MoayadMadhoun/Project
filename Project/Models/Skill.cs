@@ -15,9 +15,9 @@ namespace   Project.Models
         [MaxLength(500, ErrorMessage = "Description can't be more than 200 characters")]
         public string? Description { get; set; }
         public bool IsActive {  get; set; }
-        public ICollection<StudentSkill> StudentSkills { get; set; }=new HashSet<StudentSkill>();
-        public ICollection<OpportunitySkill> OpportunitySkills { get; set; } = new HashSet<OpportunitySkill>();
-        public ICollection<RequestSkill> RequestSkills { get; set; }= new HashSet<RequestSkill>();
+        public ICollection<StudentSkill> StudentSkills { get; set; }=new List<StudentSkill>();
+        public ICollection<OpportunitySkill> OpportunitySkills { get; set; } = new List<OpportunitySkill>();
+        public ICollection<RequestSkill> RequestSkills { get; set; }= new List<RequestSkill>();
 
     }
 }

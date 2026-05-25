@@ -111,7 +111,7 @@ namespace Project.Pages.Institution
                 return Page();
 
             }
-            catch
+            catch (Exception ex) 
             {
                 return RedirectToPage("/Index");
             }

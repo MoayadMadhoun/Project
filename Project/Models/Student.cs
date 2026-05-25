@@ -53,11 +53,11 @@ namespace Project.Models
 
 
 
-        public ICollection<StudentSkill> Skills { get; set; } = new HashSet<StudentSkill>();
-        public ICollection<TrainingApplication> Applications { get; set; } = new HashSet<TrainingApplication>();
+        public ICollection<StudentSkill> Skills { get; set; } = new List<StudentSkill>();
+        public ICollection<TrainingApplication> Applications { get; set; } = new List<TrainingApplication>();
 
-        public ICollection<PortfolioItem> PortfolioItems { get; set; } = new HashSet<PortfolioItem>();
-        public ICollection<StudentReport> Reports { get; set; } = new HashSet<StudentReport>();
+        public ICollection<PortfolioItem> PortfolioItems { get; set; } = new List<PortfolioItem>();
+        public ICollection<StudentReport> Reports { get; set; } = new List<StudentReport>();
 
 
 

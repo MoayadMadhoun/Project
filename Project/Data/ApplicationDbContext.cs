@@ -334,12 +334,6 @@ public class ApplicationDbContext : IdentityDbContext<AspNetUser>
             .WithMany()
             .HasForeignKey(o => o.InstitutionOfficerID)
             .OnDelete(DeleteBehavior.Restrict);
-        builder.Entity<TrainingOpportunity>()
-            .HasOne(o => o.OpportunitySpecialty)
-            .WithMany()
-            .HasForeignKey(o => o.OpportunitySpecialtyID)
-            .OnDelete(DeleteBehavior.Restrict);
-
         builder.Entity<AspNetRoleScope>()
             .HasOne(s => s.Role)
             .WithMany()

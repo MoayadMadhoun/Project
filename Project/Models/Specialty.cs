@@ -22,8 +22,8 @@ namespace Project.Models
 
         public Department Department { get; set; }
 
-        public ICollection<Student> Students { get; set; } = new HashSet<Student>();
-        public ICollection<OpportunitySpecialty> OpportunitySpecialties { get; set; } = new HashSet<OpportunitySpecialty>();
-        public ICollection<RequestSpecialty> RequestSpecialties { get; set; } = new HashSet<RequestSpecialty>();
+        public ICollection<Student> Students { get; set; } = new List<Student>();
+        public ICollection<OpportunitySpecialty> OpportunitySpecialties { get; set; } = new List<OpportunitySpecialty>();
+        public ICollection<RequestSpecialty> RequestSpecialties { get; set; } = new List<RequestSpecialty>();
     }
 }

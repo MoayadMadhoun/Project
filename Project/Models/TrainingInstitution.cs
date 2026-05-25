@@ -23,7 +23,7 @@ namespace Project.Models
         [MaxLength(200, ErrorMessage = "Contant person name can't be more than 200 characters")]
         public string? ContactPersonName { get; set; }
         public bool IsActive {  get; set; }
-        public ICollection<TrainingOpportunity> TrainingOpportunities { get; set; }=new HashSet<TrainingOpportunity>();
+        public ICollection<TrainingOpportunity> TrainingOpportunities { get; set; }=new List<TrainingOpportunity>();
 
         //UserID FK
         [Required(ErrorMessage = "User account is required")]
