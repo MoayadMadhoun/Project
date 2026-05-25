@@ -184,7 +184,7 @@ namespace Project.Repostory
                 .Include(a => a.Student)
                 .ThenInclude(s => s.Department)
                 .ThenInclude(d => d.University)
-                .Where(app => app.Student.Department.UniversityID== UniversityId)
+                .Where(app => app.Student.Department.UniversityID== universityId)
                 .Include(a => a.TrainingOpportunity)
                 .ThenInclude(t=>t.TrainingInstitution)
                 .AsNoTracking().AsQueryable();

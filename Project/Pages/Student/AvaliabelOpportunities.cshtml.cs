@@ -63,18 +63,18 @@ namespace Project.Pages.Student
             var state = await _context.TrainingOpportunities.Select(p => p.Status).Distinct().ToListAsync();
             Location = new SelectList(city);
             Specialty = await _specialtyRepository.CreateSpecialtySelectList();
-            var Opportunity = _context.TrainingOpportunities.Include(t => t.TrainingInstitution).AsNoTracking();
+            var Opportunity = _context.TrainingOpportunities.Include(t=>t.Specialties).ThenInclude(s => s.Specialty).Include(t => t.TrainingInstitution).AsNoTracking();
             if (!string.IsNullOrWhiteSpace(search))
             {
                 Opportunity = Opportunity.Where(
                     O => EF.Functions.Like(O.Title, $"%{search}%") ||
-                EF.Functions.Like(O.OpportunitySpecialty.Specialty.Name, $"%{search}%") ||
+                EF.Functions.Like(O.Specialties.Select(s => s.Specialty.Name).FirstOrDefault(), $"%{search}%") ||
                 EF.Functions.Like(O.TrainingInstitution.Name, $"%{search}%")
                 );
             }
             if (specialtyId.HasValue)
             {
-                Opportunity = Opportunity.Where(O =>  O.OpportunitySpecialtyID== specialtyId);
+                Opportunity = Opportunity.Where(O =>  O.Specialties.Any(s => s.SpecialtyID == specialtyId));
             }
             if (status.HasValue)
             {
