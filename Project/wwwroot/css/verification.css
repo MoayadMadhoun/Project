@@ -1,4 +1,12 @@
 ﻿
+body {
+    background-color: #EAEFF7;
+}
+
+.title-color {
+    color: #0E2E57;
+    font-weight: bold;
+}
 
 .otp-input {
     width: 40px;
@@ -19,9 +27,10 @@
     }
 
 .under-dash {
+    font-weight: bolder;
     text-align: center;
     font-size: 30PX;
-    margin: 3px 0 0 0;
+    margin: 1px 1px 1px 0;
 }
 
 @media (max-width: 576px) {
@@ -35,7 +44,35 @@
 
     .under-dash {
         font-size: 22px;
-        margin-top: 5px;
+        margin: 1px 1px 1px 0;
+        font-weight: bolder;
+    }
+
+    .otp-container {
+        gap: 6px !important;
+    }
+
+    .otp-input:focus {
+        outline: none;
+        border-color: #0eb6bf;
+        box-shadow: 0 0 8px #0eb6bf;
+        transform: scale(1.08);
+    }
+}
+
+@media (max-width: 1180px) {
+
+    .otp-input {
+        width: 30px;
+        height: 40px;
+        font-size: 18px;
+        border-radius: 8px;
+    }
+
+    .under-dash {
+        font-size: 22px;
+        margin: 1px 1px 1px 0;
+        font-weight: bolder;
     }
 
     .otp-container {
@@ -60,19 +97,26 @@
 }
 
 .btn-color {
-    background-color: #0eb6bf;
-    color: #000;
+    background-image: linear-gradient(90deg,#00998d 40%,#0b7ee6);
+    outline: none;
+    border: none;
+    color: #fff;
     font-weight: 500;
     transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(25, 135, 84, 0.4);
 }
 
-    .btn-color:hover {
-        background-color: #0a8f97;
-        color: #fff;
-        font-weight: 600;
-        transform: translateY(-5px);
-        outline: none;
-    }
+.card-sh {
+    box-shadow: 0 3px 15px #808080;
+}
+
+.btn-color:hover {
+    background-color: #0a8f97;
+    color: #fff;
+    font-weight: 600;
+    transform: translateY(-5px);
+    outline: none;
+}
 
 .otp-error {
     border-color: #dc3545 !important;

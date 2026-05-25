@@ -40,6 +40,13 @@
 
 </div>
 <div class=" m-0 input-icon ">
+    <i class="fa-solid fa-lock"></i>
+    <input asp-for="Input.ConfirmPassword" class="form-control shadow-sm" autocomplete="username" aria-required="true" placeholder="تأكيد كلمة المرور" />
+    <label class="form-label">  </label>
+    <span class="text-danger" asp-validation-for="Input.ConfirmPassword"></span>
+
+</div>
+<div class=" m-0 input-icon ">
     <i class="fa-solid fa-phone"></i>
     <input asp-for="UniversityInput.PhoneNumber" class="form-control shadow-sm" autocomplete="username" aria-required="true" placeholder="رقم الهاتف المباشر للجهة المسؤولة " />
     <label class="form-label">

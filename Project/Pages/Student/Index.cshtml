@@ -37,7 +37,7 @@
     </div>
     <div class="bg-surface-container-lowest p-lg rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] flex flex-col items-center justify-center text-center gap-sm">
         <div class="w-10 h-10 flex items-center justify-center bg-blue-50 rounded-lg"><span class="material-symbols-outlined text-tertiary">assignment</span></div>
-        <div><p class="text-slate-500 font-label-caps text-label-caps mb-xs">الطلبات المرسلة</p><h3 class="text-slate-900 font-h3 text-h3">@Model.TrainingApplication?.Count()</h3></div>
+        <div><p class="text-slate-500 font-label-caps text-label-caps mb-xs">الطلبات المرسلة</p><h3 class="text-slate-900 font-h3 text-h3">@Model.TotalApplication</h3></div>
     </div>
     <div class="bg-surface-container-lowest p-lg rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] flex flex-col items-center justify-center text-center gap-sm">
         <div class="w-10 h-10 flex items-center justify-center bg-orange-50 rounded-lg"><span class="material-symbols-outlined text-orange-500">event_available</span></div>
@@ -47,7 +47,7 @@
         <div class="w-10 h-10 flex items-center justify-center bg-purple-50 rounded-lg"><span class="material-symbols-outlined text-purple-500">work</span></div>
         <div><p class="text-slate-500 font-label-caps text-label-caps mb-xs">حالة التدريب</p><h3 class="text-slate-900 font-h3 text-h3">  @(Model.statusTrain == IndexModel.TrainingStatusEnum.Active ? "نشط" : "غير نشط")</h3></div>
       
-        <span class="absolute top-2 left-2 text-[10px] font-bold px-2 py-0.5 rounded bg-purple-100 text-purple-600">   @(Model.statusTrain == IndexModel.TrainingStatusEnum.Active ? "نشط" : "غير نشط")</span>
+        <span class="absolute top-2 left-2 text-[10px] font-bold px-2 py-0.5 rounded bg-purple-100 text-purple-600"> @(Model.statusTrain == IndexModel.TrainingStatusEnum.Active ? "نشط" : "غير نشط")</span>
     </div>
 </div>
 
@@ -85,8 +85,7 @@
                 {
                     @foreach (var app in Model.TrainingApplication)
                     {
-                        @if (app.Status != Models.TrainingApplication.ApplicationStatus.Withdrawn) //do not show the  Withdrawn Training Application
-                        {
+                        
                             <tr class="hover:bg-slate-50 transition-colors">
                                 <td class="px-4 md:px-lg py-4 md:py-md font-body-md text-sm md:text-body-md text-slate-900">@app.TrainingOpportunity.TrainingInstitution.Name</td>
                                 <td class="px-4 md:px-lg py-4 md:py-md font-body-md text-sm md:text-body-md text-slate-600">@app.AppliedAt.ToString("yyyy-MM-dd")</td>
@@ -117,7 +116,7 @@
                             </tr>
 
                           
-                        }
+                        
                     }
                 }
             </tbody>

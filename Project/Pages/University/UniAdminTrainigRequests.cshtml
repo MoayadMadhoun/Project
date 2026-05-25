@@ -1,0 +1,210 @@
+﻿@page
+@model Project.Pages.University.UniAdminTrainigRequestsModel
+@{
+    ViewData["Title"] = "إدارة الطلبات التدريبية";
+    ViewData["UserType"] = "University";
+    ViewData["UserName"] = "جامعة بيرزيت";
+    ViewData["PortalTitle"] = "بوابة الجامعة";
+    ViewData["PortalSubtitle"] = "إدارة التدريب الأكاديمي";
+    ViewData["SearchPlaceholder"] = "بحث عن طلب تدريب...";
+    ViewData["ActivePage"] = "TrainingRequests";
+}
+<link rel="stylesheet" href="~/Styles/opportunities.css">
+<div dir="rtl" class="w-full text-right">
+
+    @* ===== Hero Section  ===== *@
+    <section class="mb-lg md:mb-xl relative rounded-xl md:rounded-2xl overflow-hidden bg-primary-container p-6 md:p-xl text-on-primary">
+        <div class="relative z-10 max-w-2xl text-right">
+            <h1 class="font-h1 text-2xl md:text-h1 mb-md">إدارة الطلبات التدريبية</h1>
+            <p class="font-body-lg text-sm md:text-body-lg opacity-90 mb-lg">
+                متابعة واعتماد طلبات التدريب الخاصة بطلبة الجامعة بعد مراجعة رؤساء الأقسام.
+            </p>
+            <div class="flex gap-md justify-start flex-row">
+                <button class="bg-white text-primary font-button px-xl py-3 rounded-xl shadow-lg hover:bg-surface-container transition-colors">مراجعة الطلبات المعتمدة</button>
+                <button class="bg-primary/20 backdrop-blur-md border border-white/30 text-white font-button px-xl py-3 rounded-xl hover:bg-primary/30 transition-colors">طلبات قيد المراجعة</button>
+            </div>
+        </div>
+    </section>
+
+    <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] p-4 mb-lg">
+        <div class="flex flex-wrap gap-3 items-center justify-end">
+            <div class="relative flex-1 min-w-[220px]">
+                <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+                <input class="w-full pr-10 pl-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20 text-right" placeholder="ابحث عن طالب أو مؤسسة..." type="text" />
+            </div>
+            <select class="bg-slate-100 border-none rounded-xl text-sm font-bold text-slate-700 py-2.5 px-4 focus:ring-2 focus:ring-primary/20 cursor-pointer text-right">
+                <option>القسم</option>
+                <option>هندسة البرمجيات</option>
+                <option>نظم المعلومات</option>
+                <option>الأمن السيبراني</option>
+            </select>
+            <select class="bg-slate-100 border-none rounded-xl text-sm font-bold text-slate-700 py-2.5 px-4 focus:ring-2 focus:ring-primary/20 cursor-pointer text-right">
+                <option>حالة الطلب</option>
+                <option>قيد المراجعة</option>
+                <option>معتمد من الجامعة</option>
+                <option>مرفوض من القسم</option>
+                <option>معتمد من المؤسسة</option>
+            </select>
+            <select class="bg-slate-100 border-none rounded-xl text-sm font-bold text-slate-700 py-2.5 px-4 focus:ring-2 focus:ring-primary/20 cursor-pointer text-right">
+                <option>قرار رئيس القسم</option>
+                <option>موافقة</option>
+                <option>رفض</option>
+            </select>
+            <select class="bg-slate-100 border-none rounded-xl text-sm font-bold text-slate-700 py-2.5 px-4 focus:ring-2 focus:ring-primary/20 cursor-pointer text-right">
+                <option>قرار مسؤول التدريب</option>
+                <option>موافقة</option>
+                <option>رفض</option>
+            </select>
+            <button class="bg-primary text-white font-button px-6 py-2.5 rounded-xl hover:bg-primary/90 transition-colors">بحث</button>
+        </div>
+    </div>
+
+    @* ===== Requests Table ===== *@
+    <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] overflow-hidden">
+        <div class="p-4 md:p-lg border-b border-slate-100 flex justify-between items-center">
+            <button class="text-primary text-sm font-bold hover:underline">عرض الكل</button>
+            <h3 class="font-h3 text-lg md:text-h3 text-slate-900">طلبات التدريب الخاصة بالجامعة</h3>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-right border-collapse min-w-[1100px]">
+                <thead class="bg-surface-container-low">
+                    <tr>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الطالب</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الرقم الجامعي</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">القسم</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">المؤسسة</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الفرصة التدريبية</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">تاريخ التقديم</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الحالة النهائية</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50">
+                    @* الصف الأول *@
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-4 py-3 text-sm text-slate-900 font-bold">أحمد محمد</td>
+                        <td class="px-4 py-3 text-sm text-slate-600">20201234</td>
+                        <td class="px-4 py-3 text-sm text-slate-600">هندسة البرمجيات</td>
+                        <td class="px-4 py-3 text-sm text-slate-600">شركة التقنية المتقدمة</td>
+                        <td class="px-4 py-3 text-sm text-slate-600">تدريب Full Stack</td>
+                        <td class="px-4 py-3 text-sm text-slate-600">01-09-2025</td>
+                        <td class="px-4 py-3">
+                            <span class="px-3 py-1 rounded text-[11px] font-bold bg-blue-50 text-blue-600">قيد المراجعة</span>
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="flex gap-2 items-center">
+                                <button class="flex items-center gap-1 text-emerald-600 border border-emerald-200 px-2 py-1 rounded text-xs font-bold hover:bg-emerald-50">
+                                    <span class="material-symbols-outlined text-sm">check</span> اعتماد
+                                </button>
+                                <button class="flex items-center gap-1 text-rose-600 border border-rose-200 px-2 py-1 rounded text-xs font-bold hover:bg-rose-50">
+                                    <span class="material-symbols-outlined text-sm">cancel</span> رفض
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+
+                    @* الصف الثاني *@
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-4 py-3 text-sm text-slate-900 font-bold">سارة خالد</td>
+                        <td class="px-4 py-3 text-sm text-slate-600">20204567</td>
+                        <td class="px-4 py-3 text-sm text-slate-600">نظم المعلومات</td>
+                        <td class="px-4 py-3 text-sm text-slate-600">بنك الاستثمار</td>
+                        <td class="px-4 py-3 text-sm text-slate-600">تدريب تحليل بيانات</td>
+                        <td class="px-4 py-3 text-sm text-slate-600">05-09-2025</td>
+                        <td class="px-4 py-3">
+                            <span class="px-3 py-1 rounded text-[11px] font-bold bg-emerald-50 text-emerald-600">معتمد من الجامعة</span>
+                        </td>
+                        <td class="px-4 py-3">
+                            <button class="flex items-center gap-1 text-slate-600 border border-slate-200 px-3 py-1 rounded text-xs font-bold hover:bg-slate-50">
+                                <span class="material-symbols-outlined text-sm">visibility</span> عرض
+                            </button>
+                        </td>
+                    </tr>
+
+                    @* الصف الثالث *@
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-4 py-3 text-sm text-slate-900 font-bold">محمد علي</td>
+                        <td class="px-4 py-3 text-sm text-slate-600">20207891</td>
+                        <td class="px-4 py-3 text-sm text-slate-600">الأمن السيبراني</td>
+                        <td class="px-4 py-3 text-sm text-slate-600">شركة الحلول الذكية</td>
+                        <td class="px-4 py-3 text-sm text-slate-600">تدريب أمن سيبراني</td>
+                        <td class="px-4 py-3 text-sm text-slate-600">02-09-2025</td>
+                        <td class="px-4 py-3">
+                            <span class="px-3 py-1 rounded text-[11px] font-bold bg-rose-50 text-rose-600">مرفوض من القسم</span>
+                        </td>
+                        <td class="px-4 py-3">
+                            <button class="flex items-center gap-1 text-slate-600 border border-slate-200 px-3 py-1 rounded text-xs font-bold hover:bg-slate-50">
+                                <span class="material-symbols-outlined text-sm">visibility</span> عرض
+                            </button>
+                        </td>
+                    </tr>
+
+                    @* الصف الرابع *@
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-4 py-3 text-sm text-slate-900 font-bold">لينا محمود</td>
+                        <td class="px-4 py-3 text-sm text-slate-600">20203321</td>
+                        <td class="px-4 py-3 text-sm text-slate-600">نظم المعلومات</td>
+                        <td class="px-4 py-3 text-sm text-slate-600">مستشفى المدينة</td>
+                        <td class="px-4 py-3 text-sm text-slate-600">تدريب نظم معلومات صحية</td>
+                        <td class="px-4 py-3 text-sm text-slate-600">03-09-2025</td>
+                        <td class="px-4 py-3">
+                            <span class="px-3 py-1 rounded text-[11px] font-bold bg-blue-50 text-blue-600">قيد المراجعة</span>
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="flex gap-2 items-center">
+                                <button class="flex items-center gap-1 text-emerald-600 border border-emerald-200 px-2 py-1 rounded text-xs font-bold hover:bg-emerald-50">
+                                    <span class="material-symbols-outlined text-sm">check</span> اعتماد
+                                </button>
+                                <button class="flex items-center gap-1 text-rose-600 border border-rose-200 px-2 py-1 rounded text-xs font-bold hover:bg-rose-50">
+                                    <span class="material-symbols-outlined text-sm">cancel</span> رفض
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+
+                    @* الصف الخامس *@
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-4 py-3 text-sm text-slate-900 font-bold">عمر يوسف</td>
+                        <td class="px-4 py-3 text-sm text-slate-600">20205555</td>
+                        <td class="px-4 py-3 text-sm text-slate-600">هندسة البرمجيات</td>
+                        <td class="px-4 py-3 text-sm text-slate-600">دار الإبداع للإعلام</td>
+                        <td class="px-4 py-3 text-sm text-slate-600">تدريب تطوير تطبيقات</td>
+                        <td class="px-4 py-3 text-sm text-slate-600">04-09-2025</td>
+                        <td class="px-4 py-3">
+                            <span class="px-3 py-1 rounded text-[11px] font-bold bg-teal-50 text-teal-600">معتمد من المؤسسة</span>
+                        </td>
+                        <td class="px-4 py-3">
+                            <button class="flex items-center gap-1 text-slate-600 border border-slate-200 px-3 py-1 rounded text-xs font-bold hover:bg-slate-50">
+                                <span class="material-symbols-outlined text-sm">visibility</span> عرض
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        @* ===== Pagination Footer ===== *@
+        <div class="p-4 md:p-lg flex flex-col md:flex-row items-center justify-between gap-4 border-t border-slate-100">
+            <div class="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
+                <p class="text-sm text-slate-500 font-body-sm whitespace-nowrap">
+                    عرض <span class="font-bold text-slate-900">10</span> من أصل <span class="font-bold text-slate-900">145</span> طلب
+                </p>
+                <div class="flex items-center gap-2">
+                    <select class="bg-slate-100 border-none rounded-lg text-xs font-bold text-slate-700 py-1.5 pr-8 pl-3 focus:ring-2 focus:ring-primary/20 appearance-none cursor-pointer">
+                        <option>10</option>
+                        <option>25</option>
+                        <option>50</option>
+                    </select>
+                    <label class="text-xs text-slate-500 font-label-caps">النتائج:</label>
+                </div>
+            </div>
+            <nav class="flex items-center gap-2">
+                <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:bg-slate-50"><span class="material-symbols-outlined">chevron_right</span></button>
+                <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-primary text-white text-sm font-bold">1</button>
+                <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-600 text-sm font-bold hover:bg-slate-50">2</button>
+                <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-600 text-sm font-bold hover:bg-slate-50">3</button>
+                <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:bg-slate-50"><span class="material-symbols-outlined">chevron_left</span></button>
+            </nav>
+        </div>
+    </div>
+</div>

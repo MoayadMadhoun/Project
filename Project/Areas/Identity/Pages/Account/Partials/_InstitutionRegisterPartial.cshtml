@@ -13,14 +13,14 @@
     <span class="text-danger" asp-validation-for="InistitutionInput.FullName"></span>
     
 </div>
-@* <div class=" input-icon ">
-    <select asp-for="Input.InstituationType" class="form-select shadow-sm" autocomplete="username" aria-required="true">
+<div class=" input-icon ">
+    <select asp-for="InistitutionInput.InstituationType" asp-items="Model.InstitutionTypeList" class="form-select shadow-sm" autocomplete="username" aria-required="true">
         <option value="" class="text-light">نوع المؤسسة </option>
     </select>
     <label class="form-label">  </label>
-    <span class="text-danger" asp-validation-for="Input.InstituationType"></span>
+    <span class="text-danger" asp-validation-for="InistitutionInput.InstituationType"></span>
 
-</div> *@
+</div>
 <div class="input-icon  ">
     <i class="fa-solid fa-envelope"></i>
     <input asp-for="Input.Email" class="form-control shadow-sm" autocomplete="username" aria-required="true" placeholder="البريد الالكتروني المؤسسي" />
@@ -34,6 +34,13 @@
     <input asp-for="Input.Password" class="form-control shadow-sm" autocomplete="username" aria-required="true" placeholder="كلمة المرور" />
     <label class="form-label">  </label>
     <span class="text-danger" asp-validation-for="Input.Password"></span>
+
+</div>
+<div class=" input-icon ">
+    <i class="fa-solid fa-lock"></i>
+    <input asp-for="Input.ConfirmPassword" class="form-control shadow-sm" autocomplete="username" aria-required="true" placeholder="تأكيد كلمة المرور" />
+    <label class="form-label">  </label>
+    <span class="text-danger" asp-validation-for="Input.ConfirmPassword"></span>
 
 </div>
 <div class=" input-icon ">

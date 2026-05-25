@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -10,6 +11,7 @@ using Project.Repostory;
 
 namespace Project.Pages.University
 {
+    [Authorize(Roles = "UniversityTrainingAdmin")]
     public class IndexModel : PageModel
     {
 
@@ -42,6 +44,7 @@ namespace Project.Pages.University
         }
         public async Task<ActionResult> OnGet()
         {
+            TrainingApplications = new PaginatedList<TrainingApplication>(new List<TrainingApplication>(), 0, PageIndex, PageSize);
             try
             {
                 if (User == null)

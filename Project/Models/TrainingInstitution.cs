@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Project.Models.Enums;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Project.Models
@@ -11,8 +12,10 @@ namespace Project.Models
         [MaxLength(200, ErrorMessage = "Instituation name can't be more than 200 characters")]
         [MinLength(2, ErrorMessage = "Instituation name can't be less than 2 characters")]
         public string Name { get; set; } = string.Empty;
+
         [MaxLength(100, ErrorMessage = "Type can't be more than 200 characters")]
-        public string? Type { get; set; }
+        [StringLength(100, MinimumLength = 2)]
+        public InstitutionType? InstitutionType { get; set; }
         [MaxLength(300, ErrorMessage = "Address can't be more than 200 characters")]
         public string? Address { get; set; }
         [MaxLength(50, ErrorMessage = "Phone number can't be more than 200 characters")]

@@ -388,6 +388,11 @@ public class ApplicationDbContext : IdentityDbContext<AspNetUser>
         .HasForeignKey(s => s.DepartmentID)
         .OnDelete(DeleteBehavior.NoAction);
 
+        builder.Entity<TrainingInstitution>()
+            .Property(x => x.InstitutionType)
+            .HasConversion<string>()
+            .HasMaxLength(50);
+
         // =========================
         // SEED ROLES
         // =========================
