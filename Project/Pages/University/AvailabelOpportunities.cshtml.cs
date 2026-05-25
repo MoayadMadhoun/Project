@@ -81,7 +81,7 @@ namespace Project.Pages.University
                 var query = _uniRepo.GetOpportunityRequestForUniversity(universityId);
                 var specialities = _dbContext.Specialties.ToList();
                 Specialities = new SelectList(specialities, "Id", "Name");
-                if (StatusId > 0)
+                if (StatusId >= 0)
                 {
                     query = query.Where(a => a.Status == (TrainingOpportunityRequest.RequestStatus)StatusId);
                 }
