@@ -76,7 +76,7 @@
                     <span class="material-symbols-outlined text-lg">filter_list</span>تصفية
                 </button>
                 <select asp-for="StatusId" class="form-select flex items-center gap-2 px-5 py-2 bg-white border border-slate-200 rounded-xl text-slate-600 hover:bg-slate-50 transition-colors text-sm font-bold" asp-items="@Model.StatusList">
-                    <option value="0">
+                    <option value="-1">
                         All Statuses
                     </option>
                 </select>
@@ -121,11 +121,11 @@
                 {
                     <tr class="hover:bg-slate-50 transition-colors">
                         <td class="px-4 md:px-lg py-4 md:py-md font-body-md text-sm md:text-body-md text-slate-900">
-                                @application.Student?.Name ?? "—"
+                                @(application.Student?.Name ?? "—")
                         </td>
 
                         <td class="px-4 md:px-lg py-4 md:py-md font-body-md text-sm md:text-body-md text-slate-600">
-                                @application.TrainingOpportunity?.TrainingInstitution?.Name ?? "—"
+                                @(application.TrainingOpportunity?.TrainingInstitution?.Name ?? "—")
                         </td>
 
                         <td class="px-4 md:px-lg py-4 md:py-md font-body-md text-sm md:text-body-md text-slate-600">
@@ -159,6 +159,7 @@
             </p>
             <div class="flex items-center gap-2">
                 <label class="text-xs text-slate-500 font-label-caps" for="per-page-inst">النتائج:</label>
+                <form>
                 <select asp-for="PageSize"
                         onchange="this.form.submit()"
                         class="bg-slate-100 border-none rounded-lg text-xs font-bold text-slate-700 py-1.5 pr-8 pl-3 focus:ring-2 focus:ring-primary/20 appearance-none cursor-pointer"
@@ -167,6 +168,7 @@
                     <option value="25">25</option>
                     <option value="50">50</option>
                 </select>
+                </form>
             </div>
         </div>
 
@@ -174,6 +176,10 @@
             @if (Model.TrainingApplications.HasPrevPage)
             {
                 <a asp-route-PageIndex="@(Model.PageIndex - 1)"
+                   asp-route-SearchTerm="@Model.SearchTerm"
+                   asp-route-StatusId="@Model.StatusId"
+                   asp-route-SortOrder="@Model.SortOrder"
+                   asp-route-PageSize="@Model.PageSize"
                    class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:bg-slate-50"><span class="material-symbols-outlined">chevron_right</span></a>
             }
            
@@ -181,11 +187,19 @@
             {
 
                 <a asp-route-PageIndex="@i"
+                   asp-route-SearchTerm="@Model.SearchTerm"
+                   asp-route-StatusId="@Model.StatusId"
+                   asp-route-SortOrder="@Model.SortOrder"
+                   asp-route-PageSize="@Model.PageSize"
                    class="w-8 h-8 flex items-center justify-center rounded-lg @(Model.PageIndex == i ? "bg-primary" : "border border-slate-200 text-slate-600 hover:bg-slate-50 ")  text-white text-sm font-bold">@i</a>
             }
             @if (Model.TrainingApplications.HasNextPage)
             {
                 <a asp-route-PageIndex="@(Model.PageIndex + 1)"
+                   asp-route-SearchTerm="@Model.SearchTerm"
+                   asp-route-StatusId="@Model.StatusId"
+                   asp-route-SortOrder="@Model.SortOrder"
+                   asp-route-PageSize="@Model.PageSize"
                    class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:bg-slate-50"><span class="material-symbols-outlined">chevron_left</span></a>
             }
 

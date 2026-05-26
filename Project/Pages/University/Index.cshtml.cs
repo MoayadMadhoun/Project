@@ -24,7 +24,6 @@ namespace Project.Pages.University
         public int PageSize { get; set; } = 10;
         [BindProperty(SupportsGet = true)]
         public string SortOrder { get; set; }
-        [BindProperty(SupportsGet = true)]
         public Models.University CurrentUniversity { get; set; }
         [BindProperty(SupportsGet = true)]
         public string SearchTerm { get; set; }
@@ -88,7 +87,7 @@ namespace Project.Pages.University
                 {
                     query = query.Where(a => a.Status == (TrainingApplication.ApplicationStatus)StatusId);
                 }
-                if (SearchTerm != null)
+                if (!string.IsNullOrEmpty(SearchTerm))
                 {
                     query = query.Where(a => a.TrainingOpportunity.Title.Contains(SearchTerm));
                 }

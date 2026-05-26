@@ -21,7 +21,6 @@ namespace Project.Pages.University
         public int PageSize { get; set; } = 10;
         [BindProperty(SupportsGet = true)]
         public string SortOrder { get; set; }
-        [BindProperty(SupportsGet = true)]
         public Models.University CurrentUniversity { get; set; }
         [BindProperty(SupportsGet = true)]
         public string SearchTerm { get; set; }
@@ -80,12 +79,21 @@ namespace Project.Pages.University
 
                 var query = _uniRepo.GetOpportunityRequestForUniversity(universityId);
                 var specialities = _dbContext.Specialties.ToList();
-                Specialities = new SelectList(specialities, "Id", "Name");
-                if (StatusId >= 0)
+                Specialities = new SelectList(specialities, "SpecialtyID", "Name");
+                if (SpecialtyId > 0)
+                    query = query.Where(a => a.Specialties.Any(s => s.SpecialtyID == SpecialtyId));
+                if (StatusId > 0)
                 {
-                    query = query.Where(a => a.Status == (TrainingOpportunityRequest.RequestStatus)StatusId);
+                    var status = StatusId switch
+                    {
+                        1 => TrainingOpportunityRequest.RequestStatus.Published,
+                        2 => TrainingOpportunityRequest.RequestStatus.Closed,
+                        3 => TrainingOpportunityRequest.RequestStatus.Cancelled,
+                        _ => TrainingOpportunityRequest.RequestStatus.Draft
+                    };
+                    query = query.Where(a => a.Status == status);
                 }
-                if (SearchTerm != null)
+                if (!string.IsNullOrEmpty(SearchTerm))
                 {
                     query = query.Where(a => a.Title.Contains(SearchTerm));
                 }

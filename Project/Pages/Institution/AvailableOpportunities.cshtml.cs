@@ -21,7 +21,6 @@ namespace Project.Pages.Institution
         public int PageSize { get; set; } = 10;
         [BindProperty(SupportsGet = true)]
         public string SortOrder { get; set; }
-        [BindProperty(SupportsGet = true)]
         public TrainingInstitution CurrentInstitution { get; set; }
         [BindProperty(SupportsGet = true)]
         public string SearchTerm { get; set; }
@@ -79,16 +78,15 @@ namespace Project.Pages.Institution
                 }
                 
                 var query = _institutionRepo.GetTrainingOpportunitiesQueryable(institutionId);
-                //var selectList = Enum.GetValues(typeof(TrainingApplication.ApplicationStatus))
-                //  .Cast<TrainingApplication.ApplicationStatus>()
-                //  .Select(s => new { Value = s.ToString(), Text = s.ToString() });
                 var specialities = _dbContext.Specialties.ToList();
-                Specialities = new SelectList(specialities, "Id", "Name");
+                Specialities = new SelectList(specialities, "SpecialtyID", "Name");
+                if (SpecialtyId > 0)
+                    query = query.Where(a => a.Specialties.Any(s => s.SpecialtyID == SpecialtyId));
                 if (StatusId > 0)
                 {
                     query = query.Where(a => a.Status == (TrainingOpportunity.Opportunity)StatusId);
                 }
-                if (SearchTerm != null)
+                if (!string.IsNullOrEmpty(SearchTerm))
                 {
                     query = query.Where(a => a.Title.Contains(SearchTerm));
                 }

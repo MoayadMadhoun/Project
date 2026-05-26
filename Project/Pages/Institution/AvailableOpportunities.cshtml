@@ -84,8 +84,8 @@
                     <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">
                         <a class="text-decoration-none"
                                asp-route-PageIndex="@(Model.PageIndex)"
-                               asp-route-SortOrder="@(Model.SortOrder == "Capicity" ? "Capicity_desc" : "Capicity")">
-                            المقاعد @SortingIcon("Capicity", Model.SortOrder)
+                               asp-route-SortOrder="@(Model.SortOrder == "Capacity" ? "Capacity_desc" : "Capacity")">
+                            المقاعد @SortingIcon("Capacity", Model.SortOrder)
                         </a>
                     </th>
                     <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الموقع</th>
@@ -149,7 +149,8 @@
             <p class="text-sm text-slate-500 font-body-sm whitespace-nowrap">
                 عرض <span class="font-bold text-slate-900">@Model.TrainingOpportunities.Count</span> من أصل <span class="font-bold text-slate-900">@Model.TrainingOpportunities.TotalCount</span> طلب
             </p>
-            <div class="flex items-center gap-2">
+            <div>
+            <form class="flex items-center gap-2">
                 <label class="text-xs text-slate-500 font-label-caps" for="per-page-inst">النتائج:</label>
                 <select asp-for="PageSize"
                         onchange="this.form.submit()"
@@ -159,25 +160,44 @@
                     <option value="25">25</option>
                     <option value="50">50</option>
                 </select>
+            </form>
             </div>
         </div>
 
         <nav class="flex items-center gap-2">
             @if (Model.TrainingOpportunities.HasPrevPage)
             {
-                <a asp-route-PageIndex="@(Model.PageIndex - 1)"
+                <a asp-route-SearchTerm="@Model.SearchTerm"
+                   asp-route-StatusId="@Model.StatusId"
+                   asp-route-SpecialtyId="@Model.SpecialtyId"
+                   asp-route-PeriodMonths="@Model.PeriodMonths"
+                   asp-route-PageSize="@Model.PageSize"
+                   asp-route-SortOrder="@Model.SortOrder"
+                    asp-route-PageIndex="@(Model.PageIndex - 1)"
                    class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:bg-slate-50"><span class="material-symbols-outlined">chevron_right</span></a>
             }
            
             @for (int i = 1; i <= Model.TrainingOpportunities.TotalPages; i++)
             {
 
-                <a asp-route-PageIndex="@i"
+                <a asp-route-SearchTerm="@Model.SearchTerm"
+                   asp-route-StatusId="@Model.StatusId"
+                   asp-route-SpecialtyId="@Model.SpecialtyId"
+                   asp-route-PeriodMonths="@Model.PeriodMonths"
+                   asp-route-PageSize="@Model.PageSize"
+                   asp-route-SortOrder="@Model.SortOrder"
+                    asp-route-PageIndex="@i"
                    class="w-8 h-8 flex items-center justify-center rounded-lg @(Model.PageIndex == i ? "bg-primary" : "border border-slate-200 text-slate-600 hover:bg-slate-50 ")  text-white text-sm font-bold">@i</a>
             }
             @if (Model.TrainingOpportunities.HasNextPage)
             {
-                <a asp-route-PageIndex="@(Model.PageIndex + 1)"
+                <a asp-route-SearchTerm="@Model.SearchTerm"
+                   asp-route-StatusId="@Model.StatusId"
+                   asp-route-SpecialtyId="@Model.SpecialtyId"
+                   asp-route-PeriodMonths="@Model.PeriodMonths"
+                   asp-route-PageSize="@Model.PageSize"
+                   asp-route-SortOrder="@Model.SortOrder"
+                    asp-route-PageIndex="@(Model.PageIndex + 1)"
                    class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:bg-slate-50"><span class="material-symbols-outlined">chevron_left</span></a>
             }
         </nav>
