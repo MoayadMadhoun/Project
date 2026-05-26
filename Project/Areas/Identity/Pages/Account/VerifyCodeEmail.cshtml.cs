@@ -1,4 +1,4 @@
-
+﻿
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -157,7 +157,8 @@ namespace Project.Areas.Identity.Pages.Account
 
             await _dbContext.SaveChangesAsync();
 
-            await _emailSender.SendEmailAsync(Email, "Your Veriviction Code is ", $"Your code is <h2>{otp}</h2>");
+            await _emailSender.SendEmailAsync(Email, " 🚀 Verify your SpaceArea account", $"Dear<b> {user.FullName }</b><br />,Welcome to SpaceArea – the smart hub connecting students, universities, and training institutions!<br />  Please use the 6-digit verification code below to confirm your email address and activate your account:<br /><h2>  Verification Code : {otp}</h2><br />  ⏳ Important: This code is valid for 10 minutes only.<br /> If you didn't request this email, you can safely ignore it.<br /> Your account security is our priority.<br /><h2> Best regards, The SpaceArea Team</h2>");
+            //await _emailSender.SendEmailAsync(Email, " 🚀 Verify your SpaceArea account", $"Your code is <h2>{otp}</h2>");
 
             return new JsonResult(new { success = true });
         }
