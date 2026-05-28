@@ -18,8 +18,11 @@ namespace Project.Models.Enums
                 .GetName() ?? value.ToString();
         }
 
-        public static SelectList GetInstitutionTypes()
+       
+
+        public static SelectList GetEnumSelectList<TEnum>() where TEnum : Enum
         {
+
             var data = Enum.GetValues<InstitutionType>()
                 .Select(x => new
                 {
@@ -28,7 +31,9 @@ namespace Project.Models.Enums
                 });
 
             return new SelectList(data, "Value", "Text");
+
         }
+
     }
 }
 
