@@ -142,7 +142,7 @@ namespace Project.Areas.Identity.Pages.Account
         {
 
             UniversityList = await _universityRepository.CreateUniversitySelectList();
-            InstitutionTypeList = EnumExtensions.GetInstitutionTypes();
+            InstitutionTypeList = EnumExtensions.GetEnumSelectList<InstitutionType>();
 
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
@@ -180,7 +180,7 @@ namespace Project.Areas.Identity.Pages.Account
 
             RemoveUnusedValidation();
             UniversityList = await _universityRepository.CreateUniversitySelectList();
-            InstitutionTypeList = EnumExtensions.GetInstitutionTypes();
+            InstitutionTypeList = EnumExtensions.GetEnumSelectList<InstitutionType>();
             foreach (var item in ModelState)
             {
                 var field = item.Key;
