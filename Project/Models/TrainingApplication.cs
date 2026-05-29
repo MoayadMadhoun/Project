@@ -27,8 +27,22 @@ namespace Project.Models
         public ApplicationStatus Status { get; set; } = ApplicationStatus.Submitted ;
         public enum ApplicationStatus
         {
-            Submitted, DepartmentApproved, DepartmentRejected, UniversityApproved, UniversityRejected,
-            InstitutionRejected, Placed, Withdrawn
+            [Display(Name = "قيد مراجعة رئيس القسم")]
+            Submitted,
+            [Display(Name = "قيد مراجعة الجامعة")]
+            DepartmentApproved,
+            [Display(Name = "تم الرفض  من رئيس القسم")]
+            DepartmentRejected,
+            [Display(Name = "تمت الموافقة من الجامعة")]
+            UniversityApproved,
+            [Display(Name = "تم الرفض من الجامعة")]
+            UniversityRejected,
+            [Display(Name = "تم الرفض من المؤسسة")]
+            InstitutionRejected,
+            [Display(Name = "تم القبول")]
+            Placed,
+            [Display(Name = "تم الانسحاب")]
+            Withdrawn
         }
         [Column(TypeName = "nvarchar(50)")]
         public Decision DepartmentDecision { get; set; } = Decision.Pending ;

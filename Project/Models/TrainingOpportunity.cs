@@ -48,7 +48,12 @@ namespace Project.Models
         public Opportunity Status { get; set; } = Opportunity.Open;
         public enum Opportunity
         {
-            Open =1, Closed=2, Cancelled=3
+            [Display(Name = "مفتوحة")]
+            Open =1,
+            [Display(Name = "مغلقة")]
+            Closed =2,
+            [Display(Name = "منتهية")]
+            Cancelled =3
         }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public ICollection<RequestSpecialty> Specialties { get; set; } = new List<RequestSpecialty>();

@@ -87,8 +87,8 @@
                     {
                         
                             <tr class="hover:bg-slate-50 transition-colors">
-                                <td class="px-4 md:px-lg py-4 md:py-md font-body-md text-sm md:text-body-md text-slate-900">@app.TrainingOpportunity.TrainingInstitution.Name</td>
-                                <td class="px-4 md:px-lg py-4 md:py-md font-body-md text-sm md:text-body-md text-slate-600">@app.AppliedAt.ToString("yyyy-MM-dd")</td>
+                                <td class="px-4 md:px-lg py-4 md:py-md font-body-md text-sm md:text-body-md text-slate-900">@(app.TrainingOpportunity?.TrainingInstitution?.Name ?? "")</td>
+                            <td class="px-4 md:px-lg py-4 md:py-md font-body-md text-sm md:text-body-md text-slate-600">@app.AppliedAt.ToString("dd-MM-yyyy")</td>
                                 <td class="px-4 md:px-lg py-4 md:py-md">
                                     @if (@app.Status == Models.TrainingApplication.ApplicationStatus.Placed)
                                     {
@@ -112,7 +112,7 @@
 
                                     }
                                 </td>
-                                <td class="px-4 md:px-lg py-4 md:py-md font-body-md text-sm md:text-body-md text-slate-600">@app.TrainingOpportunity.Title</td>
+                                <td class="px-4 md:px-lg py-4 md:py-md font-body-md text-sm md:text-body-md text-slate-600">@(app.TrainingOpportunity?.Title ??"")</td>
                             </tr>
 
                           
