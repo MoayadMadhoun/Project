@@ -41,7 +41,7 @@ namespace Project.Models
             InstitutionRejected,
             [Display(Name = "تم القبول")]
             Placed,
-            [Display(Name = "تم الانسحاب")]
+            [Display(Name = "تم سحب الطلب ")]
             Withdrawn
         }
         [Column(TypeName = "nvarchar(50)")]
