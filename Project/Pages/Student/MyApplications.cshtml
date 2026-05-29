@@ -106,7 +106,7 @@
               <a asp-route-PageIndex="@(Model.PageIndex-1)" class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:bg-slate-50"><span class="material-symbols-outlined">chevron_right</span></a>
             }
             @for (int i=1; i<= @Model.StudentApplications.TotalPages; i++) { 
-                <a asp-route-PageIndex="@i" class="w-8 h-8 flex items-center justify-center rounded-lg @(i == Model.PageIndex ? "bg-primary" :"") text-white text-sm font-bold">@i</a>
+                <a asp-route-PageIndex="@i" class="w-8 h-8 flex items-center justify-center rounded-lg @(i == Model.PageIndex ? "bg-primary text-white" :"")  text-sm font-bold">@i</a>
             }
             @if (Model.StudentApplications.HasNextPage)
             {

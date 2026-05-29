@@ -283,10 +283,11 @@ namespace Project.Repositories
         }
 
         // get all Training Application for student by student Id
-        public async Task<List<TrainingApplication>> GetAllApplicationByStudentId(int studentId)
+        public IQueryable<TrainingApplication> GetAllApplicationByStudentId(int studentId)
         {
-            return await _context.TrainingApplications.AsNoTracking().
-                Include(tp => tp.TrainingOpportunity).Where(tp => tp.StudentID == studentId).ToListAsync();
+            return _context.TrainingApplications.AsNoTracking().
+                Include(tp => tp.TrainingOpportunity).ThenInclude(to=>to.TrainingInstitution).
+                                                      Where(tp => tp.StudentID == studentId);
         }
         // get IQueryable all Training Application for student by student Id use in Paginated List
         public IQueryable<TrainingApplication> GetTrainingApplications(int studentId)
