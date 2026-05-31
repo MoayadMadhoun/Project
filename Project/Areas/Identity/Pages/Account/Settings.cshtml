@@ -1,0 +1,436 @@
+@page
+@model SettingsModel
+@{
+    ViewData["Title"] = "الإعدادات";
+}
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>الإعدادات</title>
+
+    <!-- Bootstrap RTL -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" />
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <!-- Google Fonts - Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet" />
+
+    <style>
+        /* ============================
+           CSS Variables & Base
+        ============================ */
+        :root {
+            --teal-primary:   #0d9e8a;
+            --teal-dark:      #1aafa2;
+            --teal-light:     #e6f7f5;
+            --teal-mid:       #b2e8e2;
+            --text-dark:      #1a2e2b;
+            --text-muted:     #6b7e7b;
+            --card-bg:        #ffffff;
+            --page-bg:        #f4faf9;
+            --border-color:   #d8edea;
+            --shadow-sm:      0 2px 10px rgba(13,158,138,.08);
+            --shadow-hover:   0 8px 28px rgba(13,158,138,.18);
+            --radius:         16px;
+            --radius-sm:      10px;
+            --transition:     .35s cubic-bezier(.4,0,.2,1);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: var(--page-bg);
+            color: var(--text-dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ============================
+           Page Wrapper
+        ============================ */
+        .settings-page {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2.5rem 1.25rem 4rem;
+        }
+
+        /* ============================
+           Hero Banner
+        ============================ */
+        .settings-hero {
+            background: linear-gradient(135deg, var(--teal-primary) 0%, var(--teal-dark) 100%);
+            border-radius: var(--radius);
+            padding: 2.5rem 2rem 2rem;
+            margin-bottom: 2.5rem;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(-24px);
+            animation: fadeDown .6s ease forwards;
+        }
+
+        .settings-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 10% 50%, rgba(255,255,255,.12) 0%, transparent 55%),
+                radial-gradient(circle at 90% 20%, rgba(255,255,255,.08) 0%, transparent 45%);
+        }
+
+        .hero-icon-wrap {
+            width: 64px; height: 64px;
+            background: rgba(255,255,255,.18);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 1.1rem;
+            backdrop-filter: blur(6px);
+            border: 1.5px solid rgba(255,255,255,.25);
+            animation: pulseRing 2.5s ease infinite;
+        }
+
+        .hero-icon-wrap i { font-size: 1.8rem; color: #fff; }
+
+        .settings-hero h1 {
+            font-size: 2rem; font-weight: 800;
+            color: #fff; margin-bottom: .4rem;
+            position: relative;
+        }
+
+        .settings-hero p {
+            color: rgba(255,255,255,.82);
+            font-size: .95rem; font-weight: 500;
+            position: relative;
+        }
+
+        /* ============================
+           Section Label
+        ============================ */
+        .section-label {
+            font-size: .78rem; font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .12em;
+            color: var(--teal-primary);
+            margin-bottom: .9rem;
+            padding-right: .2rem;
+            opacity: 0;
+            animation: fadeIn .5s ease forwards;
+        }
+
+        /* ============================
+           Setting Card
+        ============================ */
+        .setting-card {
+            background: var(--card-bg);
+            border: 1.5px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.4rem 1.6rem;
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+            opacity: 0;
+            transform: translateX(30px);
+        }
+
+        /* Staggered entrance */
+        .card-animate { animation: slideIn .5s ease forwards; }
+
+        .setting-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--teal-light), transparent 70%);
+            opacity: 0;
+            transition: opacity var(--transition);
+        }
+
+        .setting-card:hover {
+            border-color: var(--teal-primary);
+            box-shadow: var(--shadow-hover);
+            transform: translateX(-4px) translateY(-2px);
+            color: inherit;
+        }
+
+        .setting-card:hover::after { opacity: 1; }
+
+        .setting-card:active {
+            transform: scale(.98);
+            transition: transform .1s ease;
+        }
+
+        /* Icon bubble */
+        .card-icon {
+            flex-shrink: 0;
+            width: 56px; height: 56px;
+            border-radius: var(--radius-sm);
+            background: var(--teal-light);
+            display: flex; align-items: center; justify-content: center;
+            transition: var(--transition);
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-icon i { font-size: 1.55rem; color: var(--teal-primary); transition: var(--transition); }
+
+        .setting-card:hover .card-icon {
+            background: var(--teal-primary);
+            transform: scale(1.08) rotate(-4deg);
+        }
+
+        .setting-card:hover .card-icon i { color: #fff; }
+
+        /* Text */
+        .card-body-text {
+            flex: 1;
+            position: relative; z-index: 1;
+            text-align: right;
+        }
+
+        .card-body-text h3 {
+            font-size: 1.05rem; font-weight: 700;
+            margin-bottom: .25rem; color: var(--text-dark);
+            transition: color var(--transition);
+        }
+
+        .setting-card:hover .card-body-text h3 { color: var(--teal-dark); }
+
+        .card-body-text p {
+            font-size: .85rem; color: var(--text-muted);
+            font-weight: 500; margin: 0; line-height: 1.5;
+        }
+
+        /* Arrow */
+        .card-arrow {
+            flex-shrink: 0;
+            width: 36px; height: 36px;
+            background: var(--teal-light);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            transition: var(--transition);
+            position: relative; z-index: 1;
+        }
+
+        .card-arrow i { font-size: 1rem; color: var(--teal-primary); transition: var(--transition); }
+
+        .setting-card:hover .card-arrow {
+            background: var(--teal-primary);
+            transform: translateX(-4px);
+        }
+
+        .setting-card:hover .card-arrow i { color: #fff; }
+
+        /* Divider label */
+        .group-divider {
+            height: 1px;
+            background: linear-gradient(to left, transparent, var(--border-color), transparent);
+            margin: .5rem 0 1.5rem;
+        }
+
+        /* ============================
+           Keyframes
+        ============================ */
+        @@keyframes fadeDown {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @@keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        @@keyframes slideIn {
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @@keyframes pulseRing {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255,255,255,.25); }
+            50%       { box-shadow: 0 0 0 10px rgba(255,255,255,0); }
+        }
+
+        /* ============================
+           Danger zone (logout area)
+        ============================ */
+        .danger-card {
+            --teal-primary:   #e05252;
+            --teal-dark:      #b73c3c;
+            --teal-light:     #fef2f2;
+            --border-color:   #fbd5d5;
+            --shadow-hover:   0 8px 28px rgba(224,82,82,.18);
+        }
+
+        .danger-card .card-arrow { background: #fef2f2; }
+        .danger-card .card-arrow i { color: #e05252; }
+        .danger-card:hover .card-arrow { background: #e05252; }
+        .danger-card .card-icon { background: #fef2f2; }
+        .danger-card .card-icon i { color: #e05252; }
+        .danger-card:hover .card-icon { background: #e05252; }
+        .danger-card:hover { border-color: #e05252; }
+
+        .settings-page{
+            margin-top: 0px !important;
+        }
+
+        /* ============================
+           Responsive
+        ============================ */
+        @@media (max-width: 576px) {
+            .settings-hero h1 { font-size: 1.5rem; }
+            .setting-card { padding: 1.1rem 1.2rem; gap: .9rem; }
+            .card-icon { width: 48px; height: 48px; }
+            .card-body-text h3 { font-size: .95rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="settings-page">
+
+    <!-- ======= Hero ======= -->
+    <div class="settings-hero">
+        <div class="hero-icon-wrap">
+            <i class="bi bi-gear-fill"></i>
+        </div>
+        <h1>الإعدادات</h1>
+        <p>إدارة بيانات حسابك الشخصية وتحديث معلومات تسجيل الدخول.</p>
+    </div>
+
+    <!-- ======= Group 1: Account Info ======= -->
+    <p class="section-label" style="animation-delay:.3s">معلومات الحساب</p>
+
+    <div class="d-flex flex-column gap-3 mb-4">
+
+        <a asp-page="/Settings/AccountInfo"
+           class="setting-card card-animate"
+           style="animation-delay:.35s">
+            <div class="card-icon"><i class="bi bi-person-circle"></i></div>
+            <div class="card-body-text">
+                <h3>معلومات الحساب</h3>
+                <p>تحديث الاسم الكامل، اسم المستخدم، البريد الإلكتروني ورقم الهاتف.</p>
+            </div>
+            <div class="card-arrow"><i class="bi bi-chevron-left"></i></div>
+        </a>
+
+        <a asp-page="/Settings/ChangeEmail"
+           class="setting-card card-animate"
+           style="animation-delay:.45s">
+            <div class="card-icon"><i class="bi bi-envelope-fill"></i></div>
+            <div class="card-body-text">
+                <h3>تغيير البريد الإلكتروني</h3>
+                <p>تحديث بريدك الإلكتروني المستخدم لتسجيل الدخول واستقبال الإشعارات.</p>
+            </div>
+            <div class="card-arrow"><i class="bi bi-chevron-left"></i></div>
+        </a>
+
+        <a asp-page="/Settings/ChangePassword"
+           class="setting-card card-animate"
+           style="animation-delay:.55s">
+            <div class="card-icon"><i class="bi bi-lock-fill"></i></div>
+            <div class="card-body-text">
+                <h3>تغيير كلمة المرور</h3>
+                <p>تحديث كلمة المرور الخاصة بحسابك لضمان أمان حسابك.</p>
+            </div>
+            <div class="card-arrow"><i class="bi bi-chevron-left"></i></div>
+        </a>
+
+    </div>
+
+    <div class="group-divider"></div>
+
+    <!-- ======= Group 2: Profile & Privacy ======= -->
+    <p class="section-label" style="animation-delay:.6s">الملف </p>
+
+    <div class="d-flex flex-column gap-3 mb-4">
+
+        <a asp-page="/Settings/ProfilePicture"
+           class="setting-card card-animate"
+           style="animation-delay:.65s">
+            <div class="card-icon"><i class="bi bi-camera-fill"></i></div>
+            <div class="card-body-text">
+                <h3>الصورة الشخصية</h3>
+                <p>تحديث صورتك الشخصية التي تظهر في حسابك.</p>
+            </div>
+            <div class="card-arrow"><i class="bi bi-chevron-left"></i></div>
+        </a>
+
+        @* <a asp-page="/Settings/Privacy"
+           class="setting-card card-animate"
+           style="animation-delay:.75s">
+            <div class="card-icon"><i class="bi bi-shield-check-fill"></i></div>
+            <div class="card-body-text">
+                <h3>الخصوصية</h3>
+                <p>إدارة إعدادات الخصوصية والتحكم في ظهور بياناتك.</p>
+            </div>
+            <div class="card-arrow"><i class="bi bi-chevron-left"></i></div>
+        </a> *@
+
+    </div>
+
+    <div class="group-divider"></div>
+
+    <!-- ======= Danger Zone: Logout ======= -->
+    <p class="section-label" style="animation-delay:.85s; color:#e05252">خروج</p>
+
+    <div class="d-flex flex-column gap-3">
+        <a asp-page="/Index"
+           class="setting-card danger-card card-animate"
+           style="animation-delay:.9s">
+            <div class="card-icon"><i class="bi bi-box-arrow-right"></i></div>
+            <div class="card-body-text">
+                <h3 style="color:#e05252">تسجيل الخروج</h3>
+                <p>إنهاء جلستك الحالية وتسجيل الخروج من المنصة.</p>
+            </div>
+            <div class="card-arrow"><i class="bi bi-chevron-left"></i></div>
+        </a>
+    </div>
+
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // Ripple effect on card click
+    document.querySelectorAll('.setting-card').forEach(card => {
+        card.addEventListener('click', function (e) {
+            const ripple = document.createElement('span');
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height) * 2;
+            ripple.style.cssText = `
+                position:absolute;
+                width:${size}px; height:${size}px;
+                left:${e.clientX - rect.left - size/2}px;
+                top:${e.clientY - rect.top  - size/2}px;
+                background:rgba(13,158,138,.12);
+                border-radius:50%;
+                transform:scale(0);
+                animation:ripple .55s ease-out forwards;
+                pointer-events:none;
+                z-index:0;
+            `;
+            this.appendChild(ripple);
+            ripple.addEventListener('animationend', () => ripple.remove());
+        });
+    });
+</script>
+
+<style>
+    @@keyframes ripple {
+        to { transform: scale(1); opacity: 0; }
+    }
+</style>
+
+</body>
+</html>
