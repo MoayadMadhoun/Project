@@ -1,0 +1,190 @@
+﻿@page
+@model Project.Pages.Student.CurrentTrainingModel
+@{
+    ViewData["Title"] = "التدريب الحالي";
+    ViewData["UserType"] = "Student";
+    ViewData["UserName"] = "أحمد محمد";
+    ViewData["PortalTitle"] = "بوابة الطالب";
+    ViewData["PortalSubtitle"] = "إدارة التدريب الأكاديمي";
+    ViewData["SearchPlaceholder"] = "بحث عن شيء...";
+    ViewData["ActivePage"] = "CurrentTrainig";
+}
+<link href="~/css/CurrentTraining.css" rel="stylesheet" />
+<!-- ═══════ CONTENT COLUMN ═══════ -->
+<div class="content-col">
+
+
+
+    <!-- MAIN -->
+    <div class="main-wrap">
+
+        <!-- ── Hero Card ── -->
+        <div class="hero-card">
+            <div class="hero-top">
+                <!-- Right: title + company + location -->
+                <div class="hero-right">
+                    <h1 class="hero-title">تدريب Full Stack</h1>
+                    <p class="hero-company">شركة التقنية المتقدمة</p>
+                    <div class="hero-loc">
+                        <span>جدة، المملكة العربية السعودية</span>
+                        <i class="bi bi-geo-alt-fill"></i>
+                    </div>
+                </div>
+                <!-- Left: icon + badge -->
+                <div class="hero-left">
+                    <div class="bcase-circle"><i class="bi bi-briefcase-fill"></i></div>
+                    <span class="status-badge"><span class="status-dot"></span>نشط</span>
+                </div>
+            </div>
+
+            <hr class="hero-divider" />
+
+            <!-- Meta info -->
+            <div class="hero-meta">
+                <div class="meta-item">
+                    <div class="text-end">
+                        <span class="meta-label">المشرف في المؤسسة</span>
+                        <span class="meta-val">م. خالد الشهري</span>
+                    </div>
+                    <i class="bi bi-person-fill meta-icon"></i>
+                </div>
+                <div class="meta-sep"></div>
+                <div class="meta-item">
+                    <div class="text-end">
+                        <span class="meta-label">مدة التدريب</span>
+                        <span class="meta-val">3 أشهر</span>
+                    </div>
+                    <i class="bi bi-clock-fill meta-icon"></i>
+                </div>
+                <div class="meta-sep"></div>
+                <div class="meta-item">
+                    <div class="text-end">
+                        <span class="meta-label">تاريخ البداية</span>
+                        <span class="meta-val">01-09-2025</span>
+                    </div>
+                    <i class="bi bi-calendar3 meta-icon"></i>
+                </div>
+                <div class="meta-sep"></div>
+                <div class="meta-item">
+                    <div class="text-end">
+                        <span class="meta-label">تاريخ النهاية</span>
+                        <span class="meta-val">01-12-2025</span>
+                    </div>
+                    <i class="bi bi-calendar-check-fill meta-icon"></i>
+                </div>
+            </div>
+        </div><!-- /hero -->
+        <!-- ── Tasks Card ── -->
+        <div class="tasks-card">
+            <div class="tasks-head">
+                <div class="tasks-head-title">
+                    <span>المهام المطلوبة</span>
+                    <i class="bi bi-clipboard2-check"></i>
+                </div>
+                <p class="tasks-sub">قائمة بالمهام المطلوبة منك خلال فترة التدريب</p>
+            </div>
+
+            <div class="table-responsive">
+                <table class="tasks-tbl">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>المهمة</th>
+                            <th>تفاصيل المهمة</th>
+                            <th>تاريخ الاستحقاق</th>
+                            <th>حالة التسليم</th>
+                            <th>تقييم المدرب (%)</th>
+                            <th>ملف التسليم</th>
+                            <th>الملاحظات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="row-num">1</td>
+                            <td class="task-name">التعرف على بيئة العمل وإعداد الأدوات</td>
+                            <td><a href="#" class="file-lnk"><i class="bi bi-file-earmark-text"></i> عرض الملف</a></td>
+                            <td>15-09-2025</td>
+                            <td><span class="badge-done">مكتملة</span></td>
+                            <td><span class="rating">90%</span></td>
+                            <td><a href="#" class="view-btn"><i class="bi bi-eye"></i> عرض الملف</a></td>
+                            <td>عمل ممتاز</td>
+                        </tr>
+                        <tr>
+                            <td class="row-num">2</td>
+                            <td class="task-name">تصميم قاعدة بيانات للمشروع</td>
+                            <td><a href="#" class="file-lnk"><i class="bi bi-file-earmark-text"></i> عرض الملف</a></td>
+                            <td>29-09-2025</td>
+                            <td><span class="badge-done">مكتملة</span></td>
+                            <td><span class="rating">85%</span></td>
+                            <td><a href="#" class="view-btn"><i class="bi bi-eye"></i> عرض الملف</a></td>
+                            <td>جيد جداً</td>
+                        </tr>
+                        <tr>
+                            <td class="row-num">3</td>
+                            <td class="task-name">تطوير واجهة المستخدم (Frontend)</td>
+                            <td><a href="#" class="file-lnk"><i class="bi bi-file-earmark-text"></i> عرض الملف</a></td>
+                            <td>13-10-2025</td>
+                            <td><span class="badge-done">مكتملة</span></td>
+                            <td><span class="rating">80%</span></td>
+                            <td><a href="#" class="view-btn"><i class="bi bi-eye"></i> عرض الملف</a></td>
+                            <td>جيد</td>
+                        </tr>
+                        <tr>
+                            <td class="row-num">4</td>
+                            <td class="task-name">تطوير واجهة برمجة التطبيقات (API)</td>
+                            <td><a href="#" class="file-lnk"><i class="bi bi-file-earmark-text"></i> عرض الملف</a></td>
+                            <td>27-10-2025</td>
+                            <td><span class="badge-pend">لم يتم التسليم</span></td>
+                            <td>-</td>
+                            <td><button class="upload-btn"><i class="bi bi-upload"></i> رفع ملف</button></td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td class="row-num">5</td>
+                            <td class="task-name">ربط الواجهة مع API</td>
+                            <td><a href="#" class="file-lnk"><i class="bi bi-file-earmark-text"></i> عرض الملف</a></td>
+                            <td>10-11-2025</td>
+                            <td><span class="badge-pend">لم يتم التسليم</span></td>
+                            <td>-</td>
+                            <td><button class="upload-btn"><i class="bi bi-upload"></i> رفع ملف</button></td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td class="row-num">6</td>
+                            <td class="task-name">اختبار المشروع وإصلاح الأخطاء</td>
+                            <td><a href="#" class="file-lnk"><i class="bi bi-file-earmark-text"></i> عرض الملف</a></td>
+                            <td>24-11-2025</td>
+                            <td><span class="badge-pend">لم يتم التسليم</span></td>
+                            <td>-</td>
+                            <td><button class="upload-btn"><i class="bi bi-upload"></i> رفع ملف</button></td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td class="row-num">7</td>
+                            <td class="task-name">التوثيق ورفع المشروع النهائي</td>
+                            <td><a href="#" class="file-lnk"><i class="bi bi-file-earmark-text"></i> عرض الملف</a></td>
+                            <td>01-12-2025</td>
+                            <td><span class="badge-pend">لم يتم التسليم</span></td>
+                            <td>-</td>
+                            <td><button class="upload-btn"><i class="bi bi-upload"></i> رفع ملف</button></td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="info-banner">
+                <i class="bi bi-info-circle-fill"></i>
+                <span>يمكنك رفع ملف التسليم بصيغة ZIP، أم أو أي صيغة أخرى بحد أقصى 20MB.</span>
+            </div>
+        </div><!-- /tasks -->
+
+    </div><!-- /main-wrap -->
+
+    <footer class="page-footer">
+        جميع الحقوق محفوظة © 2025 بوابة التدريب الأكاديمي
+    </footer>
+
+</div><!-- /content-col -->
+
+
