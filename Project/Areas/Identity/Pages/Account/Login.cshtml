@@ -22,7 +22,103 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet" />
     <style>
+        /* =========================
+   PAGE ANIMATION
+========================= */
 
+body{
+    overflow-x:hidden;
+}
+
+/* الكارد الرئيسي */
+.login-screen .card{
+    opacity:0;
+    transform:translateY(50px);
+    animation:loginFade 1s ease forwards;
+    border:none;
+    border-radius:24px;
+    backdrop-filter:blur(10px);
+    transition:all .35s ease;
+}
+
+/* Hover */
+.login-screen .card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 25px 60px rgba(0,0,0,.12);
+}
+
+/* ظهور الصفحة */
+@@keyframes loginFade{
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/* حقول الإدخال */
+.form-control{
+    border-radius:14px !important;
+    padding:.85rem 1rem;
+    transition:all .3s ease;
+    border:1px solid #dbe3ea;
+    box-shadow:none !important;
+}
+
+/* Focus Animation */
+.form-control:focus{
+    border-color:#00B894;
+    transform:translateY(-2px);
+    box-shadow:0 0 0 4px rgba(0,184,148,.12) !important;
+}
+
+/* زر تسجيل الدخول */
+.auth-btn{
+    background:linear-gradient(135deg,#00B894,#00a884);
+    border:none;
+    color:white;
+    font-weight:700;
+    border-radius:14px;
+    transition:all .35s ease;
+}
+
+/* Hover button */
+.auth-btn:hover{
+    transform:translateY(-3px);
+    box-shadow:0 12px 25px rgba(0,184,148,.25);
+}
+
+/* حركة العناصر الداخلية */
+.card-body > *{
+    opacity:0;
+    transform:translateY(20px);
+    animation:fadeItem .7s ease forwards;
+}
+
+/* تأخير تدريجي */
+.card-body > *:nth-child(1){ animation-delay:.2s; }
+.card-body > *:nth-child(2){ animation-delay:.4s; }
+.card-body > *:nth-child(3){ animation-delay:.6s; }
+
+@@keyframes fadeItem{
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/* حركة الخلفية */
+.wave-bottom{
+    animation:waveMove 3s ease-in-out infinite alternate;
+}
+
+@@keyframes waveMove{
+    from{
+        transform:translateY(0);
+    }
+    to{
+        transform:translateY(12px);
+    }
+}
     </style>
 </head>
 <body>
@@ -38,9 +134,9 @@
                 <h3 class="mb-0">نظام إدارة التدريب الميداني</h3>
                    
             </div>
-            <div class="card-body p-3">
+            <div class="card-body p-3 vw-80">
                 <form method="post">
-                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" style="display:none;"></div>
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" style="{@Model.ErrorMessage == null ? display:none; : display:block;}"></div>
 
                     <div class="mb-2">
                         <label asp-for="Input.Email" class="form-label">البريد الإلكتروني</label>

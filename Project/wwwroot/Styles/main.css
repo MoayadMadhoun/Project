@@ -366,7 +366,7 @@
      }
      .slider-wrapper .swiper-slide-button {
       color: #00B793;
-      margin-top: -35;
+/*      margin-top: 35;*/
      }
      /* .slider-wrapper .swiper-pagination-bullet-active::before{
      content: "";
@@ -458,7 +458,7 @@
 
     }
     .stat-item:not(:last-child) {
-      border-left: 1px solid rgba(255, 255, 255, 0.15); /* خط فاصل شفاف وأنيق */
+      border-left: 1px solid rgba(255, 255, 255, 0.15); 
     }
     .stat-item { text-align: center; }
     .stat-value {
@@ -470,7 +470,7 @@
     .stat-icon img {
       width: 40px;
       height: 40px;
-      filter: invert(100%); /* إذا كانت الأيقونة سوداء وتريدها بيضاء */
+      filter: invert(100%); 
     }
     /* ── FOOTER ───────────────────────────────────────── */
     .footer {
@@ -507,3 +507,4 @@
       .phone-mock{display:none;}
       .step-connector{display:none;}
     }
+
