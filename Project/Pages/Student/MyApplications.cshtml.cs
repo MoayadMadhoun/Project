@@ -29,9 +29,9 @@ namespace Project.Pages.Student
         public int CurrentApplicationCount => StudentApplications?.Count()  ?? 0;
         public async Task< IActionResult> OnGet()
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userId is null)   return RedirectToPage("/Identity/Account/Login");
-            var student = await studentsRepository.GetStudentByUserId(userId.ToString());
+            var student = await studentsRepository.GetStudentByUserId(userId);
             if (student is null) return NotFound();
             var applications = studentsRepository.GetAllApplicationByStudentId(student.StudentID);
            
