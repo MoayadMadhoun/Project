@@ -41,6 +41,9 @@
 <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] p-4 mb-lg">
     <div>
     <form method="get" class="flex flex-wrap gap-3 items-center justify-end">
+            <input type="hidden" name="PageSize" value="@Model.PageSize" />
+            <input type="hidden" name="PageIndex" value="@Model.PageIndex" />
+            <input type="hidden" name="SortOrder" value="@Model.SortOrder" />
         <div class="relative flex-1 min-w-[220px]">
             <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
             <input asp-for="SearchTerm" class="w-full pr-10 pl-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20 text-right" placeholder="ابحث عن طالب أو مؤسسة..." type="text" />
@@ -139,15 +142,20 @@
             </p>
             <div class="flex items-center gap-2">
                 <label class="text-xs text-slate-500 font-label-caps" for="per-page-inst">النتائج:</label>
-                <select asp-for="PageSize"
-                
-                        onchange="this.form.submit()"
-                        class="bg-slate-100 border-none rounded-lg text-xs font-bold text-slate-700 py-1.5 pr-8 pl-3 focus:ring-2 focus:ring-primary/20 appearance-none cursor-pointer"
-                        id="per-page-inst">
-                    <option value="10">10</option>
-                    <option value="25">25</option>
-                    <option value="50">50</option>
-                </select>
+                <form>
+                    <input type="hidden" name="PageSize" value="@Model.PageSize" />
+                    <input type="hidden" name="PageIndex" value="@Model.PageIndex" />
+                    <input type="hidden" name="SortOrder" value="@Model.SortOrder" />
+                    <input type="hidden" name="ApplicationStatusId" value="@Model.ApplicationStatusId" />
+                    <select asp-for="PageSize"
+                            onchange="this.form.submit()"
+                            class="bg-slate-100 border-none rounded-lg text-xs font-bold text-slate-700 py-1.5 pr-8 pl-3 focus:ring-2 focus:ring-primary/20 appearance-none cursor-pointer"
+                            id="per-page-inst">
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                    </select>
+                </form>
             </div>
         </div>
 

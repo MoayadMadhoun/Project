@@ -48,24 +48,24 @@ namespace Project.Pages.University
             {
                 if (User == null)
                 {
-                    return RedirectToPage("Identity/Account/Login");
+                    return RedirectToPage("/Account/Login", new { area = "Identity" });
                 }
                 var user = await _userManager.GetUserAsync(User);
                 if (user == null)
                 {
-                    return RedirectToPage("Identity/Account/Login");
+                    return RedirectToPage("/Account/Login", new { area = "Identity" });
                 }
 
                 AspNetRoleScope scope = _dbContext.AspNetRoleScopes.FirstOrDefault(s => s.UserID == user.Id && s.IsActive);
 
                 if (scope == null)
                 {
-                    return RedirectToPage("Identity/Account/Login");
+                    return RedirectToPage("/Account/Login", new { area = "Identity" });
                 }
 
                 if (scope.UniversityID == null)
                 {
-                    return RedirectToPage("Identity/Account/Login");
+                    return RedirectToPage("/Account/Login", new { area = "Identity" });
                 }
 
                 int universityId = (int)scope.UniversityID;

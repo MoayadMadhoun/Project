@@ -43,6 +43,9 @@
 <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] p-4 mb-lg">
   <div>  
       <form method="get" class="flex flex-wrap gap-3 items-center justify-end">
+            <input type="hidden" name="PageSize" value="@Model.PageSize" />
+            <input type="hidden" name="PageIndex" value="@Model.PageIndex" />
+            <input type="hidden" name="SortOrder" value="@Model.SortOrder" />
         <div class="relative flex-1 min-w-[180px]">
             <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
             <input asp-for="SearchTerm" class="w-full pr-10 pl-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20" placeholder="ابحث عن فرصة..." type="text" />
@@ -151,6 +154,13 @@
             </p>
             <div>
             <form class="flex items-center gap-2">
+                    <input type="hidden" name="PageSize" value="@Model.PageSize" />
+                    <input type="hidden" name="PageIndex" value="@Model.PageIndex" />
+                    <input type="hidden" name="SortOrder" value="@Model.SortOrder" />
+                    <input type="hidden" name="SearchTerm" value="@Model.SearchTerm" />
+                    <input type="hidden" name="StatusId" value="@Model.StatusId" />
+                    <input type="hidden" name="PeriodMonths" value="@Model.PeriodMonths" />
+                    <input type="hidden" name="SpecialtyId" value="@Model.SpecialtyId" />
                 <label class="text-xs text-slate-500 font-label-caps" for="per-page-inst">النتائج:</label>
                 <select asp-for="PageSize"
                         onchange="this.form.submit()"

@@ -17,6 +17,7 @@ namespace Project.Repositories
         public IQueryable<Department> GetAllQueryable() => _dbContext
            .Departments
            .Include(d => d.Students)
+           .Include(d=>d.Specialties)
            .AsNoTracking();
 
 

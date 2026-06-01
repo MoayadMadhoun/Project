@@ -47,12 +47,12 @@ namespace Project.Pages.Institution
             {
                 if (User == null)
                 {
-                    return RedirectToPage("Identity/Account/Login");
+                    return RedirectToPage("/Account/Login", new { area = "Identity" });
                 }
                 var user = await _userManager.GetUserAsync(User);
                 if (user == null)
                 {
-                    return RedirectToPage("Identity/Account/Login");
+                    return RedirectToPage("/Account/Login", new { area = "Identity" });
                 }
 
                 var scope = _dbContext.AspNetRoleScopes.FirstOrDefault(s => s.UserID == user.Id && s.IsActive);
@@ -60,13 +60,13 @@ namespace Project.Pages.Institution
                 if (scope == null)
                 {
 
-                    return RedirectToPage("Identity/Account/Login");
+                    return RedirectToPage("/Account/Login", new { area = "Identity" });
                 }
                 //int InstituationID = scope.InstitutionID;
 
                 if (scope.InstitutionID == null)
                 {
-                    return RedirectToPage("Identity/Account/Login");
+                    return RedirectToPage("/Account/Login", new { area = "Identity" });
                 }
 
                 int institutionId = scope.InstitutionID.Value;

@@ -44,14 +44,11 @@ namespace Project.Pages.Institution
         {
             try
             {
-                if (User == null)
-                {
-                    return RedirectToPage("Identity/Account/Login");
-                }
+               
                 var user = await _userManager.GetUserAsync(User);
                 if (user == null)
                 {
-                    return RedirectToPage("Identity/Account/Login");
+                    return RedirectToPage("/Account/Login", new { area = "Identity" });
                 }
 
                 var scope = _dbContext.AspNetRoleScopes.FirstOrDefault(s => s.UserID == user.Id && s.IsActive);
@@ -59,7 +56,7 @@ namespace Project.Pages.Institution
                 if (scope == null)
                 {
 
-                    return RedirectToPage("Identity/Account/Login");
+                    return RedirectToPage("/Account/Login", new { area = "Identity" });
                 }
                 //int InstituationID = scope.InstitutionID;
 
@@ -67,13 +64,13 @@ namespace Project.Pages.Institution
                 int institutionID = scope.InstitutionID.GetValueOrDefault();
                 if (institutionID == 0)
                 {
-                    return RedirectToPage("Identity/Account/Login");
+                    return RedirectToPage("/Account/Login", new { area = "Identity" });
                 }
 
                 CurrentInstitution = await _institutionRepo.GetByIdAsync(institutionID);
                 if (CurrentUniversity == null)
                 {
-                    return RedirectToPage("/Index");
+                    return RedirectToPage("/Account/Login", new { area = "Identity" });
                 }
                 var query = _institutionRepo.GetApplicationsForInstitution(institutionID).Where(tr => tr.Status == TrainingApplication.ApplicationStatus.UniversityApproved);
                

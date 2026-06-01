@@ -47,12 +47,12 @@ namespace Project.Pages.University
             {
                 if (User == null)
                 {
-                    return RedirectToPage("Identity/Account/Login");
+                    return RedirectToPage("/Account/Login", new { area = "Identity" });
                 }
                 var user = await _userManager.GetUserAsync(User);
                 if (user == null)
                 {
-                    return RedirectToPage("Identity/Account/Login");
+                    return RedirectToPage("/Account/Login", new { area = "Identity" });
                 }
 
                 var scope = _dbContext.AspNetRoleScopes.FirstOrDefault(s => s.UserID == user.Id && s.IsActive);
@@ -60,7 +60,7 @@ namespace Project.Pages.University
                 if (scope == null)
                 {
 
-                    return RedirectToPage("Identity/Account/Login");
+                    return RedirectToPage("/Account/Login", new { area = "Identity" });
                 }
                 //int InstituationID = scope.InstitutionID;
 
@@ -68,7 +68,7 @@ namespace Project.Pages.University
                 int universityId = scope.UniversityID.GetValueOrDefault();
                 if (universityId == 0)
                 {
-                    return RedirectToPage("Identity/Account/Login");
+                    return RedirectToPage("/Account/Login", new { area = "Identity" });
                 }
 
                 CurrentUniversity = await _uniRepo.GetByIdAsync(universityId);
