@@ -1,4 +1,5 @@
 ﻿@page
+@using Microsoft.AspNetCore.Html
 @model Project.Pages.University.DepartmentsHeadsModel
 @{
     ViewData["Title"] = "رؤساء الأقسام";
@@ -8,6 +9,20 @@
     ViewData["PortalSubtitle"] = "إدارة التدريب الميداني";
     ViewData["SearchPlaceholder"] = "بحث عن رؤساء أقسام ...";
     ViewData["ActivePage"] = "DepartmentsadHeads";
+    int dHIndex = 1;
+}
+@functions {
+    public IHtmlContent SortingIcon(string column, string currentSort)
+    {
+        if (currentSort == column)
+            return new HtmlString("<span><i class=\"bi bi-caret-up-fill\"></i></span>");
+
+        if (currentSort == column + "_desc")
+            return new HtmlString("<span><i class=\"bi bi-caret-down-fill\"></i></span>");
+
+        return new HtmlString("<span><i class=\"bi bi-arrow-down-up\"></i></span>");
+    }
+
 }
 <div dir="rtl" class="w-full text-right">
 
@@ -24,17 +39,17 @@
 
     @* ===== Searching & Filtering===== *@
     <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] p-4 mb-lg">
-        <div class="flex flex-wrap gap-3 items-center justify-start flex-row">
 
+        <form method="get" class="flex flex-wrap gap-3 items-center justify-start flex-row">
+            <input type="hidden" name="PageSize" value="@Model.PageSize" />
+            <input type="hidden" name="PageIndex" value="@Model.PageIndex" />
+            <input type="hidden" name="SortOrder" value="@Model.SortOrder" />
             <div class="relative flex-1 min-w-[200px]">
                 <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
-                <input class="w-1/4 pr-10 pl-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20 text-right" placeholder="ابحث عن رئيس قسم ..." type="text" />
+                <input asp-for="SearchTerm" class="w-1/4 pr-10 pl-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20 text-right" placeholder="ابحث عن رئيس قسم ..." type="text" />
             </div>
-
-           
-
-            <button class="bg-primary text-white font-button px-6 py-2.5 rounded-xl hover:bg-primary/90 transition-colors">بحث</button>
-        </div>
+            <button type="submit" class="bg-primary text-white font-button px-6 py-2.5 rounded-xl hover:bg-primary/90 transition-colors">بحث</button>
+        </form>
     </div>
 
     @* ===== Request tables===== *@
@@ -48,7 +63,15 @@
                 <thead class="bg-surface-container-low text-slate-500 font-bold text-sm">
                     <tr>
                         <th class="px-6 py-3 text-right">#</th>
-                        <th class="px-6 py-3 text-right">اسم رئيس القسم</th>
+                        <th class="px-6 py-3 text-right">
+                            <a class="text-decoration-none"
+                                   asp-route-PageSize="@Model.PageSize" 
+                                   asp-route-SearchTerm="@Model.SearchTerm"
+                                   asp-route-PageIndex="@(Model.PageIndex)"
+                                   asp-route-SortOrder="@(Model.SortOrder == "Name" ? "Name_desc" : "Name")">
+                                اسم رئيس القسم @SortingIcon("Name", Model.SortOrder)
+                            </a>
+                        </th>
                         <th class="px-6 py-3 text-right">القسم</th>
                         <th class="px-6 py-3 text-right">البريد الألكتروني</th>
                         <th class="px-6 py-3 text-right">رقم الهاتف</th>
@@ -57,117 +80,108 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-50 text-sm">
+                    @if (!(Model.DepartmentsHeads?.Any() ?? false))
+                    {
+                        <tr>
+                            <td colspan="5" class="px-4 py-6 text-center text-slate-500">
+                               لا يوجد رؤساء اقسام لعرضهم
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                  
+                    @foreach (var DH in Model.DepartmentsHeads)
+                    {
+                        <tr class="hover:bg-slate-50 transition-colors">
+                                <td class="px-6 py-3 text-slate-900 font-bold">@dHIndex</td>
+                            <td class="px-6 py-3 text-slate-600">@DH.User.FullName</td>
+                            <td class="px-6 py-3 text-slate-600">@(DH.Department?.Name ?? "_")</td>
+                            <td class="px-6 py-3 text-slate-600">@DH.User.Email</td>
+                            <td class="px-6 py-3 text-slate-600">@DH.User.PhoneNumber</td>
+                            <td class="px-6 py-3 text-slate-600">@DH.User.CreatedAt</td>
 
-                    <tr class="hover:bg-slate-50 transition-colors">
-                        <td class="px-6 py-3 text-slate-900 font-bold">1</td>
-                        <td class="px-6 py-3 text-slate-600">د.محمد علي</td>
-                        <td class="px-6 py-3 text-slate-600">هندسة البرمجيات</td>
-                        <td class="px-6 py-3 text-slate-600">m.ail@gtc.edu</td>
-                        <td class="px-6 py-3 text-slate-600">0566718557</td>
-                        <td class="px-6 py-3 text-slate-600">01-09-2025</td>
-                       
-                        <td class="px-6 py-3">
-                            <div class="flex gap-3">
-                                <button class="border border-emerald-200 text-emerald-600 text-xs font-bold px-4 py-2 rounded hover:bg-emerald-50 flex items-center gap-1"><span>👁</span>التفاصيل </button>
-                                <button class="border border-emerald-200 text-emerald-600 text-xs font-bold px-4 py-2 rounded hover:bg-emerald-50 flex items-center gap-1"><span>✎</span>تعديل </button>
-                                <button class="border border-rose-200 text-rose-600 text-xs font-bold px-4 py-2 rounded hover:bg-rose-50 flex items-center gap-1"> <span>🗑</span>حذف</button>
-        
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="hover:bg-slate-50 transition-colors">
-                        <td class="px-6 py-3 text-slate-900 font-bold">2</td>
-                        <td class="px-6 py-3 text-slate-600">د.سارة علي</td>
-                        <td class="px-6 py-3 text-slate-600">نظم معلومات</td>
-                        <td class="px-6 py-3 text-slate-600">m.ail@gtc.edu</td>
-                        <td class="px-6 py-3 text-slate-600">0566718557</td>
-                        <td class="px-6 py-3 text-slate-600">01-09-2025</td>
-
-                        <td class="px-6 py-3">
-                            <div class="flex gap-3">
-                                <button class="border border-emerald-200 text-emerald-600 text-xs font-bold px-4 py-2 rounded hover:bg-emerald-50 flex items-center gap-1"><span>👁</span>التفاصيل </button>
-                                <button class="border border-emerald-200 text-emerald-600 text-xs font-bold px-4 py-2 rounded hover:bg-emerald-50 flex items-center gap-1"><span>✎</span>تعديل </button>
-                                <button class="border border-rose-200 text-rose-600 text-xs font-bold px-4 py-2 rounded hover:bg-rose-50 flex items-center gap-1"> <span>🗑</span>حذف</button>
-
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="hover:bg-slate-50 transition-colors">
-                        <td class="px-6 py-3 text-slate-900 font-bold">3</td>
-                        <td class="px-6 py-3 text-slate-600">د.رنا علي</td>
-                        <td class="px-6 py-3 text-slate-600">هندسة البرمجيات</td>
-                        <td class="px-6 py-3 text-slate-600">m.ail@gtc.edu</td>
-                        <td class="px-6 py-3 text-slate-600">0566718557</td>
-                        <td class="px-6 py-3 text-slate-600">01-09-2025</td>
-
-                        <td class="px-6 py-3">
-                            <div class="flex gap-3">
-                                <button class="border border-emerald-200 text-emerald-600 text-xs font-bold px-4 py-2 rounded hover:bg-emerald-50 flex items-center gap-1"><span>👁</span>التفاصيل </button>
-                                <button class="border border-emerald-200 text-emerald-600 text-xs font-bold px-4 py-2 rounded hover:bg-emerald-50 flex items-center gap-1"><span>✎</span>تعديل </button>
-                                <button class="border border-rose-200 text-rose-600 text-xs font-bold px-4 py-2 rounded hover:bg-rose-50 flex items-center gap-1"> <span>🗑</span>حذف</button>
-
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="hover:bg-slate-50 transition-colors">
-                        <td class="px-6 py-3 text-slate-900 font-bold">4</td>
-                        <td class="px-6 py-3 text-slate-600">د.ليلى علي</td>
-                        <td class="px-6 py-3 text-slate-600">تقنية المعلومات</td>
-                        <td class="px-6 py-3 text-slate-600">m.ail@gtc.edu</td>
-                        <td class="px-6 py-3 text-slate-600">0566718557</td>
-                        <td class="px-6 py-3 text-slate-600">01-09-2025</td>
-
-                        <td class="px-6 py-3">
-                            <div class="flex gap-3">
-                                <button class="border border-emerald-200 text-emerald-600 text-xs font-bold px-4 py-2 rounded hover:bg-emerald-50 flex items-center gap-1"><span>👁</span>التفاصيل </button>
-                                <button class="border border-emerald-200 text-emerald-600 text-xs font-bold px-4 py-2 rounded hover:bg-emerald-50 flex items-center gap-1"><span>✎</span>تعديل </button>
-                                <button class="border border-rose-200 text-rose-600 text-xs font-bold px-4 py-2 rounded hover:bg-rose-50 flex items-center gap-1"> <span>🗑</span>حذف</button>
-
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="hover:bg-slate-50 transition-colors">
-                        <td class="px-6 py-3 text-slate-900 font-bold">5</td>
-                        <td class="px-6 py-3 text-slate-600">د.عمر علي</td>
-                        <td class="px-6 py-3 text-slate-600">الرياضيات</td>
-                        <td class="px-6 py-3 text-slate-600">m.ail@gtc.edu</td>
-                        <td class="px-6 py-3 text-slate-600">0566718557</td>
-                        <td class="px-6 py-3 text-slate-600">01-09-2025</td>
-
-                        <td class="px-6 py-3">
-                            <div class="flex gap-3">
-                                <button class="border border-emerald-200 text-emerald-600 text-xs font-bold px-4 py-2 rounded hover:bg-emerald-50 flex items-center gap-1"><span>👁</span>التفاصيل </button>
-                                <button class="border border-emerald-200 text-emerald-600 text-xs font-bold px-4 py-2 rounded hover:bg-emerald-50 flex items-center gap-1"><span>✎</span>تعديل </button>
-                                <button class="border border-rose-200 text-rose-600 text-xs font-bold px-4 py-2 rounded hover:bg-rose-50 flex items-center gap-1"> <span>🗑</span>حذف</button>
-
-                            </div>
-                        </td>
-                    </tr>
+                            <td class="px-6 py-3">
+                                <div class="flex gap-3">
+                                    <button class="border border-emerald-200 text-emerald-600 text-xs font-bold px-4 py-2 rounded hover:bg-emerald-50 flex items-center gap-1"><span>👁</span>التفاصيل </button>
+                                    <button class="border border-emerald-200 text-emerald-600 text-xs font-bold px-4 py-2 rounded hover:bg-emerald-50 flex items-center gap-1"><span>✎</span>تعديل </button>
+                                        <form method="post" asp-page-handler="RemoveDeptHead">
+                                            <input type="hidden" name="PageSize" value="@Model.PageSize" />
+                                            <input type="hidden" name="PageIndex" value="@Model.PageIndex" />
+                                            <input type="hidden" name="SortOrder" value="@Model.SortOrder" />
+                                            <input type="hidden" name="SearchTerm" value="@Model.SearchTerm" />
+                                            <input type="hidden" name="DepartmentHeadId" value="@DH.User.Id" />
+                                            <button type="submit" class="btn border border-rose-200 text-rose-600 text-xs font-bold px-4 py-2 rounded hover:bg-rose-50 flex items-center gap-1"> <span>🗑</span>حذف</button>
+                                        </form>
+                                </div>
+                            </td>
+                        </tr>
+                            @(dHIndex += 1)
+                        }
+                    }
                   
                 </tbody>
             </table>
         </div>
 
         @* ===== Pagining ===== *@
-        <div class="p-4 md:p-lg flex items-center justify-between gap-4 border-t border-slate-100 flex-row">
-            <div class="flex items-center gap-4">
+        <div class="p-4 md:p-lg flex flex-col md:flex-row items-center justify-between gap-4 border-t border-slate-100">
+            <div class="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
                 <p class="text-sm text-slate-500 font-body-sm whitespace-nowrap">
-                    عرض <span class="font-bold text-slate-900">1</span> من أصل <span class="font-bold text-slate-900">5</span> رؤساء أقسام 
+                    عرض <span class="font-bold text-slate-900">@(Model.DepartmentsHeads?.Count ?? 0)</span> من أصل <span class="font-bold text-slate-900">@Model.DepartmentsHeads?.TotalCount??0</span> رؤساء
                 </p>
                 <div class="flex items-center gap-2">
-                    <select class="bg-slate-100 border-none rounded-lg text-xs font-bold text-slate-700 py-1.5 pr-8 pl-3 focus:ring-2 focus:ring-primary/20 appearance-none cursor-pointer" id="pp-u">
-                        <option>10</option>
-                        <option>25</option>
-                        <option>50</option>
-                    </select>
+                    <label class="text-xs text-slate-500 font-label-caps" for="per-page-inst">النتائج:</label>
+                    <form method="get">
+                        <input type="hidden" name="PageSize" value="@Model.PageSize" />
+                        <input type="hidden" name="PageIndex" value="@Model.PageIndex" />
+                        <input type="hidden" name="SortOrder" value="@Model.SortOrder" />
+                        <input type="hidden" name="SearchTerm" value="@Model.SearchTerm" />
+                        
+                        <select asp-for="PageSize"
+                                onchange="this.form.submit()"
+                                class="bg-slate-100 border-none rounded-lg text-xs font-bold text-slate-700 py-1.5 pr-8 pl-3 focus:ring-2 focus:ring-primary/20 appearance-none cursor-pointer"
+                                id="per-page-inst">
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                        </select>
+                    </form>
                 </div>
             </div>
-            <nav class="flex items-center gap-2 flex-row">
-                <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:bg-slate-50"><span class="material-symbols-outlined text-sm">chevron_right</span></button>
-                <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-primary text-white text-sm font-bold">1</button>
-                <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-600 text-sm font-bold hover:bg-slate-50">2</button>
-                <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-600 text-sm font-bold hover:bg-slate-50">3</button>
-                <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:bg-slate-50"><span class="material-symbols-outlined text-sm">chevron_left</span></button>
+
+            <nav class="flex items-center gap-2">
+                @if (Model.DepartmentsHeads.HasPrevPage)
+                {
+                    <a asp-route-PageIndex="@(Model.PageIndex - 1)"
+                       asp-route-SearchTerm="@Model.SearchTerm"
+                       
+                       asp-route-SortOrder="@Model.SortOrder"
+                       asp-route-PageSize="@Model.PageSize"
+                       class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:bg-slate-50"><span class="material-symbols-outlined">chevron_right</span></a>
+                }
+           
+                @for (int i = 1; i <= Model.DepartmentsHeads.TotalPages; i++)
+                {
+
+                    <a asp-route-PageIndex="@i"
+                       asp-route-SearchTerm="@Model.SearchTerm"
+                       
+                       asp-route-SortOrder="@Model.SortOrder"
+                       asp-route-PageSize="@Model.PageSize"
+                       class="w-8 h-8 flex items-center justify-center rounded-lg @(Model.PageIndex == i ? "bg-primary" : "border border-slate-200 text-slate-600 hover:bg-slate-50 ")  text-white text-sm font-bold">@i</a>
+                }
+                @if (Model.DepartmentsHeads.HasNextPage)
+                {
+                    <a asp-route-PageIndex="@(Model.PageIndex + 1)"
+                       asp-route-SearchTerm="@Model.SearchTerm"
+                       
+                       asp-route-SortOrder="@Model.SortOrder"
+                       asp-route-PageSize="@Model.PageSize"
+                       class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:bg-slate-50"><span class="material-symbols-outlined">chevron_left</span></a>
+                }
+
+            
             </nav>
         </div>
     </div>

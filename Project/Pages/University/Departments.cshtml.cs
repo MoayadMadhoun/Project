@@ -46,13 +46,10 @@ namespace Project.Pages.University
 
         public async Task<IActionResult> OnGet()
         {
-            Departments = new PaginatedList<Department>(new List<Department>(), 0, PageIndex, PageSize);
+            Departments = new PaginatedList<Department>(new List<Department>(), PageIndex,0, PageSize);
             try
             {
-                if (User == null)
-                {
-                    return RedirectToPage("/Account/Login", new {area = "Identity"});
-                }
+                
                 var user = await _userManager.GetUserAsync(User);
                 AspNetRoleScope scope = _dbContext.AspNetRoleScopes.FirstOrDefault(s => s.UserID == user.Id && s.IsActive);
 

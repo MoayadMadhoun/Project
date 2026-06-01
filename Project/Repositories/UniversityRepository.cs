@@ -200,6 +200,15 @@ namespace Project.Repostory
                 .Where(or => or.UniversityID == UniversityId)
                 .AsNoTracking().AsQueryable();
         }
+        public IQueryable<AspNetRoleScope> GetDepartmentHeadsForUniversity(int? UniversityId)
+        {
+            return _dbContext.AspNetRoleScopes
+                .Include(dh => dh.User)
+                .Include(dh => dh.Department)
+                
+                .Where(u=>u.Role.Name=="DepartmentHead" && u.UniversityID==UniversityId)
+                .AsNoTracking().AsQueryable();
+        }
 
     }
 }
