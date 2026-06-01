@@ -308,10 +308,10 @@ namespace Project.Repositories
             return await _context.TrainingOpportunities.AsNoTracking().Where(to => EF.Functions.Like(to.Title, $"%{strSearch}%")).ToListAsync();
 
         }
-        // Get  Training Placement By Id 
-        public async Task<TrainingPlacement?> GetTrainingPlacementById(int id)
+        // Get  Training Placement By Student Id 
+        public async Task<TrainingPlacement?> GetTrainingPlacementByStudentId(int id)
         {
-            return await _context.TrainingPlacements.AsNoTracking().FirstOrDefaultAsync(tp => tp.PlacementID == id);
+            return await _context.TrainingPlacements.AsNoTracking().FirstOrDefaultAsync(tp => tp.StudentID == id);
         }
 
         // Retrieve the training term for a specific opportunity

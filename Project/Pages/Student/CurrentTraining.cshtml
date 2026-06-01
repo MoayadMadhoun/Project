@@ -23,10 +23,10 @@
             <div class="hero-top">
                 <!-- Right: title + company + location -->
                 <div class="hero-right">
-                    <h1 class="hero-title">تدريب Full Stack</h1>
-                    <p class="hero-company">شركة التقنية المتقدمة</p>
+                    <h1 class="hero-title">@(Model.CurrentPlacement?.TrainingOpportunity?.Title??"")</h1>
+                    <p class="hero-company">@(Model.CurrentPlacement?.TrainingInstitution?.Name ?? "")</p>
                     <div class="hero-loc">
-                        <span>جدة، المملكة العربية السعودية</span>
+                        <span>@(Model.CurrentPlacement?.TrainingOpportunity?.Location??"")</span>
                         <i class="bi bi-geo-alt-fill"></i>
                     </div>
                 </div>
@@ -44,7 +44,7 @@
                 <div class="meta-item">
                     <div class="text-end">
                         <span class="meta-label">المشرف في المؤسسة</span>
-                        <span class="meta-val">م. خالد الشهري</span>
+                        <span class="meta-val">@(Model.CurrentPlacement?.InstitutionSupervisor?.FullName??"")</span>
                     </div>
                     <i class="bi bi-person-fill meta-icon"></i>
                 </div>
@@ -52,7 +52,7 @@
                 <div class="meta-item">
                     <div class="text-end">
                         <span class="meta-label">مدة التدريب</span>
-                        <span class="meta-val">3 أشهر</span>
+                        <span class="meta-val">@Model.TrainingDuration</span>
                     </div>
                     <i class="bi bi-clock-fill meta-icon"></i>
                 </div>
@@ -60,7 +60,7 @@
                 <div class="meta-item">
                     <div class="text-end">
                         <span class="meta-label">تاريخ البداية</span>
-                        <span class="meta-val">01-09-2025</span>
+                        <span class="meta-val">@(Model.CurrentPlacement?.TrainingTerm.StartDate.ToString("dd-MM-yyyy") ?? "")</span>
                     </div>
                     <i class="bi bi-calendar3 meta-icon"></i>
                 </div>
@@ -68,12 +68,13 @@
                 <div class="meta-item">
                     <div class="text-end">
                         <span class="meta-label">تاريخ النهاية</span>
-                        <span class="meta-val">01-12-2025</span>
+                        <span class="meta-val">@(Model.CurrentPlacement?.TrainingTerm.EndDate.ToString("dd-MM-yyyy") ?? "")</span>
                     </div>
                     <i class="bi bi-calendar-check-fill meta-icon"></i>
                 </div>
             </div>
         </div><!-- /hero -->
+        @*
         <!-- ── Tasks Card ── -->
         <div class="tasks-card">
             <div class="tasks-head">
@@ -183,8 +184,9 @@
 
     <footer class="page-footer">
         جميع الحقوق محفوظة © 2025 بوابة التدريب الأكاديمي
-    </footer>
-
+    </footer> 
+    *@
+ </div>
 </div><!-- /content-col -->
 
 
