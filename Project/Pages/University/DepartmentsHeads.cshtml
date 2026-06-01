@@ -1,0 +1,176 @@
+﻿@page
+@model Project.Pages.University.DepartmentsHeadsModel
+@{
+    ViewData["Title"] = "رؤساء الأقسام";
+    ViewData["UserType"] = "University";
+    ViewData["UserName"] = "أحمد محمد";
+    ViewData["PortalTitle"] = "بوابة الجامعة";
+    ViewData["PortalSubtitle"] = "إدارة التدريب الميداني";
+    ViewData["SearchPlaceholder"] = "بحث عن رؤساء أقسام ...";
+    ViewData["ActivePage"] = "DepartmentsadHeads";
+}
+<div dir="rtl" class="w-full text-right">
+
+    @* ===== Hero Section  ===== *@
+    <section class="mb-lg md:mb-xl relative rounded-xl md:rounded-2xl overflow-hidden bg-primary-container p-6 md:p-xl text-on-primary">
+        <div class="relative z-10 max-w-2xl text-right">
+            <h1 class="font-h1 text-2xl md:text-h1 mb-md">رؤساء الأقسام </h1>
+            <p class="font-body-lg text-sm md:text-body-lg opacity-90 mb-lg">
+                    إدارة ومتابعة رؤساء ألاقسام            </p>
+            <button class="w-full sm:w-auto bg-white text-primary font-button px-xl py-3 rounded-xl shadow-lg hover:bg-surface-container transition-colors"> ＋ إضافة رئيس قسم جديد</button>
+            
+        </div>
+    </section>
+
+    @* ===== Searching & Filtering===== *@
+    <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] p-4 mb-lg">
+        <div class="flex flex-wrap gap-3 items-center justify-start flex-row">
+
+            <div class="relative flex-1 min-w-[200px]">
+                <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+                <input class="w-1/4 pr-10 pl-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20 text-right" placeholder="ابحث عن رئيس قسم ..." type="text" />
+            </div>
+
+           
+
+            <button class="bg-primary text-white font-button px-6 py-2.5 rounded-xl hover:bg-primary/90 transition-colors">بحث</button>
+        </div>
+    </div>
+
+    @* ===== Request tables===== *@
+    <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] overflow-hidden text-center">
+        <div class="p-4 md:p-lg border-b border-slate-100 flex justify-between items-center ">
+            <h3 class="font-h3 text-lg md:text-h3 text-slate-900 font-bold">قائمة رؤساء الأقسام</h3>
+            <p class="text-slate-600">جميع رؤساء الأقسام في الجامعة</p>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-right border-collapse min-w-[1000px]">
+                <thead class="bg-surface-container-low text-slate-500 font-bold text-sm">
+                    <tr>
+                        <th class="px-6 py-3 text-right">#</th>
+                        <th class="px-6 py-3 text-right">اسم رئيس القسم</th>
+                        <th class="px-6 py-3 text-right">القسم</th>
+                        <th class="px-6 py-3 text-right">البريد الألكتروني</th>
+                        <th class="px-6 py-3 text-right">رقم الهاتف</th>
+                        <th class="px-6 py-3 text-right">تاريخ تعيينه</th>
+                        <th class="px-6 py-3 text-right">الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50 text-sm">
+
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-6 py-3 text-slate-900 font-bold">1</td>
+                        <td class="px-6 py-3 text-slate-600">د.محمد علي</td>
+                        <td class="px-6 py-3 text-slate-600">هندسة البرمجيات</td>
+                        <td class="px-6 py-3 text-slate-600">m.ail@gtc.edu</td>
+                        <td class="px-6 py-3 text-slate-600">0566718557</td>
+                        <td class="px-6 py-3 text-slate-600">01-09-2025</td>
+                       
+                        <td class="px-6 py-3">
+                            <div class="flex gap-3">
+                                <button class="border border-emerald-200 text-emerald-600 text-xs font-bold px-4 py-2 rounded hover:bg-emerald-50 flex items-center gap-1"><span>👁</span>التفاصيل </button>
+                                <button class="border border-emerald-200 text-emerald-600 text-xs font-bold px-4 py-2 rounded hover:bg-emerald-50 flex items-center gap-1"><span>✎</span>تعديل </button>
+                                <button class="border border-rose-200 text-rose-600 text-xs font-bold px-4 py-2 rounded hover:bg-rose-50 flex items-center gap-1"> <span>🗑</span>حذف</button>
+        
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-6 py-3 text-slate-900 font-bold">2</td>
+                        <td class="px-6 py-3 text-slate-600">د.سارة علي</td>
+                        <td class="px-6 py-3 text-slate-600">نظم معلومات</td>
+                        <td class="px-6 py-3 text-slate-600">m.ail@gtc.edu</td>
+                        <td class="px-6 py-3 text-slate-600">0566718557</td>
+                        <td class="px-6 py-3 text-slate-600">01-09-2025</td>
+
+                        <td class="px-6 py-3">
+                            <div class="flex gap-3">
+                                <button class="border border-emerald-200 text-emerald-600 text-xs font-bold px-4 py-2 rounded hover:bg-emerald-50 flex items-center gap-1"><span>👁</span>التفاصيل </button>
+                                <button class="border border-emerald-200 text-emerald-600 text-xs font-bold px-4 py-2 rounded hover:bg-emerald-50 flex items-center gap-1"><span>✎</span>تعديل </button>
+                                <button class="border border-rose-200 text-rose-600 text-xs font-bold px-4 py-2 rounded hover:bg-rose-50 flex items-center gap-1"> <span>🗑</span>حذف</button>
+
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-6 py-3 text-slate-900 font-bold">3</td>
+                        <td class="px-6 py-3 text-slate-600">د.رنا علي</td>
+                        <td class="px-6 py-3 text-slate-600">هندسة البرمجيات</td>
+                        <td class="px-6 py-3 text-slate-600">m.ail@gtc.edu</td>
+                        <td class="px-6 py-3 text-slate-600">0566718557</td>
+                        <td class="px-6 py-3 text-slate-600">01-09-2025</td>
+
+                        <td class="px-6 py-3">
+                            <div class="flex gap-3">
+                                <button class="border border-emerald-200 text-emerald-600 text-xs font-bold px-4 py-2 rounded hover:bg-emerald-50 flex items-center gap-1"><span>👁</span>التفاصيل </button>
+                                <button class="border border-emerald-200 text-emerald-600 text-xs font-bold px-4 py-2 rounded hover:bg-emerald-50 flex items-center gap-1"><span>✎</span>تعديل </button>
+                                <button class="border border-rose-200 text-rose-600 text-xs font-bold px-4 py-2 rounded hover:bg-rose-50 flex items-center gap-1"> <span>🗑</span>حذف</button>
+
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-6 py-3 text-slate-900 font-bold">4</td>
+                        <td class="px-6 py-3 text-slate-600">د.ليلى علي</td>
+                        <td class="px-6 py-3 text-slate-600">تقنية المعلومات</td>
+                        <td class="px-6 py-3 text-slate-600">m.ail@gtc.edu</td>
+                        <td class="px-6 py-3 text-slate-600">0566718557</td>
+                        <td class="px-6 py-3 text-slate-600">01-09-2025</td>
+
+                        <td class="px-6 py-3">
+                            <div class="flex gap-3">
+                                <button class="border border-emerald-200 text-emerald-600 text-xs font-bold px-4 py-2 rounded hover:bg-emerald-50 flex items-center gap-1"><span>👁</span>التفاصيل </button>
+                                <button class="border border-emerald-200 text-emerald-600 text-xs font-bold px-4 py-2 rounded hover:bg-emerald-50 flex items-center gap-1"><span>✎</span>تعديل </button>
+                                <button class="border border-rose-200 text-rose-600 text-xs font-bold px-4 py-2 rounded hover:bg-rose-50 flex items-center gap-1"> <span>🗑</span>حذف</button>
+
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-6 py-3 text-slate-900 font-bold">5</td>
+                        <td class="px-6 py-3 text-slate-600">د.عمر علي</td>
+                        <td class="px-6 py-3 text-slate-600">الرياضيات</td>
+                        <td class="px-6 py-3 text-slate-600">m.ail@gtc.edu</td>
+                        <td class="px-6 py-3 text-slate-600">0566718557</td>
+                        <td class="px-6 py-3 text-slate-600">01-09-2025</td>
+
+                        <td class="px-6 py-3">
+                            <div class="flex gap-3">
+                                <button class="border border-emerald-200 text-emerald-600 text-xs font-bold px-4 py-2 rounded hover:bg-emerald-50 flex items-center gap-1"><span>👁</span>التفاصيل </button>
+                                <button class="border border-emerald-200 text-emerald-600 text-xs font-bold px-4 py-2 rounded hover:bg-emerald-50 flex items-center gap-1"><span>✎</span>تعديل </button>
+                                <button class="border border-rose-200 text-rose-600 text-xs font-bold px-4 py-2 rounded hover:bg-rose-50 flex items-center gap-1"> <span>🗑</span>حذف</button>
+
+                            </div>
+                        </td>
+                    </tr>
+                  
+                </tbody>
+            </table>
+        </div>
+
+        @* ===== Pagining ===== *@
+        <div class="p-4 md:p-lg flex items-center justify-between gap-4 border-t border-slate-100 flex-row">
+            <div class="flex items-center gap-4">
+                <p class="text-sm text-slate-500 font-body-sm whitespace-nowrap">
+                    عرض <span class="font-bold text-slate-900">1</span> من أصل <span class="font-bold text-slate-900">5</span> رؤساء أقسام 
+                </p>
+                <div class="flex items-center gap-2">
+                    <select class="bg-slate-100 border-none rounded-lg text-xs font-bold text-slate-700 py-1.5 pr-8 pl-3 focus:ring-2 focus:ring-primary/20 appearance-none cursor-pointer" id="pp-u">
+                        <option>10</option>
+                        <option>25</option>
+                        <option>50</option>
+                    </select>
+                </div>
+            </div>
+            <nav class="flex items-center gap-2 flex-row">
+                <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:bg-slate-50"><span class="material-symbols-outlined text-sm">chevron_right</span></button>
+                <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-primary text-white text-sm font-bold">1</button>
+                <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-600 text-sm font-bold hover:bg-slate-50">2</button>
+                <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-600 text-sm font-bold hover:bg-slate-50">3</button>
+                <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:bg-slate-50"><span class="material-symbols-outlined text-sm">chevron_left</span></button>
+            </nav>
+        </div>
+    </div>
+
+</div>
+
