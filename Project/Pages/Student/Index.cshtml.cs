@@ -75,7 +75,7 @@ namespace Project.Pages.Student
             if (string.IsNullOrEmpty(userId)) { return RedirectToPage("/Identity/Account/Login"); }
            
             student = await _studentRepo.GetStudentByUserId(userId);
-            if (student == null) return NotFound();
+            if (student == null) return  Forbid();
 
             AttendanceRate = await CalculateAttendanceRate(student.StudentID);
 

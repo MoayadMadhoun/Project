@@ -32,7 +32,7 @@ namespace Project.Pages.Student
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userId is null)   return RedirectToPage("/Identity/Account/Login");
             var student = await studentsRepository.GetStudentByUserId(userId);
-            if (student is null) return NotFound();
+            if (student is null) return Forbid();
             var applications = studentsRepository.GetAllApplicationByStudentId(student.StudentID);
            
             StudentApplications =await  PaginatedList<TrainingApplication>.CreateAsync(applications, PageSize , PageIndex); 
