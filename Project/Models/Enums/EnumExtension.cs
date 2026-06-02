@@ -18,20 +18,19 @@ namespace Project.Models.Enums
                 .GetName() ?? value.ToString();
         }
 
-       
+
 
         public static SelectList GetEnumSelectList<TEnum>() where TEnum : Enum
         {
-
-            var data = Enum.GetValues<InstitutionType>()
+            var data = Enum.GetValues(typeof(TEnum))
+                .Cast<TEnum>()
                 .Select(x => new
                 {
                     Value = x.ToString(),
-                    Text = x.GetDisplayName()
+                    Text = (x as Enum).GetDisplayName()
                 });
 
             return new SelectList(data, "Value", "Text");
-
         }
 
     }

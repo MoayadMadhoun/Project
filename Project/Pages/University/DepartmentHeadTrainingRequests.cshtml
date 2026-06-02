@@ -26,21 +26,36 @@
 @* ===== Filters Bar ===== *@
 <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] p-4 mb-lg">
     <div class="flex flex-wrap gap-3 items-center justify-end">
-        <div class="relative flex-1 min-w-[220px]">
-            <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
-            <input class="w-3/4 pr-10 pl-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20 text-right" placeholder="ابحث عن طالب أو مؤسسة..." type="text" />
-        </div>
+        <form method="get" class="bg-surface-container-lowest rounded-xl border p-4 mb-lg">
 
-        <select class="bg-slate-100 border-none rounded-xl text-sm font-bold text-slate-700 py-2.5 px-4 focus:ring-2 focus:ring-primary/20 cursor-pointer text-right">
-            <option>حالة الطلب</option>
-            <option>قيد المراجعة</option>
-            <option>معتمد من الجامعة</option>
-            <option>مرفوض من القسم</option>
-            <option>معتمد من المؤسسة</option>
-        </select>
+            <div class="flex flex-wrap gap-3 items-center justify-end">
 
-       
-        <button class="bg-primary text-white font-button px-6 py-2.5 rounded-xl hover:bg-primary/90 transition-colors">بحث</button>
+                <div class="relative flex-1 min-w-[220px]">
+                    <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">
+                        search
+                    </span>
+
+                    <input name="Search"
+                           value="@Model.Search"
+                           class="w-3/4 pr-10 pl-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm text-right"
+                           placeholder="ابحث عن طالب أو مؤسسة..." />
+                </div>
+
+                <select name="StatusFilter"
+                        asp-items="Model.StatusList"
+                        class="bg-slate-100 border-none rounded-xl text-sm font-bold text-slate-700 py-2.5 px-4 text-right">
+
+                    <option value="">كل الحالات</option>
+
+                </select>
+
+                <button class="bg-primary text-white px-6 py-2.5 rounded-xl hover:bg-primary/90">
+                    بحث
+                </button>
+
+            </div>
+
+        </form>
     </div>
 </div>
 
@@ -64,104 +79,51 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-50">
-                @* الصف الأول *@
-                <tr class="hover:bg-slate-50 transition-colors">
-                    <td class="px-4 py-3 text-sm text-slate-900 font-bold">أحمد محمد</td>
-                    <td class="px-4 py-3 text-sm text-slate-600">20201234</td>
+                @foreach (var item in Model.Applications)
+                {
+                    <tr class="hover:bg-slate-50 transition-colors">
 
-                    <td class="px-4 py-3 text-sm text-slate-600">شركة التقنية المتقدمة</td>
+                        <td class="px-4 py-3 text-sm text-slate-900 font-bold">
+                            @item.StudentName
+                        </td>
 
-                    <td class="px-4 py-3 text-sm text-slate-600">01-09-2025</td>
-                    <td class="px-4 py-3">
-                        <span class="px-3 py-1 rounded text-[11px] font-bold bg-blue-50 text-blue-600">قيد المراجعة</span>
-                    </td>
-                    <td class="px-4 py-3">
-                        <div class="flex gap-2 items-center">
-                            <button class="flex items-center gap-1 text-emerald-600 border border-emerald-200 px-2 py-1 rounded text-xs font-bold hover:bg-emerald-50">
-                                <span class="material-symbols-outlined text-sm">check</span> موافقة
-                            </button>
-                            <button class="flex items-center gap-1 text-rose-600 border border-rose-200 px-2 py-1 rounded text-xs font-bold hover:bg-rose-50">
-                                <span class="material-symbols-outlined text-sm">cancel</span> رفض
-                            </button>
-                        </div>
-                    </td>
-                </tr>
+                        <td class="px-4 py-3 text-sm text-slate-600">
+                            @item.StudentNumber
+                        </td>
 
-                @* الصف الثاني *@
-                <tr class="hover:bg-slate-50 transition-colors">
-                    <td class="px-4 py-3 text-sm text-slate-900 font-bold">سارة خالد</td>
-                    <td class="px-4 py-3 text-sm text-slate-600">20204567</td>
+                        <td class="px-4 py-3 text-sm text-slate-600">
+                            @item.InstitutionName
+                        </td>
 
-                    <td class="px-4 py-3 text-sm text-slate-600">بنك الاستثمار</td>
+                        <td class="px-4 py-3 text-sm text-slate-600">
+                            @item.AppliedAt.ToString("dd-MM-yyyy")
+                        </td>
 
-                    <td class="px-4 py-3 text-sm text-slate-600">05-09-2025</td>
-                    <td class="px-4 py-3">
-                        <span class="px-3 py-1 rounded text-[11px] font-bold bg-emerald-50 text-emerald-600">معتمد من الجامعة</span>
-                    </td>
-                    <td class="px-4 py-3">
-                        <button class="flex items-center gap-1 text-slate-600 border border-slate-200 px-3 py-1 rounded text-xs font-bold hover:bg-slate-50">
-                            <span class="material-symbols-outlined text-sm">visibility</span> عرض
-                        </button>
-                    </td>
-                </tr>
+                        <td class="px-4 py-3">
+                            <span class="px-3 py-1 rounded text-[11px] font-bold bg-blue-50 text-blue-600">
+                                @item.Status
+                            </span>
+                        </td>
 
-                @* الصف الثالث *@
-                <tr class="hover:bg-slate-50 transition-colors">
-                    <td class="px-4 py-3 text-sm text-slate-900 font-bold">محمد علي</td>
-                    <td class="px-4 py-3 text-sm text-slate-600">20207891</td>
+                        <td class="px-4 py-3">
+                            @if (item.Status == Project.Models.TrainingApplication.ApplicationStatus.Submitted)
+                            {
+                                <form method="post" asp-page-handler="Approve" asp-route-id="@item.ApplicationID">
+                                    <button class="text-emerald-600">موافقة</button>
+                                </form>
 
-                    <td class="px-4 py-3 text-sm text-slate-600">تدريب أمن سيبراني</td>
-                    <td class="px-4 py-3 text-sm text-slate-600">02-09-2025</td>
-                    <td class="px-4 py-3">
-                        <span class="px-3 py-1 rounded text-[11px] font-bold bg-rose-50 text-rose-600">مرفوض من القسم</span>
-                    </td>
-                    <td class="px-4 py-3">
-                        <button class="flex items-center gap-1 text-slate-600 border border-slate-200 px-3 py-1 rounded text-xs font-bold hover:bg-slate-50">
-                            <span class="material-symbols-outlined text-sm">visibility</span> عرض
-                        </button>
-                    </td>
-                </tr>
-
-                @* الصف الرابع *@
-                <tr class="hover:bg-slate-50 transition-colors">
-                    <td class="px-4 py-3 text-sm text-slate-900 font-bold">لينا محمود</td>
-                    <td class="px-4 py-3 text-sm text-slate-600">20203321</td>
-
-                    <td class="px-4 py-3 text-sm text-slate-600">مستشفى المدينة</td>
-
-                    <td class="px-4 py-3 text-sm text-slate-600">03-09-2025</td>
-                    <td class="px-4 py-3">
-                        <span class="px-3 py-1 rounded text-[11px] font-bold bg-blue-50 text-blue-600">قيد المراجعة</span>
-                    </td>
-                    <td class="px-4 py-3">
-                        <div class="flex gap-2 items-center">
-                            <button class="flex items-center gap-1 text-emerald-600 border border-emerald-200 px-2 py-1 rounded text-xs font-bold hover:bg-emerald-50">
-                                <span class="material-symbols-outlined text-sm">check</span> موافقة
-                            </button>
-                            <button class="flex items-center gap-1 text-rose-600 border border-rose-200 px-2 py-1 rounded text-xs font-bold hover:bg-rose-50">
-                                <span class="material-symbols-outlined text-sm">cancel</span> رفض
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-
-                @* الصف الخامس *@
-                <tr class="hover:bg-slate-50 transition-colors">
-                    <td class="px-4 py-3 text-sm text-slate-900 font-bold">عمر يوسف</td>
-                    <td class="px-4 py-3 text-sm text-slate-600">20205555</td>
-
-                    <td class="px-4 py-3 text-sm text-slate-600">دار الإبداع للإعلام</td>
-
-                    <td class="px-4 py-3 text-sm text-slate-600">04-09-2025</td>
-                    <td class="px-4 py-3">
-                        <span class="px-3 py-1 rounded text-[11px] font-bold bg-teal-50 text-teal-600">معتمد من المؤسسة</span>
-                    </td>
-                    <td class="px-4 py-3">
-                        <button class="flex items-center gap-1 text-slate-600 border border-slate-200 px-3 py-1 rounded text-xs font-bold hover:bg-slate-50">
-                            <span class="material-symbols-outlined text-sm">visibility</span> عرض
-                        </button>
-                    </td>
-                </tr>
+                                <form method="post" asp-page-handler="Reject" asp-route-id="@item.ApplicationID">
+                                    <button class="text-rose-600">رفض</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <span class="text-gray-500">تم المعالجة</span>
+                            }
+                        </td>
+                    </tr>
+                }
+                }
             </tbody>
         </table>
     </div>
@@ -182,11 +144,46 @@
             </div>
         </div>
         <nav class="flex items-center gap-2">
-            <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:bg-slate-50"><span class="material-symbols-outlined">chevron_right</span></button>
-            <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-primary text-white text-sm font-bold">1</button>
-            <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-600 text-sm font-bold hover:bg-slate-50">2</button>
-            <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-600 text-sm font-bold hover:bg-slate-50">3</button>
-            <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:bg-slate-50"><span class="material-symbols-outlined">chevron_left</span></button>
+
+            <!-- Prev -->
+            <a asp-page="./DepartmentHeadTrainingRequests"
+               asp-route-PageIndex="@(Model.Applications.PageIndex - 1)"
+               asp-route-Search="@Model.Search"
+               asp-route-StatusFilter="@Model.StatusFilter"
+               class="w-8 h-8 flex items-center justify-center rounded-lg border
+              @(Model.Applications.HasPrevPage ? "text-slate-600 hover:bg-slate-50" : "text-slate-300 pointer-events-none")">
+
+                <span class="material-symbols-outlined">chevron_right</span>
+            </a>
+
+            <!-- Pages -->
+            @for (int i = 1; i <= Model.Applications.TotalPages; i++)
+            {
+                <a asp-page="./DepartmentHeadTrainingRequests"
+                   asp-route-PageIndex="@i"
+                   asp-route-Search="@Model.Search"
+                   asp-route-StatusFilter="@Model.StatusFilter"
+                   class="w-8 h-8 flex items-center justify-center rounded-lg text-sm font-bold
+                          @(i == Model.Applications.PageIndex
+                                                          ? "bg-primary text-white"
+                                                          : "border text-slate-600 hover:bg-slate-50")">
+
+                    @i
+                </a>
+            }
+
+            <!-- Next -->
+            <a asp-page="./DepartmentHeadTrainingRequests"
+               asp-route-PageIndex="@(Model.Applications.PageIndex + 1)"
+               asp-route-Search="@Model.Search"
+               asp-route-StatusFilter="@Model.StatusFilter"
+               class="w-8 h-8 flex items-center justify-center rounded-lg border
+              @(Model.Applications.HasNextPage ? "text-slate-600 hover:bg-slate-50" : "text-slate-300 pointer-events-none")">
+
+                <span class="material-symbols-outlined">chevron_left</span>
+            </a>
+
         </nav>
     </div>
 </div>
+
