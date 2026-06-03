@@ -1,0 +1,814 @@
+﻿@page
+@model Project.Pages.University.StudentsModel
+@{
+    ViewData["Title"] = "الطلبة";
+    Layout = "_Layout";
+    ViewData["Title"] = "لوحة تحكم الجامعة";
+    ViewData["UserType"] = "University";
+    ViewData["PortalTitle"] = "بوابة الجامعة";
+    ViewData["PortalSubtitle"] = "إدارة التدريب الميداني";
+    ViewData["SearchPlaceholder"] = "بحث عن طلاب، مؤسسات، فرص...";
+}
+
+@section Styles {
+<style>
+    /* ===== ANIMATIONS ===== */
+    @@keyframes fadeSlideDown {
+        from { opacity: 0; transform: translateY(-28px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    @@keyframes fadeSlideUp {
+        from { opacity: 0; transform: translateY(28px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    @@keyframes fadeSlideRight {
+        from { opacity: 0; transform: translateX(-28px); }
+        to   { opacity: 1; transform: translateX(0); }
+    }
+    @@keyframes scaleIn {
+        from { opacity: 0; transform: scale(0.88); }
+        to   { opacity: 1; transform: scale(1); }
+    }
+    @@keyframes rowReveal {
+        from { opacity: 0; transform: translateX(22px); }
+        to   { opacity: 1; transform: translateX(0); }
+    }
+    @@keyframes shimmer {
+        0%   { background-position: -400px 0; }
+        100% { background-position: 400px 0; }
+    }
+    @@keyframes pulse-ring {
+        0%   { box-shadow: 0 0 0 0 rgba(22, 163, 163, 0.35); }
+        70%  { box-shadow: 0 0 0 10px rgba(22, 163, 163, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(22, 163, 163, 0); }
+    }
+    @@keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50%       { transform: translateY(-8px); }
+    }
+    @@keyframes gradientShift {
+        0%   { background-position: 0% 50%; }
+        50%  { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* ===== PAGE VARIABLES ===== */
+    :root {
+        --teal-primary: #0d9488;
+        --teal-dark:    #0f766e;
+        --teal-light:   #ccfbf1;
+        --teal-mid:     #5eead4;
+        --accent:       #f59e0b;
+        --row-hover:    #f0fdfa;
+        --radius-lg:    1rem;
+        --radius-md:    .6rem;
+        --shadow-card:  0 4px 24px rgba(13,148,136,.12);
+        --shadow-hover: 0 8px 32px rgba(13,148,136,.22);
+    }
+
+    /* ===== HERO BANNER ===== */
+    .students-hero {
+            background: linear-gradient(135deg, #0d9488 0%, #0f766e 40%, #0d9488 100%);
+        background-size: 200% 200%;
+        animation: gradientShift 8s ease infinite, scaleIn .6s ease both;
+        border-radius: var(--radius-lg);
+        position: relative;
+        overflow: hidden;
+        min-height: 170px;
+        padding: 2rem 2.5rem;
+    }
+    .students-hero::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        pointer-events: none;
+    }
+    .students-hero::after {
+        content: '';
+        position: absolute;
+        bottom: -40px; left: -40px;
+        width: 200px; height: 200px;
+        border-radius: 50%;
+        background: rgba(255,255,255,.06);
+        pointer-events: none;
+    }
+    .hero-title {
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: #fff;
+        letter-spacing: -.5px;
+        animation: fadeSlideDown .5s .1s ease both;
+    }
+    .hero-subtitle {
+        color: rgba(255,255,255,.82);
+        font-size: .97rem;
+        line-height: 1.7;
+        animation: fadeSlideDown .5s .22s ease both;
+    }
+    .hero-icon-wrap {
+        width: 70px; height: 70px;
+        border-radius: 50%;
+        background: rgba(255,255,255,.18);
+        display: flex; align-items: center; justify-content: center;
+        animation: float 3.5s ease-in-out infinite, scaleIn .5s .1s ease both;
+        backdrop-filter: blur(4px);
+    }
+    .hero-icon-wrap svg { width: 36px; height: 36px; fill: #fff; }
+
+    /* hero illustration ghost card */
+    .hero-illustration {
+        position: absolute;
+        left: 2rem; top: 50%;
+        transform: translateY(-50%);
+        animation: fadeSlideRight .6s .3s ease both;
+        opacity: .85;
+    }
+    .hero-illustration .ghost-card {
+        background: rgba(255,255,255,.16);
+        border-radius: var(--radius-md);
+        width: 110px; height: 130px;
+        backdrop-filter: blur(6px);
+        border: 1px solid rgba(255,255,255,.25);
+        position: relative;
+        overflow: hidden;
+    }
+    .hero-illustration .ghost-card::after {
+        content: '';
+        position: absolute;
+        top: 0; left: -100%;
+        width: 60%; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,.2), transparent);
+        animation: shimmer 2.5s 1s infinite;
+    }
+    .ghost-avatar {
+        width: 44px; height: 44px;
+        border-radius: 50%;
+        background: rgba(255,255,255,.3);
+        margin: 18px auto 10px;
+    }
+    .ghost-line {
+        height: 6px; border-radius: 3px;
+        background: rgba(255,255,255,.3);
+        margin: 0 14px 7px;
+    }
+    .ghost-line.short { width: 55%; margin: 0 auto 7px; }
+
+    /* ===== FILTER BAR ===== */
+    .filter-bar {
+        background: #fff;
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-card);
+        padding: 1rem 1.4rem;
+        animation: fadeSlideUp .5s .35s ease both;
+        border: 1px solid #e2f8f5;
+    }
+    .filter-bar .form-select,
+    .filter-bar .form-control {
+        border-radius: var(--radius-md);
+        border-color: #d1faf4;
+        font-size: .88rem;
+        transition: border-color .2s, box-shadow .2s;
+        direction: rtl;
+    }
+    .filter-bar .form-select:focus,
+    .filter-bar .form-control:focus {
+        border-color: var(--teal-primary);
+        box-shadow: 0 0 0 3px rgba(13,148,136,.12);
+    }
+    .btn-search {
+        background: linear-gradient(135deg, var(--teal-primary), var(--teal-dark));
+        color: #fff;
+        border: none;
+        border-radius: var(--radius-md);
+        padding: .45rem 1.3rem;
+        font-size: .88rem;
+        font-weight: 600;
+        transition: transform .18s, box-shadow .18s;
+        animation: pulse-ring 2.5s 1s infinite;
+    }
+    .btn-search:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(13,148,136,.35);
+        color: #fff;
+    }
+    .btn-filter {
+        background: #f0fdfa;
+        color: var(--teal-primary);
+        border: 1.5px solid var(--teal-mid);
+        border-radius: var(--radius-md);
+        padding: .45rem 1.1rem;
+        font-size: .88rem;
+        font-weight: 600;
+        transition: background .18s, transform .18s;
+    }
+    .btn-filter:hover {
+        background: var(--teal-light);
+        transform: translateY(-2px);
+    }
+
+    /* ===== TABLE CARD ===== */
+    .table-card {
+        background: #fff;
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-card);
+        overflow: hidden;
+        border: 1px solid #e2f8f5;
+        animation: fadeSlideUp .55s .45s ease both;
+    }
+    .table-card-header {
+        padding: 1.1rem 1.6rem .6rem;
+        border-bottom: 1px solid #f0fdfa;
+    }
+    .table-title {
+        font-size: 1.15rem;
+        font-weight: 800;
+        color: #134e4a;
+    }
+    .table-count {
+        font-size: .82rem;
+        color: #64748b;
+        font-weight: 500;
+    }
+    .count-badge {
+        display: inline-block;
+        background: linear-gradient(135deg, var(--teal-primary), var(--teal-dark));
+        color: #fff;
+        border-radius: 20px;
+        padding: .1rem .65rem;
+        font-size: .78rem;
+        font-weight: 700;
+        margin-inline-start: .4rem;
+    }
+
+    /* Table */
+    .students-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        font-size: .88rem;
+        direction: rtl;
+    }
+    .students-table thead tr {
+        background: linear-gradient(135deg, #f0fdfa, #e6faf6);
+    }
+    .students-table thead th {
+        padding: .85rem 1rem;
+        font-weight: 700;
+        color: #0f766e;
+        font-size: .82rem;
+        letter-spacing: .02em;
+        white-space: nowrap;
+        border-bottom: 2px solid var(--teal-mid);
+        text-align: right;
+    }
+    .students-table tbody tr {
+        border-bottom: 1px solid #f0fdfa;
+        transition: background .18s, transform .18s, box-shadow .18s;
+        animation: rowReveal .4s ease both;
+    }
+
+    /* staggered row animations */
+    .students-table tbody tr:nth-child(1)  { animation-delay: .55s; }
+    .students-table tbody tr:nth-child(2)  { animation-delay: .62s; }
+    .students-table tbody tr:nth-child(3)  { animation-delay: .69s; }
+    .students-table tbody tr:nth-child(4)  { animation-delay: .76s; }
+    .students-table tbody tr:nth-child(5)  { animation-delay: .83s; }
+    .students-table tbody tr:nth-child(6)  { animation-delay: .90s; }
+    .students-table tbody tr:nth-child(7)  { animation-delay: .97s; }
+    .students-table tbody tr:nth-child(8)  { animation-delay:1.04s; }
+    .students-table tbody tr:nth-child(9)  { animation-delay:1.11s; }
+    .students-table tbody tr:nth-child(10) { animation-delay:1.18s; }
+
+    .students-table tbody tr:hover {
+        background: var(--row-hover);
+        transform: scale(1.005);
+        box-shadow: 0 2px 12px rgba(13,148,136,.08);
+        z-index: 1;
+        position: relative;
+    }
+    .students-table td {
+        padding: .78rem 1rem;
+        color: #1e293b;
+        vertical-align: middle;
+        text-align: right;
+    }
+    .col-num {
+        font-weight: 700;
+        color: #94a3b8;
+        font-size: .8rem;
+        width: 40px;
+    }
+    .col-name {
+        font-weight: 700;
+        color: #134e4a;
+    }
+    .col-id {
+        font-family: 'Courier New', monospace;
+        font-size: .84rem;
+        color: #475569;
+        letter-spacing: .5px;
+    }
+    .col-spec span,
+    .col-dept span {
+        display: inline-block;
+        background: #f0fdfa;
+        color: var(--teal-dark);
+        border-radius: 20px;
+        padding: .15rem .65rem;
+        font-size: .78rem;
+        font-weight: 600;
+        border: 1px solid #b2f5ea;
+    }
+    .col-gpa {
+        font-weight: 700;
+        font-size: .92rem;
+    }
+    .gpa-high   { color: #059669; }
+    .gpa-mid    { color: #d97706; }
+    .gpa-low    { color: #dc2626; }
+
+    .training-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: .3rem;
+        font-size: .78rem;
+        font-weight: 600;
+        padding: .2rem .7rem;
+        border-radius: 20px;
+    }
+    .training-active {
+        background: #dcfce7;
+        color: #15803d;
+        border: 1px solid #86efac;
+    }
+    .training-none {
+        background: #f1f5f9;
+        color: #94a3b8;
+        border: 1px dashed #cbd5e1;
+    }
+
+    /* Details button */
+    .btn-details {
+        display: inline-flex;
+        align-items: center;
+        gap: .3rem;
+        background: transparent;
+        border: 1.5px solid var(--teal-mid);
+        color: var(--teal-primary);
+        border-radius: var(--radius-md);
+        padding: .28rem .75rem;
+        font-size: .78rem;
+        font-weight: 600;
+        transition: all .2s;
+        white-space: nowrap;
+    }
+    .btn-details:hover {
+        background: var(--teal-primary);
+        color: #fff;
+        border-color: var(--teal-primary);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(13,148,136,.28);
+    }
+    .btn-details svg {
+        width: 14px; height: 14px;
+        transition: transform .2s;
+    }
+    .btn-details:hover svg { transform: scale(1.2); }
+
+    /* ===== PAGINATION ===== */
+    .pagination-wrap {
+        padding: 1rem 1.6rem;
+        border-top: 1px solid #f0fdfa;
+        animation: fadeSlideUp .5s 1.2s ease both;
+    }
+    .pagination .page-link {
+        border-radius: var(--radius-md) !important;
+        border: 1.5px solid #e2e8f0;
+        color: #475569;
+        font-size: .84rem;
+        font-weight: 600;
+        margin: 0 2px;
+        transition: all .18s;
+        padding: .35rem .7rem;
+        min-width: 36px;
+        text-align: center;
+    }
+    .pagination .page-link:hover {
+        background: var(--teal-light);
+        border-color: var(--teal-mid);
+        color: var(--teal-dark);
+        transform: translateY(-2px);
+    }
+    .pagination .page-item.active .page-link {
+        background: linear-gradient(135deg, var(--teal-primary), var(--teal-dark));
+        border-color: var(--teal-primary);
+        color: #fff;
+        box-shadow: 0 4px 12px rgba(13,148,136,.3);
+    }
+    .per-page-select {
+        border-radius: var(--radius-md);
+        border-color: #d1faf4;
+        font-size: .82rem;
+        color: #475569;
+        direction: rtl;
+        transition: border-color .2s;
+    }
+    .per-page-select:focus {
+        border-color: var(--teal-primary);
+        box-shadow: 0 0 0 3px rgba(13,148,136,.1);
+    }
+    .pagination-info {
+        font-size: .82rem;
+        color: #64748b;
+    }
+
+    /* ===== BACK BUTTON ===== */
+    .btn-back {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        background: #fff;
+        border: 1.5px solid #e2e8f0;
+        color: #475569;
+        border-radius: var(--radius-md);
+        padding: .4rem 1rem;
+        font-size: .88rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all .2s;
+        animation: fadeSlideDown .4s ease both;
+    }
+    .btn-back:hover {
+        background: #f8fafc;
+        border-color: var(--teal-mid);
+        color: var(--teal-primary);
+        transform: translateX(3px);
+    }
+    .btn-back svg { width: 16px; height: 16px; }
+
+    /* ===== RESPONSIVE ===== */
+    @@media (max-width: 768px) {
+        .students-table thead { display: none; }
+        .students-table td {
+            display: block;
+            text-align: right !important;
+            border: none;
+            padding: .3rem 1rem;
+        }
+        .students-table td::before {
+            content: attr(data-label);
+            font-weight: 700;
+            color: #64748b;
+            font-size: .75rem;
+            display: block;
+        }
+        .students-table tbody tr {
+            display: block;
+            border: 1px solid #e2f8f5;
+            border-radius: var(--radius-md);
+            margin-bottom: .75rem;
+            padding: .5rem 0;
+        }
+        .hero-illustration { display: none; }
+        .students-hero { padding: 1.5rem; }
+        .hero-title { font-size: 1.6rem; }
+    }
+</style>
+}
+
+<div class="container-fluid px-3 py-3" dir="rtl">
+
+    <!-- Back button -->
+    @* <div class="mb-3">
+        <a href="javascript:history.back()" class="btn-back">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/>
+            </svg>
+            رجوع
+        </a>
+    </div> *@
+
+    <!-- ===== HERO BANNER ===== -->
+    <div class="students-hero mb-4">
+        <!-- ghost illustration left -->
+        @* <div class="hero-illustration d-none d-lg-block">
+            <div class="ghost-card">
+                <div class="ghost-avatar"></div>
+                <div class="ghost-line"></div>
+                <div class="ghost-line short"></div>
+                <div class="ghost-line"></div>
+            </div>
+        </div> *@
+
+        <div class="d-flex align-items-center justify-content-start gap-3 position-relative">
+            <div class="text-end">
+                <h1 class="hero-title mb-1">الطلبة</h1>
+                <p class="hero-subtitle mb-0">
+                    متابعة الطلبة المسجلين في نظام التدريب الميداني<br>
+                    وإدارة بياناتهم الأكاديمية وحالة التدريب الخاصة بهم.
+                </p>
+            </div>
+            @* <div class="hero-icon-wrap flex-shrink-0">
+                <!-- graduation cap icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M12 3 1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/>
+                </svg>
+            </div> *@
+        </div>
+    </div>
+
+    <!-- ===== FILTER BAR ===== -->
+    <div class="filter-bar mb-4">
+        <div class="row g-2 align-items-center">
+            <!-- Search -->
+            <div class="col-12 col-md-3">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-white border-end-0" style="border-color:#d1faf4;border-radius:var(--radius-md) 0 0 var(--radius-md);">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#0d9488" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                        </svg>
+                    </span>
+                    <input type="text" class="form-control form-control-sm border-start-0 ps-0"
+                           placeholder="ابحث عن طالب..."
+                           style="border-color:#d1faf4;border-radius:0 var(--radius-md) var(--radius-md) 0;" />
+                </div>
+            </div>
+            <!-- Specialty -->
+            <div class="col-6 col-md-2">
+                <select class="form-select form-select-sm">
+                    <option>التخصص - الكل</option>
+                    <option>هندسة البرمجيات</option>
+                    <option>تحليل البيانات</option>
+                    <option>أمن سيبراني</option>
+                    <option>علوم الحاسب</option>
+                    <option>شبكات الحاسب</option>
+                    <option>تقنية المعلومات</option>
+                    <option>الذكاء الاصطناعي</option>
+                    <option>تصميم جرافيك</option>
+                </select>
+            </div>
+            <!-- Department -->
+            <div class="col-6 col-md-2">
+                <select class="form-select form-select-sm">
+                    <option>القسم - الكل</option>
+                    <option>تقنية المعلومات</option>
+                    <option>الحاسوب</option>
+                    <option>الأدب الرقمي</option>
+                </select>
+            </div>
+            <!-- Current Training -->
+            <div class="col-6 col-md-2">
+                <select class="form-select form-select-sm">
+                    <option>التدريب الحالي - الكل</option>
+                    <option>لديه تدريب</option>
+                    <option>لا يوجد تدريب</option>
+                </select>
+            </div>
+            <!-- Buttons -->
+            <div class="col-6 col-md-3 d-flex gap-2 justify-content-end">
+                <button class="btn btn-filter">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="me-1 d-flex">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 4h18M7 8h10M11 12h2m-4 4h6"/>
+                    </svg>
+                    تصفية
+                </button>
+                <button class="btn btn-search btn-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" class="me-1">
+                        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    بحث
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== TABLE CARD ===== -->
+    <div class="table-card">
+        <!-- Header -->
+        <div class="table-card-header d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <div>
+                <span class="table-title">الطلبة المسجلون</span>
+                <span class="count-badge">128</span>
+            </div>
+            <span class="table-count">إجمالي 128 طالب وطالبة</span>
+        </div>
+
+        <!-- Table -->
+        <div class="table-responsive">
+            <table class="students-table">
+                <thead>
+                    <tr>
+                        <th class="col-num">#</th>
+                        <th>الطالب</th>
+                        <th>الرقم الجامعي</th>
+                        <th>التخصص</th>
+                        <th>القسم</th>
+                        <th>المعدل</th>
+                        <th>التدريب الحالي</th>
+                        <th>التفاصيل</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @* -------- Row 1 -------- *@
+                    <tr>
+                        <td class="col-num" data-label="#">1</td>
+                        <td class="col-name" data-label="الطالب">محمد أحمد البدوي</td>
+                        <td class="col-id" data-label="الرقم الجامعي">20201234</td>
+                        <td class="col-spec" data-label="التخصص"><span>هندسة البرمجيات</span></td>
+                        <td class="col-dept" data-label="القسم"><span>تقنية المعلومات</span></td>
+                        <td class="col-gpa gpa-high" data-label="المعدل">3.45</td>
+                        <td data-label="التدريب الحالي">
+                            <span class="training-badge training-active">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="#15803d"><circle cx="12" cy="12" r="6"/></svg>
+                                تدريب Full Stack
+                            </span>
+                        </td>
+                        <td data-label="التفاصيل">
+                            <a asp-page="/Students/Details" asp-route-id="1" class="btn-details">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.964-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/></svg>
+                                التفاصيل
+                            </a>
+                        </td>
+                    </tr>
+                    @* -------- Row 2 -------- *@
+                    <tr>
+                        <td class="col-num" data-label="#">2</td>
+                        <td class="col-name" data-label="الطالب">سارة المطيري</td>
+                        <td class="col-id" data-label="الرقم الجامعي">20204567</td>
+                        <td class="col-spec" data-label="التخصص"><span>تحليل البيانات</span></td>
+                        <td class="col-dept" data-label="القسم"><span>الحاسوب</span></td>
+                        <td class="col-gpa gpa-high" data-label="المعدل">3.80</td>
+                        <td data-label="التدريب الحالي">
+                            <span class="training-badge training-active">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="#15803d"><circle cx="12" cy="12" r="6"/></svg>
+                                تدريب تحليل البيانات
+                            </span>
+                        </td>
+                        <td data-label="التفاصيل">
+                            <a asp-page="/Students/Details" asp-route-id="2" class="btn-details">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.964-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/></svg>
+                                التفاصيل
+                            </a>
+                        </td>
+                    </tr>
+                    @* -------- Row 3 -------- *@
+                    <tr>
+                        <td class="col-num" data-label="#">3</td>
+                        <td class="col-name" data-label="الطالب">أحمد العتيبي</td>
+                        <td class="col-id" data-label="الرقم الجامعي">20207891</td>
+                        <td class="col-spec" data-label="التخصص"><span>أمن سيبراني</span></td>
+                        <td class="col-dept" data-label="القسم"><span>تقنية المعلومات</span></td>
+                        <td class="col-gpa gpa-mid" data-label="المعدل">3.20</td>
+                        <td data-label="التدريب الحالي">
+                            <span class="training-badge training-active">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="#15803d"><circle cx="12" cy="12" r="6"/></svg>
+                                تدريب أمن المعلومات
+                            </span>
+                        </td>
+                        <td data-label="التفاصيل">
+                            <a asp-page="/Students/Details" asp-route-id="3" class="btn-details">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.964-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/></svg>
+                                التفاصيل
+                            </a>
+                        </td>
+                    </tr>
+                    @* -------- Row 4 -------- *@
+                    <tr>
+                        <td class="col-num" data-label="#">4</td>
+                        <td class="col-name" data-label="الطالب">نورة الحربي</td>
+                        <td class="col-id" data-label="الرقم الجامعي">20201543</td>
+                        <td class="col-spec" data-label="التخصص"><span>علوم الحاسب</span></td>
+                        <td class="col-dept" data-label="القسم"><span>الحاسوب</span></td>
+                        <td class="col-gpa gpa-high" data-label="المعدل">3.65</td>
+                        <td data-label="التدريب الحالي">
+                            <span class="training-badge training-none">لا يوجد تدريب</span>
+                        </td>
+                        <td data-label="التفاصيل">
+                            <a asp-page="/Students/Details" asp-route-id="4" class="btn-details">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.964-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/></svg>
+                                التفاصيل
+                            </a>
+                        </td>
+                    </tr>
+                    @* -------- Row 5 -------- *@
+                    <tr>
+                        <td class="col-num" data-label="#">5</td>
+                        <td class="col-name" data-label="الطالب">خالد الدوسري</td>
+                        <td class="col-id" data-label="الرقم الجامعي">20203321</td>
+                        <td class="col-spec" data-label="التخصص"><span>شبكات الحاسب</span></td>
+                        <td class="col-dept" data-label="القسم"><span>تقنية المعلومات</span></td>
+                        <td class="col-gpa gpa-mid" data-label="المعدل">3.10</td>
+                        <td data-label="التدريب الحالي">
+                            <span class="training-badge training-none">لا يوجد تدريب</span>
+                        </td>
+                        <td data-label="التفاصيل">
+                            <a asp-page="/Students/Details" asp-route-id="5" class="btn-details">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.964-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/></svg>
+                                التفاصيل
+                            </a>
+                        </td>
+                    </tr>
+                    @* -------- Row 6 -------- *@
+                    <tr>
+                        <td class="col-num" data-label="#">6</td>
+                        <td class="col-name" data-label="الطالب">ريم الشهري</td>
+                        <td class="col-id" data-label="الرقم الجامعي">20203211</td>
+                        <td class="col-spec" data-label="التخصص"><span>تقنية المعلومات</span></td>
+                        <td class="col-dept" data-label="القسم"><span>تقنية المعلومات</span></td>
+                        <td class="col-gpa gpa-high" data-label="المعدل">3.75</td>
+                        <td data-label="التدريب الحالي">
+                            <span class="training-badge training-active">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="#15803d"><circle cx="12" cy="12" r="6"/></svg>
+                                تدريب تطوير ويب
+                            </span>
+                        </td>
+                        <td data-label="التفاصيل">
+                            <a asp-page="/Students/Details" asp-route-id="6" class="btn-details">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.964-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/></svg>
+                                التفاصيل
+                            </a>
+                        </td>
+                    </tr>
+                    @* -------- Row 7 -------- *@
+                    <tr>
+                        <td class="col-num" data-label="#">7</td>
+                        <td class="col-name" data-label="الطالب">عبدالعزيز العنزي</td>
+                        <td class="col-id" data-label="الرقم الجامعي">20205566</td>
+                        <td class="col-spec" data-label="التخصص"><span>الذكاء الاصطناعي</span></td>
+                        <td class="col-dept" data-label="القسم"><span>الحاسوب</span></td>
+                        <td class="col-gpa gpa-high" data-label="المعدل">3.90</td>
+                        <td data-label="التدريب الحالي">
+                            <span class="training-badge training-none">لا يوجد تدريب</span>
+                        </td>
+                        <td data-label="التفاصيل">
+                            <a asp-page="/Students/Details" asp-route-id="7" class="btn-details">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.964-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/></svg>
+                                التفاصيل
+                            </a>
+                        </td>
+                    </tr>
+                    @* -------- Row 8 -------- *@
+                    <tr>
+                        <td class="col-num" data-label="#">8</td>
+                        <td class="col-name" data-label="الطالب">فاطمة الزهراني</td>
+                        <td class="col-id" data-label="الرقم الجامعي">20206677</td>
+                        <td class="col-spec" data-label="التخصص"><span>تصميم جرافيك</span></td>
+                        <td class="col-dept" data-label="القسم"><span>الأدب الرقمي</span></td>
+                        <td class="col-gpa gpa-high" data-label="المعدل">3.60</td>
+                        <td data-label="التدريب الحالي">
+                            <span class="training-badge training-active">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="#15803d"><circle cx="12" cy="12" r="6"/></svg>
+                                تدريب تصميم جرافيك
+                            </span>
+                        </td>
+                        <td data-label="التفاصيل">
+                            <a asp-page="/Students/Details" asp-route-id="8" class="btn-details">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.964-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/></svg>
+                                التفاصيل
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ===== PAGINATION ===== -->
+        <div class="pagination-wrap d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <!-- Info + per-page -->
+            <div class="d-flex align-items-center gap-2">
+                <span class="pagination-info">عرض 1 إلى 10 من 128 طالب</span>
+                <select class="form-select form-select-sm per-page-select" style="width:70px;">
+                    <option>10</option>
+                    <option>25</option>
+                    <option>50</option>
+                </select>
+            </div>
+            <!-- Pages -->
+            <nav aria-label="Page navigation">
+                <ul class="pagination pagination-sm mb-0 flex-wrap">
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Previous">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m15 19 7-7-7-7" transform="scale(-1,1) translate(-24,0)"/>
+                            </svg>
+                        </a>
+                    </li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+                    <li class="page-item"><a class="page-link" href="#">16</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Next">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m9 5 7 7-7 7"/>
+                            </svg>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div><!-- /table-card -->
+
+</div><!-- /container-fluid -->
