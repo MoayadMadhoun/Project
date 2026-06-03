@@ -18,7 +18,7 @@ namespace Project.Models
         public string? PhoneNumber { get; set;  }
         [EmailAddress(ErrorMessage="Invalid email format")]
         public string? Email { get; set; }
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } 
         public ICollection<Department> Departments { get; set; } = new List<Department>();
         public ICollection<TrainingOpportunityRequest> TrainingOpportunityRequests { get; set; } = new List<TrainingOpportunityRequest>();
 
