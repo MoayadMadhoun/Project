@@ -1,0 +1,160 @@
+﻿@page
+@model Project.Pages.University.AttendanceModel
+@{
+    ViewData["Title"] = "الحضور";
+    ViewData["UserType"] = "University";
+    ViewData["PortalTitle"] = "بوابة الجامعة";
+    ViewData["PortalSubtitle"] = "إدارة التدريب الميداني";
+    ViewData["SearchPlaceholder"] = "بحث عن طلاب، مؤسسات...";
+    ViewData["ActivePage"] = "Attendance";
+}
+
+<link rel="stylesheet" href="~/css/attendance.css" />
+
+<div class="attendance-page mt-5">
+
+    <div class="hero-card">
+        <div>
+            <h1 class="text-end">الحضور</h1>
+            <p>
+                متابعة وتحليل حضور الطلبة أثناء فترة التدريب
+            </p>
+        </div>
+
+        <div class="hero-icon">
+            <i class="bi bi-calendar-check"></i>
+        </div>
+    </div>
+
+    <div class="filter-card">
+
+        <input class="form-control border-none shadow-sm rounded-3 bg-light"
+               placeholder="ابحث عن طالب ..." />
+
+        <select class="form-select border-none shadow-sm rounded-3 bg-light">
+            <option>جميع حالات الحضور</option>
+            <option>حاضر</option>
+            <option>متأخر</option>
+            <option>غائب</option>
+            <option>معذور</option>
+        </select>
+
+        <select class="form-select border-none shadow-sm rounded-3 bg-light">
+            <option>جميع المؤسسات</option>
+        </select>
+
+        <button class="btn btn-filter">
+            تصفية
+        </button>
+
+    </div>
+
+    <div class="row g-4 mb-4">
+
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-number">456</div>
+                <div class="stat-title">إجمالي السجلات</div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="stat-card success">
+                <div class="stat-number">298</div>
+                <div class="stat-title">حاضر</div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="stat-card warning">
+                <div class="stat-number">72</div>
+                <div class="stat-title">متأخر</div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="stat-card danger">
+                <div class="stat-number">56</div>
+                <div class="stat-title">غائب</div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="table-card">
+
+        <div class="table-header text-end">
+            سجلات الحضور
+        </div>
+
+        <div class="table-responsive">
+
+            <table class="table align-middle">
+
+                <thead>
+
+                    <tr>
+                        <th>#</th>
+                        <th>الطالب</th>
+                        <th>التدريب</th>
+                        <th>المؤسسة</th>
+                        <th>وقت الدخول</th>
+                        <th>وقت الخروج</th>
+                        <th>الحالة</th>
+                        <th>الملاحظات</th>
+                        <th>الإجراءات</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>1</td>
+                        <td>محمد أحمد</td>
+                        <td>تطوير ويب</td>
+                        <td>شركة التقنية</td>
+                        <td>08:00</td>
+                        <td>04:00</td>
+                        <td>
+                            <span class="badge bg-success-subtle text-success">
+                                حاضر
+                            </span>
+                        </td>
+                        <td>-</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary">
+                                تفاصيل
+                            </button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>2</td>
+                        <td>سارة المطيري</td>
+                        <td>تحليل بيانات</td>
+                        <td>مركز الحلول</td>
+                        <td>08:15</td>
+                        <td>04:00</td>
+                        <td>
+                            <span class="badge bg-warning-subtle text-warning">
+                                متأخر
+                            </span>
+                        </td>
+                        <td>تأخير بسيط</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary">
+                                تفاصيل
+                            </button>
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
