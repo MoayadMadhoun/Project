@@ -42,6 +42,8 @@ namespace Project.Pages.University
 
         public async Task OnGetAsync()
         {
+            StatusList = EnumExtensions.GetEnumSelectList<TrainingApplication.ApplicationStatus>();
+
             var userId = _userManager.GetUserId(User);
 
             var roleScope = await _context.AspNetRoleScopes
@@ -95,8 +97,8 @@ namespace Project.Pages.University
             Applications = await PaginatedList<TrainingApplicationVM>
                 .CreateAsync(projected, PageSize, PageIndex);
 
-            //  Enum dropdown
-            StatusList = EnumExtensions.GetEnumSelectList<TrainingApplication.ApplicationStatus>();
+           
+           
         }
 
 
