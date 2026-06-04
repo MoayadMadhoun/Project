@@ -1,0 +1,374 @@
+﻿@page
+@model CreateModel
+
+@{
+    ViewData["Title"] = "إضافة فرصة تدريبية";
+}
+
+<form method="post">
+
+    <!-- Hero -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body p-5 text-white"
+             style="background:#1ab29a;border-radius:24px;">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+
+                    <h1 class="fw-bold mb-3">
+                        إضافة فرصة تدريبية
+                    </h1>
+
+                    <p class="mb-0 fs-5 opacity-75">
+                        إنشاء فرصة تدريب جديدة وإتاحتها للطلبة خلال فترة التدريب المحددة.
+                    </p>
+
+                </div>
+
+                <div class="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center"
+                     style="width:90px;height:90px;">
+
+                    <i class="bi bi-briefcase fs-1"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Institution Info -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                معلومات المؤسسة
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-md-4">
+
+                    <label class="text-muted">
+                        المؤسسة
+                    </label>
+
+                    <div class="fw-semibold">
+                        @Model.CurrentInstitution?.Name
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label class="text-muted">
+                        مسؤول التدريب
+                    </label>
+
+                    <div class="fw-semibold">
+                        @User.Identity?.Name
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label class="text-muted">
+                        فترة التدريب الحالية
+                    </label>
+
+                    <div class="fw-semibold">
+                        الفصل الأول 2026
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Opportunity Details -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                تفاصيل الفرصة
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-4">
+
+                <div class="col-md-8">
+
+                    <label asp-for="Input.Title" class="form-label">
+                        عنوان الفرصة
+                    </label>
+
+                    <input asp-for="Input.Title"
+                           class="form-control" />
+                    <span asp-validation-for="Input.Title" class="text-danger"></span>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label asp-for="Input.Capacity" class="form-label">
+                        عدد المقاعد
+                    </label>
+
+                    <input asp-for="Input.Capacity"
+                           type="number"
+                           class="form-control" />
+
+                    <span asp-validation-for="Input.Capacity" class="text-danger"></span>
+
+                </div>
+
+                <div class="col-md-12">
+
+                    <label asp-for="Input.Location" class="form-label">
+                        مكان التدريب
+                    </label>
+
+                    <input asp-for="Input.Location"
+                           class="form-control" />
+
+                    <span asp-validation-for="Input.Location" class="text-danger"></span>
+
+                </div>
+
+                <div class="col-md-12">
+
+                    <label asp-for="Input.Description"
+                           class="form-label">
+
+                        وصف الفرصة
+
+                    </label>
+
+                    <textarea asp-for="Input.Description"
+                              rows="5"
+                              class="form-control"></textarea>
+
+                    <span asp-validation-for="Input.Description" class="text-danger"></span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Training Period -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                فترة التدريب
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-4">
+
+                <div class="col-md-4">
+
+                    <label class="form-label">
+                        فترة التدريب
+                    </label>
+
+                    <select asp-for="Input.TermId"
+                            asp-items="Model.Terms"
+                            class="form-select">
+
+                        <option value="">
+                            اختر الفترة
+                        </option>
+
+                    </select>
+                    <span asp-validation-for="Input.TermId" class="text-danger"></span>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label asp-for="Input.StartDate"
+                           class="form-label">
+
+                        تاريخ البداية
+
+                    </label>
+
+                    <input asp-for="Input.StartDate"
+                           type="date"
+                           class="form-control" />
+
+                    <span asp-validation-for="Input.StartDate" class="text-danger"></span>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label asp-for="Input.EndDate"
+                           class="form-label">
+
+                        تاريخ النهاية
+
+                    </label>
+
+                    <input asp-for="Input.EndDate"
+                           type="date"
+                           class="form-control" />
+
+                    <span asp-validation-for="Input.EndDate" class="text-danger"></span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Opportunity Type -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                نوع الفرصة
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="form-check mb-3">
+
+                <input class="form-check-input"
+                       type="radio"
+                       name="OpportunityType"
+                       id="Direct"
+                       checked />
+
+                <label class="form-check-label"
+                       for="Direct">
+
+                    فرصة مباشرة من المؤسسة
+
+                </label>
+
+            </div>
+
+            <div class="form-check mb-4">
+
+                <input class="form-check-input"
+                       type="radio"
+                       name="OpportunityType"
+                       id="RequestBased" />
+
+                <label class="form-check-label"
+                       for="RequestBased">
+
+                    استجابة لطلب جامعة أو قسم
+
+                </label>
+
+            </div>
+
+            <div>
+
+                <label class="form-label">
+                    الطلب المرتبط
+                </label>
+
+                <select asp-for="Input.RequestId"
+                        class="form-select">
+
+                    <option value="">
+                        اختر الطلب
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Status -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                حالة الفرصة
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <select asp-for="Input.Status"
+                    class="form-select">
+
+                @foreach (var item in Html.GetEnumSelectList<ViewModels.AddTrainingOpportunityVM.Opportunity>())
+                {
+                    <option value="@item.Value">@item.Text</option>
+                }
+
+            </select>
+            <span asp-validation-for="Input.Status"></span>
+        </div>
+
+    </div>
+
+    <!-- Buttons -->
+
+    <div class="d-flex gap-2 mb-5">
+
+        <button type="submit"
+                class="btn btn-success px-5">
+
+            حفظ الفرصة
+
+        </button>
+
+        <a asp-page="Index"
+           class="btn btn-light px-5">
+
+            إلغاء
+
+        </a>
+
+    </div>
+
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
