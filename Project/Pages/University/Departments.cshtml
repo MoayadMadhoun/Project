@@ -33,7 +33,7 @@
             <p class="font-body-lg text-sm md:text-body-lg opacity-90 mb-lg">
                 إدارة أقسام الجامعة ومتابعة المعلومات الأساسيه لكل قسم
             </p>
-            <button class="w-full sm:w-auto bg-white text-primary font-button px-xl py-3 rounded-xl shadow-lg hover:bg-surface-container transition-colors"> ＋ إضافة قسم جديد</button>
+            <a class="w-full sm:w-auto bg-white text-primary font-button px-xl py-3 rounded-xl shadow-lg hover:bg-surface-container transition-colors" asp-page="/University/department/create"> ＋ إضافة قسم جديد</a>
 
         </div>
     </section>
@@ -49,12 +49,16 @@
                 <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
                 <input asp-for="SearchTerm" class="w-1/4 pr-10 pl-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20 text-right" placeholder="ابحث عن قسم ..." type="text" />
             </div>
-                <select asp-for="IsActive" class="form-select flex items-center gap-2 px-5 py-2 bg-white border border-slate-200 rounded-xl text-slate-600 hover:bg-slate-50 transition-colors text-sm font-bold">
-                
-                    <option value="">الحالة</option>
-                    <option value="true">نشط</option>
-                    <option value="false">غير نشط</option>
-            </select>
+            <div class="relative flex-1 min-w-[200px]">
+                    <select asp-for="IsActive" class="form-select flex items-center gap-2 px-5 py-2 bg-white border border-slate-200 rounded-xl text-slate-600 hover:bg-slate-50 transition-colors text-sm font-bold">
+
+                        <option value="">الحالة</option>
+                        <option value="true">نشط</option>
+                        <option value="false">غير نشط</option>
+                    </select>
+            </div>
+
+               
 
             <button type="submit" class="bg-primary text-white font-button px-6 py-2.5 rounded-xl hover:bg-primary/90 transition-colors">بحث</button>
         </form>
@@ -109,14 +113,14 @@
                             
                                 <td class="px-6 py-3">
                                     <div class="flex gap-3">
-                                        <a class="btn border border-emerald-200 text-emerald-600 text-xs font-bold px-4 py-2 rounded hover:bg-emerald-50 flex items-center gap-1"><span>👁</span>التفاصيل </a>
-                                        <a class="btn border border-emerald-200 text-emerald-600 text-xs font-bold px-4 py-2 rounded hover:bg-emerald-50 flex items-center gap-1"><span>✎</span>تعديل </a>
+                                        <a asp-page="/University/department/details" class="btn border border-emerald-200 text-emerald-600 text-xs font-bold px-4 py-2 rounded hover:bg-emerald-50 flex items-center gap-1"><span>👁</span>التفاصيل </a>
+                                        <a asp-page="/University/department/update" class="btn border border-emerald-200 text-emerald-600 text-xs font-bold px-4 py-2 rounded hover:bg-emerald-50 flex items-center gap-1"><span>✎</span>تعديل </a>
                                         <form method="post" asp-page-handler="RemoveDept">
                                             <input type="hidden" name="RemoveDeptId" value="@dept.DepartmentID" />
                                             <button type="submit" class="btn border border-rose-200 text-rose-600 text-xs font-bold px-4 py-2 rounded hover:bg-rose-50 flex items-center gap-1"> <span>🗑</span>حذف</button>
                                         </form>
                                         
-                                        <a class="btn border border-slate-200 text-slate-600 text-xs font-bold px-4 py-2 rounded hover:bg-slate-200 flex items-center gap-1"> . . .</a>
+                                        @* <a class="btn border border-slate-200 text-slate-600 text-xs font-bold px-4 py-2 rounded hover:bg-slate-200 flex items-center gap-1"> . . .</a> *@
                                     </div>
                                 </td>
                             </tr>
@@ -132,7 +136,7 @@
         <div class="p-4 md:p-lg flex flex-col md:flex-row items-center justify-between gap-4 border-t border-slate-100">
             <div class="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
                 <p class="text-sm text-slate-500 font-body-sm whitespace-nowrap">
-                    عرض <span class="font-bold text-slate-900">@(Model.Departments?.Count??0)</span> من أصل <span class="font-bold text-slate-900">@Model.Departments?.TotalCount??0</span> اقسام
+                    عرض <span class="font-bold text-slate-900">@(Model.Departments?.Count??0)</span> من أصل <span class="font-bold text-slate-900">@Model.Departments?.TotalCount</span> اقسام
                 </p>
                 <div class="flex items-center gap-2">
                     <label class="text-xs text-slate-500 font-label-caps" for="per-page-inst">النتائج:</label>
