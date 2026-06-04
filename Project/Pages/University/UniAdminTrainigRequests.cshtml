@@ -1,4 +1,4 @@
-﻿@page
+﻿ @page
 @model Project.Pages.University.UniAdminTrainigRequestsModel
 @{
     ViewData["Title"] = "إدارة الطلبات التدريبية";
@@ -9,10 +9,10 @@
     ViewData["SearchPlaceholder"] = "بحث عن طلب تدريب...";
     ViewData["ActivePage"] = "TrainingRequests";
 }
+@*
 <link rel="stylesheet" href="~/Styles/opportunities.css">
 <div dir="rtl" class="w-full text-right">
 
-    @* ===== Hero Section  ===== *@
     <section class="mb-lg md:mb-xl relative rounded-xl md:rounded-2xl overflow-hidden bg-primary-container p-6 md:p-xl text-on-primary">
         <div class="relative z-10 max-w-2xl text-right">
             <h1 class="font-h1 text-2xl md:text-h1 mb-md">إدارة الطلبات التدريبية</h1>
@@ -59,7 +59,6 @@
         </div>
     </div>
 
-    @* ===== Requests Table ===== *@
     <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] overflow-hidden">
         <div class="p-4 md:p-lg border-b border-slate-100 flex justify-between items-center">
             <button class="text-primary text-sm font-bold hover:underline">عرض الكل</button>
@@ -80,7 +79,6 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-50">
-                    @* الصف الأول *@
                     <tr class="hover:bg-slate-50 transition-colors">
                         <td class="px-4 py-3 text-sm text-slate-900 font-bold">أحمد محمد</td>
                         <td class="px-4 py-3 text-sm text-slate-600">20201234</td>
@@ -103,7 +101,6 @@
                         </td>
                     </tr>
 
-                    @* الصف الثاني *@
                     <tr class="hover:bg-slate-50 transition-colors">
                         <td class="px-4 py-3 text-sm text-slate-900 font-bold">سارة خالد</td>
                         <td class="px-4 py-3 text-sm text-slate-600">20204567</td>
@@ -121,7 +118,6 @@
                         </td>
                     </tr>
 
-                    @* الصف الثالث *@
                     <tr class="hover:bg-slate-50 transition-colors">
                         <td class="px-4 py-3 text-sm text-slate-900 font-bold">محمد علي</td>
                         <td class="px-4 py-3 text-sm text-slate-600">20207891</td>
@@ -139,7 +135,6 @@
                         </td>
                     </tr>
 
-                    @* الصف الرابع *@
                     <tr class="hover:bg-slate-50 transition-colors">
                         <td class="px-4 py-3 text-sm text-slate-900 font-bold">لينا محمود</td>
                         <td class="px-4 py-3 text-sm text-slate-600">20203321</td>
@@ -162,7 +157,6 @@
                         </td>
                     </tr>
 
-                    @* الصف الخامس *@
                     <tr class="hover:bg-slate-50 transition-colors">
                         <td class="px-4 py-3 text-sm text-slate-900 font-bold">عمر يوسف</td>
                         <td class="px-4 py-3 text-sm text-slate-600">20205555</td>
@@ -183,7 +177,6 @@
             </table>
         </div>
 
-        @* ===== Pagination Footer ===== *@
         <div class="p-4 md:p-lg flex flex-col md:flex-row items-center justify-between gap-4 border-t border-slate-100">
             <div class="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
                 <p class="text-sm text-slate-500 font-body-sm whitespace-nowrap">
@@ -207,4 +200,125 @@
             </nav>
         </div>
     </div>
+</div>
+
+ *@
+
+
+<div dir="rtl">
+
+<!-- ===== FILTERS ===== -->
+<form method="get"
+      class="bg-surface-container-lowest rounded-xl border p-4 mb-lg">
+
+    <div class="flex flex-wrap gap-3 items-center justify-end">
+
+        <input name="Search"
+               value="@Model.Search"
+               class="bg-slate-100 rounded-xl px-4 py-2 text-right"
+               placeholder="بحث..." />
+
+        <select name="DepartmentId" asp-items="Model.DepartmentList"
+                class="bg-slate-100 rounded-xl px-4 py-2 text-right">
+            <option value="">كل الأقسام</option>
+        </select>
+
+        <select name="StatusFilter" asp-items="Model.StatusList"
+                class="bg-slate-100 rounded-xl px-4 py-2 text-right">
+            <option value="">الحالة</option>
+        </select>
+
+        <select name="DepartmentDecisionFilter" asp-items="Model.DecisionList"
+                class="bg-slate-100 rounded-xl px-4 py-2 text-right">
+            <option value="">قرار القسم</option>
+        </select>
+
+        <select name="UniversityDecisionFilter" asp-items="Model.DecisionList"
+                class="bg-slate-100 rounded-xl px-4 py-2 text-right">
+            <option value="">قرار الجامعة</option>
+        </select>
+
+        <button class="bg-primary text-white px-6 py-2 rounded-xl">
+            بحث
+        </button>
+
+    </div>
+</form>
+
+<!-- ===== TABLE ===== -->
+<div class="bg-white rounded-xl border overflow-hidden">
+
+<table class="w-full text-right">
+    <thead class="bg-gray-100">
+        <tr>
+            <th>الطالب</th>
+            <th>الرقم</th>
+            <th>القسم</th>
+            <th>المؤسسة</th>
+            <th>الفرصة</th>
+            <th>الحالة</th>
+            <th>الإجراءات</th>
+        </tr>
+    </thead>
+
+    <tbody>
+    @foreach (var item in Model.Applications)
+    {
+        <tr class="border-t">
+
+            <td>@item.StudentName</td>
+            <td>@item.StudentNumber</td>
+            <td>@item.DepartmentName</td>
+            <td>@item.InstitutionName</td>
+            <td>@item.OpportunityTitle</td>
+            @* <td>@item.Status.GetDisplayName()</td> *@
+
+            <td>
+                @if (item.Status == Project.Models.TrainingApplication.ApplicationStatus.DepartmentApproved)
+                {
+                    <form method="post" asp-page-handler="Approve" asp-route-id="@item.ApplicationID">
+                        <button class="text-green-600">اعتماد</button>
+                    </form>
+
+                    <form method="post" asp-page-handler="Reject" asp-route-id="@item.ApplicationID">
+                        <button class="text-red-600">رفض</button>
+                    </form>
+                }
+                else
+                {
+                    <span>—</span>
+                }
+            </td>
+
+        </tr>
+    }
+    </tbody>
+
+</table>
+
+</div>
+
+<!-- ===== PAGINATION ===== -->
+<div class="flex gap-2 mt-4 justify-center">
+
+    <a asp-route-PageIndex="@(Model.Applications.PageIndex - 1)"
+       class="px-3 py-1 border @(Model.Applications.HasPrevPage ? "" : "opacity-50 pointer-events-none")">
+        السابق
+    </a>
+
+    @for (int i = 1; i <= Model.Applications.TotalPages; i++)
+    {
+        <a asp-route-PageIndex="@i"
+           class="px-3 py-1 border @(i == Model.Applications.PageIndex ? "bg-primary text-white" : "")">
+            @i
+        </a>
+    }
+
+    <a asp-route-PageIndex="@(Model.Applications.PageIndex + 1)"
+       class="px-3 py-1 border @(Model.Applications.HasNextPage ? "" : "opacity-50 pointer-events-none")">
+        التالي
+    </a>
+
+</div>
+
 </div>
