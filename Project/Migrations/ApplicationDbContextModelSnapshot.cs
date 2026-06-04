@@ -561,9 +561,6 @@ namespace Project.Migrations
 
                     b.HasKey("OpportunitySpecialtyID");
 
-                    b.HasIndex("OpportunityID")
-                        .IsUnique();
-
                     b.HasIndex("SpecialtyID");
 
                     b.HasIndex("OpportunityID", "SpecialtyID")
@@ -654,9 +651,14 @@ namespace Project.Migrations
                     b.Property<int>("SpecialtyID")
                         .HasColumnType("int");
 
+                    b.Property<int?>("TrainingOpportunityOpportunityID")
+                        .HasColumnType("int");
+
                     b.HasKey("RequestSpecialtyID");
 
                     b.HasIndex("SpecialtyID");
+
+                    b.HasIndex("TrainingOpportunityOpportunityID");
 
                     b.HasIndex("RequestID", "SpecialtyID")
                         .IsUnique();
@@ -1062,6 +1064,10 @@ namespace Project.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
+                    b.Property<string>("InstitutionType")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
@@ -1073,10 +1079,6 @@ namespace Project.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Type")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("UserID")
                         .IsRequired()
@@ -1122,9 +1124,6 @@ namespace Project.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
 
-                    b.Property<int>("OpportunitySpecialtyID")
-                        .HasColumnType("int");
-
                     b.Property<int?>("RequestID")
                         .HasColumnType("int");
 
@@ -1152,8 +1151,6 @@ namespace Project.Migrations
                     b.HasIndex("InstitutionID");
 
                     b.HasIndex("InstitutionOfficerID");
-
-                    b.HasIndex("OpportunitySpecialtyID");
 
                     b.HasIndex("RequestID");
 
@@ -1562,8 +1559,8 @@ namespace Project.Migrations
             modelBuilder.Entity("Project.Models.OpportunitySpecialty", b =>
                 {
                     b.HasOne("Project.Models.TrainingOpportunity", "TrainingOpportunity")
-                        .WithOne()
-                        .HasForeignKey("Project.Models.OpportunitySpecialty", "OpportunityID")
+                        .WithMany()
+                        .HasForeignKey("OpportunityID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1621,6 +1618,10 @@ namespace Project.Migrations
                         .HasForeignKey("SpecialtyID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Project.Models.TrainingOpportunity", null)
+                        .WithMany("Specialties")
+                        .HasForeignKey("TrainingOpportunityOpportunityID");
 
                     b.Navigation("Request");
 
@@ -1806,12 +1807,6 @@ namespace Project.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Project.Models.OpportunitySpecialty", "OpportunitySpecialty")
-                        .WithMany()
-                        .HasForeignKey("OpportunitySpecialtyID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("Project.Models.TrainingOpportunityRequest", "Request")
                         .WithMany("Opportunities")
                         .HasForeignKey("RequestID");
@@ -1827,8 +1822,6 @@ namespace Project.Migrations
                         .HasForeignKey("TrainingTermTermID");
 
                     b.Navigation("InstitutionOfficer");
-
-                    b.Navigation("OpportunitySpecialty");
 
                     b.Navigation("Request");
 
@@ -1994,6 +1987,11 @@ namespace Project.Migrations
             modelBuilder.Entity("Project.Models.TrainingInstitution", b =>
                 {
                     b.Navigation("TrainingOpportunities");
+                });
+
+            modelBuilder.Entity("Project.Models.TrainingOpportunity", b =>
+                {
+                    b.Navigation("Specialties");
                 });
 
             modelBuilder.Entity("Project.Models.TrainingOpportunityRequest", b =>

@@ -12,7 +12,7 @@ namespace Project.Models
         
         public int InstitutionID { get; set; }
         [ForeignKey(nameof(InstitutionID))]
-        public TrainingInstitution TrainingInstitution { get; set; } = new TrainingInstitution();
+        public TrainingInstitution TrainingInstitution { get; set; } 
         //TermID Fk
         [Required(ErrorMessage = "Training term is required")]
         
