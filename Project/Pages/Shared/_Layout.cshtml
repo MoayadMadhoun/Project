@@ -20,6 +20,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
     <style>
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
@@ -212,6 +214,7 @@
           }
         }
     </script>
+    @RenderSection("Styles", required: false)
 </head>
 <body class="bg-surface text-on-surface">
 
@@ -235,11 +238,11 @@
             <div class="relative flex items-center">
                 <span class="material-symbols-outlined absolute right-3 text-slate-400">search</span>
                 <input class="w-full pr-10 pl-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20"
-                       placeholder="@ViewData["SearchPlaceholder"]" type="text" />
+                       placeholder="@(ViewData["SearchPlaceholder"]?.ToString())" type="text" />
             </div>
         </div>
         <div class="flex items-center gap-md">
-            <span class="text-slate-700 dark:text-slate-200 font-bold text-sm hidden sm:block">@user.FullName</span>
+            <span class="text-slate-700 dark:text-slate-200 font-bold text-sm hidden sm:block">@user?.FullName</span>
             <div class="w-8 h-8 rounded-full overflow-hidden border-2 border-primary-container">
                 <img alt="User Profile"
                      src="./images/Logos/logoBottomnavbar" />
@@ -261,8 +264,8 @@
                         <span class="material-symbols-outlined text-white">school</span>
                     </div>
                     <div>
-                        <h2 class="text-xl font-bold text-slate-900 dark:text-white">@ViewData["PortalTitle"]</h2>
-                        <p class="text-xs text-slate-500">@ViewData["PortalSubtitle"]</p>
+                        <h2 class="text-xl font-bold text-slate-900 dark:text-white">@(ViewData["PortalTitle"]?.ToString())</h2>
+                        <p class="text-xs text-slate-500">@(ViewData["PortalSubtitle"]?.ToString())</p>
                     </div>
                 </div>
                 <button class="lg:hidden p-2 text-slate-400 hover:bg-slate-100 rounded-lg" id="close-menu">
@@ -284,7 +287,7 @@
                 <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" asp-page="/Institution/TrainingRequests">
                     <span class="material-symbols-outlined">group</span>طلبات الطلبة
                 </a>
-                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" href="#">
+                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" asp-page="/Institution/CurrentTraining">
                     <span class="material-symbols-outlined">work</span>التدريب الحالي
                 </a>
                 <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" href="#">
@@ -296,9 +299,9 @@
                 <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" href="#">
                     <span class="material-symbols-outlined">grading</span>التقييمات
                 </a>
-                @* <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" href="#">
-                    <span class="material-symbols-outlined">settings</span>الإعدادات
-                </a> **@
+                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" asp-page="/Institution/Profile">
+                    <span class="material-symbols-outlined">person</span>الملف المؤسسة
+                </a>
             }
             else if ((string?)ViewData["UserType"] == "University")
             {
@@ -309,11 +312,17 @@
                 <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" asp-page="/University/AvailabelOpportunities">
                     <span class="material-symbols-outlined">explore</span>الفرص التدريبية
                 </a>
-                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" href="#">
+                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" asp-page="/University/Students">
                     <span class="material-symbols-outlined">school</span>الطلاب
+                </a>
+                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" asp-page="/University/Attendance">
+                    <span class="material-symbols-outlined">event_available</span>الحضور
                 </a>
                 <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" href="#">
                     <span class="material-symbols-outlined">business</span>المؤسسات
+                </a>
+                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" asp-page="/University/Departments">
+                    <span class="material-symbols-outlined">apartment</span>الأقسام
                 </a>
                 <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" href="#">
                     <span class="material-symbols-outlined">manage_accounts</span>المشرفون
@@ -333,7 +342,7 @@
             else
             {
                 @* ===== قائمة بوابة الطالب (الافتراضية) ===== *@
-                <a class="flex items-center gap-md px-4 py-3 rounded-xl bg-teal-50 text-teal-600 border-r-4 border-teal-500 transition-all hover:bg-teal-100/50 font-bold font-body-md text-body-md" href="/Student/Index">
+                <a class="flex items-center gap-md px-4 py-3 rounded-xl bg-teal-50 text-teal-600 border-r-4 border-teal-500 transition-all hover:bg-teal-100/50 font-bold font-body-md text-body-md" asp-page="/Student/Index">
                     <span class="material-symbols-outlined">dashboard</span>الرئيسية
                 </a>
                 <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" asp-page="/Student/AvaliabelOpportunities">
@@ -345,21 +354,18 @@
                 <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" asp-page="/Student/CurrentTraining">
                     <span class="material-symbols-outlined">work</span>التدريب الحالي
                 </a>
-                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" href="#">
+                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" asp-page="/Student/Attendance">
                     <span class="material-symbols-outlined">event_available</span>الحضور
                 </a>
-                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" href="#">
+                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" asp-page="/Student/Reports">
                     <span class="material-symbols-outlined">description</span>التقارير
                 </a>
-                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" href="#">
+                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" asp-page="/Student/Evaluations">
                     <span class="material-symbols-outlined">grading</span>التقييمات
                 </a>
                 <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" href="#">
                     <span class="material-symbols-outlined">person</span>الملف الشخصي
                 </a>
-                @* <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" href="#">
-                    <span class="material-symbols-outlined">settings</span>الإعدادات
-                </a> **@
             }
 
             <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" asp-area="Identity" asp-page="/Account/Settings">
@@ -400,8 +406,8 @@
     </nav>
 
     @* ===== Footer ===== *@
-    <footer class="lg:mr-[280px] w-full flex flex-col md:flex-row justify-between items-center px-8 py-8 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 space-y-4 md:space-y-0 text-center md:text-right">
-        <div class="text-[10px] md:text-xs font-normal text-slate-500">University Field Training Portal. All Rights Reserved 2024 ©</div>
+    <footer class="lg:mr-[280px] flex flex-col md:flex-row justify-between items-center px-8 py-8 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 space-y-4 md:space-y-0 text-center md:text-right">
+        <div class="text-[10px] md:text-xs font-normal text-slate-500">University Field Training Portal. All Rights Reserved 2026 ©</div>
         <div class="flex flex-wrap justify-center gap-4 md:gap-lg">
             <a class="text-slate-500 hover:text-teal-500 underline underline-offset-4 opacity-80 hover:opacity-100 text-[10px] md:text-xs" href="#">Technical Support</a>
             <a class="text-slate-500 hover:text-teal-500 underline underline-offset-4 opacity-80 hover:opacity-100 text-[10px] md:text-xs" href="#">Terms of Service</a>
@@ -410,7 +416,7 @@
     </footer>
 
     @* ===== JavaScript ===== *@
-    <script>
+    @* <script>
         const menuToggle = document.getElementById('menu-toggle');
         const closeMenu = document.getElementById('close-menu');
         const sidebar = document.getElementById('sidebar');
@@ -431,7 +437,7 @@
                 if (window.innerWidth < 1024) toggleSidebar();
             });
         });
-    </script>
+    </script> *@
     <script>
 
     // =========================
@@ -465,51 +471,10 @@
         });
     });
 
-    // =========================
-    // Scroll Animation
-    // =========================
-
-    // const scrollElements = document.querySelectorAll(".scroll-animate");
-
-    // const elementInView = (el, offset = 100) => {
-    //     const elementTop = el.getBoundingClientRect().top;
-
-    //     return (
-    //         elementTop <=
-    //         ((window.innerHeight || document.documentElement.clientHeight) - offset)
-    //     );
-    // };
-
-    // const displayScrollElement = (element) => {
-    //     element.classList.add("show");
-    // };
-
-    // const hideScrollElement = (element) => {
-    //     element.classList.remove("show");
-    // };
-
-    // const handleScrollAnimation = () => {
-
-    //     scrollElements.forEach((el) => {
-
-    //         if (elementInView(el, 100)) {
-    //             displayScrollElement(el);
-    //         }
-    //         else {
-    //             hideScrollElement(el);
-    //         }
-
-    //     });
-
-    // };
-
-    // window.addEventListener("scroll", () => {
-    //     handleScrollAnimation();
-    // });
-
-    // handleScrollAnimation();
-
+   
 </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
