@@ -286,7 +286,7 @@ namespace Project.Repositories
         public IQueryable<TrainingApplication> GetAllApplicationByStudentId(int studentId)
         {
             return _context.TrainingApplications.AsNoTracking().
-                Include(tp => tp.TrainingOpportunity).ThenInclude(to=>to.TrainingInstitution).
+                Include(tp => tp.TrainingOpportunity).ThenInclude(to => to.TrainingInstitution).
                                                       Where(tp => tp.StudentID == studentId);
         }
         // get IQueryable all Training Application for student by student Id use in Paginated List
@@ -464,6 +464,14 @@ namespace Project.Repositories
             return true;
 
         }
-
+        public IQueryable<Student> GetStudentsForUniversity(int UniversityId)
+        {
+            return _context.Students
+                .Include(s => s.Department)
+                .Include(s => s.Specialty)
+                .Include(s=>s.Applications)
+                .ThenInclude(a=>a.TrainingOpportunity)
+                .Where(s => s.UniversityID == UniversityId).AsQueryable();
+        }
     }
 }

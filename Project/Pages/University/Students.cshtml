@@ -1,4 +1,5 @@
 ﻿@page
+@using Microsoft.AspNetCore.Html
 @model Project.Pages.University.StudentsModel
 @{
     ViewData["Title"] = "الطلبة";
@@ -8,8 +9,21 @@
     ViewData["PortalTitle"] = "بوابة الجامعة";
     ViewData["PortalSubtitle"] = "إدارة التدريب الميداني";
     ViewData["SearchPlaceholder"] = "بحث عن طلاب، مؤسسات، فرص...";
+    int SIndex = 1;
 }
+@functions {
+    public IHtmlContent SortingIcon(string column, string currentSort)
+    {
+        if (currentSort == column)
+            return new HtmlString("<span><i class=\"bi bi-caret-up-fill\"></i></span>");
 
+        if (currentSort == column + "_desc")
+            return new HtmlString("<span><i class=\"bi bi-caret-down-fill\"></i></span>");
+
+        return new HtmlString("<span><i class=\"bi bi-arrow-down-up\"></i></span>");
+    }
+
+}
 @section Styles {
 <style>
     /* ===== ANIMATIONS ===== */
@@ -520,6 +534,10 @@
 
     <!-- ===== FILTER BAR ===== -->
     <div class="filter-bar mb-4">
+        <form method="get">
+            <input type="hidden" name="PageSize" value="@Model.PageSize" />
+                    <input type="hidden" name="PageIndex" value="@Model.PageIndex" />
+                    <input type="hidden" name="SortOrder" value="@Model.SortOrder" />
         <div class="row g-2 align-items-center">
             <!-- Search -->
             <div class="col-12 col-md-3">
@@ -529,58 +547,48 @@
                             <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
                         </svg>
                     </span>
-                    <input type="text" class="form-control form-control-sm border-start-0 ps-0"
+                    <input asp-for="SearchTerm" type="text" class="form-control form-control-sm border-start-0 ps-0"
                            placeholder="ابحث عن طالب..."
                            style="border-color:#d1faf4;border-radius:0 var(--radius-md) var(--radius-md) 0;" />
                 </div>
             </div>
             <!-- Specialty -->
             <div class="col-6 col-md-2">
-                <select class="form-select form-select-sm">
-                    <option>التخصص - الكل</option>
-                    <option>هندسة البرمجيات</option>
-                    <option>تحليل البيانات</option>
-                    <option>أمن سيبراني</option>
-                    <option>علوم الحاسب</option>
-                    <option>شبكات الحاسب</option>
-                    <option>تقنية المعلومات</option>
-                    <option>الذكاء الاصطناعي</option>
-                    <option>تصميم جرافيك</option>
+                <select asp-for="SelectedSpecialityId" asp-items="@Model.SpecialitiesList" class="form-select form-select-sm">
+                    <option value="-1">التخصص - الكل</option>
+                  
                 </select>
             </div>
-            <!-- Department -->
+                @if (User.IsInRole("UniversityTrainingAdmin"))
+                    {
+                        <!-- Department -->
+                        <div class="col-6 col-md-2">
+                            <select asp-for="SelectedDepartmentId" asp-items="@Model.DepartmentsList" class="form-select form-select-sm">
+                                <option value="-1">القسم - الكل</option>
+
+                            </select>
+                        </div>
+                    }
+                    <!-- Current Training -->
             <div class="col-6 col-md-2">
-                <select class="form-select form-select-sm">
-                    <option>القسم - الكل</option>
-                    <option>تقنية المعلومات</option>
-                    <option>الحاسوب</option>
-                    <option>الأدب الرقمي</option>
-                </select>
-            </div>
-            <!-- Current Training -->
-            <div class="col-6 col-md-2">
-                <select class="form-select form-select-sm">
-                    <option>التدريب الحالي - الكل</option>
-                    <option>لديه تدريب</option>
-                    <option>لا يوجد تدريب</option>
+                <select asp-for="IsTraining" class="form-select form-select-sm">
+                    <option value="">التدريب الحالي - الكل</option>
+                    <option value="true">لديه تدريب</option>
+                    <option value="false">لا يوجد تدريب</option>
                 </select>
             </div>
             <!-- Buttons -->
             <div class="col-6 col-md-3 d-flex gap-2 justify-content-end">
-                <button class="btn btn-filter">
+                <button type="submit" class="btn btn-filter">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="me-1 d-flex">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3 4h18M7 8h10M11 12h2m-4 4h6"/>
                     </svg>
                     تصفية
                 </button>
-                <button class="btn btn-search btn-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" class="me-1">
-                        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-                    </svg>
-                    بحث
-                </button>
+                
             </div>
         </div>
+        </form>
     </div>
 
     <!-- ===== TABLE CARD ===== -->
@@ -589,9 +597,9 @@
         <div class="table-card-header d-flex align-items-center justify-content-between flex-wrap gap-2">
             <div>
                 <span class="table-title">الطلبة المسجلون</span>
-                <span class="count-badge">128</span>
+                <span class="count-badge">@Model.Students.TotalCount</span>
             </div>
-            <span class="table-count">إجمالي 128 طالب وطالبة</span>
+            <span class="table-count">إجمالي @Model.Students.TotalCount طالب وطالبة</span>
         </div>
 
         <!-- Table -->
@@ -600,175 +608,59 @@
                 <thead>
                     <tr>
                         <th class="col-num">#</th>
-                        <th>الطالب</th>
+                        <th><a class="text-decoration-none"
+       asp-route-PageSize="@Model.PageSize" 
+       asp-route-SearchTerm="@Model.SearchTerm"
+       asp-route-PageIndex="@(Model.PageIndex)"
+       asp-route-SortOrder="@(Model.SortOrder == "Name" ? "Name_desc" : "Name")">
+    الطالب @SortingIcon("Name", Model.SortOrder)
+</a></th>
                         <th>الرقم الجامعي</th>
                         <th>التخصص</th>
                         <th>القسم</th>
-                        <th>المعدل</th>
+                        <th><a class="text-decoration-none"
+                               asp-route-PageSize="@Model.PageSize" 
+                               asp-route-SearchTerm="@Model.SearchTerm"
+                               asp-route-PageIndex="@(Model.PageIndex)"
+                               asp-route-SortOrder="@(Model.SortOrder == "GPA" ? "GPA_desc" : "GPA")">
+                            المعدل @SortingIcon("GPA", Model.SortOrder)
+                            </a></th>
                         <th>التدريب الحالي</th>
                         <th>التفاصيل</th>
                     </tr>
                 </thead>
                 <tbody>
                     @* -------- Row 1 -------- *@
-                    <tr>
-                        <td class="col-num" data-label="#">1</td>
-                        <td class="col-name" data-label="الطالب">محمد أحمد البدوي</td>
-                        <td class="col-id" data-label="الرقم الجامعي">20201234</td>
-                        <td class="col-spec" data-label="التخصص"><span>هندسة البرمجيات</span></td>
-                        <td class="col-dept" data-label="القسم"><span>تقنية المعلومات</span></td>
-                        <td class="col-gpa gpa-high" data-label="المعدل">3.45</td>
-                        <td data-label="التدريب الحالي">
-                            <span class="training-badge training-active">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="#15803d"><circle cx="12" cy="12" r="6"/></svg>
-                                تدريب Full Stack
-                            </span>
-                        </td>
-                        <td data-label="التفاصيل">
-                            <a asp-page="/Students/Details" asp-route-id="1" class="btn-details">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.964-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/></svg>
-                                التفاصيل
-                            </a>
-                        </td>
-                    </tr>
-                    @* -------- Row 2 -------- *@
-                    <tr>
-                        <td class="col-num" data-label="#">2</td>
-                        <td class="col-name" data-label="الطالب">سارة المطيري</td>
-                        <td class="col-id" data-label="الرقم الجامعي">20204567</td>
-                        <td class="col-spec" data-label="التخصص"><span>تحليل البيانات</span></td>
-                        <td class="col-dept" data-label="القسم"><span>الحاسوب</span></td>
-                        <td class="col-gpa gpa-high" data-label="المعدل">3.80</td>
-                        <td data-label="التدريب الحالي">
-                            <span class="training-badge training-active">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="#15803d"><circle cx="12" cy="12" r="6"/></svg>
-                                تدريب تحليل البيانات
-                            </span>
-                        </td>
-                        <td data-label="التفاصيل">
-                            <a asp-page="/Students/Details" asp-route-id="2" class="btn-details">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.964-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/></svg>
-                                التفاصيل
-                            </a>
-                        </td>
-                    </tr>
-                    @* -------- Row 3 -------- *@
-                    <tr>
-                        <td class="col-num" data-label="#">3</td>
-                        <td class="col-name" data-label="الطالب">أحمد العتيبي</td>
-                        <td class="col-id" data-label="الرقم الجامعي">20207891</td>
-                        <td class="col-spec" data-label="التخصص"><span>أمن سيبراني</span></td>
-                        <td class="col-dept" data-label="القسم"><span>تقنية المعلومات</span></td>
-                        <td class="col-gpa gpa-mid" data-label="المعدل">3.20</td>
-                        <td data-label="التدريب الحالي">
-                            <span class="training-badge training-active">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="#15803d"><circle cx="12" cy="12" r="6"/></svg>
-                                تدريب أمن المعلومات
-                            </span>
-                        </td>
-                        <td data-label="التفاصيل">
-                            <a asp-page="/Students/Details" asp-route-id="3" class="btn-details">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.964-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/></svg>
-                                التفاصيل
-                            </a>
-                        </td>
-                    </tr>
-                    @* -------- Row 4 -------- *@
-                    <tr>
-                        <td class="col-num" data-label="#">4</td>
-                        <td class="col-name" data-label="الطالب">نورة الحربي</td>
-                        <td class="col-id" data-label="الرقم الجامعي">20201543</td>
-                        <td class="col-spec" data-label="التخصص"><span>علوم الحاسب</span></td>
-                        <td class="col-dept" data-label="القسم"><span>الحاسوب</span></td>
-                        <td class="col-gpa gpa-high" data-label="المعدل">3.65</td>
-                        <td data-label="التدريب الحالي">
-                            <span class="training-badge training-none">لا يوجد تدريب</span>
-                        </td>
-                        <td data-label="التفاصيل">
-                            <a asp-page="/Students/Details" asp-route-id="4" class="btn-details">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.964-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/></svg>
-                                التفاصيل
-                            </a>
-                        </td>
-                    </tr>
-                    @* -------- Row 5 -------- *@
-                    <tr>
-                        <td class="col-num" data-label="#">5</td>
-                        <td class="col-name" data-label="الطالب">خالد الدوسري</td>
-                        <td class="col-id" data-label="الرقم الجامعي">20203321</td>
-                        <td class="col-spec" data-label="التخصص"><span>شبكات الحاسب</span></td>
-                        <td class="col-dept" data-label="القسم"><span>تقنية المعلومات</span></td>
-                        <td class="col-gpa gpa-mid" data-label="المعدل">3.10</td>
-                        <td data-label="التدريب الحالي">
-                            <span class="training-badge training-none">لا يوجد تدريب</span>
-                        </td>
-                        <td data-label="التفاصيل">
-                            <a asp-page="/Students/Details" asp-route-id="5" class="btn-details">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.964-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/></svg>
-                                التفاصيل
-                            </a>
-                        </td>
-                    </tr>
-                    @* -------- Row 6 -------- *@
-                    <tr>
-                        <td class="col-num" data-label="#">6</td>
-                        <td class="col-name" data-label="الطالب">ريم الشهري</td>
-                        <td class="col-id" data-label="الرقم الجامعي">20203211</td>
-                        <td class="col-spec" data-label="التخصص"><span>تقنية المعلومات</span></td>
-                        <td class="col-dept" data-label="القسم"><span>تقنية المعلومات</span></td>
-                        <td class="col-gpa gpa-high" data-label="المعدل">3.75</td>
-                        <td data-label="التدريب الحالي">
-                            <span class="training-badge training-active">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="#15803d"><circle cx="12" cy="12" r="6"/></svg>
-                                تدريب تطوير ويب
-                            </span>
-                        </td>
-                        <td data-label="التفاصيل">
-                            <a asp-page="/Students/Details" asp-route-id="6" class="btn-details">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.964-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/></svg>
-                                التفاصيل
-                            </a>
-                        </td>
-                    </tr>
-                    @* -------- Row 7 -------- *@
-                    <tr>
-                        <td class="col-num" data-label="#">7</td>
-                        <td class="col-name" data-label="الطالب">عبدالعزيز العنزي</td>
-                        <td class="col-id" data-label="الرقم الجامعي">20205566</td>
-                        <td class="col-spec" data-label="التخصص"><span>الذكاء الاصطناعي</span></td>
-                        <td class="col-dept" data-label="القسم"><span>الحاسوب</span></td>
-                        <td class="col-gpa gpa-high" data-label="المعدل">3.90</td>
-                        <td data-label="التدريب الحالي">
-                            <span class="training-badge training-none">لا يوجد تدريب</span>
-                        </td>
-                        <td data-label="التفاصيل">
-                            <a asp-page="/Students/Details" asp-route-id="7" class="btn-details">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.964-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/></svg>
-                                التفاصيل
-                            </a>
-                        </td>
-                    </tr>
-                    @* -------- Row 8 -------- *@
-                    <tr>
-                        <td class="col-num" data-label="#">8</td>
-                        <td class="col-name" data-label="الطالب">فاطمة الزهراني</td>
-                        <td class="col-id" data-label="الرقم الجامعي">20206677</td>
-                        <td class="col-spec" data-label="التخصص"><span>تصميم جرافيك</span></td>
-                        <td class="col-dept" data-label="القسم"><span>الأدب الرقمي</span></td>
-                        <td class="col-gpa gpa-high" data-label="المعدل">3.60</td>
-                        <td data-label="التدريب الحالي">
-                            <span class="training-badge training-active">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="#15803d"><circle cx="12" cy="12" r="6"/></svg>
-                                تدريب تصميم جرافيك
-                            </span>
-                        </td>
-                        <td data-label="التفاصيل">
-                            <a asp-page="/Students/Details" asp-route-id="8" class="btn-details">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.964-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/></svg>
-                                التفاصيل
-                            </a>
-                        </td>
-                    </tr>
+                    @foreach (var student in Model.Students)
+                    {
+
+
+                        <tr>
+                            <td class="col-num" data-label="#">@SIndex</td>
+                            <td class="col-name" data-label="الطالب">@student.Name</td>
+                            <td class="col-id" data-label="الرقم الجامعي">@student.StudentNumber</td>
+                            <td class="col-spec" data-label="التخصص"><span>@student.Specialty</span></td>
+                            <td class="col-dept" data-label="القسم"><span>@(student.Department?.Name??"_") </span></td>
+                            <td class="col-gpa gpa-high" data-label="المعدل">@student.GPA</td>
+                            <td data-label="التدريب الحالي">
+                                @{
+    var placed = student.Applications?
+        .FirstOrDefault(a => a.Status == Models.TrainingApplication.ApplicationStatus.Placed);
+}
+
+<span class="training-badge @(placed != null ? "training-active" : "training-none")">
+    @(placed?.TrainingOpportunity?.Title ?? "لا يوجد تدريب")
+</span>
+                            </td>
+                            <td data-label="التفاصيل">
+                                <a asp-page="/Students/Details" asp-route-id="@student.StudentID" class="btn-details">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.964-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/></svg>
+                                    التفاصيل
+                                </a>
+                            </td>
+                        </tr>
+                        @(SIndex++)
+                    }
                 </tbody>
             </table>
         </div>
@@ -777,34 +669,65 @@
         <div class="pagination-wrap d-flex align-items-center justify-content-between flex-wrap gap-3">
             <!-- Info + per-page -->
             <div class="d-flex align-items-center gap-2">
-                <span class="pagination-info">عرض 1 إلى 10 من 128 طالب</span>
-                <select class="form-select form-select-sm per-page-select" style="width:70px;">
-                    <option>10</option>
-                    <option>25</option>
-                    <option>50</option>
-                </select>
+                <span class="pagination-info">عرض 1 إلى @Model.PageSize من @Model.Students.TotalCount طالب</span>
+                <form method="get">
+                    <input type="hidden" name="PageSize" value="@Model.PageSize" />
+                    <input type="hidden" name="PageIndex" value="@Model.PageIndex" />
+                    <input type="hidden" name="SortOrder" value="@Model.SortOrder" />
+                    <input type="hidden" name="SearchTerm" value="@Model.SearchTerm" />
+    
+                    <select asp-for="PageSize"
+                            onchange="this.form.submit()"
+                            class="form-select form-select-sm per-page-select" style="width:70px;">
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                    </select>
+                </form>
             </div>
             <!-- Pages -->
             <nav aria-label="Page navigation">
                 <ul class="pagination pagination-sm mb-0 flex-wrap">
                     <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Previous">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="m15 19 7-7-7-7" transform="scale(-1,1) translate(-24,0)"/>
-                            </svg>
-                        </a>
+                         @if (Model.Students.HasPrevPage)
+                        {
+                            <a asp-route-PageIndex="@(Model.PageIndex - 1)"
+                               asp-route-SearchTerm="@Model.SearchTerm"
+                               asp-route-SortOrder="@Model.SortOrder"
+                               asp-route-PageSize="@Model.PageSize"
+                               class="page-link" href="#" aria-label="Previous">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="m15 19 7-7-7-7" transform="scale(-1,1) translate(-24,0)"/>
+                                </svg>
+                            </a>            
+                        }
                     </li>
-                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
-                    <li class="page-item"><a class="page-link" href="#">16</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Next">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="m9 5 7 7-7 7"/>
-                            </svg>
-                        </a>
+                     @for (int i = 1; i <= Model.Students.TotalPages; i++)
+                {
+                    <li class="page-item @(Model.PageIndex == i ? "active" : "")">
+    <a class="page-link"
+       asp-route-PageIndex="@i"
+       asp-route-SearchTerm="@Model.SearchTerm"
+       asp-route-SortOrder="@Model.SortOrder"
+       asp-route-PageSize="@Model.PageSize">
+        @i
+    </a>
+</li>
+                   
+                  }
+                   <li>
+                         @if (Model.Students.HasNextPage)
+                        {
+                            <a asp-route-PageIndex="@(Model.PageIndex + 1)"
+                               asp-route-SearchTerm="@Model.SearchTerm"
+                               asp-route-SortOrder="@Model.SortOrder"
+                               asp-route-PageSize="@Model.PageSize"
+                               class="page-link" href="#" aria-label="Next">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="m9 5 7 7-7 7"/>
+                                </svg>
+                            </a>            
+                        }
                     </li>
                 </ul>
             </nav>
