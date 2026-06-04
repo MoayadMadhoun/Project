@@ -1,0 +1,201 @@
+﻿@page
+@model Project.Pages.University.department.createModel
+@{
+    ViewData["Title"] = "إضافة قسم جديد";
+    ViewData["UserType"] = "University";
+    ViewData["PortalTitle"] = "بوابة الجامعة";
+    ViewData["PortalSubtitle"] = "إدارة التدريب الميداني";
+    ViewData["SearchPlaceholder"] = "بحث عن طلاب، مؤسسات...";
+}
+
+<form method="post">
+
+    <!-- Hero Section -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body p-5 text-white"
+             style="background:#1ab29a;border-radius:24px;">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+
+                    <h1 class="fw-bold mb-3">
+                        إضافة قسم جديد
+                    </h1>
+
+                    <p class="mb-0 fs-5 opacity-75">
+                        إنشاء قسم أكاديمي جديد ضمن الجامعة وإتاحته لإدارة التخصصات والطلبة.
+                    </p>
+
+                </div>
+
+                <div class="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center"
+                     style="width:90px;height:90px;">
+
+                    <i class="bi bi-building-add fs-1"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Department Information -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                بيانات القسم
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-4">
+
+                <div class="col-md-8">
+
+                    <label class="form-label fw-semibold">
+                        اسم القسم
+                    </label>
+
+                    <input type="text"
+                           class="form-control shadow-sm rounded-3 bg-light border-none"
+                           placeholder="مثال: قسم هندسة البرمجيات" />
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label class="form-label fw-semibold">
+                        حالة القسم
+                    </label>
+
+                    <select class="form-select shadow-sm rounded-3 bg-light border-none">
+
+                        <option selected>
+                            نشط
+                        </option>
+
+                        <option>
+                            غير نشط
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Information Card -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-body">
+
+            <div class="d-flex align-items-center">
+
+                <div class="me-3">
+
+                    <i class="bi bi-info-circle-fill text-primary fs-3"></i>
+
+                </div>
+
+                <div>
+
+                    <h6 class="fw-bold mb-1">
+                        ملاحظة
+                    </h6>
+
+                    <p class="text-muted mb-0">
+                        سيتم ربط القسم تلقائياً بالجامعة الحالية، ويمكن إضافة التخصصات التابعة له لاحقاً.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Preview Card -->
+
+    @* <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                معاينة
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="border rounded-4 p-4 bg-light">
+
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <div>
+
+                        <h5 class="fw-bold mb-1">
+                            قسم هندسة البرمجيات
+                        </h5>
+
+                        <span class="badge bg-success">
+                            نشط
+                        </span>
+
+                    </div>
+
+                    <div>
+
+                        <i class="bi bi-diagram-3 fs-1 text-secondary"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div> *@
+
+    <!-- Buttons -->
+
+    <div class="d-flex gap-2 mb-5">
+
+        <button type="submit"
+                class="btn btn-success px-5">
+
+            <i class="bi bi-check-circle me-1"></i>
+
+            حفظ القسم
+
+        </button>
+
+        <a href="#"
+           class="btn btn-light px-5">
+
+            <i class="bi bi-x-circle me-1"></i>
+
+            إلغاء
+
+        </a>
+
+    </div>
+
+</form>
