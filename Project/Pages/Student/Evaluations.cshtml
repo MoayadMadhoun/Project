@@ -1,0 +1,312 @@
+﻿@page
+@model Project.Pages.Student.EvaluationsModel
+@{
+    ViewData["Title"] = "التقييمات";
+    ViewData["UserType"] = "Student";
+    ViewData["UserName"] = "أحمد محمد";
+    ViewData["PortalTitle"] = "بوابة الطالب";
+    ViewData["PortalSubtitle"] = "إدارة التدريب الأكاديمي";
+    ViewData["SearchPlaceholder"] = "بحث في المنصة...";
+    ViewData["ActivePage"] = "Evaluations";
+}
+<link rel="stylesheet" href="~/css/Opportunities.css" />
+
+@* ===== Hero Section ===== *@
+<section class="mb-lg md:mb-xl relative rounded-xl md:rounded-2xl overflow-hidden bg-primary-container p-6 md:p-xl text-on-primary">
+    <div class="relative z-10 max-w-2xl text-right mb-3">
+        <h1 class="font-h1 text-2xl md:text-h1 mb-md">التقييمات</h1>
+        <p class="font-body-lg text-sm md:text-body-lg opacity-90">
+            عرض جميع التقييمات التي حصلت عليها خلال فترة التدريب
+        </p>
+    </div>
+    @*    <div class="absolute -bottom-10 -left-10 w-48 h-48 md:w-64 md:h-64 bg-white/10 rounded-full blur-3xl"></div>
+    <div class="absolute -top-20 -left-20 w-64 h-64 md:w-80 md:h-80 bg-secondary-fixed-dim/20 rounded-full blur-3xl"></div> *@
+  
+</section>
+
+
+
+@* ===== Filters Bar ===== *@
+<div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] p-4 mb-lg">
+    <div class="flex flex-wrap gap-3 items-end">
+
+        <!-- Search -->
+        <div class="relative flex-1 min-w-[180px]">
+            <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+            <input class="w-full pr-10 pl-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20" placeholder="ابحث عن نقيم..." type="text" />
+        </div>
+
+     
+        <div class="flex flex-col gap-1">
+            <label class="text-xs text-gray-500">حالة التقييم</label>
+            <select dir="rtl" class="w-40 border border-slate-200 rounded-xl text-sm font-bold text-slate-700 py-2.5 px-4 focus:ring-2 focus:ring-primary/20 cursor-pointer">
+                <option>الكل</option>
+                <option>أسبوعي</option>
+                <option>نهائي</option>
+            </select>
+        </div>
+        <div class="flex flex-col gap-1">
+            <label class="text-xs text-gray-500">نوع التقييم</label>
+            <select dir="rtl" class="w-40 border border-slate-200 rounded-xl text-sm font-bold text-slate-700 py-2.5 px-4 focus:ring-2 focus:ring-primary/20 cursor-pointer">
+                <option>الكل</option>
+                <option>أسبوعي</option>
+                <option>نهائي</option>
+            </select>
+        </div>
+
+        <!-- Status -->
+        <div class="flex flex-col gap-1">
+            <label class="text-xs text-gray-500">الجهة المقيمة</label>
+            <select class="w-40 border border-slate-200 rounded-xl text-sm font-bold text-slate-700 py-2.5 px-4 focus:ring-2 focus:ring-primary/20 cursor-pointer">
+                <option>الكل</option>
+                <option>مقبول</option>
+                <option>قيد المراجعة</option>
+                <option>قيد المراجعة (مرفوض)</option>
+                <option>لم يتم التسليم</option>
+            </select>
+        </div>
+
+        <!-- Button -->
+        <button class="bg-white text-emerald-600 border border-emerald-600 font-button px-6 py-2.5 rounded-xl hover:bg-emerald-50 transition-colors">
+            فلترة
+            <i class="bi bi-filter"></i>
+        </button>
+
+    </div>
+</div>
+
+@* ===== Opportunities Table ===== *@
+<div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] overflow-hidden">
+    <div class="p-4 md:p-lg border-b border-slate-100  justify-between items-center">
+        <h3 class="font-h3 text-lg md:text-h3 text-slate-900">قائمة التقارير</h3>
+        <p class="text-slate-500">جميع التقارير التي قمت برفعها خلال فترة التدريب</p>
+
+    </div>
+    <div class="overflow-x-auto">
+        <table class="w-full text-xs text-center align-middle text-right border-collapse min-w-[960px]">
+            <thead class="bg-surface-container-low">
+                <tr>
+                    <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">#</th>
+                    <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">نوع التقييم</th>
+                    <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">التدريب المرتبط</th>
+                    <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الجهة المقيمة (المشرف)</th>
+                    <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">تاريخ التقييم</th>
+                    <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الدرجة</th>
+                    <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الدرجة العظمى</th>
+                    <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الملاحظات</th>
+                    <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">ملف PDF</th>
+                    <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">حالة التقييم</th>
+                    <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الإجراءات</th>
+
+                    
+                   
+                   
+                   
+                   
+                  
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-50">
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-4 py-3 text-sm text-slate-900">1</td>
+                    <td class="px-4 py-3 text-sm text-slate-900 font-bold">
+                        <span class="px-3 py-1 rounded text-[11px] font-bold bg-emerald-50 text-emerald-600 d-flex">
+                            جامعي نهائي
+                        </span>
+                    </td>
+                    <td class="px-4 py-3 text-slate-600">تدريب Full Stack <br /> شركة التقنية المتقدمة</td>
+                    <td class="px-4 py-3 text-slate-600">مشرف الجامعة <br> د.أحمد نادر</td>
+                    <td class="px-4 py-3 text-slate-600"> 2025-04-20</td>
+                    <td class="px-4 py-3 text-primary"> 92</td>
+                    <td class="px-4 py-3 text-slate-600"> 100</td>
+                    <td class="px-4 py-3 text-slate-600"> التزام عالي وجودة ممتازة بالعمل</td>
+                    <td class="px-4 py-3">
+                        <button class="border border-slate-200 text-emerald-600 flex items-center gap-2 text-xs font-bold px-4 py-1 rounded hover:bg-emerald-50 transition-colors">
+                            <svg class="w-5 h-6 text-red-500" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13 3v5a1 1 0 001 1h5" />
+                                <text text-anchor="middle" x="50%" y="17" font-size="5" font-weight="bold" fill="#ef4444" stroke="none" font-family="Arial">PDF</text>
+                            </svg>
+                            <span>عرض</span>
+                        </button>
+                    </td>
+                    <td class="px-4 py-3">
+                        <span class="px-3 py-1 rounded text-[11px] font-bold bg-emerald-50 text-emerald-600 d-flex">
+                            معتمد
+                        </span>
+
+                    </td>
+
+               
+                    <td class="px-4 py-3">
+
+                        <button class="border border-slate-200 text-emerald-600 text-xs font-bold px-4 py-1 rounded hover:bg-emerald-50 flex items-center gap-1"><span>👁</span> عرض </button>
+
+                            
+                    </td>
+
+                   
+                   
+                    
+                   
+                   
+                  
+                </tr>
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-4 py-3 text-sm text-slate-900">2</td>
+                    <td class="px-4 py-3 text-sm text-slate-900 font-bold">
+                        <span class="px-3 py-1 rounded text-[11px] font-bold bg-blue-100 text-tertiary d-flex">
+                            جامعة نصفي
+                        </span>
+                    </td>
+                    <td class="px-4 py-3 text-slate-600">تدريب نظم معلومات صحية <br /> شركة التقنية المتقدمة</td>
+                    <td class="px-4 py-3 text-slate-600">مشرف المؤسسة <br> د.أحمد نادر</td>
+                    <td class="px-4 py-3 text-slate-600"> 2025-04-20</td>
+                    <td class="px-4 py-3 text-primary"> 85</td>
+                    <td class="px-4 py-3 text-slate-600"> 100</td>
+                    <td class="px-4 py-3 text-slate-600"> تقدم جيد وبحتاج لمزيد من التركيز ف يالتحليل والبحث</td>
+                    <td class="px-4 py-3">
+                        <button class="border border-slate-200 text-emerald-600 flex items-center gap-2 text-xs font-bold px-4 py-1 rounded hover:bg-emerald-50 transition-colors">
+                            <svg class="w-5 h-6 text-red-500" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13 3v5a1 1 0 001 1h5" />
+                                <text text-anchor="middle" x="50%" y="17" font-size="5" font-weight="bold" fill="#ef4444" stroke="none" font-family="Arial">PDF</text>
+                            </svg>
+                            <span>عرض</span>
+                        </button>
+                    </td>
+                    <td class="px-4 py-3">
+                        <span class="px-3 py-1 rounded text-[11px] font-bold bg-blue-100 text-tertiary d-flex">
+                            تم التسليم
+                        </span>
+
+                    </td>
+
+               
+                    <td class="px-4 py-3">
+
+                        <button class="border border-slate-200 text-emerald-600 text-xs font-bold px-4 py-1 rounded hover:bg-emerald-50 flex items-center gap-1"><span>👁</span> عرض </button>
+
+                            
+                    </td>
+
+                   
+                   
+                    
+                   
+                   
+                  
+                </tr>
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-4 py-3 text-sm text-slate-900">3</td>
+                    <td class="px-4 py-3 text-sm text-slate-900 font-bold">
+                        <span class="px-3 py-1 rounded text-[11px] font-bold bg-orange-50 text-orange-500 d-flex">
+                            مؤسسطة نصفي
+                        </span>
+                    </td>
+                    <td class="px-4 py-3 text-slate-600">تدريب Full Stack <br /> شركة التقنية المتقدمة</td>
+                    <td class="px-4 py-3 text-slate-600">مشرف الجامعة <br> د.أحمد نادر</td>
+                    <td class="px-4 py-3 text-slate-600"> 2025-04-20</td>
+                    <td class="px-4 py-3 text-primary"> 88</td>
+                    <td class="px-4 py-3 text-slate-600"> 100</td>
+                    <td class="px-4 py-3 text-slate-600"> أداء مميز ومتعاون</td>
+                    <td class="px-4 py-3 text-slate-700">
+                        _
+                    </td>
+                    <td class="px-4 py-3">
+                        <span class="px-3 py-1 rounded text-[11px] font-bold bg-slate-200 text-slate-700 d-flex">
+                            مسودة
+                        </span>
+
+                    </td>
+
+               
+                    <td class="px-4 py-3">
+
+                        <button class="border border-slate-200 text-emerald-600 text-xs font-bold px-4 py-1 rounded hover:bg-emerald-50 flex items-center gap-1"><span>👁</span> عرض </button>
+
+                            
+                    </td>
+
+                   
+                   
+                    
+                   
+                   
+                  
+                </tr>
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-4 py-3 text-sm text-slate-900">4</td>
+                    <td class="px-4 py-3 text-sm text-slate-900 font-bold">
+                        <span class="px-3 py-1 rounded text-[11px] font-bold bg-emerald-50 text-emerald-600 d-flex">
+                            جامعي نهائي
+                        </span>
+                    </td>
+                    <td class="px-4 py-3 text-slate-600">تدريب Full Stack <br /> شركة التقنية المتقدمة</td>
+                    <td class="px-4 py-3 text-slate-600">مشرف الجامعة <br> د.أحمد نادر</td>
+                    <td class="px-4 py-3 text-slate-600"> 2025-04-20</td>
+                    <td class="px-4 py-3 text-primary"> 88</td>
+                    <td class="px-4 py-3 text-slate-600"> 100</td>
+                    <td class="px-4 py-3 text-slate-600"> أداء ممتاز في جميع الجوانب</td>
+                    <td class="px-4 py-3">
+                        <button class="border border-slate-200 text-emerald-600 flex items-center gap-2 text-xs font-bold px-4 py-1 rounded hover:bg-emerald-50 transition-colors">
+                            <svg class="w-5 h-6 text-red-500" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13 3v5a1 1 0 001 1h5" />
+                                <text text-anchor="middle" x="50%" y="17" font-size="5" font-weight="bold" fill="#ef4444" stroke="none" font-family="Arial">PDF</text>
+                            </svg>
+                            <span>عرض</span>
+                        </button>
+                    </td>
+                    <td class="px-4 py-3">
+                        <span class="px-3 py-1 rounded text-[11px] font-bold bg-emerald-50 text-emerald-600 d-flex">
+                            معتمد
+                        </span>
+
+                    </td>
+
+               
+                    <td class="px-4 py-3">
+
+                        <button class="border border-slate-200 text-emerald-600 text-xs font-bold px-4 py-1 rounded hover:bg-emerald-50 flex items-center gap-1"><span>👁</span> عرض </button>
+
+                            
+                    </td>
+
+                   
+                   
+                    
+                   
+                   
+                  
+                </tr>
+
+           
+            </tbody>
+        </table>
+    </div>
+    <div class="p-4 md:p-lg flex flex-col md:flex-row items-center justify-between gap-4 border-t border-slate-100">
+        <div class="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
+            <p class="text-sm text-slate-500 font-body-sm whitespace-nowrap">
+                عرض <span class="font-bold text-slate-900">1</span> من أصل <span class="font-bold text-slate-900">48</span> تقرير
+            </p>
+            <div class="flex items-center gap-2">
+                <label class="text-xs text-slate-500 font-label-caps" for="pp-s">النتائج:</label>
+                <select class="bg-slate-100 border-none rounded-lg text-xs font-bold text-slate-700 py-1.5 pr-8 pl-3 focus:ring-2 focus:ring-primary/20 appearance-none cursor-pointer" id="pp-s">
+                    <option>10</option>
+                    <option>25</option>
+                    <option>50</option>
+                </select>
+            </div>
+        </div>
+        <nav class="flex items-center gap-2">
+            <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:bg-slate-50"><span class="material-symbols-outlined">chevron_right</span></button>
+            <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-primary text-white text-sm font-bold">1</button>
+            <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-600 text-sm font-bold hover:bg-slate-50">2</button>
+            <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-600 text-sm font-bold hover:bg-slate-50">3</button>
+            <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:bg-slate-50"><span class="material-symbols-outlined">chevron_left</span></button>
+        </nav>
+    </div>
+
+   
+</div>
