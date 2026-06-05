@@ -28,78 +28,77 @@ public class CreateModel : PageModel
     public TrainingInstitution? CurrentInstitution { get; private set; }
     public int InstitutionId { get; set; }
     public string CurrentOfficerId { get; set; }
-    public List<SelectListItem> Terms { get; set; } 
+    public List<SelectListItem> Terms { get; set; }
 
 
     public async Task<ActionResult> OnGetAsync()
     {
+        await LoadPageDataAsync();
 
-        Terms = await _context.TrainingTerms
-            .Select(t => new SelectListItem
-            {
-                Value = t.TermID.ToString(),
-                Text = t.Name
-            })
-            .ToListAsync();
-
-        try
-        {
-            if (User == null)
-            {
-                return RedirectToPage("/Account/Login", new { area = "Identity" });
-            }
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return RedirectToPage("/Account/Login", new { area = "Identity" });
-            }
-
-            var scope = await _context.AspNetRoleScopes.FirstOrDefaultAsync(s => s.UserID == user.Id);
-
-            if (scope == null)
-            {
-
-                return RedirectToPage("/Account/Login", new { area = "Identity" });
-            }
-
-            if (scope.InstitutionID == null)
-            {
-                return RedirectToPage("/Account/Login", new { area = "Identity" });
-            }
-
-           InstitutionId = scope.InstitutionID.Value;
-
-            CurrentInstitution = await _institutionRepo.GetByIdAsync(InstitutionId);
-            if (CurrentInstitution == null)
-            {
-                return RedirectToPage("/Index");
-            }
-            CurrentOfficerId = user.Id;
-
-            return Page();
-
-        }
-        catch (Exception ex)
-        {
+        if (CurrentInstitution == null)
             return RedirectToPage("/Index");
-        }
+
+        return Page();
     }
 
     public async Task<IActionResult> OnPostAsync()
     {
+        // التحقق من التواريخ
+
+        if (Input.StartDate != default &&
+            Input.StartDate.Date < DateTime.Today)
+        {
+            ModelState.AddModelError(
+                nameof(Input.StartDate),
+                "لا يمكن اختيار تاريخ بداية في الماضي");
+        }
+
+        if (Input.EndDate != default &&
+            Input.EndDate.Date < DateTime.Today)
+        {
+            ModelState.AddModelError(
+                nameof(Input.EndDate),
+                "لا يمكن اختيار تاريخ نهاية في الماضي");
+        }
+
+        if (Input.EndDate <= Input.StartDate)
+        {
+            ModelState.AddModelError(
+                nameof(Input.EndDate),
+                "يجب أن يكون تاريخ النهاية بعد تاريخ البداية");
+        }
+
         if (!ModelState.IsValid)
+        {
+            await LoadPageDataAsync();
             return Page();
+        }
+
+        // جلب المستخدم الحالي
 
         var user = await _userManager.GetUserAsync(User);
 
         if (user == null)
-            return RedirectToPage("/Account/Login", new { area = "Identity" });
+        {
+            return RedirectToPage(
+                "/Account/Login",
+                new { area = "Identity" });
+        }
+
+        // جلب المؤسسة الحالية
 
         var scope = await _context.AspNetRoleScopes
-            .FirstOrDefaultAsync(s => s.UserID == user.Id);
+            .FirstOrDefaultAsync(s =>
+                s.UserID == user.Id);
 
         if (scope?.InstitutionID == null)
-            return RedirectToPage("/Account/Login", new { area = "Identity" });
+        {
+            return RedirectToPage(
+                "/Account/Login",
+                new { area = "Identity" });
+        }
+
+        // إنشاء الفرصة
 
         var opportunity = new TrainingOpportunity
         {
@@ -109,11 +108,16 @@ public class CreateModel : PageModel
             Title = Input.Title,
             Description = Input.Description,
             Capacity = Input.Capacity,
+
             StartDate = Input.StartDate,
             EndDate = Input.EndDate,
+
             Location = Input.Location,
+
             TermID = Input.TermId,
+
             RequestID = Input.RequestId,
+
             Status = (TrainingOpportunity.Opportunity)Input.Status,
 
             CreatedAt = DateTime.Now
@@ -123,6 +127,43 @@ public class CreateModel : PageModel
 
         await _context.SaveChangesAsync();
 
+        TempData["SuccessMessage"] = "تمت إضافة الفرصة التدريبية بنجاح";
+
         return RedirectToPage("../AvailableOpportunities");
+    }
+
+    private async Task LoadPageDataAsync()
+    {
+        await LoadTermsAsync();
+
+        var user = await _userManager.GetUserAsync(User);
+
+        if (user == null)
+            return;
+
+        var scope = await _context.AspNetRoleScopes
+            .FirstOrDefaultAsync(s => s.UserID == user.Id);
+
+        if (scope?.InstitutionID == null)
+            return;
+
+        InstitutionId = scope.InstitutionID.Value;
+        CurrentOfficerId = user.Id;
+
+        CurrentInstitution =
+            await _institutionRepo.GetByIdAsync(InstitutionId);
+    }
+    private async Task LoadTermsAsync()
+    {
+        //should move this to its repository
+        Terms = await _context.TrainingTerms
+            .Where(t => t.IsActive)
+            .OrderByDescending(t => t.StartDate)
+            .Select(t => new SelectListItem
+            {
+                Value = t.TermID.ToString(),
+                Text = $"{t.Name} - {t.AcademicYear}"
+            })
+            .ToListAsync();
     }
 }
