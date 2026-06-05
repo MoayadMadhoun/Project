@@ -264,7 +264,22 @@
                         <span class="material-symbols-outlined text-white">school</span>
                     </div>
                     <div>
-                        <h2 class="text-xl font-bold text-slate-900 dark:text-white">@(ViewData["PortalTitle"]?.ToString())</h2>
+                        <h2 class="text-xl font-bold text-slate-900 dark:text-white">
+                            @if (User.IsInRole("UniversityTrainingAdmin") || User.IsInRole("DepartmentHead") || User.IsInRole("UniversitySupervisor"))
+                            {
+                                 @:بوابة الجامعة 
+                            }
+                            @if (User.IsInRole("InstitutionTrainingOfficer") || User.IsInRole("InstitutionSupervisor"))
+                            {
+                                @:بوابة المؤسسة
+                            }
+                            @if (User.IsInRole("Student"))
+                            {
+                                @:بوابة الطالب
+                            }
+
+                            @* @(ViewData["PortalTitle"]?.ToString()) *@
+                        </h2>
                         <p class="text-xs text-slate-500">@(ViewData["PortalSubtitle"]?.ToString())</p>
                     </div>
                 </div>
@@ -275,10 +290,10 @@
         </div>
 
         <nav class="flex-1 px-4 space-y-1 overflow-y-auto">
-            @if ((string?)ViewData["UserType"] == "Institution")
+            @if(User.IsInRole("InstitutionTrainingOfficer") || User.IsInRole("InstitutionSupervisor"))
             {
                 @* ===== قائمة بوابة المؤسسة ===== *@
-                <a class="flex items-center gap-md px-4 py-3 rounded-xl font-body-md text-body-md" asp-page="/Institution">
+                <a class="flex items-center gap-md px-4 py-3 rounded-xl font-body-md text-body-md" asp-page="/Institution/Index">
                     <span class="material-symbols-outlined">dashboard</span>الرئيسية
                 </a>
                 <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" asp-page="/Institution/AvailableOpportunities">
@@ -290,20 +305,20 @@
                 <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" asp-page="/Institution/CurrentTraining">
                     <span class="material-symbols-outlined">work</span>التدريب الحالي
                 </a>
-                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" href="#">
+                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" asp-page="/Institution/index">
                     <span class="material-symbols-outlined">manage_accounts</span>المشرفون
                 </a>
-                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" href="#">
+                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" asp-page="/Institution/Reports">
                     <span class="material-symbols-outlined">description</span>التقارير
                 </a>
-                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" href="#">
+                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" asp-page="/Institution/index">
                     <span class="material-symbols-outlined">grading</span>التقييمات
                 </a>
                 <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" asp-page="/Institution/Profile">
-                    <span class="material-symbols-outlined">person</span>الملف المؤسسة
+                    <span class="material-symbols-outlined">person</span>ملف المؤسسة
                 </a>
             }
-            else if ((string?)ViewData["UserType"] == "University")
+            else if (User.IsInRole("UniversityTrainingAdmin") || User.IsInRole("DepartmentHead") || User.IsInRole("UniversitySupervisor"))
             {
                 @* ===== قائمة بوابة الجامعة ===== *@
                 <a class="flex items-center gap-md px-4 py-3 rounded-xl font-body-md text-body-md" asp-page="/University/Index">
@@ -312,7 +327,8 @@
                 <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" asp-page="/University/AvailabelOpportunities">
                     <span class="material-symbols-outlined">explore</span>الفرص التدريبية
                 </a>
-                @if (User.IsInRole("UniversityTrainingAdmin")){
+                @if (User.IsInRole("UniversityTrainingAdmin") || User.IsInRole("DepartmentHead"))
+                {
                     <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" asp-page="@(User.IsInRole("UniversityTrainingAdmin") ? "/University/UniAdminTrainigRequests" : User.IsInRole("DepartmentHead") ? "/University/DepartmentHeadTrainingRequests" : "")">
                         <span class="material-symbols-outlined">group</span>طلبات الطلبة
                     </a>
@@ -343,12 +359,8 @@
                     <span class="material-symbols-outlined">grading</span>التقييمات
                 </a>
 
-                @* <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" href="#"> *@
-                    @* <span class="material-symbols-outlined">settings</span>الإعدادات 
-                 @</a> *@
-
             }
-            else
+            else if(User.IsInRole("Student"))
             {
                 @* ===== قائمة بوابة الطالب (الافتراضية) ===== *@
                 <a class="flex items-center gap-md px-4 py-3 rounded-xl font-body-md text-body-md" asp-page="/Student/Index">
@@ -483,34 +495,47 @@
    
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // =========================
-        // Active Nav Link Highlight
-        // =========================
+   <script>
+    // =========================
+    // Active Nav Link Highlight
+    // =========================
 
-        const currentPath = window.location.pathname.toLowerCase().replace(/\/$/, '');
+    const currentPath = window.location.pathname.toLowerCase().replace(/\/$/, '');
+    let anyActive = false;
 
-        document.querySelectorAll('#sidebar nav a').forEach(link => {
+    document.querySelectorAll('#sidebar nav a').forEach(link => {
         const linkPath = new URL(link.href).pathname.toLowerCase().replace(/\/$/, '');
-
         if (!linkPath || linkPath === '#') return;
 
-        const isActive = currentPath === linkPath
-        // || currentPath.startsWith(linkPath + '/');
-
-        if (isActive) {
-        link.classList.remove(
-        'text-slate-600', 'hover:bg-slate-50',
-        'hover:text-slate-900', 'border-transparent',
-        'hover:border-slate-200', 'hover:translate-x-1'
-        );
-        link.classList.add(
-        'bg-teal-50', 'text-teal-600',
-        'border-r-4', 'border-teal-500', 'font-bold'
-        );
+        if (currentPath === linkPath) {
+            anyActive = true;
+            link.classList.remove(
+                'text-slate-600', 'hover:bg-slate-50',
+                'hover:text-slate-900', 'border-transparent',
+                'hover:border-slate-200', 'hover:translate-x-1'
+            );
+            link.classList.add(
+                'bg-teal-50', 'text-teal-600',
+                'border-r-4', 'border-teal-500', 'font-bold'
+            );
         }
-        });
-    </script>
+    });
+
+    if (!anyActive) {
+        const homeLink = document.querySelector('#sidebar nav a:first-child');
+        if (homeLink) {
+            homeLink.classList.remove(
+                'text-slate-600', 'hover:bg-slate-50',
+                'hover:text-slate-900', 'border-transparent',
+                'hover:border-slate-200', 'hover:translate-x-1'
+            );
+            homeLink.classList.add(
+                'bg-teal-50', 'text-teal-600',
+                'border-r-4', 'border-teal-500', 'font-bold'
+            );
+        }
+    }
+</script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
