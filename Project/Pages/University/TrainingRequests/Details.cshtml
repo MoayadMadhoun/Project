@@ -1,0 +1,365 @@
+﻿@page
+@model Project.Pages.University.TrainingRequests.DetailsModel
+
+@{
+    ViewData["Title"] = "تفاصيل طلب فرصة تدريب";
+    ViewData["UserType"] = "University";
+    ViewData["PortalTitle"] = "بوابة الجامعة";
+    ViewData["PortalSubtitle"] = "إدارة التدريب الميداني";
+    ViewData["SearchPlaceholder"] = "بحث عن طلاب، مؤسسات...";
+}
+
+<!-- Hero Section -->
+
+<div class="card border-0 shadow-sm mb-4">
+
+    <div class="card-body p-5 text-white"
+         style="background:#1ab29a;border-radius:24px;">
+
+        <div class="d-flex justify-content-between align-items-center">
+
+            <div>
+
+                <h1 class="fw-bold mb-3">
+                    تفاصيل طلب فرصة تدريب
+                </h1>
+
+                <p class="mb-0 fs-5 opacity-75">
+                    عرض كافة المعلومات المرتبطة بطلب الفرص التدريبية.
+                </p>
+
+            </div>
+
+            <div class="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center"
+                 style="width:90px;height:90px;">
+
+                <i class="bi bi-file-earmark-text fs-1"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Request Information -->
+
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+
+    <div class="card-header bg-white">
+
+        <h5 class="fw-bold mb-0">
+            معلومات الطلب
+        </h5>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row g-4">
+
+            <div class="col-md-3">
+
+                <label class="text-muted">
+                    رقم الطلب
+                </label>
+
+                <div class="fw-semibold">
+                    REQ-2026-015
+                </div>
+
+            </div>
+
+            <div class="col-md-5">
+
+                <label class="text-muted">
+                    عنوان الطلب
+                </label>
+
+                <div class="fw-semibold">
+                    فرص تدريب لطلبة هندسة البرمجيات
+                </div>
+
+            </div>
+
+            <div class="col-md-2">
+
+                <label class="text-muted">
+                    الحالة
+                </label>
+
+                <div>
+                    <span class="badge bg-success">
+                        منشور
+                    </span>
+                </div>
+
+            </div>
+
+            <div class="col-md-2">
+
+                <label class="text-muted">
+                    عدد المقاعد
+                </label>
+
+                <div class="fw-semibold">
+                    30
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Creator Information -->
+
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+
+    <div class="card-header bg-white">
+
+        <h5 class="fw-bold mb-0">
+            الجهة المنشئة للطلب
+        </h5>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row">
+
+            <div class="col-md-4">
+
+                <label class="text-muted">
+                    الجامعة
+                </label>
+
+                <div class="fw-semibold">
+                    الجامعة الإسلامية
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <label class="text-muted">
+                    المنشئ
+                </label>
+
+                <div class="fw-semibold">
+                    مسؤول التدريب العام
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <label class="text-muted">
+                    القسم
+                </label>
+
+                <div class="fw-semibold">
+                    -
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Request Description -->
+
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+
+    <div class="card-header bg-white">
+
+        <h5 class="fw-bold mb-0">
+            وصف الطلب
+        </h5>
+
+    </div>
+
+    <div class="card-body">
+
+        <p class="mb-0 text-muted">
+
+            توفير فرص تدريب ميداني لطلبة قسم هندسة البرمجيات
+            في مجالات تطوير الويب وتطوير تطبيقات الهواتف الذكية
+            وقواعد البيانات.
+
+        </p>
+
+    </div>
+
+</div>
+
+<!-- Training Period -->
+
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+
+    <div class="card-header bg-white">
+
+        <h5 class="fw-bold mb-0">
+            فترة التدريب
+        </h5>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row">
+
+            <div class="col-md-3">
+
+                <label class="text-muted">
+                    الفترة التدريبية
+                </label>
+
+                <div class="fw-semibold">
+                    الفصل الأول 2026-2027
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <label class="text-muted">
+                    تاريخ البداية
+                </label>
+
+                <div class="fw-semibold">
+                    01/09/2026
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <label class="text-muted">
+                    تاريخ النهاية
+                </label>
+
+                <div class="fw-semibold">
+                    31/12/2026
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <label class="text-muted">
+                    آخر موعد للتقديم
+                </label>
+
+                <div class="fw-semibold">
+                    15/08/2026
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Additional Notes -->
+
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+
+    <div class="card-header bg-white">
+
+        <h5 class="fw-bold mb-0">
+            ملاحظات إضافية
+        </h5>
+
+    </div>
+
+    <div class="card-body">
+
+        <p class="mb-0 text-muted">
+
+            يفضل أن تكون الفرص التدريبية داخل المحافظة
+            وأن تشمل إشرافاً مباشراً على الطلبة.
+
+        </p>
+
+    </div>
+
+</div>
+
+<!-- Timeline -->
+
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+
+    <div class="card-header bg-white">
+
+        <h5 class="fw-bold mb-0">
+            معلومات التتبع
+        </h5>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row">
+
+            <div class="col-md-6">
+
+                <label class="text-muted">
+                    تاريخ إنشاء الطلب
+                </label>
+
+                <div class="fw-semibold">
+                    01/06/2026
+                </div>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <label class="text-muted">
+                    آخر تحديث
+                </label>
+
+                <div class="fw-semibold">
+                    05/06/2026
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Actions -->
+
+<div class="d-flex gap-2 mb-5">
+
+    <a href="#"
+       class="btn btn-success px-5">
+
+        <i class="bi bi-pencil-square me-1"></i>
+
+        تعديل الطلب
+
+    </a>
+
+    <a href="#"
+       class="btn btn-light px-5">
+
+        <i class="bi bi-arrow-right-circle me-1"></i>
+
+        رجوع
+
+    </a>
+
+</div>
