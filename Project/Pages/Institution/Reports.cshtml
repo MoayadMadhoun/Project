@@ -1,0 +1,222 @@
+﻿@page
+@model Project.Pages.Institution.ReportsModel
+@{
+}
+<link rel="stylesheet" href="~/Styles/Reports.css" />
+<main class="main-content">
+
+    <!-- Back -->
+    <a href="#" class="back-btn">
+        رجوع
+        <i class="bi bi-arrow-left"></i>
+    </a>
+
+    <!-- Hero Banner -->
+    <!-- Hero Banner -->
+    <div class="hero-banner">
+        <div class="hero-text">
+            <div class="hero-title">التقارير</div>
+            <div class="hero-subtitle">
+                متابعة التقارير التي تطلبها الجامعة من مؤسستكم<br />
+                وتعبئتها وإرسالها للجامعة.
+            </div>
+        </div>
+        <div class="hero-illustration">
+            <div class="hero-doc-icon"><i class="bi bi-file-earmark-text"></i></div>
+            <div class="clip-wrap" style="position:relative;">
+                <div class="clip-board">
+                    <div class="clip-top"></div>
+                    <div class="clip-line"></div>
+                    <div class="clip-line short"></div>
+                    <div class="clip-line"></div>
+                    <div class="clip-line short"></div>
+                </div>
+                <div class="check-badge"><i class="bi bi-check-lg"></i></div>
+            </div>
+            <div class="folder-icon"></div>
+        </div>
+
+       
+    </div>  <!-- ← closing tag was here before, now moved to end -->
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+
+    
+        <div class="filter-search">
+            <input type="text" placeholder="ابحث عن طالب أو تقرير..." />
+            <i class="bi bi-search"></i>
+        </div>
+
+        <select class="filter-select" style="max-width:200px;">
+            <option>جميع الحالات</option>
+            <option>بانتظار تعبئة التقرير</option>
+            <option>تم إرسال التقرير</option>
+            <option>متأخرة</option>
+        </select>
+
+        <select class="filter-select" style="max-width:200px;">
+            <option>جميع أنواع التقارير</option>
+            <option>تقرير أداء</option>
+            <option>تقرير حضور</option>
+            <option>تقرير متابعة</option>
+            <option>تقرير نهائي</option>
+        </select>
+        <button class="filter-btn">
+            <i class="bi bi-funnel"></i>
+            تصفية
+        </button>
+    </div>
+
+    <!-- Table Card -->
+    <div class="table-card">
+        <div class="table-card-header">
+            <div style="flex:1; text-align:right;">
+                <div class="table-card-title">التقارير المطلوبة من الجامعة</div>
+            </div>
+            <div class="table-header-icon"><i class="bi bi-building-fill-check"></i></div>
+        </div>
+        <div class="table-card-subtitle">
+            هذه هي التقارير التي تطلبها الجامعة منكم خلال فترة التدريب.
+        </div>
+
+        <div class="table-responsive">
+            <table class="reports-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>الطالب</th>
+                        <th>نوع التقرير</th>
+                        <th>التدريب</th>
+                        <th>تاريخ الطلب</th>
+                        <th>الموعد النهائي</th>
+                        <th>حالة التقرير</th>
+                        <th>ملف مرفق</th>
+                        <th>العمليات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td class="td-name">محمد أحمد البدوي</td>
+                        <td>تقرير أداء</td>
+                        <td class="td-link">تطوير أدائه</td>
+                        <td>01-06-2025</td>
+                        <td>15-06-2025</td>
+                        <td><span class="badge-waiting">بانتظار تعبئة التقرير</span></td>
+                        <td><span style="color:#ccc;">—</span></td>
+                        <td><span class="three-dots">⋮</span></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td class="td-name">سارة المطيري</td>
+                        <td>تقرير حضور</td>
+                        <td class="td-link">تحليل بيانات</td>
+                        <td>28-05-2025</td>
+                        <td>12-06-2025</td>
+                        <td><span class="badge-waiting">بانتظار تعبئة التقرير</span></td>
+                        <td><span style="color:#ccc;">—</span></td>
+                        <td><span class="three-dots">⋮</span></td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td class="td-name">أحمد العتيبي</td>
+                        <td>تقرير متابعة</td>
+                        <td class="td-link">تصميم جرافيك</td>
+                        <td>25-05-2025</td>
+                        <td>10-06-2025</td>
+                        <td><span class="badge-sent">تم إرسال التقرير</span></td>
+                        <td><span class="file-icon-btn"><i class="bi bi-file-earmark"></i></span></td>
+                        <td><span class="three-dots">⋮</span></td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td class="td-name">نورة الحربي</td>
+                        <td>تقرير أداء</td>
+                        <td class="td-link">أمن المعلومات</td>
+                        <td>20-05-2025</td>
+                        <td>08-06-2025</td>
+                        <td><span class="badge-sent">تم إرسال التقرير</span></td>
+                        <td><span class="file-icon-btn"><i class="bi bi-file-earmark"></i></span></td>
+                        <td><span class="three-dots">⋮</span></td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td class="td-name">فيصل السبيعي</td>
+                        <td>تقرير نهائي</td>
+                        <td class="td-link">إدارة مشاريع</td>
+                        <td>18-05-2025</td>
+                        <td>05-06-2025</td>
+                        <td><span class="badge-waiting">بانتظار تعبئة التقرير</span></td>
+                        <td><span style="color:#ccc;">—</span></td>
+                        <td><span class="three-dots">⋮</span></td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td class="td-name">خالد الدوسري</td>
+                        <td>تقرير أداء</td>
+                        <td class="td-link">تطوير ويب</td>
+                        <td>15-05-2025</td>
+                        <td>02-06-2025</td>
+                        <td><span class="badge-sent">تم إرسال التقرير</span></td>
+                        <td><span class="file-icon-btn"><i class="bi bi-file-earmark"></i></span></td>
+                        <td><span class="three-dots">⋮</span></td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td class="td-name">ريم الشهري</td>
+                        <td>تقرير متابعة</td>
+                        <td class="td-link">تحليل بيانات</td>
+                        <td>10-05-2025</td>
+                        <td>30-05-2025</td>
+                        <td><span class="badge-late">متأخرة</span></td>
+                        <td><span style="color:#ccc;">—</span></td>
+                        <td><span class="three-dots">⋮</span></td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td class="td-name">عبدالعزيز العنزي</td>
+                        <td>تقرير نهائي</td>
+                        <td class="td-link">تصميم جرافيك</td>
+                        <td>05-05-2025</td>
+                        <td>28-05-2025</td>
+                        <td><span class="badge-waiting">بانتظار تعبئة التقرير</span></td>
+                        <td><span style="color:#ccc;">—</span></td>
+                        <td><span class="three-dots">⋮</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination-bar">
+            <div class="pagination-info">
+                عرض 1 إلى 8 من 28 تقرير
+                <select>
+                    <option>8</option>
+                    <option>16</option>
+                    <option>24</option>
+                </select>
+                <i class="bi bi-chevron-down" style="font-size:11px;"></i>
+            </div>
+            <div class="pagination-pages">
+                <button class="page-btn page-arrow"><i class="bi bi-chevron-right"></i></button>
+                <button class="page-btn">3</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn active">1</button>
+                <button class="page-btn page-arrow"><i class="bi bi-chevron-left"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div>جميع الحقوق محفوظة © 2024 • بوابة التدريب الميداني</div>
+        <div style="display:flex; gap:18px;">
+            <a href="#">Technical Support</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Privacy Policy</a>
+        </div>
+    </footer>
+
+</main>
+
