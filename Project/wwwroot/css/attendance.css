@@ -1,0 +1,158 @@
+﻿.attendance-page {
+    animation: fadePage .6s ease;
+}
+
+@keyframes fadePage {
+
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.hero-card {
+    background: linear-gradient(135deg,#1ab29a,#0fa9b5);
+    color: white;
+    border-radius: 22px;
+    padding: 35px;
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+    .hero-card h1 {
+        font-size: 38px;
+        font-weight: 700;
+    }
+
+    .hero-card p {
+        margin-top: 10px;
+        font-size: 18px;
+        opacity: .95;
+    }
+
+.hero-icon {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+}
+
+.filter-card {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 25px;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr auto;
+    gap: 15px;
+    box-shadow: 0 8px 25px rgba(0,0,0,.04);
+}
+
+.btn-filter {
+    background: #1ab29a;
+    color: white;
+    border: none;
+}
+
+    .btn-filter:hover {
+        background: #149883;
+        color: white;
+    }
+
+.stat-card {
+    background: white;
+    border-radius: 20px;
+    text-align: center;
+    padding: 25px;
+    box-shadow: 0 8px 25px rgba(0,0,0,.04);
+    transition: .35s;
+}
+
+    .stat-card:hover {
+        transform: translateY(-8px);
+    }
+
+.stat-number {
+    font-size: 34px;
+    font-weight: 700;
+    color: #1ab29a;
+}
+
+.stat-title {
+    color: #6b7280;
+    margin-top: 10px;
+}
+
+.success {
+    border-top: 4px solid #16a34a;
+}
+
+.warning {
+    border-top: 4px solid #f59e0b;
+}
+
+.danger {
+    border-top: 4px solid #ef4444;
+}
+
+.table-card {
+    background: white;
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,.05);
+}
+
+.table-header {
+    padding: 20px;
+    font-size: 22px;
+    font-weight: 700;
+    color: #1f2937;
+    border-bottom: 1px solid #edf2f7;
+}
+
+.table th {
+    background: #f8fafc;
+    color: #374151;
+    font-weight: 700;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+.table tbody tr {
+    transition: .3s;
+}
+
+    .table tbody tr:hover {
+        background: #f8fffd;
+    }
+
+.badge {
+    padding: 8px 14px;
+    border-radius: 50px;
+}
+
+@media(max-width:991px) {
+
+    .filter-card {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-card {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+    }
+}
