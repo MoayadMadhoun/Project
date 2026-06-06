@@ -3,6 +3,10 @@
 
 @{
     ViewData["Title"] = "إضافة فرصة تدريبية";
+    ViewData["UserType"] = "Institution";
+    ViewData["PortalTitle"] = "بوابة المؤسسة";
+    ViewData["PortalSubtitle"] = "إدارة المتدربين والفرص";
+    ViewData["SearchPlaceholder"] = "بحث عن طلاب، طلبات...";
 }
 
 <form method="post">
@@ -223,7 +227,8 @@
 
                     <input asp-for="Input.StartDate"
                            type="date"
-                           class="form-control" />
+                           class="form-control"
+                           min="@DateTime.Today.ToString("yyyy-MM-dd")" />
 
                     <span asp-validation-for="Input.StartDate" class="text-danger"></span>
 
@@ -240,7 +245,8 @@
 
                     <input asp-for="Input.EndDate"
                            type="date"
-                           class="form-control" />
+                           class="form-control"
+                           min="@DateTime.Today.ToString("yyyy-MM-dd")" />
 
                     <span asp-validation-for="Input.EndDate" class="text-danger"></span>
                 </div>

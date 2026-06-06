@@ -1,0 +1,342 @@
+﻿@page
+@model Project.Pages.University.TrainingRequests.CreateModel
+
+@{
+    ViewData["Title"] = "طلب فرصة تدريب";
+    ViewData["UserType"] = "University";
+    ViewData["PortalTitle"] = "بوابة الجامعة";
+    ViewData["PortalSubtitle"] = "إدارة التدريب الميداني";
+    ViewData["SearchPlaceholder"] = "بحث عن طلاب، مؤسسات...";
+}
+
+<form method="post">
+
+    <!-- Hero Section -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body p-5 text-white"
+             style="background:#1ab29a;border-radius:24px;">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+
+                    <h1 class="fw-bold mb-3">
+                        طلب فرصة تدريب
+                    </h1>
+
+                    <p class="mb-0 fs-5 opacity-75">
+                        إنشاء طلب جديد للحصول على فرص تدريبية من المؤسسات للطلبة خلال فترة تدريب محددة.
+                    </p>
+
+                </div>
+
+                <div class="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center"
+                     style="width:90px;height:90px;">
+
+                    <i class="bi bi-send-plus fs-1"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Request Information -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                بيانات الطلب
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-4">
+
+                <div class="col-md-8">
+
+                    <label class="form-label fw-semibold">
+                        عنوان الطلب
+                    </label>
+
+                    <input type="text"
+                           class="form-control shadow-sm rounded-3 bg-light border-0"
+                           placeholder="مثال: فرص تدريب لطلبة هندسة البرمجيات" />
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label class="form-label fw-semibold">
+                        عدد المقاعد المطلوبة
+                    </label>
+
+                    <input type="number"
+                           class="form-control shadow-sm rounded-3 bg-light border-0"
+                           placeholder="30" />
+
+                </div>
+
+                <div class="col-md-12">
+
+                    <label class="form-label fw-semibold">
+                        وصف الطلب
+                    </label>
+
+                    <textarea rows="5"
+                              class="form-control shadow-sm rounded-3 bg-light border-0"
+                              placeholder="أدخل وصفاً تفصيلياً للفرص التدريبية المطلوبة ومتطلبات التدريب..."></textarea>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Training Term -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                فترة التدريب
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-4">
+
+                <div class="col-md-4">
+
+                    <label class="form-label fw-semibold">
+                        فترة التدريب
+                    </label>
+
+                    <select class="form-select shadow-sm rounded-3 bg-light border-0">
+
+                        <option selected>
+                            الفصل الأول 2026-2027
+                        </option>
+
+                        <option>
+                            الفصل الثاني 2026-2027
+                        </option>
+
+                        <option>
+                            الفصل الصيفي 2026-2027
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label class="form-label fw-semibold">
+                        تاريخ البداية المفضل
+                    </label>
+
+                    <input type="date"
+                           class="form-control shadow-sm rounded-3 bg-light border-0" />
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label class="form-label fw-semibold">
+                        تاريخ النهاية المفضل
+                    </label>
+
+                    <input type="date"
+                           class="form-control shadow-sm rounded-3 bg-light border-0" />
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label class="form-label fw-semibold">
+                        آخر موعد لتقديم الطلبة
+                    </label>
+
+                    <input type="date"
+                           class="form-control shadow-sm rounded-3 bg-light border-0" />
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Request Scope -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                نطاق الطلب
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="alert alert-light border rounded-4 mb-0">
+
+                <div class="d-flex align-items-center">
+
+                    <i class="bi bi-building text-success fs-3 me-3"></i>
+
+                    <div>
+
+                        <div class="fw-bold">
+                            الجامعة الحالية
+                        </div>
+
+                        <div class="text-muted">
+                            سيتم ربط الطلب تلقائياً بالجامعة الحالية وفقاً لصلاحيات المستخدم.
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Status -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                حالة الطلب
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <select class="form-select shadow-sm rounded-3 bg-light border-0">
+
+                <option selected>
+                    مسودة
+                </option>
+
+                <option>
+                    منشور
+                </option>
+
+                <option>
+                    مغلق
+                </option>
+
+                <option>
+                    ملغى
+                </option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+    <!-- Notes -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                ملاحظات إضافية
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <textarea rows="4"
+                      class="form-control shadow-sm rounded-3 bg-light border-0"
+                      placeholder="أدخل أي ملاحظات أو متطلبات إضافية للمؤسسات (اختياري)..."></textarea>
+
+        </div>
+
+    </div>
+
+    <!-- Information -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-body">
+
+            <div class="d-flex align-items-center">
+
+                <div class="me-3">
+
+                    <i class="bi bi-info-circle-fill text-primary fs-3"></i>
+
+                </div>
+
+                <div>
+
+                    <h6 class="fw-bold mb-1">
+                        ملاحظة مهمة
+                    </h6>
+
+                    <p class="text-muted mb-0">
+                        يتم تحديد الجامعة تلقائياً من حساب المستخدم الحالي، كما يتم تحديد منشئ الطلب تلقائياً سواء كان مسؤول التدريب العام أو رئيس القسم حسب الصلاحيات الممنوحة له.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Buttons -->
+
+    <div class="d-flex gap-2 mb-5">
+
+        <button type="submit"
+                class="btn btn-success px-5">
+
+            <i class="bi bi-send me-1"></i>
+
+            نشر الطلب
+
+
+        </button>
+
+        <a asp-page="/University/AvailabelOpportunities"
+           class="btn btn-outline-danger px-5">
+
+            <i class="bi bi-x-circle me-1"></i>
+
+            إلغاء
+
+        </a>
+
+    </div>
+
+</form>
