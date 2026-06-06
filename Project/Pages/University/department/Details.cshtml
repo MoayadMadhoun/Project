@@ -8,6 +8,8 @@
     ViewData["PortalSubtitle"] = "إدارة التدريب الميداني";
     ViewData["SearchPlaceholder"] = "بحث عن طلاب، مؤسسات...";
 }
+<a href="c:\users\badar\desktop\project\project\pages\university\department\details.cshtml.cs">c:\users\badar\desktop\project\project\pages\university\department\details.cshtml.cs</a>
+<a href="c:\users\badar\desktop\project\project\pages\university\department\details.cshtml">c:\users\badar\desktop\project\project\pages\university\department\details.cshtml</a>
 
 <!-- Hero Section -->
 
@@ -66,7 +68,7 @@
                 </label>
 
                 <div class="fw-semibold fs-5">
-                    قسم هندسة البرمجيات
+                   @(Model.Department?.Name??"-")
                 </div>
 
             </div>
@@ -79,7 +81,7 @@
 
                 <div>
                     <span class="badge bg-success">
-                        نشط
+                        نشط@(Model.Department.IsActive?"نشط": "غير نشط")
                     </span>
                 </div>
 
@@ -92,7 +94,7 @@
                 </label>
 
                 <div class="fw-semibold">
-                    DEP-001
+                   
                 </div>
 
             </div>
@@ -126,7 +128,7 @@
                 </label>
 
                 <div class="fw-semibold">
-                    د. أحمد محمد أبو عودة
+                  @(Model.DepartmentHead?.FullName??"-")
                 </div>
 
             </div>
@@ -138,7 +140,7 @@
                 </label>
 
                 <div class="fw-semibold">
-                    ahmad@university.edu
+                    @(Model.DepartmentHead?.Email ?? "-")
                 </div>
 
             </div>
@@ -150,7 +152,7 @@
                 </label>
 
                 <div class="fw-semibold">
-                    +970 59 123 4567
+                    @(Model.DepartmentHead?.PhoneNumber ?? "-")
                 </div>
 
             </div>
@@ -180,7 +182,7 @@
             <div class="col-md-4">
 
                 <h2 class="fw-bold text-primary">
-                    4
+                    @Model.Department.Specialties.Count()
                 </h2>
 
                 <div class="text-muted">
@@ -192,7 +194,7 @@
             <div class="col-md-4">
 
                 <h2 class="fw-bold text-success">
-                    185
+                    @Model.Department.Students.Count()
                 </h2>
 
                 <div class="text-muted">
@@ -204,7 +206,7 @@
             <div class="col-md-4">
 
                 <h2 class="fw-bold text-warning">
-                    12
+                    @Model.Department.University.TrainingOpportunityRequests.Count()
                 </h2>
 
                 <div class="text-muted">
@@ -234,23 +236,15 @@
     <div class="card-body">
 
         <div class="d-flex flex-wrap gap-2">
-
+            @foreach(var sp in Model.Department.Specialties)
+            {
+                
+            
             <span class="badge bg-light text-dark border px-3 py-2">
-                هندسة البرمجيات
+               @(sp?.Name??"-")
             </span>
 
-            <span class="badge bg-light text-dark border px-3 py-2">
-                الأمن السيبراني
-            </span>
-
-            <span class="badge bg-light text-dark border px-3 py-2">
-                الذكاء الاصطناعي
-            </span>
-
-            <span class="badge bg-light text-dark border px-3 py-2">
-                علم البيانات
-            </span>
-
+            }
         </div>
 
     </div>

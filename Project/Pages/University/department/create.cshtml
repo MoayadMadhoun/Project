@@ -55,7 +55,6 @@
             </h5>
 
         </div>
-
         <div class="card-body">
 
             <div class="row g-4">
@@ -66,7 +65,7 @@
                         اسم القسم
                     </label>
 
-                    <input type="text"
+                    <input asp-for="DepartmentName" type="text"
                            class="form-control shadow-sm rounded-3 bg-light border-none"
                            placeholder="مثال: قسم هندسة البرمجيات" />
 
@@ -78,13 +77,13 @@
                         حالة القسم
                     </label>
 
-                    <select class="form-select shadow-sm rounded-3 bg-light border-none">
+                    <select asp-for="IsActive" class="form-select shadow-sm rounded-3 bg-light border-none">
 
-                        <option selected>
+                        <option value="true" selected>
                             نشط
                         </option>
 
-                        <option>
+                        <option value="false">
                             غير نشط
                         </option>
 
@@ -95,6 +94,7 @@
             </div>
 
         </div>
+       
 
     </div>
 

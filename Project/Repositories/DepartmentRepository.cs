@@ -38,6 +38,9 @@ namespace Project.Repositories
             return await _dbContext
             .Departments
             .Include(d => d.Students)
+            .Include(d => d.Specialties)
+            .Include(d=>d.University)
+            .ThenInclude(u=>u.TrainingOpportunityRequests)
             .AsNoTracking()
             .FirstOrDefaultAsync(d => d.DepartmentID == DepartmentID);
         }
