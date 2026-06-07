@@ -28,7 +28,7 @@ namespace Project.Models
         [Required(ErrorMessage = "User account is required")]
         [ForeignKey(nameof(UserID))]
         public string UserID { get; set; } = string.Empty;
-        public AspNetUser User { get; set; } = new AspNetUser();
+        public AspNetUser User { get; set; } = null!;
 
 
     }

@@ -12,13 +12,13 @@ namespace Project.Models
         
         public int RequestID { get; set; }
         [ForeignKey(nameof(RequestID))]
-        public TrainingOpportunityRequest Request { get; set; }= new TrainingOpportunityRequest();      
+        public TrainingOpportunityRequest Request { get; set; }= null!;      
         //SpecialtyID FK
         [Required(ErrorMessage = "Specialty is required")]
         
         public int SpecialtyID { get; set; }
         [ForeignKey(nameof(SpecialtyID))]
-        public Specialty Specialty { get; set; } = new Specialty();
+        public Specialty Specialty { get; set; } = null!;
     }
 
 }

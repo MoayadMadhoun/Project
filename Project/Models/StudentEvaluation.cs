@@ -11,7 +11,7 @@ namespace Project.Models
        
         public int PlacementID { get; set; }
         [ForeignKey(nameof(PlacementID))]
-        public TrainingPlacement TrainingPlacement { get; set; } = new TrainingPlacement();
+        public TrainingPlacement TrainingPlacement { get; set; } = null!;
         
         public string? UniversitySupervisorID { get; set; }
         [ForeignKey(nameof(UniversitySupervisorID))]

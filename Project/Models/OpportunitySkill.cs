@@ -13,13 +13,13 @@ namespace Project.Models
         
         public int OpportunityID { get; set; }
         [ForeignKey(nameof(OpportunityID))]
-        public TrainingOpportunity TrainingOpportunity { get; set; } = new TrainingOpportunity();
+        public TrainingOpportunity TrainingOpportunity { get; set; } =null!;
         //SkillID FK
         [Required(ErrorMessage = "Skill is required")]
         
         public int SkillID { get; set; }
         [ForeignKey(nameof(SkillID))]
-        public Skill Skill { get; set; }=new Skill();
+        public Skill Skill { get; set; }=null!;
         public bool IsRequired { get; set; } = true;
     }
 }

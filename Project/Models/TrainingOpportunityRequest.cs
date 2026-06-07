@@ -42,21 +42,21 @@ namespace Project.Models
         
         public int UniversityID { get; set; }
         [ForeignKey(nameof(UniversityID))]
-        public University University { get; set; }=new University();
+        public University University { get; set; }=null!;
         //TermID Fk
         [Required(ErrorMessage = "Training term is required")]
         
         public int TermID { get; set; }
         [ForeignKey(nameof(TermID))]
-        public TrainingTerm TrainingTerm { get; set; } = new TrainingTerm();
+        public TrainingTerm TrainingTerm { get; set; } = null!;
         //Only one of those can be set one should be null
         
         public string? UniversityAdminID { get; set; } = string.Empty;
         [ForeignKey(nameof(UniversityAdminID))]
-        public AspNetUser? UniversityAdmin { get; set; } = new AspNetUser();
+        public AspNetUser? UniversityAdmin { get; set; } = null!;
         public string? DepartmentHeadID { get; set; } = string.Empty;
         [ForeignKey(nameof(DepartmentHeadID))]
-        public AspNetUser? DepartmentHead { get; set; } = new AspNetUser();
+        public AspNetUser? DepartmentHead { get; set; } = null!;
 
         public ICollection<OpportunityRequestInstitution> OpportunityRequests { get; set; } = new List<OpportunityRequestInstitution>();
         public ICollection<RequestSpecialty> Specialties { get; set; } = new List<RequestSpecialty>();   

@@ -13,31 +13,31 @@ namespace Project.Models
         
         public int OpportunityID { get; set; }
         [ForeignKey(nameof(OpportunityID))]
-        public TrainingOpportunity TrainingOpportunity { get; set; }= new TrainingOpportunity();
+        public TrainingOpportunity TrainingOpportunity { get; set; }= null!;
         //TrainingApplication FK
         [Required(ErrorMessage = "Training application is required")]
         
         public int ApplicationID { get; set; }
         [ForeignKey(nameof(ApplicationID))]
-        public TrainingApplication TrainingApplication { get; set; } = new TrainingApplication();   
+        public TrainingApplication TrainingApplication { get; set; } = null!;   
         //StudentID FK
         [Required(ErrorMessage = "Student is required")]
         
         public int StudentID { get; set; }
         [ForeignKey(nameof(StudentID))]
-        public Student Student { get; set; } = new Student();
+        public Student Student { get; set; } = null!;
         //InstitutionID FK
         [Required(ErrorMessage = "Institution opportunity is required")]
         
         public int InstitutionID { get; set; }
         [ForeignKey(nameof(InstitutionID))]
-        public TrainingInstitution TrainingInstitution { get; set; } = new TrainingInstitution();
+        public TrainingInstitution TrainingInstitution { get; set; } = null!;
         //TermID FK
         [Required(ErrorMessage = "Training Term is required")]
         
         public int TermID { get; set; }
         [ForeignKey(nameof(TermID))]
-        public TrainingTerm TrainingTerm { get; set; } = new TrainingTerm();
+        public TrainingTerm TrainingTerm { get; set; } = null!;
         //
         
         public string? UniversitySupervisorID { get; set; }
