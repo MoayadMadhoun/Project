@@ -116,15 +116,15 @@
                 <td class="py-4 px-3 text-left">
                     <div class="flex items-center gap-2 justify-start">
                         <div class="avatar-circle"><svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="8" r="4" stroke-width="2" /><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke-width="2" stroke-linecap="round" /></svg></div>
-                        <span class="font-semibold text-gray-800">أ. @(supervisor.User.FullName??"-") </span>
+                        <span class="font-semibold text-gray-800">أ. @(supervisor.FullName??"-") </span>
 
                     </div>
                 </td>
-                <td class="py-4 px-3 text-gray-500 text-xs">@supervisor.User.Email</td>
-                <td class="py-4 px-3 text-gray-700">@supervisor.Department</td>
-                <td class="py-4 px-3 text-center font-bold text-teal-600">@(Model.TrainingPlacements.Where(tp=>tp.InstitutionSupervisorID == supervisor.UserID).Count())  </td>
+                <td class="py-4 px-3 text-gray-500 text-xs">@supervisor.Email</td>
+                <td class="py-4 px-3 text-gray-700">@(supervisor.RoleScope?.Department?.Name??"-")</td>
+                <td class="py-4 px-3 text-center font-bold text-teal-600">@(Model.TrainingPlacements.Where(tp=>tp.InstitutionSupervisorID == supervisor.Id).Count())  </td>
                         <td class="py-4 px-3"><span class="badge-active text-xs font-bold px-3 py-1 rounded-full">@(supervisor.IsActive? "نشط":"غير نشط")</span></td>
-                        <td class="py-4 px-3 text-gray-400 text-xs">@supervisor.User.CreatedAt</td>
+                        <td class="py-4 px-3 text-gray-400 text-xs">@supervisor.CreatedAt</td>
                 <td class="py-4 px-3"><button class="dots-btn px-2 py-1 text-gray-400 font-bold text-lg tracking-widest">•••</button></td>
             </tr>
             @(supervisorIndex++)
