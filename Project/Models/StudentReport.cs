@@ -12,13 +12,13 @@ namespace Project.Models
         
         public int PlacementID { get; set; }
         [ForeignKey(nameof(PlacementID))]
-        public TrainingPlacement Placement { get; set; } = new TrainingPlacement(); 
+        public TrainingPlacement Placement { get; set; } = null!; 
 
         [Required(ErrorMessage = "Student is required")]
         
         public int StudentID { get; set; }
         [ForeignKey(nameof(StudentID))]
-        public Student Student { get; set; }= new Student();
+        public Student Student { get; set; }= null!;
 
         [Column(TypeName = "nvarchar(50)")]
         public ReportType Type { get; set; }

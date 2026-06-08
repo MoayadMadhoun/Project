@@ -12,13 +12,13 @@ namespace Project.Models
         
         public int OpportunityID { get; set; }
         [ForeignKey(nameof(OpportunityID))]
-        public TrainingOpportunity TrainingOpportunity { get; set; }= new TrainingOpportunity();
+        public TrainingOpportunity TrainingOpportunity { get; set; }= null!;
         //StudentID FK
         [Required(ErrorMessage = "Student is required")]
         
         public int StudentID { get; set; }
         [ForeignKey(nameof(StudentID))]
-        public Student Student { get; set; }=new Student();
+        public Student Student { get; set; }=null!;
 
         public DateTime AppliedAt { get; set; } = DateTime.Now;
         [MaxLength(1000, ErrorMessage = "Notes can't be more than 1000 characters")]

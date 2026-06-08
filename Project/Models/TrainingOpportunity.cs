@@ -18,7 +18,7 @@ namespace Project.Models
         
         public int TermID { get; set; }
         [ForeignKey(nameof(TermID))]
-        public TrainingTerm TrainingTerm { get; set; } = new TrainingTerm();
+        public TrainingTerm TrainingTerm { get; set; } = null!;
         //RequestID FK
         public int? RequestID { get; set; }
         [ForeignKey(nameof(RequestID))]
@@ -43,7 +43,7 @@ namespace Project.Models
         
         public string InstitutionOfficerID { get; set; } = string.Empty;
         [ForeignKey(nameof(InstitutionOfficerID))]
-        public AspNetUser InstitutionOfficer { get; set; } = new AspNetUser();
+        public AspNetUser InstitutionOfficer { get; set; } = null!;
         [Column(TypeName = "nvarchar(50)")]
         public Opportunity Status { get; set; } = Opportunity.Open;
         public enum Opportunity

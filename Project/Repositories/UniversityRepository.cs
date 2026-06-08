@@ -205,7 +205,6 @@ namespace Project.Repostory
             return _dbContext.AspNetRoleScopes
                 .Include(dh => dh.User)
                 .Include(dh => dh.Department)
-                
                 .Where(u=>u.Role.Name=="DepartmentHead" && u.UniversityID==UniversityId)
                 .AsNoTracking().AsQueryable();
         }

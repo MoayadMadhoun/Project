@@ -13,7 +13,7 @@ namespace Project.Models
         
         public int PlacementID { get; set; }
         [ForeignKey(nameof(PlacementID))]
-        public TrainingPlacement TrainingPlacement { get; set; }= new TrainingPlacement();
+        public TrainingPlacement TrainingPlacement { get; set; }= null!;
         [Required(ErrorMessage= "Attendance date is required")]
         public DateTime AttendanceDate { get; set; }
         public TimeSpan? CheckInTime { get; set; }
@@ -30,7 +30,7 @@ namespace Project.Models
         
         public string InstitutionSupervisorID { get; set; }= string.Empty;
         [ForeignKey(nameof(InstitutionSupervisorID))]
-        public AspNetUser InstitutionSupervisor { get; set; }= new AspNetUser();
+        public AspNetUser InstitutionSupervisor { get; set; }= null!;
         [MaxLength(500, ErrorMessage = "Notes can't be more than 500 characters")]
         public string? Notes { get; set; }
     }
