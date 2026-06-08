@@ -44,6 +44,7 @@ namespace Project
             builder.Services.AddScoped<DepartmentRepository>();
             builder.Services.AddScoped<SpecialtyRepository>();
             builder.Services.AddScoped<OptService>();
+            builder.Services.AddScoped<CreateUserService>();
 
             builder.Services.AddRazorPages();
 
