@@ -53,9 +53,8 @@ namespace Project.Repositories
 
         public async Task AddAsync(Department department )
         {
-            department.IsActive = true;
 
-            await _dbContext.Departments.AddAsync(department);
+             _dbContext.Departments.Add(department);
 
             await _dbContext.SaveChangesAsync();
 
