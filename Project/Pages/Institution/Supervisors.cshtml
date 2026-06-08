@@ -1,6 +1,21 @@
 ﻿@page
+@using Microsoft.AspNetCore.Html
 @model Project.Pages.Institution.SupervisorsModel
 @{
+    int supervisorIndex = 1;
+}
+@functions {
+    public IHtmlContent SortingIcon(string column, string currentSort)
+    {
+        if (currentSort == column)
+            return new HtmlString("<span><i class=\"bi bi-caret-up-fill\"></i></span>");
+
+        if (currentSort == column + "_desc")
+            return new HtmlString("<span><i class=\"bi bi-caret-down-fill\"></i></span>");
+
+        return new HtmlString("<span><i class=\"bi bi-arrow-down-up\"></i></span>");
+    }
+
 }
 <div class="header-gradient rounded-2xl text-white p-7 mb-7 flex items-center gap-5 shadow-card min-h-[200px]">
     <div class="bg-white/20 rounded-full p-4 flex items-center justify-center">
@@ -21,8 +36,16 @@
         </p>
 
     </div>
+    <!-- Add Button -->
+    <button class="btn-add flex items-center gap-2 text-white rounded-xl px-5 py-2.5 text-sm font-bold shadow">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M12 5v14M5 12h14" stroke-width="2.5" stroke-linecap="round" /></svg>
+        إضافة مشرف
+    </button>
 </div>
-
+<form method="get">
+    <input type="hidden" name="PageSize" value="@Model.PageSize" />
+    <input type="hidden" name="PageIndex" value="@Model.PageIndex" />
+    <input type="hidden" name="SortOrder" value="@Model.SortOrder" />
 <!-- Actions Bar -->
 <div class="flex items-center justify-between mb-5 gap-3 flex-wrap">
     <!-- Search -->
@@ -31,19 +54,25 @@
             <circle cx="11" cy="11" r="8" stroke-width="2" />
             <path d="M21 21l-4.35-4.35" stroke-width="2" stroke-linecap="round" />
         </svg>
-        <input type="text" placeholder="ابحث عن مشرف..." class="w-full border border-gray-200 bg-white rounded-xl py-2.5 pr-10 pl-4 text-sm text-gray-700 shadow-sm focus:ring-2 focus:ring-teal-300 focus:border-teal-400" />
+        <input asp-for="SearchTerm" type="text" placeholder="ابحث عن مشرف..." class="w-full border border-gray-200 bg-white rounded-xl py-2.5 pr-10 pl-4 text-sm text-gray-700 shadow-sm focus:ring-2 focus:ring-teal-300 focus:border-teal-400" />
     </div>
+
     <!-- Filter -->
-    <button class="filter-btn flex items-center gap-2 border border-gray-200 bg-white rounded-xl px-4 py-2.5 text-sm text-gray-600 shadow-sm font-medium">
+        <div class="relative flex-1 min-w-[200px]">
+            <select asp-for="IsActive" class="form-select flex items-center gap-2 px-5 py-2 bg-white border border-slate-200 rounded-xl text-slate-600 hover:bg-slate-50 transition-colors text-sm font-bold">
+
+                <option value="">الحالة</option>
+                <option value="true">نشط</option>
+                <option value="false">غير نشط</option>
+            </select>
+        </div>
+    <button type="submit" class="filter-btn flex items-center gap-2 border border-gray-200 bg-white rounded-xl px-4 py-2.5 text-sm text-gray-600 shadow-sm font-medium">
         <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M3 6h18M7 12h10M11 18h2" stroke-width="2" stroke-linecap="round" /></svg>
         تصفية
     </button>
-    <!-- Add Button -->
-    <button class="btn-add flex items-center gap-2 text-white rounded-xl px-5 py-2.5 text-sm font-bold shadow">
-        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M12 5v14M5 12h14" stroke-width="2.5" stroke-linecap="round" /></svg>
-        إضافة مشرف
-    </button>
+   
 </div>
+</form>
 
 <!-- Table Card -->
 <div class="bg-white rounded-2xl shadow-card overflow-hidden mb-7">
@@ -51,7 +80,15 @@
         <thead>
             <tr class="border-b border-gray-100 bg-gray-50/60">
                 <th class="py-4 px-4 font-bold text-gray-500 text-xs">#</th>
-                <th class="py-4 px-3 font-bold text-gray-500 text-xs">اسم المشرف</th>
+                <th class="py-4 px-3 font-bold text-gray-500 text-xs">
+                    <a class="text-decoration-none"
+                           asp-route-PageSize="@Model.PageSize"
+                           asp-route-SearchTerm="@Model.SearchTerm"
+                           asp-route-PageIndex="@(Model.PageIndex)"
+                           asp-route-SortOrder="@(Model.SortOrder == "Name" ? "Name_desc" : "Name")">
+                        اسم المشرف @SortingIcon("Name", Model.SortOrder)
+                    </a>
+                </th>
                 <th class="py-4 px-3 font-bold text-gray-500 text-xs">البريد الإلكتروني</th>
                 <th class="py-4 px-3 font-bold text-gray-500 text-xs">القسم/الإدارة</th>
                 <th class="py-4 px-3 font-bold text-gray-500 text-xs">عدد المتدربين</th>
@@ -61,177 +98,101 @@
             </tr>
         </thead>
         <tbody>
+            @if (Model.Supervisors.TotalCount == 0)
+            {
+                <tr>
+                    <td colspan="12" class="px-4 py-6 text-center text-slate-500">
+                        لا يوجد مشرفين لعرضهم
+                    </td>
+                </tr>
+            }
+            else
+            {
+            @foreach (var supervisor in Model.Supervisors)
+            {
             <!-- Row 1 -->
             <tr class="table-row-hover border-b border-gray-50">
-                <td class="py-4 px-4 text-gray-400 font-semibold">1</td>
+                <td class="py-4 px-4 text-gray-400 font-semibold">@supervisorIndex</td>
                 <td class="py-4 px-3 text-left">
                     <div class="flex items-center gap-2 justify-start">
                         <div class="avatar-circle"><svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="8" r="4" stroke-width="2" /><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke-width="2" stroke-linecap="round" /></svg></div>
-                        <span class="font-semibold text-gray-800">أ. أحمد البدوي</span>
+                        <span class="font-semibold text-gray-800">أ. @(supervisor.User.FullName??"-") </span>
 
                     </div>
                 </td>
-                <td class="py-4 px-3 text-gray-500 text-xs">ahmed.albadawi@company.com</td>
-                <td class="py-4 px-3 text-gray-700">تقنية المعلومات</td>
-                <td class="py-4 px-3 text-center font-bold text-teal-600">12</td>
-                <td class="py-4 px-3"><span class="badge-active text-xs font-bold px-3 py-1 rounded-full">نشط</span></td>
-                <td class="py-4 px-3 text-gray-400 text-xs">01-06-2025</td>
+                <td class="py-4 px-3 text-gray-500 text-xs">@supervisor.User.Email</td>
+                <td class="py-4 px-3 text-gray-700">@supervisor.Department</td>
+                <td class="py-4 px-3 text-center font-bold text-teal-600">@(Model.TrainingPlacements.Where(tp=>tp.InstitutionSupervisorID == supervisor.UserID).Count())  </td>
+                        <td class="py-4 px-3"><span class="badge-active text-xs font-bold px-3 py-1 rounded-full">@(supervisor.IsActive? "نشط":"غير نشط")</span></td>
+                        <td class="py-4 px-3 text-gray-400 text-xs">@supervisor.User.CreatedAt</td>
                 <td class="py-4 px-3"><button class="dots-btn px-2 py-1 text-gray-400 font-bold text-lg tracking-widest">•••</button></td>
             </tr>
-            <!-- Row 2 -->
-            <tr class="table-row-hover border-b border-gray-50">
-                <td class="py-4 px-4 text-gray-400 font-semibold">2</td>
-                <td class="py-4 px-3 text-left">
-                    <div class="flex items-center gap-2 justify-start">
-                        <div class="avatar-circle"><svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="8" r="4" stroke-width="2" /><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke-width="2" stroke-linecap="round" /></svg></div>
-                        <span class="font-semibold text-gray-800">أ. سارة المطيري</span>
-
-                    </div>
-                </td>
-                <td class="py-4 px-3 text-gray-500 text-xs">sara.almutairi@company.com</td>
-                <td class="py-4 px-3 text-gray-700">الهندسة</td>
-                <td class="py-4 px-3 text-center font-bold text-teal-600">10</td>
-                <td class="py-4 px-3"><span class="badge-active text-xs font-bold px-3 py-1 rounded-full">نشط</span></td>
-                <td class="py-4 px-3 text-gray-400 text-xs">28-05-2025</td>
-                <td class="py-4 px-3"><button class="dots-btn px-2 py-1 text-gray-400 font-bold text-lg tracking-widest">•••</button></td>
-            </tr>
-            <!-- Row 3 -->
-            <tr class="table-row-hover border-b border-gray-50">
-                <td class="py-4 px-4 text-gray-400 font-semibold">3</td>
-                <td class="py-4 px-3 text-left">
-                    <div class="flex items-center gap-2 justify-start">
-                        <div class="avatar-circle"><svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="8" r="4" stroke-width="2" /><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke-width="2" stroke-linecap="round" /></svg></div>
-                        <span class="font-semibold text-gray-800">أ. محمد العتيبي</span>
-
-                    </div>
-                </td>
-                <td class="py-4 px-3 text-gray-500 text-xs">m.alotaibi@company.com</td>
-                <td class="py-4 px-3 text-gray-700">التصميم</td>
-                <td class="py-4 px-3 text-center font-bold text-teal-600">8</td>
-                <td class="py-4 px-3"><span class="badge-active text-xs font-bold px-3 py-1 rounded-full">نشط</span></td>
-                <td class="py-4 px-3 text-gray-400 text-xs">25-05-2025</td>
-                <td class="py-4 px-3"><button class="dots-btn px-2 py-1 text-gray-400 font-bold text-lg tracking-widest">•••</button></td>
-            </tr>
-            <!-- Row 4 -->
-            <tr class="table-row-hover border-b border-gray-50">
-                <td class="py-4 px-4 text-gray-400 font-semibold">4</td>
-                <td class="py-4 px-3 text-left">
-                    <div class="flex items-center gap-2 justify-start">
-                        <div class="avatar-circle"><svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="8" r="4" stroke-width="2" /><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke-width="2" stroke-linecap="round" /></svg></div>
-                        <span class="font-semibold text-gray-800">أ. نورة الحربي</span>
-
-                    </div>
-                </td>
-                <td class="py-4 px-3 text-gray-500 text-xs">nora.alharbi@company.com</td>
-                <td class="py-4 px-3 text-gray-700">الموارد البشرية</td>
-                <td class="py-4 px-3 text-center font-bold text-teal-600">6</td>
-                <td class="py-4 px-3"><span class="badge-active text-xs font-bold px-3 py-1 rounded-full">نشط</span></td>
-                <td class="py-4 px-3 text-gray-400 text-xs">20-05-2025</td>
-                <td class="py-4 px-3"><button class="dots-btn px-2 py-1 text-gray-400 font-bold text-lg tracking-widest">•••</button></td>
-            </tr>
-            <!-- Row 5 -->
-            <tr class="table-row-hover border-b border-gray-50">
-                <td class="py-4 px-4 text-gray-400 font-semibold">5</td>
-                <td class="py-4 px-3">
-                    <div class="flex items-center gap-2 justify-start">
-                        <div class="avatar-circle"><svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="8" r="4" stroke-width="2" /><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke-width="2" stroke-linecap="round" /></svg></div>
-                        <span class="font-semibold text-gray-800">أ. فيصل السبيعي</span>
-
-                    </div>
-                </td>
-                <td class="py-4 px-3 text-gray-500 text-xs">f.alsubaei@company.com</td>
-                <td class="py-4 px-3 text-gray-700">التسويق</td>
-                <td class="py-4 px-3 text-center font-bold text-teal-600">9</td>
-                <td class="py-4 px-3"><span class="badge-active text-xs font-bold px-3 py-1 rounded-full">نشط</span></td>
-                <td class="py-4 px-3 text-gray-400 text-xs">18-05-2025</td>
-                <td class="py-4 px-3"><button class="dots-btn px-2 py-1 text-gray-400 font-bold text-lg tracking-widest">•••</button></td>
-            </tr>
-            <!-- Row 7 -->
-            <tr class="table-row-hover border-b border-gray-50">
-                <td class="py-4 px-4 text-gray-400 font-semibold">7</td>
-                <td class="py-4 px-3">
-                    <div class="flex items-center gap-2 justify-start">
-                        <div class="avatar-circle"><svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="8" r="4" stroke-width="2" /><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke-width="2" stroke-linecap="round" /></svg></div>
-                        <span class="font-semibold text-gray-800">أ. ريم الشهري</span>
-
-                    </div>
-                </td>
-                <td class="py-4 px-3 text-gray-500 text-xs">k.alddssari@company.com</td>
-                <td class="py-4 px-3 text-gray-700">تقنية المعلومات</td>
-                <td class="py-4 px-3 text-center font-bold text-gray-500">5</td>
-                <td class="py-4 px-3"><span class="badge-inactive text-xs font-bold px-3 py-1 rounded-full">غير نشط</span></td>
-                <td class="py-4 px-3 text-gray-400 text-xs">10-05-2025</td>
-                <td class="py-4 px-3"><button class="dots-btn px-2 py-1 text-gray-400 font-bold text-lg tracking-widest">•••</button></td>
-            </tr>
-            <!-- Row 8 -->
-            <tr class="table-row-hover border-b border-gray-50">
-                <td class="py-4 px-4 text-gray-400 font-semibold">8</td>
-                <td class="py-4 px-3">
-                    <div class="flex items-center gap-2 justify-start">
-                        <div class="avatar-circle"><svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="8" r="4" stroke-width="2" /><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke-width="2" stroke-linecap="round" /></svg></div>
-                        <span class="font-semibold text-gray-800">أ. عبدالعزيز العنزي</span>
-
-                    </div>
-                </td>
-                <td class="py-4 px-3 text-gray-500 text-xs">a.alenezi@company.com</td>
-                <td class="py-4 px-3 text-gray-700">التصميم</td>
-                <td class="py-4 px-3 text-center font-bold text-teal-600">4</td>
-                <td class="py-4 px-3"><span class="badge-active text-xs font-bold px-3 py-1 rounded-full">نشط</span></td>
-                <td class="py-4 px-3 text-gray-400 text-xs">05-05-2025</td>
-                <td class="py-4 px-3"><button class="dots-btn px-2 py-1 text-gray-400 font-bold text-lg tracking-widest">•••</button></td>
-            </tr>
-            <!-- Row 9 -->
-            <tr class="table-row-hover border-b border-gray-50">
-                <td class="py-4 px-4 text-gray-400 font-semibold">9</td>
-                <td class="py-4 px-3">
-                    <div class="flex items-center gap-2 justify-start">
-                        <div class="avatar-circle"><svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="8" r="4" stroke-width="2" /><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke-width="2" stroke-linecap="round" /></svg></div>
-                        <span class="font-semibold text-gray-800">أ. هند القحطاني</span>
-
-                    </div>
-                </td>
-                <td class="py-4 px-3 text-gray-500 text-xs">hend.alqahtani@company.com</td>
-                <td class="py-4 px-3 text-gray-700">الموارد البشرية</td>
-                <td class="py-4 px-3 text-center font-bold text-gray-500">3</td>
-                <td class="py-4 px-3"><span class="badge-inactive text-xs font-bold px-3 py-1 rounded-full">غير نشط</span></td>
-                <td class="py-4 px-3 text-gray-400 text-xs">01-05-2025</td>
-                <td class="py-4 px-3"><button class="dots-btn px-2 py-1 text-gray-400 font-bold text-lg tracking-widest">•••</button></td>
-            </tr>
-            <!-- Row 10 -->
-            <tr class="table-row-hover">
-                <td class="py-4 px-4 text-gray-400 font-semibold">10</td>
-                <td class="py-4 px-3">
-                    <div class="flex items-center gap-2 justify-start">
-                        <div class="avatar-circle"><svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="8" r="4" stroke-width="2" /><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke-width="2" stroke-linecap="round" /></svg></div>
-                        <span class="font-semibold text-gray-800">أ. ياسر الزهراني</span>
-
-                    </div>
-                </td>
-                <td class="py-4 px-3 text-gray-500 text-xs">y.alzahrani@company.com</td>
-                <td class="py-4 px-3 text-gray-700">التسويق</td>
-                <td class="py-4 px-3 text-center font-bold text-teal-600">6</td>
-                <td class="py-4 px-3"><span class="badge-active text-xs font-bold px-3 py-1 rounded-full">نشط</span></td>
-                <td class="py-4 px-3 text-gray-400 text-xs">28-04-2025</td>
-                <td class="py-4 px-3"><button class="dots-btn px-2 py-1 text-gray-400 font-bold text-lg tracking-widest">•••</button></td>
-            </tr>
+            @(supervisorIndex++)
+            }
+            }
         </tbody>
     </table>
 
     <!-- Pagination -->
     <div class="flex items-center justify-between px-5 py-4 border-t border-gray-100 bg-gray-50/40">
+        <div class="flex items-center gap-2">
+            <label class="text-xs text-slate-500 font-label-caps" for="per-page-inst">النتائج:</label>
+            <form method="get">
+                <input type="hidden" name="PageSize" value="@Model.PageSize" />
+                <input type="hidden" name="PageIndex" value="@Model.PageIndex" />
+                <input type="hidden" name="SortOrder" value="@Model.SortOrder" />
+                <input type="hidden" name="SearchTerm" value="@Model.SearchTerm" />
+                        
+                <select asp-for="PageSize"
+                        onchange="this.form.submit()"
+                        class="bg-slate-100 border-none rounded-lg text-xs font-bold text-slate-700 py-1.5 pr-8 pl-3 focus:ring-2 focus:ring-primary/20 appearance-none cursor-pointer"
+                        id="per-page-inst">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                </select>
+            </form>
+            <span class="text-xs text-gray-400">عرض  @((Model.Supervisors?.PageSize * (Model.Supervisors?.PageIndex - 1))) - @(Model.Supervisors?.PageSize * Model.Supervisors?.PageIndex) من @Model.Supervisors?.TotalCount مشرف</span>
+        </div>
         <div class="flex items-center gap-1.5">
             <!-- Prev -->
-            <button class="page-btn w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 text-gray-400 text-sm">
-                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M15 18l-6-6 6-6" stroke-width="2" stroke-linecap="round" /></svg>
-            </button>
-            <button class="page-btn active w-8 h-8 flex items-center justify-center rounded-lg text-sm font-bold shadow-sm">1</button>
-            <button class="page-btn w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 text-gray-500 text-sm font-medium">2</button>
+            @if (Model.Supervisors?.HasPrevPage??false)
+            {
+
+                <a asp-route-PageIndex="@(Model.PageIndex - 1)"
+                   asp-route-SearchTerm="@Model.SearchTerm"
+                   asp-route-SortOrder="@Model.SortOrder"
+                   asp-route-PageSize="@Model.PageSize"
+                   class="page-btn w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 text-gray-400 text-sm"><span class="material-symbols-outlined">chevron_right</span></a>
+            }
+           
+           
+            @for (int i = 1; i <= Model.Supervisors?.TotalPages; i++)
+            {
+
+                <a asp-route-PageIndex="@i"
+                   asp-route-SearchTerm="@Model.SearchTerm"
+                   asp-route-SortOrder="@Model.SortOrder"
+                   asp-route-PageSize="@Model.PageSize"
+                   class="page-btn w-8 h-8 flex items-center justify-center rounded-lg text-sm font-bold@(Model.PageIndex == i ? "active shadow-sm " : "border border-gray-200 text-gray-500 text-sm font-medium")  text-white text-sm font-bold">
+                   @i
+                </a>
+            }
+            
             <!-- Next -->
-            <button class="page-btn w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 text-gray-400 text-sm">
-                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M9 18l6-6-6-6" stroke-width="2" stroke-linecap="round" /></svg>
-            </button>
+            @if (Model.Supervisors?.HasNextPage??false)
+            {
+                <a asp-route-PageIndex="@(Model.PageIndex + 1)"
+                   asp-route-SearchTerm="@Model.SearchTerm"
+                   asp-route-SortOrder="@Model.SortOrder"
+                   asp-route-PageSize="@Model.PageSize"
+                   class="page-btn w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 text-gray-400 text-sm">
+                    <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M9 18l6-6-6-6" stroke-width="2" stroke-linecap="round" /></svg>
+               </a>
+            }
+
         </div>
-        <span class="text-xs text-gray-400">عرض 1 - 10 من 18 مشرف</span>
+        
     </div>
 </div>
 

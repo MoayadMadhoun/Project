@@ -28,7 +28,9 @@ namespace Project.Pages.University
         public Models.University CurrentUniversity { get; set; }
         [BindProperty(SupportsGet = true)]
         public string SearchTerm { get; set; } = string.Empty;
-        public PaginatedList<AspNetRoleScope> DepartmentsHeads { get; set; } 
+        [BindProperty(SupportsGet = true)]
+        public bool IsActive { get; set; }
+        public PaginatedList<AspNetRoleScope> DepartmentsHeads { get; set; }
         public string DepartmentHeadId { get; set; }
 
         public DepartmentsHeadsModel(ApplicationDbContext dbContext, UniversityRepository universityRepo, UserManager<AspNetUser> userManager)
@@ -70,7 +72,14 @@ namespace Project.Pages.University
                 {
                     query = query.Where(a => a.User.FullName.Contains(SearchTerm));
                 }
-                
+                if (IsActive == true)
+                {
+                    query = query.Where(a => a.IsActive);
+                }
+                else if (IsActive == false)
+                {
+                    query = query.Where(a => !a.IsActive);
+                }
                 query = SortOrder switch
                 {
                     "Name" => query.OrderBy(a => a.User.FullName),
