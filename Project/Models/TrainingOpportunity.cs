@@ -57,5 +57,6 @@ namespace Project.Models
         }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public ICollection<RequestSpecialty> Specialties { get; set; } = new List<RequestSpecialty>();
+        public ICollection<TrainingPlacement> TrainingPlacement { get; set; }=new List<TrainingPlacement>();
     }
 }

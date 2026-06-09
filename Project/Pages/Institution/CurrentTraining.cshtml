@@ -33,131 +33,50 @@
     </div>
 </div>
 <div class="space-y-4">
-
-    <!-- Card 1 -->
-    <div class="bg-white border border-slate-200 rounded-xl p-8 hover:shadow-sm transition-shadow">
-        <div class="flex items-center gap-2 mb-3">
-           
-            <h2 class="text-lg font-semibold text-slate-800">Full Stack Development</h2>
-            <span class="bg-green-50 text-green-700 text-xs font-semibold px-3 py-0.5 rounded-full">نشط</span>
+    @if (!Model.CurrentTrainings.Any())
+    {
+      
+        <div class="bg-white border border-slate-200 rounded-xl p-8 hover:shadow-sm transition-shadow">
+            لا يوجد تدريبات حالية لعرضهم
         </div>
-        <p class="text-sm text-slate-500 mb-8 leading-relaxed">
-            برنامج تدريبي يهدف إلى تطوير مهارات بناء تطبيقات الويب باستخدام React Core و ASP.NET
-        </p>
-        <div class="flex items-center justify-between flex-wrap gap-3">
-            <div class="flex items-center gap-5 flex-wrap text-slate-400 text-sm">
-                <span class="flex items-center gap-1.5">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                    مدة التدريب: 3 أشهر
-                </span>
-                <span class="flex items-center gap-1.5">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2h5M12 12a4 4 0 100-8 4 4 0 000 8z" /></svg>
-                    12 متدرب
-                </span>
-                <span class="flex items-center gap-1.5">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                    تاريخ البداية: 2025-06-01
-                </span>
+    }
+    else
+    {
+        @foreach (var ct in Model.CurrentTrainings)
+        {
+
+            <div class="bg-white border border-slate-200 rounded-xl p-8 hover:shadow-sm transition-shadow">
+                <div class="flex items-center gap-2 mb-3">
+
+                    <h2 class="text-lg font-semibold text-slate-800"> @(ct.Title) </h2>
+                    <span class="bg-green-50 text-green-700 text-xs font-semibold px-3 py-0.5 rounded-full">نشط</span>
+                </div>
+                <p class="text-sm text-slate-500 mb-8 leading-relaxed">
+                    @(ct.Description ?? "_")
+                </p>
+                <div class="flex items-center justify-between flex-wrap gap-3">
+                    <div class="flex items-center gap-5 flex-wrap text-slate-400 text-sm">
+                        <span class="flex items-center gap-1.5">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            مدة التدريب: @((ct.StartDate.Month - ct.EndDate.Month) + 12 * (ct.StartDate.Year - ct.EndDate.Year) )  شهر
+                        </span>
+                        <span class="flex items-center gap-1.5">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2h5M12 12a4 4 0 100-8 4 4 0 000 8z" /></svg>
+                            @ct.TrainingPlacement.Count() متدربين
+                        </span>
+                        <span class="flex items-center gap-1.5">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                            تاريخ البداية: @ct.StartDate
+                        </span>
+                    </div>
+                    <a href="#" class="text-sm text-emerald-600 flex items-center gap-1 hover:underline">
+                        ← عرض التفاصيل
+                    </a>
+                </div>
             </div>
-            <a href="#" class="text-sm text-emerald-600 flex items-center gap-1 hover:underline">
-                ← عرض التفاصيل
-            </a>
-        </div>
-    </div>
-
-    <!-- Card 2 -->
-    <div class="bg-white border border-slate-200 rounded-xl p-8 hover:shadow-sm transition-shadow">
-        <div class="flex items-center gap-2 mb-3">
-            
-            <h2 class="text-lg font-semibold text-slate-800">تدريب تحليل البيانات</h2>
-            <span class="bg-green-50 text-green-700 text-xs font-semibold px-3 py-0.5 rounded-full">نشط</span>
-        </div>
-        <p class="text-sm text-slate-500 mb-8 leading-relaxed">
-            برنامج يركز على تحليل البيانات واستخراج الأنماط باستخدام أدوات وتقنيات البيانات الحديثة.
-        </p>
-        <div class="flex items-center justify-between flex-wrap gap-3">
-            <div class="flex items-center gap-5 flex-wrap text-slate-400 text-sm">
-                <span class="flex items-center gap-1.5">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                    مدة التدريب: 2 شهر
-                </span>
-                <span class="flex items-center gap-1.5">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2h5M12 12a4 4 0 100-8 4 4 0 000 8z" /></svg>
-                    8 متدربين
-                </span>
-                <span class="flex items-center gap-1.5">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                    تاريخ البداية: 2025-06-10
-                </span>
-            </div>
-            <a href="#" class="text-sm text-emerald-600 flex items-center gap-1 hover:underline">
-                ← عرض التفاصيل
-            </a>
-        </div>
-    </div>
-
-    <!-- Card 3 -->
-    <div class="bg-white border border-slate-200 rounded-xl p-8 hover:shadow-sm transition-shadow">
-        <div class="flex items-center gap-2 mb-3">
-            
-            <h2 class="text-lg font-semibold text-slate-800">تدريب الأمن السيبراني</h2>
-            <span class="bg-green-50 text-green-700 text-xs font-semibold px-3 py-0.5 rounded-full">نشط</span>
-        </div>
-        <p class="text-sm text-slate-500 mb-8 leading-relaxed">
-            برنامج تدريبي لتأهيل المتدربين في مجال الأمن السيبراني وحماية الأنظمة والشبكات.
-        </p>
-        <div class="flex items-center justify-between flex-wrap gap-3">
-            <div class="flex items-center gap-5 flex-wrap text-slate-400 text-sm">
-                <span class="flex items-center gap-1.5">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                    مدة التدريب: 3 أشهر
-                </span>
-                <span class="flex items-center gap-1.5">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2h5M12 12a4 4 0 100-8 4 4 0 000 8z" /></svg>
-                    10 متدربين
-                </span>
-                <span class="flex items-center gap-1.5">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                    تاريخ البداية: 2025-06-15
-                </span>
-            </div>
-            <a href="#" class="text-sm text-emerald-600 flex items-center gap-1 hover:underline">
-                ← عرض التفاصيل
-            </a>
-        </div>
-    </div>
-
-    <!-- Card 4 -->
-    <div class="bg-white border border-slate-200 rounded-xl p-8 hover:shadow-sm transition-shadow">
-        <div class="flex items-center gap-2 mb-3">
-           
-            <h2 class="text-lg font-semibold text-slate-800">تدريب تطوير تطبيقات الموبايل</h2>
-            <span class="bg-green-50 text-green-700 text-xs font-semibold px-3 py-0.5 rounded-full">نشط</span>
-        </div>
-        <p class="text-sm text-slate-500 mb-8 leading-relaxed">
-            تعلم أساسيات وبرمجة تطبيقات الهواتف الذكية باستخدام أحدث الأدوات والتقنيات.
-        </p>
-        <div class="flex items-center justify-between flex-wrap gap-3">
-            <div class="flex items-center gap-5 flex-wrap text-slate-400 text-sm">
-                <span class="flex items-center gap-1.5">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                    مدة التدريب: 2 شهر
-                </span>
-                <span class="flex items-center gap-1.5">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2h5M12 12a4 4 0 100-8 4 4 0 000 8z" /></svg>
-                    5 متدربين
-                </span>
-                <span class="flex items-center gap-1.5">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                    تاريخ البداية: 2025-06-20
-                </span>
-            </div>
-            <a href="#" class="text-sm text-emerald-600 flex items-center gap-1 hover:underline">
-                ← عرض التفاصيل
-            </a>
-        </div>
-    </div>
-
+        }
+    }
+   
 </div>
 
 
