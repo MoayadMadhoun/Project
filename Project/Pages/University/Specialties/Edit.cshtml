@@ -1,0 +1,236 @@
+﻿@page "{id:int}"
+@model Project.Pages.University.Specialties.EditModel
+
+@{
+    ViewData["Title"] = "تعديل التخصص";
+}
+
+<form method="post">
+
+    <input type="hidden" asp-for="Input.SpecialtyID" />
+
+    <!-- Hero -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body p-5 text-white"
+             style="background:#1ab29a;border-radius:24px;">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+
+                    <h1 class="fw-bold mb-3">
+                        تعديل التخصص
+                    </h1>
+
+                    <p class="mb-0 fs-5 opacity-75">
+                        تحديث بيانات التخصص الأكاديمي وإدارته داخل الجامعة.
+                    </p>
+
+                </div>
+
+                <div class="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center"
+                     style="width:90px;height:90px;">
+
+                    <i class="bi bi-pencil-square fs-1"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Specialty Information -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                بيانات التخصص
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-4">
+
+                <div class="col-md-6">
+
+                    <label asp-for="Input.Name"
+                           class="form-label fw-semibold">
+                    </label>
+
+                    <input asp-for="Input.Name"
+                           class="form-control" />
+
+                    <span asp-validation-for="Input.Name"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <label class="form-label fw-semibold">
+                        القسم
+                    </label>
+
+                    <select asp-for="Input.DepartmentID"
+                            asp-items="Model.Departments"
+                            class="form-select">
+                    </select>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <label asp-for="Input.Category"
+                           class="form-label fw-semibold">
+                    </label>
+
+                    <input asp-for="Input.Category"
+                           class="form-control" />
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <label class="form-label fw-semibold">
+                        الحالة
+                    </label>
+
+                    <select asp-for="Input.IsActive"
+                            class="form-select">
+
+                        <option value="true">
+                            نشط
+                        </option>
+
+                        <option value="false">
+                            غير نشط
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-12">
+
+                    <label asp-for="Input.Description"
+                           class="form-label fw-semibold">
+                    </label>
+
+                    <textarea asp-for="Input.Description"
+                              rows="5"
+                              class="form-control">
+                    </textarea>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Statistics -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                معلومات إضافية
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row text-center">
+
+                <div class="col-md-4">
+
+                    <h6 class="text-muted">
+                        عدد الطلبة
+                    </h6>
+
+                    <h3 class="fw-bold text-primary">
+                        @Model.StudentCount
+                    </h3>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <h6 class="text-muted">
+                        فرص التدريب المرتبطة
+                    </h6>
+
+                    <h3 class="fw-bold text-success">
+                        @Model.OpportunityCount
+                    </h3>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <h6 class="text-muted">
+                        طلبات الفرص المرتبطة
+                    </h6>
+
+                    <h3 class="fw-bold text-warning">
+                        @Model.RequestCount
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Info -->
+
+    <div class="alert alert-info border-0 shadow-sm">
+
+        <i class="bi bi-info-circle-fill me-2"></i>
+
+        تعديل بيانات التخصص سيؤثر على الطلبة وفرص التدريب المرتبطة به.
+
+    </div>
+
+    <!-- Buttons -->
+
+    <div class="d-flex gap-2">
+
+        <button type="submit"
+                class="btn btn-success px-5">
+
+            <i class="bi bi-check-circle me-1"></i>
+
+            حفظ التعديلات
+
+        </button>
+
+        <a asp-page="Index"
+           class="btn btn-light px-5">
+
+            إلغاء
+
+        </a>
+
+    </div>
+
+</form>
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+}
