@@ -11,12 +11,12 @@ namespace Project.Models
         
         public int PlacementID { get; set; }
         [ForeignKey(nameof(PlacementID))]
-        public TrainingPlacement TrainingPlacement { get; set; }= new TrainingPlacement();
+        public TrainingPlacement TrainingPlacement { get; set; }= null!;
         [Required(ErrorMessage = "University supervisor is required")]
         
         public string UniversitySupervisorID { get; set; }=string.Empty;
         [ForeignKey(nameof(UniversitySupervisorID))]
-        public AspNetUser UniversitySupervisor { get; set; }=new AspNetUser();
+        public AspNetUser UniversitySupervisor { get; set; }=null!;
         [Required(ErrorMessage = "Visit date is required")]
         public DateTime VisitDate { get; set; }
         [Column(TypeName = "nvarchar(50)")]

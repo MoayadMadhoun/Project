@@ -48,6 +48,14 @@
                 <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
                 <input asp-for="SearchTerm" class="w-1/4 pr-10 pl-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20 text-right" placeholder="ابحث عن رئيس قسم ..." type="text" />
             </div>
+            <div class="relative flex-1 min-w-[200px]">
+                <select asp-for="IsActive" class="form-select flex items-center gap-2 px-5 py-2 bg-white border border-slate-200 rounded-xl text-slate-600 hover:bg-slate-50 transition-colors text-sm font-bold">
+
+                    <option value="">الحالة</option>
+                    <option value="true">نشط</option>
+                    <option value="false">غير نشط</option>
+                </select>
+            </div>
             <button type="submit" class="bg-primary text-white font-button px-6 py-2.5 rounded-xl hover:bg-primary/90 transition-colors">بحث</button>
         </form>
     </div>
@@ -95,11 +103,11 @@
                     {
                         <tr class="hover:bg-slate-50 transition-colors">
                                 <td class="px-6 py-3 text-slate-900 font-bold">@dHIndex</td>
-                            <td class="px-6 py-3 text-slate-600">@DH.User.FullName</td>
-                            <td class="px-6 py-3 text-slate-600">@(DH.Department?.Name ?? "_")</td>
-                            <td class="px-6 py-3 text-slate-600">@DH.User.Email</td>
-                            <td class="px-6 py-3 text-slate-600">@DH.User.PhoneNumber</td>
-                            <td class="px-6 py-3 text-slate-600">@DH.User.CreatedAt</td>
+                            <td class="px-6 py-3 text-slate-600">@DH.FullName</td>
+                            <td class="px-6 py-3 text-slate-600">@(DH.RoleScope?.Department?.Name ?? "_")</td>
+                            <td class="px-6 py-3 text-slate-600">@DH.Email</td>
+                            <td class="px-6 py-3 text-slate-600">@DH.PhoneNumber</td>
+                            <td class="px-6 py-3 text-slate-600">@DH.CreatedAt</td>
 
                             <td class="px-6 py-3">
                                 <div class="flex gap-3">
@@ -110,7 +118,7 @@
                                             <input type="hidden" name="PageIndex" value="@Model.PageIndex" />
                                             <input type="hidden" name="SortOrder" value="@Model.SortOrder" />
                                             <input type="hidden" name="SearchTerm" value="@Model.SearchTerm" />
-                                            <input type="hidden" name="DepartmentHeadId" value="@DH.User.Id" />
+                                            <input type="hidden" name="DepartmentHeadId" value="@DH.Id" />
                                             <button type="submit" class="btn border border-rose-200 text-rose-600 text-xs font-bold px-4 py-2 rounded hover:bg-rose-50 flex items-center gap-1"> <span>🗑</span>حذف</button>
                                         </form>
                                 </div>
@@ -153,6 +161,7 @@
             <nav class="flex items-center gap-2">
                 @if (Model.DepartmentsHeads.HasPrevPage)
                 {
+
                     <a asp-route-PageIndex="@(Model.PageIndex - 1)"
                        asp-route-SearchTerm="@Model.SearchTerm"
                        

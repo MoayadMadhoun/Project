@@ -16,7 +16,7 @@ namespace Project.Models
         
         public int UniversityID { get; set; }
         [ForeignKey(nameof(UniversityID))]
-        public University University { get; set; }= new University();
+        public University University { get; set; } = null!;
 
         public ICollection<Specialty?> Specialties { get; set; }
 

@@ -226,6 +226,16 @@ namespace Project.Repository
                 .Where(t=>t.InstitutionID== InstituationID)
                 .AsNoTracking().AsQueryable();
         }
+        public IQueryable<AspNetUser> GetSupervisorsForInstitution(int? InstitutionId)
+        {
+            return _dbContext.Users
+                .Include(u => u.RoleScope)
+                .ThenInclude(rs => rs.Department)
+                .Where(u => u.RoleScope.Role.Name == "InstitutionSupervisor" && u.RoleScope.InstitutionID == InstitutionId)
+                .AsNoTracking().AsQueryable();
+        }
+       
+        
     }
 }
 

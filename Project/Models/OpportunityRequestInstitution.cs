@@ -24,13 +24,13 @@ namespace Project.Models
         
         public int RequestID { get; set; }
         [ForeignKey(nameof(RequestID))]
-        public TrainingOpportunityRequest Request { get; set; } = new TrainingOpportunityRequest();         
+        public TrainingOpportunityRequest Request { get; set; } = null! ;         
 
         [Required(ErrorMessage = "Institution is required")]
         
         public int InstitutionID { get; set; }
         [ForeignKey(nameof(InstitutionID))]
-        public TrainingInstitution TrainingInstitution { get; set; } = new TrainingInstitution();
+        public TrainingInstitution TrainingInstitution { get; set; } = null!;
 
 
     }

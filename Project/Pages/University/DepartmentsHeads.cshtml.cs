@@ -8,6 +8,7 @@ using Project.Extensions;
 using Project.Models;
 using Project.Repositories;
 using Project.Repostory;
+using System.Reflection;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Project.Pages.University
@@ -28,7 +29,9 @@ namespace Project.Pages.University
         public Models.University CurrentUniversity { get; set; }
         [BindProperty(SupportsGet = true)]
         public string SearchTerm { get; set; } = string.Empty;
-        public PaginatedList<AspNetRoleScope> DepartmentsHeads { get; set; } 
+        [BindProperty(SupportsGet = true)]
+        public bool IsActive { get; set; }
+        public PaginatedList<AspNetUser> DepartmentsHeads { get; set; } = new PaginatedList<AspNetUser>(new List<AspNetUser>(), 1, 0, 10);
         public string DepartmentHeadId { get; set; }
 
         public DepartmentsHeadsModel(ApplicationDbContext dbContext, UniversityRepository universityRepo, UserManager<AspNetUser> userManager)
@@ -68,17 +71,24 @@ namespace Project.Pages.University
                 var query = _universityRepo.GetDepartmentHeadsForUniversity(universityId);
                 if (!string.IsNullOrEmpty(SearchTerm))
                 {
-                    query = query.Where(a => a.User.FullName.Contains(SearchTerm));
+                    query = query.Where(a => a.FullName.Contains(SearchTerm));
                 }
-                
+                if (IsActive == true)
+                {
+                    query = query.Where(a => a.IsActive);
+                }
+                else if (IsActive == false)
+                {
+                    query = query.Where(a => !a.IsActive);
+                }
                 query = SortOrder switch
                 {
-                    "Name" => query.OrderBy(a => a.User.FullName),
-                    "Name_desc" => query.OrderByDescending(a => a.User.FullName),
-                    _ => query.OrderBy(p => p.UserID),
+                    "Name" => query.OrderBy(a => a.FullName),
+                    "Name_desc" => query.OrderByDescending(a => a.FullName),
+                    _ => query.OrderBy(p => p.Id),
 
                 };
-                DepartmentsHeads = await PaginatedList<AspNetRoleScope>.CreateAsync(query, PageIndex, PageSize);
+                DepartmentsHeads = await PaginatedList<AspNetUser>.CreateAsync(query, PageIndex, PageSize);
                 return Page();
             }
             catch (Exception ex)

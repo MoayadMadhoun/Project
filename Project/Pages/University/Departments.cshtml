@@ -33,7 +33,7 @@
             <p class="font-body-lg text-sm md:text-body-lg opacity-90 mb-lg">
                 إدارة أقسام الجامعة ومتابعة المعلومات الأساسيه لكل قسم
             </p>
-            <a class="w-full sm:w-auto bg-white text-primary font-button px-xl py-3 rounded-xl shadow-lg hover:bg-surface-container transition-colors" asp-page="/University/department/create"> ＋ إضافة قسم جديد</a>
+            <a class="w-full sm:w-auto bg-white text-primary font-button px-xl py-3 rounded-xl shadow-lg hover:bg-surface-container transition-colors" asp-route-UniversityId="@Model.CurrentUniversity.UniversityID" asp-page="/University/department/create"> ＋ إضافة قسم جديد</a>
 
         </div>
     </section>
