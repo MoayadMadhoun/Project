@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Project.Data;
 using Project.Models;
 
@@ -175,7 +176,18 @@ namespace Project.Repositories
         }
 
 
-
+        public async Task<List<SelectListItem>> GetUniversityDepartmentsSelectListAsync(int universityId)
+        {
+            return await _dbContext.Departments
+                .Where(d => d.UniversityID == universityId)
+                .OrderBy(d => d.Name)
+                .Select(d => new SelectListItem
+                {
+                    Value = d.DepartmentID.ToString(),
+                    Text = d.Name
+                })
+                .ToListAsync();
+        }
 
 
 

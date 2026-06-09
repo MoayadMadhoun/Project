@@ -180,9 +180,25 @@ namespace Project.Repositories
         }
 
 
+        public IQueryable<Specialty> GetUniversitySpecialtiesQueryable(int universityId)
+        {
+            return  _dbContext.Specialties
+                .Include(s => s.Department)
+                .Include(s => s.Students)
+                .Where(s => s.Department.UniversityID == universityId)
+                .AsNoTracking();
+        }
 
-
-
+        public async Task<Specialty?> GetDetailsAsync(int specialtyId)
+        {
+            return await _dbContext.Specialties
+                .Include(s => s.Department)
+                .Include(s => s.Students)
+                .Include(s => s.OpportunitySpecialties)
+                .Include(s => s.RequestSpecialties)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(s => s.SpecialtyID == specialtyId);
+        }
 
 
 
