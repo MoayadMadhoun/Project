@@ -1,0 +1,378 @@
+﻿@page
+@model Project.Pages.University.Supervisors.DetailsModel
+
+@{
+    ViewData["Title"] = "تفاصيل مشرف الجامعة";
+}
+
+<div class="card border-0 shadow-sm mb-4">
+
+    <div class="card-body p-5 text-white"
+         style="background:#1ab29a;border-radius:24px;">
+
+        <div class="d-flex justify-content-between align-items-center">
+
+            <div>
+
+                <h1 class="fw-bold mb-3">
+                    تفاصيل مشرف الجامعة
+                </h1>
+
+                <p class="mb-0 fs-5 opacity-75">
+                    عرض بيانات المشرف وصلاحياته داخل الجامعة.
+                </p>
+
+            </div>
+
+            <div class="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center"
+                 style="width:90px;height:90px;">
+
+                <i class="bi bi-person-vcard-fill fs-1"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Profile Card -->
+
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+
+    <div class="card-body">
+
+        <div class="row align-items-center">
+
+            <div class="col-md-2 text-center">
+
+                <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center"
+                     style="width:110px;height:110px;">
+
+                    <i class="bi bi-person-fill fs-1 text-secondary"></i>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-10">
+
+                <h3 class="fw-bold mb-2">
+                    أحمد محمد
+                </h3>
+
+                <p class="text-muted mb-1">
+                    University Supervisor
+                </p>
+
+                <span class="badge bg-success">
+                    الحساب فعال
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Personal Information -->
+
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+
+    <div class="card-header bg-white">
+
+        <h5 class="fw-bold mb-0">
+            البيانات الشخصية
+        </h5>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row g-4">
+
+            <div class="col-md-6">
+
+                <label class="text-muted">
+                    الاسم الكامل
+                </label>
+
+                <div class="fw-semibold">
+                    أحمد محمد
+                </div>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <label class="text-muted">
+                    البريد الإلكتروني
+                </label>
+
+                <div class="fw-semibold">
+                    ahmad@university.edu
+                </div>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <label class="text-muted">
+                    رقم الهاتف
+                </label>
+
+                <div class="fw-semibold">
+                    0599999999
+                </div>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <label class="text-muted">
+                    حالة الحساب
+                </label>
+
+                <div>
+
+                    <span class="badge bg-success">
+                        فعال
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Account Information -->
+
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+
+    <div class="card-header bg-white">
+
+        <h5 class="fw-bold mb-0">
+            معلومات الحساب
+        </h5>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row g-4">
+
+            <div class="col-md-4">
+
+                <label class="text-muted">
+                    الدور
+                </label>
+
+                <div class="fw-semibold">
+                    University Supervisor
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <label class="text-muted">
+                    الجامعة
+                </label>
+
+                <div class="fw-semibold">
+                    جامعة النجاح الوطنية
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <label class="text-muted">
+                    تاريخ إنشاء الحساب
+                </label>
+
+                <div class="fw-semibold">
+                    01/01/2026
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Permissions -->
+
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+
+    <div class="card-header bg-white">
+
+        <h5 class="fw-bold mb-0">
+            الصلاحيات
+        </h5>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row g-3">
+
+            <div class="col-md-6">
+
+                <div class="border rounded-4 p-3">
+
+                    <i class="bi bi-building-check text-success me-2"></i>
+
+                    متابعة فرص التدريب
+
+                </div>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <div class="border rounded-4 p-3">
+
+                    <i class="bi bi-person-check text-primary me-2"></i>
+
+                    متابعة الطلبات
+
+                </div>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <div class="border rounded-4 p-3">
+
+                    <i class="bi bi-file-earmark-text text-warning me-2"></i>
+
+                    مراجعة التقارير
+
+                </div>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <div class="border rounded-4 p-3">
+
+                    <i class="bi bi-bar-chart-line text-danger me-2"></i>
+
+                    الاطلاع على الإحصائيات
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Statistics -->
+
+<div class="row g-3 mb-4">
+
+    <div class="col-md-4">
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body text-center">
+
+                <i class="bi bi-briefcase-fill text-primary fs-1"></i>
+
+                <h6 class="mt-2">
+                    الفرص المتابعة
+                </h6>
+
+                <h2 class="fw-bold text-primary">
+                    24
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-4">
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body text-center">
+
+                <i class="bi bi-file-earmark-check-fill text-success fs-1"></i>
+
+                <h6 class="mt-2">
+                    الطلبات المعالجة
+                </h6>
+
+                <h2 class="fw-bold text-success">
+                    67
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-4">
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body text-center">
+
+                <i class="bi bi-people-fill text-warning fs-1"></i>
+
+                <h6 class="mt-2">
+                    الطلبة المتابعون
+                </h6>
+
+                <h2 class="fw-bold text-warning">
+                    120
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Buttons -->
+
+<div class="d-flex gap-2 mb-5">
+
+    <a asp-page="Edit"
+       @* asp-route-id="@Model.UserId" *@
+       class="btn btn-success px-5">
+
+        <i class="bi bi-pencil-square me-1"></i>
+
+        تعديل
+
+    </a>
+
+    <a asp-page="Index"
+       class="btn btn-light px-5">
+
+        <i class="bi bi-arrow-right-circle me-1"></i>
+
+        رجوع
+
+    </a>
+
+</div>

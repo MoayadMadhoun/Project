@@ -600,7 +600,7 @@
             <h2>قائمة المشرفين الأكاديميين</h2>
             <div class="tch-sub">إجمالي 86 مشرف</div>
         </div>
-        <a href="#" class="btn-add" data-bs-toggle="modal" data-bs-target="#addModal">
+        <a href="#" class="btn-add">
             <i class="bi bi-plus-lg"></i> إضافة مشرف
         </a>
     </div>
@@ -851,26 +851,5 @@
 </div>
 
 @section Scripts {
-    <script>
-        function confirmDelete(id, name) {
-            document.getElementById('deleteId').value = id;
-            document.getElementById('deleteConfirmText').textContent =
-                'هل أنت متأكد من حذف المشرف "' + name + '"؟ لا يمكن التراجع عن هذا الإجراء.';
-            new bootstrap.Modal(document.getElementById('deleteModal')).show();
-        }
-        function changePageSize(size) {
-            const u = new URL(window.location.href);
-            u.searchParams.set('pageSize', size);
-            u.searchParams.set('page', '1');
-            window.location.href = u.toString();
-        }
-        document.getElementById('applyFilter').addEventListener('click', () => {
-            const u = new URL(window.location.href);
-            u.searchParams.set('search', document.getElementById('searchInput').value);
-            u.searchParams.set('dept',   document.getElementById('deptFilter').value);
-            u.searchParams.set('spec',   document.getElementById('specFilter').value);
-            u.searchParams.set('page',   '1');
-            window.location.href = u.toString();
-        });
-    </script>
+   
 }
