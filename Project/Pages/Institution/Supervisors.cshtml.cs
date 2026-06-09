@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -10,6 +11,7 @@ using Project.Repostory;
 
 namespace Project.Pages.Institution
 {
+    [Authorize(Roles = "InstitutionTrainingOfficer")]
     public class SupervisorsModel : PageModel
     {
 
@@ -27,7 +29,7 @@ namespace Project.Pages.Institution
         public string SearchTerm { get; set; } = string.Empty;
         [BindProperty(SupportsGet = true)]
         public bool IsActive { get; set; }
-        public PaginatedList<AspNetRoleScope> Supervisors { get; set; }
+        public PaginatedList<AspNetUser> Supervisors { get; set; } = new PaginatedList<AspNetUser>(new List<AspNetUser>(), 1, 0, 10);
         public string DepartmentHeadId { get; set; }
         public List<TrainingPlacement> TrainingPlacements { get; set; }
 
@@ -68,25 +70,25 @@ namespace Project.Pages.Institution
                 var query = _institutionRepository.GetSupervisorsForInstitution(institutionId);
                 if (!string.IsNullOrEmpty(SearchTerm))
                 {
-                    query = query.Where(a => a.User.FullName.Contains(SearchTerm));
+                    query = query.Where(a => a.FullName.Contains(SearchTerm));
                 }
                 if (IsActive == true)
                 {
-                    query = query.Where(a => a.IsActive);
+                    query = query.Where(a => a.RoleScope.IsActive);
                 }
                 else if (IsActive == false)
                 {
-                    query = query.Where(a => !a.IsActive);
+                    query = query.Where(a => !a.RoleScope.IsActive);
                 }
                 TrainingPlacements =await _dbContext.TrainingPlacements.Include(tp=>tp.InstitutionSupervisor).ToListAsync();
                 query = SortOrder switch
                 {
-                    "Name" => query.OrderBy(a => a.User.FullName),
-                    "Name_desc" => query.OrderByDescending(a => a.User.FullName),
-                    _ => query.OrderBy(p => p.UserID),
+                    "Name" => query.OrderBy(a => a.FullName),
+                    "Name_desc" => query.OrderByDescending(a => a.FullName),
+                    _ => query.OrderBy(p => p.Id),
 
                 };
-                Supervisors = await PaginatedList<AspNetRoleScope>.CreateAsync(query, PageIndex, PageSize);
+                Supervisors = await PaginatedList<AspNetUser>.CreateAsync(query, PageIndex, PageSize);
                 return Page();
             }
             catch (Exception ex)
