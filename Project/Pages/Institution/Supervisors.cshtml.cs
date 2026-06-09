@@ -88,7 +88,7 @@ namespace Project.Pages.Institution
                     _ => query.OrderBy(p => p.Id),
 
                 };
-                Supervisors = await PaginatedList<AspNetUser>.CreateAsync(query, PageIndex, PageSize);
+                Supervisors = await PaginatedList<AspNetUser>.CreateAsync(query, PageSize, PageIndex);
                 return Page();
             }
             catch (Exception ex)

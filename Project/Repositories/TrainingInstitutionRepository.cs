@@ -234,8 +234,13 @@ namespace Project.Repository
                 .Where(u => u.RoleScope.Role.Name == "InstitutionSupervisor" && u.RoleScope.InstitutionID == InstitutionId)
                 .AsNoTracking().AsQueryable();
         }
-       
-        
+        public IQueryable<TrainingOpportunity> GetCurrentTrainingsForInstitution(int institutionId)
+        {
+            return _dbContext.TrainingOpportunities
+                .Include(to => to.TrainingPlacement)
+                .Where(to => to.InstitutionID == institutionId && to.TrainingPlacement.Any(tp=>tp.Status== TrainingPlacement.PlacementStatus.InProgress))
+                .AsNoTracking().AsQueryable();
+        }
     }
 }
 

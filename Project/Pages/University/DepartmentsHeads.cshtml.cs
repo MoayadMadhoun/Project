@@ -88,7 +88,7 @@ namespace Project.Pages.University
                     _ => query.OrderBy(p => p.Id),
 
                 };
-                DepartmentsHeads = await PaginatedList<AspNetUser>.CreateAsync(query, PageIndex, PageSize);
+                DepartmentsHeads = await PaginatedList<AspNetUser>.CreateAsync(query, PageSize, PageIndex);
                 return Page();
             }
             catch (Exception ex)
@@ -124,7 +124,7 @@ namespace Project.Pages.University
                     
                 }
 
-                return RedirectToPage(new { SearchTerm, SortOrder, PageIndex, PageSize });
+                return RedirectToPage(new { SearchTerm, SortOrder, PageSize, PageIndex });
             }
             catch (Exception ex)
             {
