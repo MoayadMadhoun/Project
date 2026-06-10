@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "{ïd}"
 @model Project.Pages.University.Supervisors.DetailsModel
 
 @{
@@ -59,19 +59,28 @@
             <div class="col-md-10">
 
                 <h3 class="fw-bold mb-2">
-                    أحمد محمد
+                    @Model.Supervisor.FullName
                 </h3>
 
                 <p class="text-muted mb-1">
                     University Supervisor
                 </p>
 
-                <span class="badge bg-success">
-                    الحساب فعال
-                </span>
+                @if (Model.Supervisor.IsActive)
+                {
+                    <span class="badge bg-success">
+                        الحساب فعال
+                    </span>
+                }
+                else
+                {
+                    <span class="badge bg-success">
+                        الحساب  غير فعال
+                    </span>
+                }
 
             </div>
-
+             
         </div>
 
     </div>
@@ -101,7 +110,7 @@
                 </label>
 
                 <div class="fw-semibold">
-                    أحمد محمد
+                    @Model.Supervisor.FullName
                 </div>
 
             </div>
@@ -113,7 +122,7 @@
                 </label>
 
                 <div class="fw-semibold">
-                    ahmad@university.edu
+                    @Model.Supervisor.Email
                 </div>
 
             </div>
@@ -125,7 +134,7 @@
                 </label>
 
                 <div class="fw-semibold">
-                    0599999999
+                    @Model.Supervisor.PhoneNumber
                 </div>
 
             </div>
@@ -138,9 +147,18 @@
 
                 <div>
 
-                    <span class="badge bg-success">
-                        فعال
-                    </span>
+                    @if (Model.Supervisor.IsActive)
+                    {
+                        <span class="badge bg-success">
+                            الحساب فعال
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-success">
+                            الحساب  غير فعال
+                        </span>
+                    }
 
                 </div>
 
@@ -187,7 +205,7 @@
                 </label>
 
                 <div class="fw-semibold">
-                    جامعة النجاح الوطنية
+                    @Model.Supervisor.University?.Name
                 </div>
 
             </div>
@@ -199,7 +217,7 @@
                 </label>
 
                 <div class="fw-semibold">
-                    01/01/2026
+                  @Model.Supervisor.CreatedAt
                 </div>
 
             </div>
@@ -284,7 +302,7 @@
 
 <div class="row g-3 mb-4">
 
-    <div class="col-md-4">
+    @* <div class="col-md-4">
 
         <div class="card border-0 shadow-sm">
 
@@ -326,7 +344,7 @@
 
         </div>
 
-    </div>
+    </div> *@
 
     <div class="col-md-4">
 
@@ -357,7 +375,7 @@
 <div class="d-flex gap-2 mb-5">
 
     <a asp-page="Edit"
-       @* asp-route-id="@Model.UserId" *@
+        asp-route-id="@Model.Supervisor.Id" 
        class="btn btn-success px-5">
 
         <i class="bi bi-pencil-square me-1"></i>
