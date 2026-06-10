@@ -67,9 +67,10 @@
                         عنوان الطلب
                     </label>
 
-                    <input type="text"
+                    <input asp-for="TrainingRequest.Title" type="text"
                            class="form-control shadow-sm rounded-3 bg-light border-0"
                            placeholder="مثال: فرص تدريب لطلبة هندسة البرمجيات" />
+                    <span class="text-danger" asp-validation-for="TrainingRequest.Title"></span>
 
                 </div>
 
@@ -79,21 +80,35 @@
                         عدد المقاعد المطلوبة
                     </label>
 
-                    <input type="number"
+                    <input asp-for="TrainingRequest.RequestedSeats" type="number"
                            class="form-control shadow-sm rounded-3 bg-light border-0"
                            placeholder="30" />
+                    <span class="text-danger" asp-validation-for="TrainingRequest.RequestedSeats"></span>
 
                 </div>
+                <div class="col-md-4">
 
+                    <label class="form-label fw-semibold">
+                        المؤسسة
+                    </label>
+
+                    <select asp-items="Model.InstitutionsList" asp-for="TrainingRequest.InstitutionID" class="form-select shadow-sm rounded-3 bg-light border-0">
+                        <option value="">
+                            اختر المؤسسة
+                        </option>
+                    </select>
+                    <span class="text-danger" asp-validation-for="TrainingRequest.InstitutionID"></span>
+                </div>
                 <div class="col-md-12">
 
                     <label class="form-label fw-semibold">
                         وصف الطلب
                     </label>
 
-                    <textarea rows="5"
+                    <textarea asp-for="TrainingRequest.Description" rows="5"
                               class="form-control shadow-sm rounded-3 bg-light border-0"
                               placeholder="أدخل وصفاً تفصيلياً للفرص التدريبية المطلوبة ومتطلبات التدريب..."></textarea>
+                    <span class="text-danger" asp-validation-for="TrainingRequest.Description"></span>
 
                 </div>
 
@@ -125,22 +140,12 @@
                         فترة التدريب
                     </label>
 
-                    <select class="form-select shadow-sm rounded-3 bg-light border-0">
-
-                        <option selected>
-                            الفصل الأول 2026-2027
+                    <select asp-items="Model.TrainingTermsList" asp-for="TrainingRequest.TermID" class="form-select shadow-sm rounded-3 bg-light border-0">
+                        <option value="">
+                            اختر الفصل
                         </option>
-
-                        <option>
-                            الفصل الثاني 2026-2027
-                        </option>
-
-                        <option>
-                            الفصل الصيفي 2026-2027
-                        </option>
-
                     </select>
-
+                    <span class="text-danger" asp-validation-for="TrainingRequest.TermID"></span>
                 </div>
 
                 <div class="col-md-4">
@@ -149,8 +154,9 @@
                         تاريخ البداية المفضل
                     </label>
 
-                    <input type="date"
+                    <input asp-for="TrainingRequest.PreferredStartDate" type="date"
                            class="form-control shadow-sm rounded-3 bg-light border-0" />
+                           <span class="text-danger" asp-validation-for="TrainingRequest.PreferredStartDate"></span>
 
                 </div>
 
@@ -160,8 +166,9 @@
                         تاريخ النهاية المفضل
                     </label>
 
-                    <input type="date"
+                    <input asp-for="TrainingRequest.PreferredEndDate" type="date"
                            class="form-control shadow-sm rounded-3 bg-light border-0" />
+                    <span class="text-danger" asp-validation-for="TrainingRequest.PreferredEndDate"></span>
 
                 </div>
 
@@ -171,8 +178,9 @@
                         آخر موعد لتقديم الطلبة
                     </label>
 
-                    <input type="date"
+                    <input asp-for="TrainingRequest.ApplicationDeadline" type="date"
                            class="form-control shadow-sm rounded-3 bg-light border-0" />
+                    <span class="text-danger" asp-validation-for="TrainingRequest.ApplicationDeadline"></span>
 
                 </div>
 
@@ -236,25 +244,26 @@
 
         <div class="card-body">
 
-            <select class="form-select shadow-sm rounded-3 bg-light border-0">
+            <select asp-for="TrainingRequest.Status" class="form-select shadow-sm rounded-3 bg-light border-0">
 
-                <option selected>
+                <option value="0">
                     مسودة
                 </option>
 
-                <option>
+                <option value="1">
                     منشور
                 </option>
 
-                <option>
+                <option value="2">
                     مغلق
                 </option>
 
-                <option>
+                <option value="3">
                     ملغى
                 </option>
 
             </select>
+            <span class="text-danger" asp-validation-for="TrainingRequest.Status"></span>
 
         </div>
 
@@ -274,10 +283,10 @@
 
         <div class="card-body">
 
-            <textarea rows="4"
+            <textarea asp-for="TrainingRequest.Notes" rows="4"
                       class="form-control shadow-sm rounded-3 bg-light border-0"
                       placeholder="أدخل أي ملاحظات أو متطلبات إضافية للمؤسسات (اختياري)..."></textarea>
-
+            <span class="text-danger" asp-validation-for="TrainingRequest.Notes"></span>
         </div>
 
     </div>
@@ -340,3 +349,6 @@
     </div>
 
 </form>
+@section Scripts {
+<partial name="_ValidationScriptsPartial.cshtml" />
+}
