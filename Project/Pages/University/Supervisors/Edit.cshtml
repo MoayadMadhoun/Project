@@ -7,7 +7,7 @@
 
 <form method="post">
 
-    @* <input type="hidden" asp-for="Input.UserId" /> *@
+    <input type="hidden" asp-for="SupervisorsVM.Id" /> 
 
     <!-- Hero -->
 
@@ -66,10 +66,10 @@
                     </label>
 
                     @* asp-for="Input.FullName" *@
-                    <input class="form-control shadow-sm rounded-3 bg-light border-0" />
+                    <input asp-for="SupervisorsVM.Name" class="form-control shadow-sm rounded-3 bg-light border-0" />
 
                     @* asp-validation-for="Input.FullName" *@
-                    <span class="text-danger"></span>
+                    <span asp-validation-for="SupervisorsVM.Name" class="text-danger"></span>
 
                 </div>
 
@@ -80,10 +80,10 @@
                     </label>
 
                    @* asp-for="Input.Email" *@
-                    <input class="form-control shadow-sm rounded-3 bg-light border-0" />
+                    <input asp-for="SupervisorsVM.Email" class="form-control shadow-sm rounded-3 bg-light border-0" />
 
                  @* asp-validation-for="Input.Email" *@
-                    <span class="text-danger"></span>
+                    <span asp-validation-for="SupervisorsVM.Email" class="text-danger"></span>
 
                 </div>
 
@@ -94,10 +94,10 @@
                     </label>
 
                    @* asp-for="Input.PhoneNumber" *@
-                    <input class="form-control shadow-sm rounded-3 bg-light border-0" />
+                    <input asp-for="SupervisorsVM.PhoneNumber" class="form-control shadow-sm rounded-3 bg-light border-0" />
 
                    @* asp-validation-for="Input.PhoneNumber" *@
-                    <span class="text-danger"></span>
+                    <span asp-validation-for="SupervisorsVM.PhoneNumber" class="text-danger"></span>
 
                 </div>
 
@@ -108,7 +108,7 @@
                     </label>
 
                    @* asp-for="Input.IsActive" *@
-                    <select class="form-select shadow-sm rounded-3 bg-light border-0">
+                    <select asp-for="SupervisorsVM.IsActive" class="form-select shadow-sm rounded-3 bg-light border-0">
 
                         <option value="true">
                             فعال
@@ -163,7 +163,7 @@
                     </label>
 
                     <div class="fw-semibold">
-                        جامعة النجاح الوطنية
+                        @Model.SuperInfo.University?.Name
                     </div>
 
                 </div>
@@ -175,7 +175,7 @@
                     </label>
 
                     <div class="fw-semibold">
-                        01/01/2026
+                        @Model.SuperInfo.CreatedAt
                     </div>
 
                 </div>
