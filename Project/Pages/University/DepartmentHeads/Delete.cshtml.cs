@@ -38,7 +38,7 @@ namespace Project.Pages.University.DepartmentHeads
 
             if(departmentHead is null)
             {
-                return NotFound();
+                return Page();
             }
             departmentHead.IsActive = false;
 
