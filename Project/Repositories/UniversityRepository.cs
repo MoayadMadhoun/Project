@@ -218,5 +218,15 @@ namespace Project.Repostory
                     .ThenInclude(rs => rs.University)
                 .FirstOrDefaultAsync(u => u.Id == UserId);
         }
+        public async Task<AspNetUser?> GetUniversitySuperVisorByUserId(string UserId)
+        {
+            return await _dbContext.Users
+             .Include(u => u.RoleScope)
+                 .ThenInclude(rs => rs.University)
+             .Include(u=>u.)
+             .FirstOrDefaultAsync(u => u.Id == UserId);
+        }
+
+
     }
 }
