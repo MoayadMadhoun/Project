@@ -29,7 +29,9 @@ public class CreateModel : PageModel
     public int InstitutionId { get; set; }
     public string CurrentOfficerId { get; set; }
     public List<SelectListItem> Terms { get; set; }
+    public SelectList Specialties { get; set; }
 
+    public List<Skill> Skills { get; set; } = [];
 
     public async Task<ActionResult> OnGetAsync()
     {
@@ -37,6 +39,18 @@ public class CreateModel : PageModel
 
         if (CurrentInstitution == null)
             return RedirectToPage("/Index");
+
+        Specialties = new SelectList(
+            await _context.Specialties
+                .Where(x => x.IsActive)
+                .OrderBy(x => x.Name)
+                .ToListAsync(),
+            "SpecialtyID",
+            "Name");
+
+        Skills = await _context.Skills
+            .OrderBy(x => x.Name)
+            .ToListAsync();
 
         return Page();
     }
@@ -123,8 +137,37 @@ public class CreateModel : PageModel
             CreatedAt = DateTime.Now
         };
 
-        _context.TrainingOpportunities.Add(opportunity);
 
+        _context.TrainingOpportunities.Add(opportunity);
+        await _context.SaveChangesAsync();
+
+        if (Input.SelectedSpecialties.Any())
+        {
+            _context.OpportunitySpecialties.AddRange(
+
+                Input.SelectedSpecialties.Select(x =>
+                    new OpportunitySpecialty
+                    {
+                        OpportunityID = opportunity.OpportunityID,
+                        SpecialtyID = x
+                    }));
+        }
+
+        if (Input.SelectedSkills.Any())
+        {
+            _context.OpportunitySkills.AddRange(
+
+                Input.SelectedSkills.Select(skillId =>
+                    new OpportunitySkill
+                    {
+                        OpportunityID = opportunity.OpportunityID,
+                        SkillID = skillId,
+
+                        IsRequired =
+                            Input.SkillTypes.TryGetValue(skillId, out var required)
+                            && required
+                    }));
+        }
         await _context.SaveChangesAsync();
 
         TempData["SuccessMessage"] = "تمت إضافة الفرصة التدريبية بنجاح";

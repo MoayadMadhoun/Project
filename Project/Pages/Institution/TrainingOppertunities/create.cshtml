@@ -175,12 +175,139 @@
 
                 </div>
 
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+    <!-- Target Specialties -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+            <h5 class="fw-bold mb-0">
+                التخصصات المستهدفة
+            </h5>
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-3">
+
+                @foreach (var item in Model.Specialties)
+                {
+                    <div class="col-md-4">
+
+                        <div class="form-check">
+
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   name="Input.SelectedSpecialties"
+                                   value="@item.Value"
+                                   id="specialty_@item.Value" />
+
+                            <label class="form-check-label"
+                                   for="specialty_@item.Value">
+
+                                @item.Text
+
+                            </label>
+
+                        </div>
+
+                    </div>
+                }
+
             </div>
 
         </div>
 
     </div>
 
+    <!-- Required Skills -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                المهارات المطلوبة
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table align-middle">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>اختيار</th>
+
+                            <th>المهارة</th>
+
+                            <th>النوع</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var skill in Model.Skills)
+                        {
+                            <tr>
+
+                                <td>
+
+                                    <input type="checkbox"
+                                           name="Input.SelectedSkills"
+                                           value="@skill.SkillID" />
+
+                                </td>
+
+                                <td>
+
+                                    @skill.Name
+
+                                </td>
+
+                                <td>
+
+                                    <select class="form-select form-select-sm"
+                                            name="Input.SkillTypes[@skill.SkillID]">
+
+                                        <option value="true">
+                                            أساسية
+                                        </option>
+
+                                        <option value="false">
+                                            مفضلة
+                                        </option>
+
+                                    </select>
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
     <!-- Training Period -->
 
     <div class="card border-0 shadow-sm rounded-4 mb-4">
@@ -364,7 +491,7 @@
 
         </button>
 
-        <a asp-page="Index"
+        <a asp-page="/Institution/AvailableOpportunities"
            class="btn btn-light px-5">
 
             إلغاء
