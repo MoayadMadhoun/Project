@@ -391,7 +391,7 @@ namespace Project.Repositories
         // Get all Student report by student is 
         public IQueryable<StudentReport> GetStudentReportsAsync(int studentId){
 
-            return  _context.StudentReports.Where(sr => sr.StudentID == studentId);
+            return  _context.StudentReports.Include(sr => sr.Placement).Where(sr => sr.StudentID == studentId);
         }
 
         public async Task<StudentReport?> GetStudentReport(int ReportId)
