@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "{id}"
 @model Project.Pages.University.Supervisors.DeleteModel
 
 @{
@@ -7,7 +7,7 @@
 
 <form method="post">
 
-    @* <input type="hidden" asp-for="UserId" /> *@
+     <input type="hidden" asp-for="Supervisor.Id" /> 
 
     <!-- Hero -->
 
@@ -77,7 +77,7 @@
                     </label>
 
                     <div class="fw-semibold">
-                        أحمد محمد
+                        @Model.Supervisor.FullName
                     </div>
 
                 </div>
@@ -89,7 +89,7 @@
                     </label>
 
                     <div class="fw-semibold">
-                        ahmad@university.edu
+                        @Model.Supervisor.Email
                     </div>
 
                 </div>
@@ -101,7 +101,7 @@
                     </label>
 
                     <div class="fw-semibold">
-                        0599999999
+                        @Model.Supervisor.PhoneNumber
                     </div>
 
                 </div>
@@ -113,10 +113,21 @@
                     </label>
 
                     <div>
+                        @if (Model.Supervisor.IsActive)
+                        {
 
-                        <span class="badge bg-success">
-                            فعال
-                        </span>
+                            <span class="badge bg-success">
+                                فعال
+                            </span>
+                        }
+                        else
+                        {
+
+                            <span class="badge bg-success">
+                                غير فعال
+                            </span>
+                        }
+
 
                     </div>
 
@@ -163,8 +174,8 @@
                     </label>
 
                     <div class="fw-semibold">
-                        جامعة النجاح الوطنية
-                    </div>
+                         @Model.Supervisor.University.Name
+                     </div>
 
                 </div>
 
@@ -175,7 +186,7 @@
                     </label>
 
                     <div class="fw-semibold">
-                        01/01/2026
+                        @Model.Supervisor.CreatedAt
                     </div>
 
                 </div>

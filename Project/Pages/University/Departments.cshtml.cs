@@ -11,7 +11,7 @@ using Project.Repostory;
 
 namespace Project.Pages.University
 {
-    [Authorize(Roles = "UniversityTrainingAdmin")]
+    [Authorize(Roles ="UniversityTrainingAdmin, DepartmentHead")]
     public class DepartmentsModel : PageModel
     {
         private readonly DepartmentRepository _deptRepo;

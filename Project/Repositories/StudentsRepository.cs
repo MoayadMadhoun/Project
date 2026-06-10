@@ -334,13 +334,11 @@ namespace Project.Repositories
            FirstOrDefaultAsync(se => se.TrainingPlacement.PlacementID == TrainingPlacementId && se.TrainingPlacement.StudentID == studentId);
         }
         // View all evaluations for the student based on the student ID number 
-        public async Task<List<StudentEvaluation>> GetAllEvaluationByStudentId(int studentId)
+        public IQueryable<StudentEvaluation> GetAllEvaluationByStudentId(int studentId)
         {
-            return await _context.StudentEvaluations.Include(se => se.TrainingPlacement).
-            Where(se => se.TrainingPlacement.StudentID == studentId).ToListAsync();
+            return  _context.StudentEvaluations.Include(se => se.TrainingPlacement).
+            Where(se => se.TrainingPlacement.StudentID == studentId);
         }
-
-
 
         // View the attendance schedule 
         public async Task<List<AttendanceRecord>> GetAttendanceRecord(int studentId, int? placementId = null)
@@ -389,6 +387,18 @@ namespace Project.Repositories
                     EF.Functions.Like(se.TrainingPlacement.TrainingOpportunity.Title, $"%{strSearch}%")
 
                     ).ToListAsync();
+        }
+        // Get all Student report by student is 
+        public IQueryable<StudentReport> GetStudentReportsAsync(int studentId){
+
+            return  _context.StudentReports.Include(sr => sr.Placement).Where(sr => sr.StudentID == studentId);
+        }
+
+        public async Task<StudentReport?> GetStudentReport(int ReportId)
+        {
+            return await _context.StudentReports
+                .Include(sr => sr.Placement)
+                .FirstOrDefaultAsync(sr => sr.ReportID == ReportId);
         }
         // create a report
         public async Task AddStudentReport(StudentReport NewStudentReport)

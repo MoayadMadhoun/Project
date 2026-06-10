@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "{RequestId}"
 @model Project.Pages.University.TrainingRequests.DeleteModel
 
 @{
@@ -92,7 +92,7 @@
                     </label>
 
                     <div class="fw-semibold">
-                        REQ-2026-015
+                        @Model.TrainingOpportunityRequest?.RequestID
                     </div>
 
                 </div>
@@ -104,7 +104,7 @@
                     </label>
 
                     <div class="fw-semibold">
-                        فرص تدريب لطلبة هندسة البرمجيات
+                        @(Model.TrainingOpportunityRequest?.Title??"_")
                     </div>
 
                 </div>
@@ -116,7 +116,7 @@
                     </label>
 
                     <div class="fw-semibold">
-                        30
+                        @Model.TrainingOpportunityRequest?.RequestedSeats
                     </div>
 
                 </div>
@@ -130,7 +130,7 @@
                     <div>
 
                         <span class="badge bg-success">
-                            منشور
+                            @Model.TrainingOpportunityRequest?.Status
                         </span>
 
                     </div>
@@ -166,7 +166,7 @@
                     </label>
 
                     <div class="fw-semibold">
-                        الفصل الأول 2026-2027
+                        @Model.TrainingOpportunityRequest?.TrainingTerm.Name
                     </div>
 
                 </div>
@@ -178,7 +178,7 @@
                     </label>
 
                     <div class="fw-semibold">
-                        01/09/2026
+                        @Model.TrainingOpportunityRequest?.PreferredStartDate
                     </div>
 
                 </div>
@@ -190,7 +190,7 @@
                     </label>
 
                     <div class="fw-semibold">
-                        31/12/2026
+                        @Model.TrainingOpportunityRequest?.PreferredEndDate
                     </div>
 
                 </div>
@@ -217,7 +217,7 @@
 
             <p class="mb-0 text-muted">
 
-                يفضل أن تكون الفرص التدريبية داخل المحافظة وأن تشمل إشرافاً مباشراً على الطلبة.
+                @Model.TrainingOpportunityRequest?.Notes
 
             </p>
 

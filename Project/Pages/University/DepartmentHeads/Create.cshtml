@@ -1,4 +1,4 @@
-﻿@page
+﻿@page 
 @model Project.Pages.University.DepartmentHeads.CreateModel
 
 @{
@@ -63,8 +63,8 @@
                         الاسم الكامل
                     </label>
 
-                   @* asp-for="Input.FullName" *@
-                    <input class="form-control shadow-sm rounded-3 bg-light border-0"
+                   @* asp-for="Input.Name" *@
+                    <input asp-for="Input.Name" class="form-control shadow-sm rounded-3 bg-light border-0"
                            placeholder="أدخل الاسم الكامل" />
 
                 </div>
@@ -76,7 +76,7 @@
                     </label>
 
                     @* asp-for="Input.Email" *@
-                    <input class="form-control shadow-sm rounded-3 bg-light border-0"
+                    <input asp-for="Input.Email" class="form-control shadow-sm rounded-3 bg-light border-0"
                            placeholder="head@university.edu" />
 
                 </div>
@@ -88,7 +88,7 @@
                     </label>
 
                      @* asp-for="Input.PhoneNumber" *@
-                    <input class="form-control shadow-sm rounded-3 bg-light border-0"
+                    <input asp-for="Input.PhoneNumber" class="form-control shadow-sm rounded-3 bg-light border-0"
                            placeholder="059xxxxxxx" />
 
                 </div>
@@ -101,7 +101,7 @@
 
                     @* asp-for="Input.DepartmentId"
                             asp-items="Model.Departments" *@
-                    <select class="form-select shadow-sm rounded-3 bg-light border-0">
+                    <select asp-for="Input.DepartmentId" asp-items="Model.DepartmentList" class="form-select shadow-sm rounded-3 bg-light border-0">
 
                         <option value="">
                             اختر القسم

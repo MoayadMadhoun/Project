@@ -209,5 +209,24 @@ namespace Project.Repostory
                 .AsNoTracking().AsQueryable();
         }
 
+        public async Task<AspNetUser?> GetDpartmentHeadByUserId(string UserId)
+        {
+            return await _dbContext.Users
+                .Include(u => u.RoleScope)
+                    .ThenInclude(rs => rs.Department)
+                .Include(u => u.RoleScope)
+                    .ThenInclude(rs => rs.University)
+                .FirstOrDefaultAsync(u => u.Id == UserId);
+        }
+        public async Task<AspNetUser?> GetUniversitySuperVisorByUserId(string UserId)
+        {
+            return await _dbContext.Users
+             .Include(u => u.RoleScope)
+                 .ThenInclude(rs => rs.University)
+             .Include(u=>u.)
+             .FirstOrDefaultAsync(u => u.Id == UserId);
+        }
+
+
     }
 }
