@@ -29,7 +29,13 @@ namespace Project.Pages.University.TrainingRequests
         public IActionResult OnGet([FromRoute] int RequestId)
         {
 
-            TrainingOpportunityRequest = _dbContext.TrainingOpportunityRequests.Include(to => to.TrainingTerm).Where(to => to.RequestID == RequestId).FirstOrDefault();
+            TrainingOpportunityRequest = _dbContext.TrainingOpportunityRequests
+                .Include(to => to.TrainingTerm)
+                 .Include(to => to.University)
+                . Include(to => to.UniversityAdmin)
+                . Include(to => to.Department)
+                 .Include(to => to.DepartmentHead)
+                .Where(to => to.RequestID == RequestId).FirstOrDefault();
             if (TrainingOpportunityRequest == null)
             {
                 return NotFound();
