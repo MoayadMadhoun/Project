@@ -64,12 +64,12 @@
                     </label>
 
                     @* asp-for="Input.FullName" *@
-                    <input 
+                    <input asp-for="Input.Name"
                            class="form-control shadow-sm rounded-3 bg-light border-0"
                            placeholder="أدخل الاسم الكامل" />
 
-                    @* asp-validation-for="Input.FullName" *@
-                    <span class="text-danger"></span>
+                    @* asp-validation-for="Input.Name" *@
+                    <span asp-validation-for="Input.Name" class="text-danger"></span>
 
                 </div>
 
@@ -80,11 +80,11 @@
                     </label>
 
                     @* asp-for="Input.Email" *@
-                    <input class="form-control shadow-sm rounded-3 bg-light border-0"
+                    <input asp-for="Input.Email" class="form-control shadow-sm rounded-3 bg-light border-0"
                            placeholder="example@university.edu" />
 
                     @* asp-validation-for="Input.Email" *@
-                    <span class="text-danger"></span>
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
 
                 </div>
 
@@ -95,11 +95,11 @@
                     </label>
 
                     @* asp-for="Input.PhoneNumber" *@
-                    <input class="form-control shadow-sm rounded-3 bg-light border-0"
+                    <input asp-for="Input.PhoneNumber" class="form-control shadow-sm rounded-3 bg-light border-0"
                            placeholder="059xxxxxxx" />
 
                     @* asp-validation-for="Input.PhoneNumber" *@
-                    <span class="text-danger"></span>
+                    <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
 
                 </div>
 
