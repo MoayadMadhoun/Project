@@ -1,0 +1,263 @@
+﻿@page "{id}"
+@model Project.Pages.University.DepartmentHeads.DeleteModel
+
+@{
+    ViewData["Title"] = "تعطيل رئيس قسم";
+}
+
+<form method="post">
+
+    <input type="hidden" asp-for="DepartmentHead.Id" />
+
+    <!-- Hero -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body p-5 text-white"
+             style="background:#dc3545;border-radius:24px;">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+
+                    <h1 class="fw-bold mb-3">
+                        تعطيل رئيس قسم
+                    </h1>
+
+                    <p class="mb-0 fs-5 opacity-75">
+                        سيتم تعطيل الحساب ومنع رئيس القسم من استخدام النظام.
+                    </p>
+
+                </div>
+
+                <div class="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center"
+                     style="width:90px;height:90px;">
+
+                    <i class="bi bi-person-x-fill fs-1"></i>
+
+                </div>
+                 
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Warning -->
+
+    <div class="alert alert-danger border-0 shadow-sm mb-4">
+
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+
+        هل أنت متأكد من تعطيل هذا الحساب؟
+        لن يتمكن رئيس القسم من تسجيل الدخول أو مراجعة طلبات التدريب حتى يتم إعادة تفعيل الحساب.
+
+    </div>
+
+    <!-- Personal Information -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                بيانات رئيس القسم
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-4">
+
+                <div class="col-md-6">
+
+                    <label class="text-muted">
+                        الاسم الكامل
+                    </label>
+
+                    <div class="fw-semibold">
+                        @Model.DepartmentHead.FullName
+                    </div>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <label class="text-muted">
+                        البريد الإلكتروني
+                    </label>
+
+                    <div class="fw-semibold">
+                        @Model.DepartmentHead.Email
+                    </div>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <label class="text-muted">
+                        رقم الهاتف
+                    </label>
+
+                    <div class="fw-semibold">
+                        @Model.DepartmentHead.PhoneNumber
+                    </div>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <label class="text-muted">
+                        حالة الحساب
+                    </label>
+
+                    <div>
+                        @if (Model.DepartmentHead.IsActive)
+                        {
+                            <span class="badge bg-success">
+                                فعال
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-success">
+                                غير فعال
+                            </span>
+                        }
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Department Information -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                معلومات القسم
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-4">
+
+                <div class="col-md-6">
+
+                    <label class="text-muted">
+                        القسم
+                    </label>
+
+                    <div class="fw-semibold">
+                        @Model.DepartmentHead?.RoleScope?.Department?.Name
+                    </div>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <label class="text-muted">
+                        الجامعة
+                    </label>
+
+                    <div class="fw-semibold">
+                        @Model.DepartmentHead?.RoleScope?.University.Name
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Impact -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                تأثير العملية
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <ul class="mb-0">
+
+                <li>
+                    سيتم منع رئيس القسم من تسجيل الدخول.
+                </li>
+
+                <li>
+                    ستبقى جميع الطلبات والمراجعات السابقة محفوظة.
+                </li>
+
+                <li>
+                    لن يتم حذف أي بيانات مرتبطة بالحساب.
+                </li>
+
+                <li>
+                    يمكن إعادة تفعيل الحساب في أي وقت.
+                </li>
+
+                <li>
+                    لن تتأثر طلبات التدريب السابقة أو الحالية.
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+    <!-- Notes -->
+
+    <div class="alert alert-warning border-0 shadow-sm mb-4">
+
+        <i class="bi bi-shield-exclamation me-2"></i>
+
+        إذا كان هذا المستخدم هو رئيس القسم الوحيد، يفضل تعيين رئيس قسم آخر قبل تعطيل الحساب.
+
+    </div>
+
+    <!-- Buttons -->
+
+    <div class="d-flex gap-2 mb-5">
+        
+        
+        <button type="submit"
+                class="btn btn-danger px-5">
+
+            <i class="bi bi-person-x-fill me-1"></i>
+
+            تعطيل رئيس القسم
+
+        </button>
+
+        <a asp-page="Index"
+           class="btn btn-light px-5">
+
+            <i class="bi bi-arrow-right-circle me-1"></i>
+
+            رجوع
+
+        </a>
+
+    </div>
+
+</form>

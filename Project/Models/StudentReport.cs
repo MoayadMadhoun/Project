@@ -24,7 +24,10 @@ namespace Project.Models
         public ReportType Type { get; set; }
         public enum ReportType
         {
-            Weekly, Final
+            [Display(Name ="اسبوعي")]
+            Weekly,
+            [Display(Name = "نهائي")]
+            Final
         }
 
         [Required(ErrorMessage = "Title is required")]
@@ -44,7 +47,16 @@ namespace Project.Models
         public StudentReportStatus Status { get; set; } = StudentReportStatus.Submitted;
         public enum StudentReportStatus
         {
-            Submitted, Reviewed, Approved, Rejected
+            [Display(Name = "لم يتم التسليم")]
+            NotSubmitted,
+            [Display(Name = "قيد المراجعة")]
+            Submitted, 
+            [Display(Name = "تمت المراجعة")] 
+            Reviewed, 
+            [Display(Name = "مقبول")]
+            Approved,
+            [Display(Name = "مرفوض")]
+            Rejected
         }
 
         public string? UniversitySupervisorID { get; set; }

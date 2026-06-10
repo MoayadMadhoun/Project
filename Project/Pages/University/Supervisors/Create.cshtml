@@ -1,0 +1,357 @@
+﻿@page
+@model Project.Pages.University.Supervisors.CreateModel
+
+@{
+    ViewData["Title"] = "إضافة مشرف جامعة";
+}
+
+<form method="post">
+
+    <!-- Hero -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body p-5 text-white"
+             style="background:#1ab29a;border-radius:24px;">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+
+                    <h1 class="fw-bold mb-3">
+                        إضافة مشرف جامعة
+                    </h1>
+
+                    <p class="mb-0 fs-5 opacity-75">
+                        إنشاء حساب مشرف جديد لمتابعة عمليات التدريب الميداني داخل الجامعة.
+                    </p>
+
+                </div>
+
+                <div class="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center"
+                     style="width:90px;height:90px;">
+
+                    <i class="bi bi-person-workspace fs-1"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Supervisor Information -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                بيانات المشرف
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-4">
+
+                <div class="col-md-6">
+
+                    <label class="form-label fw-semibold">
+                        الاسم الكامل
+                    </label>
+
+                    @* asp-for="Input.FullName" *@
+                    <input asp-for="Input.Name"
+                           class="form-control shadow-sm rounded-3 bg-light border-0"
+                           placeholder="أدخل الاسم الكامل" />
+
+                    @* asp-validation-for="Input.Name" *@
+                    <span asp-validation-for="Input.Name" class="text-danger"></span>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <label class="form-label fw-semibold">
+                        البريد الإلكتروني
+                    </label>
+
+                    @* asp-for="Input.Email" *@
+                    <input asp-for="Input.Email" class="form-control shadow-sm rounded-3 bg-light border-0"
+                           placeholder="example@university.edu" />
+
+                    @* asp-validation-for="Input.Email" *@
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <label class="form-label fw-semibold">
+                        رقم الهاتف
+                    </label>
+
+                    @* asp-for="Input.PhoneNumber" *@
+                    <input asp-for="Input.PhoneNumber" class="form-control shadow-sm rounded-3 bg-light border-0"
+                           placeholder="059xxxxxxx" />
+
+                    @* asp-validation-for="Input.PhoneNumber" *@
+                    <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Account Information -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                معلومات الحساب
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-md-4">
+
+                    <label class="text-muted">
+                        الدور
+                    </label>
+
+                    <div class="fw-semibold">
+                        مشرف جامعة
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label class="text-muted">
+                        الجامعة
+                    </label>
+
+                    <div class="fw-semibold">
+                        الجامعة الحالية
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label class="text-muted">
+                        طريقة الدخول
+                    </label>
+
+                    <div class="fw-semibold">
+                        البريد الإلكتروني وكلمة المرور
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Permissions -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                صلاحيات المشرف
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-3">
+
+                <div class="col-md-6">
+
+                    <div class="border rounded-4 p-3">
+
+                        <i class="bi bi-building-check text-success me-2"></i>
+
+                        متابعة فرص التدريب
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <div class="border rounded-4 p-3">
+
+                        <i class="bi bi-person-check text-primary me-2"></i>
+
+                        متابعة الطلبات المقدمة
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <div class="border rounded-4 p-3">
+
+                        <i class="bi bi-file-earmark-text text-warning me-2"></i>
+
+                        مراجعة التقارير
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <div class="border rounded-4 p-3">
+
+                        <i class="bi bi-bar-chart-line text-danger me-2"></i>
+
+                        الاطلاع على الإحصائيات
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Process -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                إجراءات إنشاء الحساب
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row text-center g-3">
+
+                <div class="col-md-3">
+
+                    <div class="border rounded-4 p-4">
+
+                        <i class="bi bi-person-plus-fill text-success fs-1"></i>
+
+                        <h6 class="mt-3">
+                            إنشاء الحساب
+                        </h6>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <div class="border rounded-4 p-4">
+
+                        <i class="bi bi-shield-check text-primary fs-1"></i>
+
+                        <h6 class="mt-3">
+                            ربط الدور
+                        </h6>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <div class="border rounded-4 p-4">
+
+                        <i class="bi bi-key-fill text-warning fs-1"></i>
+
+                        <h6 class="mt-3">
+                            إنشاء كلمة مرور
+                        </h6>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <div class="border rounded-4 p-4">
+
+                        <i class="bi bi-envelope-check-fill text-danger fs-1"></i>
+
+                        <h6 class="mt-3">
+                            إرسال البريد
+                        </h6>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Info -->
+
+    <div class="alert alert-info border-0 shadow-sm mb-4">
+
+        <i class="bi bi-info-circle-fill me-2"></i>
+
+        سيتم إنشاء كلمة مرور عشوائية وكود تفعيل وإرسالها إلى البريد الإلكتروني للمشرف الجديد.
+
+    </div>
+
+    <!-- Buttons -->
+
+    <div class="d-flex gap-2 mb-5">
+
+        <button type="submit"
+                class="btn btn-success px-5">
+
+            <i class="bi bi-person-check-fill me-1"></i>
+
+            إنشاء المشرف
+
+        </button>
+
+        <a asp-page="/University/Supervisors"
+           class="btn btn-light px-5">
+
+            <i class="bi bi-x-circle me-1"></i>
+
+            إلغاء
+
+        </a>
+
+    </div>
+
+</form>
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,251 @@
+﻿@page
+@model Project.Pages.University.Supervisors.DeleteModel
+
+@{
+    ViewData["Title"] = "تعطيل مشرف الجامعة";
+}
+
+<form method="post">
+
+    @* <input type="hidden" asp-for="UserId" /> *@
+
+    <!-- Hero -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body p-5 text-white"
+             style="background:#dc3545;border-radius:24px;">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+
+                    <h1 class="fw-bold mb-3">
+                        تعطيل مشرف الجامعة
+                    </h1>
+
+                    <p class="mb-0 fs-5 opacity-75">
+                        سيتم تعطيل حساب المشرف ومنعه من تسجيل الدخول للنظام.
+                    </p>
+
+                </div>
+
+                <div class="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center"
+                     style="width:90px;height:90px;">
+
+                    <i class="bi bi-person-x-fill fs-1"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Warning -->
+
+    <div class="alert alert-danger border-0 shadow-sm mb-4">
+
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+
+        هل أنت متأكد من تعطيل هذا المشرف؟
+        لن يتمكن من تسجيل الدخول أو استخدام صلاحياته حتى تتم إعادة تفعيل الحساب.
+
+    </div>
+
+    <!-- Supervisor Information -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                بيانات المشرف
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-4">
+
+                <div class="col-md-6">
+
+                    <label class="text-muted">
+                        الاسم الكامل
+                    </label>
+
+                    <div class="fw-semibold">
+                        أحمد محمد
+                    </div>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <label class="text-muted">
+                        البريد الإلكتروني
+                    </label>
+
+                    <div class="fw-semibold">
+                        ahmad@university.edu
+                    </div>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <label class="text-muted">
+                        رقم الهاتف
+                    </label>
+
+                    <div class="fw-semibold">
+                        0599999999
+                    </div>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <label class="text-muted">
+                        حالة الحساب
+                    </label>
+
+                    <div>
+
+                        <span class="badge bg-success">
+                            فعال
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Account Information -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                معلومات الحساب
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-md-4">
+
+                    <label class="text-muted">
+                        الدور
+                    </label>
+
+                    <div class="fw-semibold">
+                        University Supervisor
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label class="text-muted">
+                        الجامعة
+                    </label>
+
+                    <div class="fw-semibold">
+                        جامعة النجاح الوطنية
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label class="text-muted">
+                        تاريخ إنشاء الحساب
+                    </label>
+
+                    <div class="fw-semibold">
+                        01/01/2026
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Impact -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                تأثير العملية
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <ul class="mb-0">
+
+                <li>
+                    سيتم منع المشرف من تسجيل الدخول.
+                </li>
+
+                <li>
+                    ستبقى جميع البيانات والسجلات محفوظة.
+                </li>
+
+                <li>
+                    يمكن إعادة تفعيل الحساب لاحقاً.
+                </li>
+
+                <li>
+                    لن يتم حذف أي تقارير أو طلبات مرتبطة بالمشرف.
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+    <!-- Buttons -->
+
+    <div class="d-flex gap-2 mb-5">
+
+        <button type="submit"
+                class="btn btn-danger px-5">
+
+            <i class="bi bi-person-x-fill me-1"></i>
+
+            تعطيل المشرف
+
+        </button>
+
+        <a asp-page="Index"
+           class="btn btn-light px-5">
+
+            <i class="bi bi-arrow-right-circle me-1"></i>
+
+            رجوع
+
+        </a>
+
+    </div>
+
+</form>
