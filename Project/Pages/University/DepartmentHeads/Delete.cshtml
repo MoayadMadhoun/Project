@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "{id}"
 @model Project.Pages.University.DepartmentHeads.DeleteModel
 
 @{
@@ -7,7 +7,7 @@
 
 <form method="post">
 
-    @* <input type="hidden" asp-for="UserId" /> *@
+    <input type="hidden" asp-for="DepartmentHead.Id" />
 
     <!-- Hero -->
 
@@ -36,7 +36,7 @@
                     <i class="bi bi-person-x-fill fs-1"></i>
 
                 </div>
-
+                 
             </div>
 
         </div>
@@ -77,7 +77,7 @@
                     </label>
 
                     <div class="fw-semibold">
-                        أحمد محمد
+                        @Model.DepartmentHead.FullName
                     </div>
 
                 </div>
@@ -89,7 +89,7 @@
                     </label>
 
                     <div class="fw-semibold">
-                        ahmad@university.edu
+                        @Model.DepartmentHead.Email
                     </div>
 
                 </div>
@@ -101,7 +101,7 @@
                     </label>
 
                     <div class="fw-semibold">
-                        0599999999
+                        @Model.DepartmentHead.PhoneNumber
                     </div>
 
                 </div>
@@ -113,10 +113,19 @@
                     </label>
 
                     <div>
+                        @if (Model.DepartmentHead.IsActive)
+                        {
+                            <span class="badge bg-success">
+                                فعال
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-success">
+                                غير فعال
+                            </span>
+                        }
 
-                        <span class="badge bg-success">
-                            فعال
-                        </span>
 
                     </div>
 
@@ -151,7 +160,7 @@
                     </label>
 
                     <div class="fw-semibold">
-                        هندسة الحاسوب
+                        @Model.DepartmentHead?.RoleScope?.Department?.Name
                     </div>
 
                 </div>
@@ -163,7 +172,7 @@
                     </label>
 
                     <div class="fw-semibold">
-                        جامعة النجاح الوطنية
+                        @Model.DepartmentHead?.RoleScope?.University.Name
                     </div>
 
                 </div>
@@ -229,7 +238,8 @@
     <!-- Buttons -->
 
     <div class="d-flex gap-2 mb-5">
-
+        
+        
         <button type="submit"
                 class="btn btn-danger px-5">
 
