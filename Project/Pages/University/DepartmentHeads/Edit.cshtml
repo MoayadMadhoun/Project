@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "{id}"
 @model Project.Pages.University.DepartmentHeads.EditModel
 
 @{
@@ -6,8 +6,8 @@
 }
 
 <form method="post">
+    <input type="hidden" asp-for="DepartmentHeadsVM.Id" />
 
-    @* <input type="hidden" asp-for="Input.UserId" /> *@
 
     <!-- Hero -->
 
@@ -66,10 +66,10 @@
                     </label>
 
                      @* asp-for="Input.FullName" *@
-                    <input class="form-control shadow-sm rounded-3 bg-light border-0" />
+                    <input asp-for="DepartmentHeadsVM.Name" class="form-control shadow-sm rounded-3 bg-light border-0" />
 
                     @* asp-validation-for="Input.FullName" *@
-                    <span class="text-danger"></span>
+                    <span asp-validation-for="DepartmentHeadsVM.Name" class="text-danger"></span>
 
                 </div>
 
@@ -80,10 +80,10 @@
                     </label>
 
                    @* asp-for="Input.Email" *@
-                    <input class="form-control shadow-sm rounded-3 bg-light border-0" />
+                    <input asp-for="DepartmentHeadsVM.Email" class="form-control shadow-sm rounded-3 bg-light border-0" />
 
                    @* asp-validation-for="Input.Email" *@
-                    <span class="text-danger"></span>
+                    <span asp-validation-for="DepartmentHeadsVM.Email" class="text-danger"></span>
 
                 </div>
 
@@ -94,10 +94,10 @@
                     </label>
 
                     @* asp-for="Input.PhoneNumber" *@
-                    <input class="form-control shadow-sm rounded-3 bg-light border-0" />
+                    <input asp-for="DepartmentHeadsVM.PhoneNumber" class="form-control shadow-sm rounded-3 bg-light border-0" />
 
                    @* asp-validation-for="Input.PhoneNumber" *@
-                    <span class="text-danger"></span>
+                    <span asp-validation-for="DepartmentHeadsVM.PhoneNumber" class="text-danger"></span>
 
                 </div>
 
@@ -109,7 +109,7 @@
 
                    @* asp-for="Input.DepartmentId"
                             asp-items="Model.Departments" *@
-                    <select class="form-select shadow-sm rounded-3 bg-light border-0">
+                    <select asp-for="DepartmentHeadsVM.DepartmentId" asp-items="Model.DepartmentList" class="form-select shadow-sm rounded-3 bg-light border-0">
 
                         <option value="">
                             اختر القسم
@@ -129,7 +129,7 @@
                     </label>
 
                     @* asp-for="Input.IsActive" *@
-                    <select class="form-select shadow-sm rounded-3 bg-light border-0">
+                    <select asp-for="DepartmentHeadsVM.isActive" class="form-select shadow-sm rounded-3 bg-light border-0">
 
                         <option value="true">
                             فعال
@@ -183,8 +183,8 @@
                         الجامعة
                     </label>
 
-                    <div class="fw-semibold">
-                        الجامعة الحالية
+                    <div class="fw-semibold">  
+                        @Model.DepartmentHeadInfo.RoleScope?.University.Name
                     </div>
 
                 </div>
@@ -196,7 +196,7 @@
                     </label>
 
                     <div class="fw-semibold">
-                        01/01/2026
+                       @Model.DepartmentHeadInfo.CreatedAt
                     </div>
 
                 </div>
