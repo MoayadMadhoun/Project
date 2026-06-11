@@ -567,9 +567,13 @@
 <div class="filters-bar">
     <div class="filter-search">
         <i class="bi bi-search si"></i>
-        <input type="text" id="searchInput" placeholder="ابحث عن مشرف..." />
+        <input type="text"
+               name="SearchTerm"
+               value="@Model.SearchTerm"
+               placeholder="ابحث بالاسم أو البريد الإلكتروني"
+               class="form-control" />
     </div>
-    <select class="filter-select" id="deptFilter">
+    @* <select class="filter-select" id="deptFilter">
         <option value="">جميع الأقسام</option>
         <option>تقنية المعلومات</option>
         <option>علوم الحاسب</option>
@@ -584,7 +588,7 @@
         <option>تحليل البيانات</option>
         <option>شبكات الحاسب</option>
         <option>إدارة المشاريع</option>
-    </select>
+    </select> *@
     <button class="btn-filter" id="applyFilter">
         <i class="bi bi-sliders"></i> تصفية
     </button>
@@ -600,7 +604,7 @@
             <h2>قائمة المشرفين الأكاديميين</h2>
             <div class="tch-sub">إجمالي 86 مشرف</div>
         </div>
-        <a href="#" class="btn-add">
+        <a asp-page="/University/Supervisors/Create" class="btn-add">
             <i class="bi bi-plus-lg"></i> إضافة مشرف
         </a>
     </div>
@@ -612,154 +616,204 @@
                     <th style="width:50px">#</th>
                     <th>اسم المشرف</th>
                     <th>البريد الإلكتروني</th>
-                    <th>القسم</th>
-                    <th>التخصص</th>
+                    @* <th>القسم</th>
+                    <th>التخصص</th> *@
                     <th style="width:120px">الإجراءات</th>
                 </tr>
             </thead>
+           
             <tbody>
-                <tr>
-                    <td><span class="row-num">1</span></td>
-                    <td><span class="sup-name">د. محمد بن عبدالله</span></td>
-                    <td><span class="email-cell">m.abdullah@uot.edu.sa</span></td>
-                    <td><span class="dept-badge">تقنية المعلومات</span></td>
-                    <td><span class="spec-badge">هندسة البرمجيات</span></td>
-                    <td>
-                        <div class="action-btns">
-                            <a href="#" class="act-btn view"><i class="bi bi-eye"></i></a>
-                            <a href="#" class="act-btn edit"><i class="bi bi-pencil"></i></a>
-                            <button class="act-btn del" onclick="confirmDelete(1,'د. محمد بن عبدالله')"><i class="bi bi-trash3"></i></button>
-                        </div>
-                    </td>
+
+                @{
+                    int rowNumber =
+                    ((Model.Supervisors.PageIndex - 1) * Model.PageSize) + 1;
+                }
+
+                @foreach (var supervisor in Model.Supervisors)
+                {
+                    <tr>
+
+                        <td>
+                            <span class="row-num">
+                                @rowNumber
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="sup-name">
+                                @supervisor.FullName
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="email-cell">
+                                @supervisor.Email
+                            </span>
+                        </td>
+
+                        <td>
+                            <div class="action-btns">
+
+                                <a asp-page="/University/Supervisors/Details" asp-route-id="@supervisor.Id" class="act-btn view">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+
+                                <a asp-page="/University/Supervisors/Edit" asp-route-id="@supervisor.Id" class="act-btn edit">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+
+                                <a asp-page="/University/Supervisors/Delete" asp-route-id="@supervisor.Id" class="act-btn del">
+                                    <i class="bi bi-trash3"></i>
+                                </a>
+
+                            </div>
+                        </td>
+
                 </tr>
-                <tr>
-                    <td><span class="row-num">2</span></td>
-                    <td><span class="sup-name">د. سارة بنت خالد</span></td>
-                    <td><span class="email-cell">s.khalid@uot.edu.sa</span></td>
-                    <td><span class="dept-badge">علوم الحاسب</span></td>
-                    <td><span class="spec-badge">علوم الحاسب</span></td>
-                    <td>
-                        <div class="action-btns">
-                            <a href="#" class="act-btn view"><i class="bi bi-eye"></i></a>
-                            <a href="#" class="act-btn edit"><i class="bi bi-pencil"></i></a>
-                            <button class="act-btn del" onclick="confirmDelete(2,'د. سارة بنت خالد')"><i class="bi bi-trash3"></i></button>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td><span class="row-num">3</span></td>
-                    <td><span class="sup-name">د. أحمد بن فيصل</span></td>
-                    <td><span class="email-cell">a.faisal@uot.edu.sa</span></td>
-                    <td><span class="dept-badge">تقنية المعلومات</span></td>
-                    <td><span class="spec-badge">أمن سيبراني</span></td>
-                    <td>
-                        <div class="action-btns">
-                            <a href="#" class="act-btn view"><i class="bi bi-eye"></i></a>
-                            <a href="#" class="act-btn edit"><i class="bi bi-pencil"></i></a>
-                            <button class="act-btn del" onclick="confirmDelete(3,'د. أحمد بن فيصل')"><i class="bi bi-trash3"></i></button>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td><span class="row-num">4</span></td>
-                    <td><span class="sup-name">د. نورة بنت سعد</span></td>
-                    <td><span class="email-cell">n.saad@uot.edu.sa</span></td>
-                    <td><span class="dept-badge">نظم المعلومات</span></td>
-                    <td><span class="spec-badge">نظم معلومات إدارية</span></td>
-                    <td>
-                        <div class="action-btns">
-                            <a href="#" class="act-btn view"><i class="bi bi-eye"></i></a>
-                            <a href="#" class="act-btn edit"><i class="bi bi-pencil"></i></a>
-                            <button class="act-btn del" onclick="confirmDelete(4,'د. نورة بنت سعد')"><i class="bi bi-trash3"></i></button>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td><span class="row-num">5</span></td>
-                    <td><span class="sup-name">د. بدر بن علي</span></td>
-                    <td><span class="email-cell">b.ali@uot.edu.sa</span></td>
-                    <td><span class="dept-badge">الهندسة</span></td>
-                    <td><span class="spec-badge">هندسة البرمجيات</span></td>
-                    <td>
-                        <div class="action-btns">
-                            <a href="#" class="act-btn view"><i class="bi bi-eye"></i></a>
-                            <a href="#" class="act-btn edit"><i class="bi bi-pencil"></i></a>
-                            <button class="act-btn del" onclick="confirmDelete(5,'د. بدر بن علي')"><i class="bi bi-trash3"></i></button>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td><span class="row-num">6</span></td>
-                    <td><span class="sup-name">د. ريم بنت محمد</span></td>
-                    <td><span class="email-cell">r.mohammed@uot.edu.sa</span></td>
-                    <td><span class="dept-badge">علوم البيانات</span></td>
-                    <td><span class="spec-badge">تحليل البيانات</span></td>
-                    <td>
-                        <div class="action-btns">
-                            <a href="#" class="act-btn view"><i class="bi bi-eye"></i></a>
-                            <a href="#" class="act-btn edit"><i class="bi bi-pencil"></i></a>
-                            <button class="act-btn del" onclick="confirmDelete(6,'د. ريم بنت محمد')"><i class="bi bi-trash3"></i></button>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td><span class="row-num">7</span></td>
-                    <td><span class="sup-name">د. عبدالله بن ناصر</span></td>
-                    <td><span class="email-cell">a.nasser@uot.edu.sa</span></td>
-                    <td><span class="dept-badge">تقنية المعلومات</span></td>
-                    <td><span class="spec-badge">شبكات الحاسب</span></td>
-                    <td>
-                        <div class="action-btns">
-                            <a href="#" class="act-btn view"><i class="bi bi-eye"></i></a>
-                            <a href="#" class="act-btn edit"><i class="bi bi-pencil"></i></a>
-                            <button class="act-btn del" onclick="confirmDelete(7,'د. عبدالله بن ناصر')"><i class="bi bi-trash3"></i></button>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td><span class="row-num">8</span></td>
-                    <td><span class="sup-name">د. هند بنت راشد</span></td>
-                    <td><span class="email-cell">h.rashid@uot.edu.sa</span></td>
-                    <td><span class="dept-badge">نظم المعلومات</span></td>
-                    <td><span class="spec-badge">إدارة المشاريع</span></td>
-                    <td>
-                        <div class="action-btns">
-                            <a href="#" class="act-btn view"><i class="bi bi-eye"></i></a>
-                            <a href="#" class="act-btn edit"><i class="bi bi-pencil"></i></a>
-                            <button class="act-btn del" onclick="confirmDelete(8,'د. هند بنت راشد')"><i class="bi bi-trash3"></i></button>
-                        </div>
-                    </td>
-                </tr>
+                
+
+                    rowNumber++;
+                }
+
             </tbody>
         </table>
     </div>
 
     <div class="table-footer">
+
         <div class="per-page">
             عرض
+
             <select onchange="changePageSize(this.value)">
-                <option value="10" selected>10</option>
-                <option value="25">25</option>
-                <option value="50">50</option>
+                <option value="10" selected="@(Model.PageSize == 10)">
+                    10
+                </option>
+                
+
+                <option value="25" selected="@(Model.PageSize == 25)">
+                    25
+                </option>
+
+                <option value="50" selected="@(Model.PageSize == 50)">
+                    50
+                </option>
             </select>
         </div>
-        <span class="showing-text">عرض 1 إلى 10 من 86 مشرف</span>
+
+        @{
+            var start =
+            ((Model.Supervisors.PageIndex - 1) * Model.PageSize) + 1;
+
+            var end =
+            Math.Min(start + Model.PageSize - 1,
+            Model.Supervisors.TotalCount);
+        }
+
+        <span class="showing-text">
+            عرض @start إلى @end من @Model.Supervisors.TotalCount مشرف
+        </span>
+
         <div class="pagination-btns">
-            <a href="#" class="pg-btn disabled"><i class="bi bi-chevron-right"></i></a>
-            <a href="#" class="pg-btn active">1</a>
-            <a href="#" class="pg-btn">2</a>
-            <a href="#" class="pg-btn">3</a>
-            <span class="pg-dots">...</span>
-            <a href="#" class="pg-btn">9</a>
-            <a href="#" class="pg-btn"><i class="bi bi-chevron-left"></i></a>
+
+            @if (Model.Supervisors.HasPrevPage)
+            {
+                <a asp-route-PageNumber="@(Model.PageNumber - 1)"
+                   asp-route-PageSize="@Model.PageSize"
+                   asp-route-SearchTerm="@Model.SearchTerm"
+                   class="pg-btn">
+
+                    <i class="bi bi-chevron-right"></i>
+
+                </a>
+            }
+            else
+            {
+                <span class="pg-btn disabled">
+                    <i class="bi bi-chevron-right"></i>
+                </span>
+            }
+
+            @{
+                int current = Model.Supervisors.PageIndex;
+                int total = Model.Supervisors.TotalPages;
+
+                int startPage = Math.Max(1, current - 1);
+                int endPage = Math.Min(total, current + 1);
+            }
+
+            @if (startPage > 1)
+            {
+                <a asp-route-PageNumber="1"
+                   asp-route-PageSize="@Model.PageSize"
+                   asp-route-SearchTerm="@Model.SearchTerm"
+                   class="pg-btn">
+
+                    1
+
+                </a>
+
+                @if (startPage > 2)
+                {
+                    <span class="pg-dots">...</span>
+                }
+            }
+
+            @for (int i = startPage; i <= endPage; i++)
+            {
+                <a asp-route-PageNumber="@i"
+                   asp-route-PageSize="@Model.PageSize"
+                   asp-route-SearchTerm="@Model.SearchTerm"
+                   class="pg-btn @(i == current ? "active" : "")">
+
+                    @i
+
+                </a>
+            }
+
+            @if (endPage < total)
+            {
+                @if (endPage < total - 1)
+                {
+                    <span class="pg-dots">...</span>
+                }
+
+                <a asp-route-PageNumber="@total"
+                   asp-route-PageSize="@Model.PageSize"
+                   asp-route-SearchTerm="@Model.SearchTerm"
+                   class="pg-btn">
+
+                    @total
+
+                </a>
+            }
+
+            @if (Model.Supervisors.HasNextPage)
+            {
+                <a asp-route-PageNumber="@(Model.PageNumber + 1)"
+                   asp-route-PageSize="@Model.PageSize"
+                   asp-route-SearchTerm="@Model.SearchTerm"
+                   class="pg-btn">
+
+                    <i class="bi bi-chevron-left"></i>
+
+                </a>
+            }
+            else
+            {
+                <span class="pg-btn disabled">
+                    <i class="bi bi-chevron-left"></i>
+                </span>
+            }
+
         </div>
+
     </div>
 
 </div><!-- /table-card -->
 @* ════════════════════════════
    ADD SUPERVISOR MODAL
 ════════════════════════════ *@
-<div class="modal fade" id="addModal" tabindex="-1" aria-hidden="true">
+@* <div class="modal fade" id="addModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 rounded-4 shadow-lg">
             <div class="modal-header border-0 pt-4 px-4 pb-0">
@@ -819,12 +873,12 @@
             </div>
         </div>
     </div>
-</div>
+</div> *@
 
 @* ════════════════════════════
    DELETE CONFIRM MODAL
 ════════════════════════════ *@
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+@* <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content border-0 rounded-4 shadow-lg text-center p-4">
             <div class="del-circle">
@@ -848,8 +902,19 @@
             </form>
         </div>
     </div>
-</div>
+</div> *@
 
 @section Scripts {
    
 }
+<script>
+    function changePageSize(size) {
+
+        const url = new URL(window.location.href);
+
+        url.searchParams.set('PageSize', size);
+        url.searchParams.set('PageNumber', 1);
+
+        window.location.href = url.toString();
+    }
+</script>
