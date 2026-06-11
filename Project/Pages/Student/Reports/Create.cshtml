@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "{OpportunityId}"
 @model CreateModel
 
 @{
@@ -6,226 +6,380 @@
     ViewData["UserType"] = "Student";
 }
 
-<form method="post" enctype="multipart/form-data">
 
-    <!-- Hero -->
+<!-- Hero Section -->
 
-    <div class="card border-0 shadow-sm mb-4">
+<div class="card border-0 shadow-sm mb-4">
 
-        <div class="card-body p-5 text-white"
-             style="background:#2563eb;border-radius:24px;">
+    <div class="card-body p-5 text-white"
+         style="background:#1ab29a;border-radius:24px;">
 
-            <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex justify-content-between align-items-center">
+
+            <div>
+
+                <h1 class="fw-bold mb-3">
+                    التقديم على فرصة تدريب
+                </h1>
+
+                <p class="mb-0 fs-5 opacity-75">
+                    قم بمراجعة بياناتك وإرسال طلب الالتحاق بالفرصة التدريبية.
+                </p>
+
+            </div>
+
+            <div class="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center"
+                 style="width:90px;height:90px;">
+
+                <i class="bi bi-send-check-fill fs-1"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Opportunity Information -->
+
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+
+    <div class="card-header bg-white">
+
+        <h5 class="fw-bold mb-0">
+            معلومات الفرصة التدريبية
+        </h5>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row g-4">
+
+            <div class="col-md-6">
+
+                <label class="text-muted">
+                    عنوان الفرصة
+                </label>
+
+                <div class="fw-semibold">
+                    @(Model.opportunity?.Title ?? "")
+                </div>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <label class="text-muted">
+                    المؤسسة
+                </label>
+
+                <div class="fw-semibold">
+                    @Model.opportunity?.TrainingInstitution?.Name?? ""
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <label class="text-muted">
+                    فترة التدريب
+                </label>
+
+                <div class="fw-semibold">
+                    @(Model.opportunity?.TrainingTerm?.Name ?? "")
+                    @(Model.opportunity?.TrainingTerm?.AcademicYear ?? "")
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <label class="text-muted">
+                    تاريخ البداية
+                </label>
+
+                <div class="fw-semibold">
+
+                    @(Model.opportunity?.TrainingTerm?.StartDate.ToString("dd-MM-yyyy") ?? "")
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <label class="text-muted">
+                    تاريخ النهاية
+                </label>
+
+                <div class="fw-semibold">
+                    @(Model.opportunity?.TrainingTerm?.EndDate.ToString("dd-MM-yyyy") ?? "")
+                </div>
+
+            </div>
+
+            <div class="col-md-12">
+
+                <label class="text-muted">
+                    وصف الفرصة
+                </label>
+
+                <div>
+                    @(Model.opportunity?.Description ?? "")
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Student Information -->
+
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+
+    <div class="card-header bg-white">
+
+        <h5 class="fw-bold mb-0">
+            بيانات الطالب
+        </h5>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row g-4">
+
+            <div class="col-md-4">
+
+                <label class="text-muted">
+                    الاسم
+                </label>
+
+                <div class="fw-semibold">
+                    @(Model.student?.Name ?? "")
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <label class="text-muted">
+                    الرقم الجامعي
+                </label>
+
+                <div class="fw-semibold">
+                    @(Model.student?.StudentNumber ?? "")
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <label class="text-muted">
+                    المعدل
+                </label>
+
+                <div class="fw-semibold">
+                    @(Model.student?.GPA?.ToString() ?? "")
+                </div>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <label class="text-muted">
+                    القسم
+                </label>
+
+                <div class="fw-semibold">
+                    @(Model.student?.Department?.Name ?? "")
+                </div>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <label class="text-muted">
+                    التخصص
+                </label>
+
+                <div class="fw-semibold">
+                    @(Model.student?.Specialty?.Name ?? "")
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<form method="post">
+
+    <!-- Student Notes -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                ملاحظات الطالب
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <textarea asp-for="@Model.studentNotes" class="form-control"
+                      rows="6"
+                      placeholder="أضف أي معلومات أو ملاحظات ترغب بإرسالها مع طلب التدريب..."> </textarea>
+
+        </div>
+
+    </div>
+
+    <!-- Workflow -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                مسار اعتماد الطلب
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-4 text-center">
+
+                <div class="col-md-4">
+
+                    <div class="border rounded-4 p-4 h-100">
+
+                        <i class="bi bi-person-workspace text-primary fs-1"></i>
+
+                        <h6 class="mt-3">
+                            رئيس القسم
+                        </h6>
+
+                        <p class="text-muted mb-0">
+                            مراجعة الطلب والتأكد من أهلية الطالب.
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <div class="border rounded-4 p-4 h-100">
+
+                        <i class="bi bi-building-check text-success fs-1"></i>
+
+                        <h6 class="mt-3">
+                            مسؤول التدريب العام
+                        </h6>
+
+                        <p class="text-muted mb-0">
+                            اعتماد الطلب من الجامعة.
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <div class="border rounded-4 p-4 h-100">
+
+                        <i class="bi bi-briefcase-fill text-danger fs-1"></i>
+
+                        <h6 class="mt-3">
+                            المؤسسة
+                        </h6>
+
+                        <p class="text-muted mb-0">
+                            القبول النهائي للطالب داخل المؤسسة.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="text-center mt-4">
+
+                <i class="bi bi-arrow-left-right fs-3 text-secondary"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Important Note -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-body">
+
+            <div class="d-flex align-items-start">
+
+                <i class="bi bi-info-circle-fill text-primary fs-3 me-3"></i>
 
                 <div>
 
-                    <h1 class="fw-bold mb-3">
-                        رفع تقرير التدريب
-                    </h1>
+                    <h6 class="fw-bold">
+                        ملاحظة مهمة
+                    </h6>
 
-                    <p class="mb-0 fs-5 opacity-75">
-                        قم بإرسال تقريرك الأسبوعي أو النهائي لمراجعته من قبل المشرف الأكاديمي.
+                    <p class="mb-0 text-muted">
+
+                        بعد إرسال الطلب ستصبح حالته
+                        <span class="badge bg-warning text-dark">
+                            Submitted
+                        </span>
+
+                        وسيتم تحويله تلقائياً إلى رئيس القسم لمراجعته.
+                        لا يمكن تعديل الطلب بعد إرساله إلا إذا تم رفضه أو سحبه.
+
                     </p>
 
                 </div>
 
-                <div class="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center"
-                     style="width:90px;height:90px;">
-
-                    <i class="bi bi-file-earmark-arrow-up fs-1"></i>
-
-                </div>
-
             </div>
 
         </div>
 
     </div>
 
-    <!-- Training Info -->
+    <!-- Declaration -->
 
     <div class="card border-0 shadow-sm rounded-4 mb-4">
 
-        <div class="card-header bg-white">
-
-            <h5 class="fw-bold mb-0">
-                معلومات التدريب
-            </h5>
-
-        </div>
-
         <div class="card-body">
 
-            <div class="row">
+            <div class="form-check">
 
-                <div class="col-md-4">
+                <input asp-for="@Model.IsAgree" class="form-check-input"
+                       type="checkbox"
+                       id="agree" />
 
-                    <label class="text-muted">
-                        فرصة التدريب
-                    </label>
+                <label class="form-check-label"
+                       for="agree">
 
-                    <div class="fw-semibold">
-                        متدرب ASP.NET Core
-                    </div>
+                    أقر بأن جميع البيانات المقدمة صحيحة وأتحمل مسؤولية أي معلومات غير صحيحة.
 
-                </div>
-
-                <div class="col-md-4">
-
-                    <label class="text-muted">
-                        المؤسسة
-                    </label>
-
-                    <div class="fw-semibold">
-                        شركة التقنية الحديثة
-                    </div>
-
-                </div>
-
-                <div class="col-md-4">
-
-                    <label class="text-muted">
-                        المشرف الأكاديمي
-                    </label>
-
-                    <div class="fw-semibold">
-                        د. أحمد خالد
-                    </div>
-
-                </div>
+                </label>
 
             </div>
-
-        </div>
-
-    </div>
-
-    <!-- Report Details -->
-
-    <div class="card border-0 shadow-sm rounded-4 mb-4">
-
-        <div class="card-header bg-white">
-
-            <h5 class="fw-bold mb-0">
-                بيانات التقرير
-            </h5>
-
-        </div>
-
-        <div class="card-body">
-
-            <div class="row g-4">
-
-                <div class="col-md-4">
-
-                    <label class="form-label">
-                        نوع التقرير
-                    </label>
-
-                    <select class="form-select">
-
-                        <option>
-                            تقرير أسبوعي
-                        </option>
-
-                        <option>
-                            تقرير نهائي
-                        </option>
-
-                    </select>
-
-                </div>
-
-                <div class="col-md-8">
-
-                    <label class="form-label">
-                        عنوان التقرير
-                    </label>
-
-                    <input type="text"
-                           class="form-control"
-                           placeholder="أدخل عنوان التقرير" />
-
-                </div>
-
-                <div class="col-md-12">
-
-                    <label class="form-label">
-                        محتوى التقرير
-                    </label>
-
-                    <textarea rows="8"
-                              class="form-control"
-                              placeholder="اكتب تفاصيل التقرير هنا..."></textarea>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- Upload File -->
-
-    <div class="card border-0 shadow-sm rounded-4 mb-4">
-
-        <div class="card-header bg-white">
-
-            <h5 class="fw-bold mb-0">
-                ملف التقرير
-            </h5>
-
-        </div>
-
-        <div class="card-body">
-
-            <div class="border rounded-4 p-5 text-center">
-
-                <i class="bi bi-cloud-arrow-up fs-1 text-primary"></i>
-
-                <h5 class="mt-3">
-                    رفع ملف التقرير
-                </h5>
-
-                <p class="text-muted">
-                    PDF أو DOCX بحد أقصى 20MB
-                </p>
-
-                <input type="file"
-                       class="form-control mt-3" />
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- Notes -->
-
-    <div class="card border-0 shadow-sm rounded-4 mb-4">
-
-        <div class="card-header bg-white">
-
-            <h5 class="fw-bold mb-0">
-                ملاحظات هامة
-            </h5>
-
-        </div>
-
-        <div class="card-body">
-
-            <ul class="mb-0">
-
-                <li>تأكد من كتابة عنوان واضح للتقرير.</li>
-
-                <li>يجب أن يعكس التقرير الأعمال المنجزة خلال فترة التدريب.</li>
-
-                <li>يمكن رفع ملف إضافي يحتوي على صور أو مرفقات داعمة.</li>
-
-                <li>بعد الإرسال ستصبح حالة التقرير "قيد المراجعة".</li>
-
-            </ul>
 
         </div>
 
@@ -236,15 +390,18 @@
     <div class="d-flex gap-2 mb-5">
 
         <button type="submit"
-                class="btn btn-primary px-5">
+                class="btn btn-success px-5">
 
-            <i class="bi bi-send me-2"></i>
-            إرسال التقرير
+            <i class="bi bi-send-fill me-1"></i>
+
+            إرسال الطلب
 
         </button>
 
-        <a href="#"
+        <a asp-page="Student/AvaliabelOpportunities"
            class="btn btn-light px-5">
+
+            <i class="bi bi-x-circle me-1"></i>
 
             إلغاء
 
@@ -253,4 +410,3 @@
     </div>
 
 </form>
-

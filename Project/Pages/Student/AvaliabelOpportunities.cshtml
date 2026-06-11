@@ -101,7 +101,16 @@
                             </td>
                         <td class="px-4 py-3">
                             <div class="flex gap-2 items-center">
-                                <a asp-page="/Student/Applications/create" class="bg-primary text-white text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-primary/90">تقديم</a>
+
+                             @if(!Model.AppliedIds.Contains(Opportunity.OpportunityID) && 
+                             @Opportunity.Status == @Models.TrainingOpportunity.Opportunity.Open )
+                                                         
+                              {
+
+                              <a asp-page="/Student/Applications/Create" asp-route-opportunityId="@Opportunity.OpportunityID" 
+                              class="bg-primary text-white text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-primary/90">تقديم </a>
+
+                              }                               
                                 <a href="#" class="text-primary text-xs font-bold hover:underline whitespace-nowrap">عرض التفاصيل</a>
                              </div>
                         </td>
