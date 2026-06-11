@@ -24,7 +24,7 @@ namespace Project.Pages.University.Supervisors
 
             if(Supervisor == null)
             {
-                ModelState.AddModelError(nameof(Supervisor), "áÇ íæÌÏ ÑÆíÓ ÌÇãÚÉ ");
+                ModelState.AddModelError(nameof(Supervisor), "áÇ íæÌÏ ãÔÑİ ÌÇãÚÉ ");
 
                 return Page();
             }
@@ -37,12 +37,12 @@ namespace Project.Pages.University.Supervisors
 
             if (Supervisor == null)
             {
-                ModelState.AddModelError(nameof(Supervisor), "áÇ íæÌÏ ÑÆíÓ ÌÇãÚÉ ");
+                ModelState.AddModelError(nameof(Supervisor), "áÇ íæÌÏ ãÔÑİ ÌÇãÚÉ ");
                 return Page();
             }
             UniversitySupervisor?.IsActive = false;
             await _dbContext.SaveChangesAsync();
-            TempData["SuccessMessafe"] = "Êã ÊÚØíá ÑÆíÓ ÇáÌÇãÚÉ ÈäÌÇÍ";
+            TempData["SuccessMessafe"] = "Êã ÊÚØíá ãÔÑİ ÇáÌÇãÚÉ ÈäÌÇÍ";
 
             return Page();
         }

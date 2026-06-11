@@ -34,7 +34,7 @@ namespace Project.Pages.University.Supervisors
 
             if(supervisor == null)
             {
-                ModelState.AddModelError(nameof(supervisor), "ÑÆíÓ ÇáÌÇãÚÉ åĞÇ ÛíÑ ãæÌæÏ ");
+                ModelState.AddModelError(nameof(supervisor), "ãÔÑİ ÇáÌÇãÚÉ åĞÇ ÛíÑ ãæÌæÏ ");
                 return Page();
             }
             FullViewModel(supervisor, SupervisorsVM);
@@ -53,7 +53,7 @@ namespace Project.Pages.University.Supervisors
 
             if (supervisor == null)
             {
-                ModelState.AddModelError(nameof(supervisor), "ÑÆíÓ ÇáÌÇãÚÉ åĞÇ ÛíÑ ãæÌæÏ ");
+                ModelState.AddModelError(nameof(supervisor), "ãÔÑİ ÇáÌÇãÚÉ åĞÇ ÛíÑ ãæÌæÏ ");
                 return Page();
             }
 

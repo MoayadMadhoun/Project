@@ -24,7 +24,7 @@ namespace Project.Pages.University.Supervisors
 
             if (Supervisor == null)
             {
-                ModelState.AddModelError(nameof(Supervisor), "áÇ íæÌÏ ÑÆíÓ ÌÇãÚÉ ");
+                ModelState.AddModelError(nameof(Supervisor), "áÇ íæÌÏ ãÔÑİ ÌÇãÚÉ ");
 
                 return Page();
             }
