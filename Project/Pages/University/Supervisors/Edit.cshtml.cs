@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Project.Data;
@@ -9,6 +10,7 @@ using Project.ViewModel;
 
 namespace Project.Pages.University.Supervisors
 {
+    [Authorize(Roles = "UniversityTrainingAdmin")]
     public class EditModel : PageModel
     {
         private readonly ApplicationDbContext _dbContext;

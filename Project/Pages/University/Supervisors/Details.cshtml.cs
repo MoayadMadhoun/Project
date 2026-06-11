@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Project.Data;
@@ -6,6 +7,7 @@ using Project.Repostory;
 
 namespace Project.Pages.University.Supervisors
 {
+    [Authorize(Roles = "UniversityTrainingAdmin")]
     public class DetailsModel : PageModel
     {
         private readonly ApplicationDbContext _dbContext;
