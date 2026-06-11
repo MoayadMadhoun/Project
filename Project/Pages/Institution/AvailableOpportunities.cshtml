@@ -131,7 +131,7 @@
                 {
                     <tr class="hover:bg-slate-50 transition-colors">
                         <td class="px-4 py-3 text-sm text-slate-900 font-bold">@opportunity.Title</td>
-                        <td class="px-4 py-3 text-sm text-slate-600">@foreach (var sp in opportunity.Specialties)
+                        <td class="px-4 py-3 text-sm text-slate-600">@foreach (var sp in opportunity.OpportunitySpecialties)
                             {
                                 <span>@sp.Specialty.Name </span>
                             }

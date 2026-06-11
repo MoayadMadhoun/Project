@@ -81,7 +81,7 @@ namespace Project.Pages.Institution
                 var specialities = _dbContext.Specialties.ToList();
                 Specialities = new SelectList(specialities, "SpecialtyID", "Name");
                 if (SpecialtyId > 0)
-                    query = query.Where(a => a.Specialties.Any(s => s.SpecialtyID == SpecialtyId));
+                    query = query.Where(a => a.OpportunitySpecialties.Any(s => s.SpecialtyID == SpecialtyId));
                 if (StatusId > 0)
                 {
                     query = query.Where(a => a.Status == (TrainingOpportunity.Opportunity)StatusId);
