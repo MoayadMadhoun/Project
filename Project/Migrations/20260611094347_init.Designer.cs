@@ -12,15 +12,15 @@ using Project.Data;
 namespace Project.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260520132658_fixrolescopemodel")]
-    partial class fixrolescopemodel
+    [Migration("20260611094347_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.7")
+                .HasAnnotation("ProductVersion", "10.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -399,6 +399,38 @@ namespace Project.Migrations
                     b.HasIndex("UniversityID");
 
                     b.ToTable("Departments");
+                });
+
+            modelBuilder.Entity("Project.Models.EmailVerificationCode", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ExpireAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("EmailVerificationCodes");
                 });
 
             modelBuilder.Entity("Project.Models.FieldVisit", b =>
@@ -1030,6 +1062,10 @@ namespace Project.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
+                    b.Property<string>("InstitutionType")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
@@ -1041,10 +1077,6 @@ namespace Project.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Type")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("UserID")
                         .IsRequired()
@@ -1239,6 +1271,9 @@ namespace Project.Migrations
                     b.Property<int>("TermID")
                         .HasColumnType("int");
 
+                    b.Property<int?>("TrainingOpportunityOpportunityID")
+                        .HasColumnType("int");
+
                     b.Property<string>("UniversitySupervisorID")
                         .HasColumnType("nvarchar(450)");
 
@@ -1256,6 +1291,8 @@ namespace Project.Migrations
                     b.HasIndex("StudentID");
 
                     b.HasIndex("TermID");
+
+                    b.HasIndex("TrainingOpportunityOpportunityID");
 
                     b.HasIndex("UniversitySupervisorID");
 
@@ -1454,6 +1491,17 @@ namespace Project.Migrations
                     b.Navigation("University");
                 });
 
+            modelBuilder.Entity("Project.Models.EmailVerificationCode", b =>
+                {
+                    b.HasOne("Project.Models.AspNetUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Project.Models.FieldVisit", b =>
                 {
                     b.HasOne("Project.Models.TrainingPlacement", "TrainingPlacement")
@@ -1495,7 +1543,7 @@ namespace Project.Migrations
             modelBuilder.Entity("Project.Models.OpportunitySkill", b =>
                 {
                     b.HasOne("Project.Models.TrainingOpportunity", "TrainingOpportunity")
-                        .WithMany()
+                        .WithMany("OpportunitySkills")
                         .HasForeignKey("OpportunityID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1514,7 +1562,7 @@ namespace Project.Migrations
             modelBuilder.Entity("Project.Models.OpportunitySpecialty", b =>
                 {
                     b.HasOne("Project.Models.TrainingOpportunity", "TrainingOpportunity")
-                        .WithMany()
+                        .WithMany("OpportunitySpecialties")
                         .HasForeignKey("OpportunityID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1857,6 +1905,10 @@ namespace Project.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Project.Models.TrainingOpportunity", null)
+                        .WithMany("TrainingPlacement")
+                        .HasForeignKey("TrainingOpportunityOpportunityID");
+
                     b.HasOne("Project.Models.AspNetUser", "UniversitySupervisor")
                         .WithMany()
                         .HasForeignKey("UniversitySupervisorID")
@@ -1938,6 +1990,15 @@ namespace Project.Migrations
             modelBuilder.Entity("Project.Models.TrainingInstitution", b =>
                 {
                     b.Navigation("TrainingOpportunities");
+                });
+
+            modelBuilder.Entity("Project.Models.TrainingOpportunity", b =>
+                {
+                    b.Navigation("OpportunitySkills");
+
+                    b.Navigation("OpportunitySpecialties");
+
+                    b.Navigation("TrainingPlacement");
                 });
 
             modelBuilder.Entity("Project.Models.TrainingOpportunityRequest", b =>

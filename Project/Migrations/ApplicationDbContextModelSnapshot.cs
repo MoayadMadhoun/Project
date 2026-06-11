@@ -651,14 +651,9 @@ namespace Project.Migrations
                     b.Property<int>("SpecialtyID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TrainingOpportunityOpportunityID")
-                        .HasColumnType("int");
-
                     b.HasKey("RequestSpecialtyID");
 
                     b.HasIndex("SpecialtyID");
-
-                    b.HasIndex("TrainingOpportunityOpportunityID");
 
                     b.HasIndex("RequestID", "SpecialtyID")
                         .IsUnique();
@@ -1273,6 +1268,9 @@ namespace Project.Migrations
                     b.Property<int>("TermID")
                         .HasColumnType("int");
 
+                    b.Property<int?>("TrainingOpportunityOpportunityID")
+                        .HasColumnType("int");
+
                     b.Property<string>("UniversitySupervisorID")
                         .HasColumnType("nvarchar(450)");
 
@@ -1290,6 +1288,8 @@ namespace Project.Migrations
                     b.HasIndex("StudentID");
 
                     b.HasIndex("TermID");
+
+                    b.HasIndex("TrainingOpportunityOpportunityID");
 
                     b.HasIndex("UniversitySupervisorID");
 
@@ -1540,7 +1540,7 @@ namespace Project.Migrations
             modelBuilder.Entity("Project.Models.OpportunitySkill", b =>
                 {
                     b.HasOne("Project.Models.TrainingOpportunity", "TrainingOpportunity")
-                        .WithMany()
+                        .WithMany("OpportunitySkills")
                         .HasForeignKey("OpportunityID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1559,7 +1559,7 @@ namespace Project.Migrations
             modelBuilder.Entity("Project.Models.OpportunitySpecialty", b =>
                 {
                     b.HasOne("Project.Models.TrainingOpportunity", "TrainingOpportunity")
-                        .WithMany()
+                        .WithMany("OpportunitySpecialties")
                         .HasForeignKey("OpportunityID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1618,10 +1618,6 @@ namespace Project.Migrations
                         .HasForeignKey("SpecialtyID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Project.Models.TrainingOpportunity", null)
-                        .WithMany("Specialties")
-                        .HasForeignKey("TrainingOpportunityOpportunityID");
 
                     b.Navigation("Request");
 
@@ -1906,6 +1902,10 @@ namespace Project.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Project.Models.TrainingOpportunity", null)
+                        .WithMany("TrainingPlacement")
+                        .HasForeignKey("TrainingOpportunityOpportunityID");
+
                     b.HasOne("Project.Models.AspNetUser", "UniversitySupervisor")
                         .WithMany()
                         .HasForeignKey("UniversitySupervisorID")
@@ -1991,7 +1991,11 @@ namespace Project.Migrations
 
             modelBuilder.Entity("Project.Models.TrainingOpportunity", b =>
                 {
-                    b.Navigation("Specialties");
+                    b.Navigation("OpportunitySkills");
+
+                    b.Navigation("OpportunitySpecialties");
+
+                    b.Navigation("TrainingPlacement");
                 });
 
             modelBuilder.Entity("Project.Models.TrainingOpportunityRequest", b =>

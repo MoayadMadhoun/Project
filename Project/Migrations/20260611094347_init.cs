@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Project.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -35,6 +35,7 @@ namespace Project.Migrations
                     FullName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    AccountType = table.Column<int>(type: "int", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -69,22 +70,6 @@ namespace Project.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Skills", x => x.SkillID);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Specialties",
-                columns: table => new
-                {
-                    SpecialtyID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    Category = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Specialties", x => x.SpecialtyID);
                 });
 
             migrationBuilder.CreateTable(
@@ -211,13 +196,36 @@ namespace Project.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "EmailVerificationCodes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ExpireAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsUsed = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmailVerificationCodes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_EmailVerificationCodes_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "TrainingInstitutions",
                 columns: table => new
                 {
                     InstituationID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Type = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    InstitutionType = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Address = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: true),
                     PhoneNumber = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
@@ -288,9 +296,10 @@ namespace Project.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     RoleID = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    UniversityID = table.Column<int>(type: "int", nullable: false),
-                    DepartmentID = table.Column<int>(type: "int", nullable: false),
-                    InstitutionID = table.Column<int>(type: "int", nullable: false),
+                    UniversityID = table.Column<int>(type: "int", nullable: true),
+                    DepartmentID = table.Column<int>(type: "int", nullable: true),
+                    InstitutionID = table.Column<int>(type: "int", nullable: true),
+                    StudentID = table.Column<int>(type: "int", nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -329,42 +338,25 @@ namespace Project.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Students",
+                name: "Specialties",
                 columns: table => new
                 {
-                    StudentID = table.Column<int>(type: "int", nullable: false)
+                    SpecialtyID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    StudentNumber = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Level = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
-                    GPA = table.Column<decimal>(type: "decimal(5,2)", precision: 5, scale: 2, nullable: true),
-                    Bio = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
-                    CVPath = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    ProfileImagePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Status = table.Column<string>(type: "nvarchar(50)", nullable: false),
-                    DepartmentID = table.Column<int>(type: "int", nullable: false),
-                    SpecialtyID = table.Column<int>(type: "int", nullable: true),
-                    UserID = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    Category = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    DepartmentID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Students", x => x.StudentID);
+                    table.PrimaryKey("PK_Specialties", x => x.SpecialtyID);
                     table.ForeignKey(
-                        name: "FK_Students_AspNetUsers_UserID",
-                        column: x => x.UserID,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Students_Departments_DepartmentID",
+                        name: "FK_Specialties_Departments_DepartmentID",
                         column: x => x.DepartmentID,
                         principalTable: "Departments",
                         principalColumn: "DepartmentID");
-                    table.ForeignKey(
-                        name: "FK_Students_Specialties_SpecialtyID",
-                        column: x => x.SpecialtyID,
-                        principalTable: "Specialties",
-                        principalColumn: "SpecialtyID");
                 });
 
             migrationBuilder.CreateTable(
@@ -379,7 +371,7 @@ namespace Project.Migrations
                     PreferredStartDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     PreferredEndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ApplicationDeadline = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Status = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Notes = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
                     DepartmentID = table.Column<int>(type: "int", nullable: true),
@@ -423,55 +415,49 @@ namespace Project.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PortfolioItems",
+                name: "Students",
                 columns: table => new
                 {
-                    PortfolioItemID = table.Column<int>(type: "int", nullable: false)
+                    StudentID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    StudentID = table.Column<int>(type: "int", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
-                    FilePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Url = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Type = table.Column<string>(type: "nvarchar(50)", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    StudentNumber = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Level = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    GPA = table.Column<decimal>(type: "decimal(5,2)", precision: 5, scale: 2, nullable: true),
+                    Bio = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    CVPath = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    ProfileImagePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Status = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    DepartmentID = table.Column<int>(type: "int", nullable: false),
+                    SpecialtyID = table.Column<int>(type: "int", nullable: true),
+                    UserID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UniversityID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PortfolioItems", x => x.PortfolioItemID);
+                    table.PrimaryKey("PK_Students", x => x.StudentID);
                     table.ForeignKey(
-                        name: "FK_PortfolioItems_Students_StudentID",
-                        column: x => x.StudentID,
-                        principalTable: "Students",
-                        principalColumn: "StudentID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "StudentSkills",
-                columns: table => new
-                {
-                    StudentSkillID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Level = table.Column<string>(type: "nvarchar(50)", nullable: false),
-                    StudentID = table.Column<int>(type: "int", nullable: false),
-                    SkillID = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_StudentSkills", x => x.StudentSkillID);
-                    table.ForeignKey(
-                        name: "FK_StudentSkills_Skills_SkillID",
-                        column: x => x.SkillID,
-                        principalTable: "Skills",
-                        principalColumn: "SkillID",
+                        name: "FK_Students_AspNetUsers_UserID",
+                        column: x => x.UserID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_StudentSkills_Students_StudentID",
-                        column: x => x.StudentID,
-                        principalTable: "Students",
-                        principalColumn: "StudentID",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_Students_Departments_DepartmentID",
+                        column: x => x.DepartmentID,
+                        principalTable: "Departments",
+                        principalColumn: "DepartmentID");
+                    table.ForeignKey(
+                        name: "FK_Students_Specialties_SpecialtyID",
+                        column: x => x.SpecialtyID,
+                        principalTable: "Specialties",
+                        principalColumn: "SpecialtyID");
+                    table.ForeignKey(
+                        name: "FK_Students_Universities_UniversityID",
+                        column: x => x.UniversityID,
+                        principalTable: "Universities",
+                        principalColumn: "UniversityID");
                 });
 
             migrationBuilder.CreateTable(
@@ -480,7 +466,7 @@ namespace Project.Migrations
                 {
                     RequestInstitutionID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Status = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     SentAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     RespondedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Notes = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
@@ -573,7 +559,7 @@ namespace Project.Migrations
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Location = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: true),
                     InstitutionOfficerID = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TrainingTermTermID = table.Column<int>(type: "int", nullable: true)
                 },
@@ -608,6 +594,58 @@ namespace Project.Migrations
                         column: x => x.TrainingTermTermID,
                         principalTable: "TrainingTerms",
                         principalColumn: "TermID");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PortfolioItems",
+                columns: table => new
+                {
+                    PortfolioItemID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    StudentID = table.Column<int>(type: "int", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    FilePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Url = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Type = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PortfolioItems", x => x.PortfolioItemID);
+                    table.ForeignKey(
+                        name: "FK_PortfolioItems_Students_StudentID",
+                        column: x => x.StudentID,
+                        principalTable: "Students",
+                        principalColumn: "StudentID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StudentSkills",
+                columns: table => new
+                {
+                    StudentSkillID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Level = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    StudentID = table.Column<int>(type: "int", nullable: false),
+                    SkillID = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StudentSkills", x => x.StudentSkillID);
+                    table.ForeignKey(
+                        name: "FK_StudentSkills_Skills_SkillID",
+                        column: x => x.SkillID,
+                        principalTable: "Skills",
+                        principalColumn: "SkillID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_StudentSkills_Students_StudentID",
+                        column: x => x.StudentID,
+                        principalTable: "Students",
+                        principalColumn: "StudentID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -673,16 +711,16 @@ namespace Project.Migrations
                     StudentID = table.Column<int>(type: "int", nullable: false),
                     AppliedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     StudentNotes = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
-                    Status = table.Column<string>(type: "nvarchar(50)", nullable: false),
-                    DepartmentDecision = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    DepartmentDecision = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     DepartmentHeadID = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     DepartmentReviewedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DepartmentReviewNotes = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
-                    UniversityAdminDecision = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    UniversityAdminDecision = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     UniversityAdminID = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     UniversityAdminReviewedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UniversityAdminNotes = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
-                    InstitutionDecision = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    InstitutionDecision = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     InstitutionOfficerID = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     InstitutionReviewedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     InstitutionNotes = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true)
@@ -737,8 +775,9 @@ namespace Project.Migrations
                     InstitutionSupervisorID = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(50)", nullable: false),
-                    Notes = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true)
+                    Status = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Notes = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    TrainingOpportunityOpportunityID = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -780,6 +819,11 @@ namespace Project.Migrations
                         principalColumn: "OpportunityID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
+                        name: "FK_TrainingPlacements_TrainingOpportunities_TrainingOpportunityOpportunityID",
+                        column: x => x.TrainingOpportunityOpportunityID,
+                        principalTable: "TrainingOpportunities",
+                        principalColumn: "OpportunityID");
+                    table.ForeignKey(
                         name: "FK_TrainingPlacements_TrainingTerms_TermID",
                         column: x => x.TermID,
                         principalTable: "TrainingTerms",
@@ -797,7 +841,7 @@ namespace Project.Migrations
                     AttendanceDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CheckInTime = table.Column<TimeSpan>(type: "time", nullable: true),
                     CheckOutTime = table.Column<TimeSpan>(type: "time", nullable: true),
-                    Status = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     InstitutionSupervisorID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Notes = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true)
                 },
@@ -827,7 +871,7 @@ namespace Project.Migrations
                     PlacementID = table.Column<int>(type: "int", nullable: false),
                     UniversitySupervisorID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     VisitDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Type = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Score = table.Column<decimal>(type: "decimal(5,2)", precision: 5, scale: 2, nullable: true),
                     MaxScore = table.Column<decimal>(type: "decimal(5,2)", precision: 5, scale: 2, nullable: true),
                     Notes = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
@@ -860,13 +904,13 @@ namespace Project.Migrations
                     PlacementID = table.Column<int>(type: "int", nullable: false),
                     UniversitySupervisorID = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     InstitutionSupervisorID = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    Type = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     EvaluationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Score = table.Column<decimal>(type: "decimal(5,2)", precision: 5, scale: 2, nullable: false),
                     MaxScore = table.Column<decimal>(type: "decimal(5,2)", precision: 5, scale: 2, nullable: false),
                     Notes = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
                     EvaluationPdfPath = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -900,12 +944,12 @@ namespace Project.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PlacementID = table.Column<int>(type: "int", nullable: false),
                     StudentID = table.Column<int>(type: "int", nullable: false),
-                    Type = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Title = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
                     Content = table.Column<string>(type: "nvarchar(max)", maxLength: 5000, nullable: true),
                     FilePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SubmittedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     UniversitySupervisorID = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     ReviewNotes = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true)
                 },
@@ -1027,6 +1071,11 @@ namespace Project.Migrations
                 column: "UniversityID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_EmailVerificationCodes_UserId",
+                table: "EmailVerificationCodes",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_FieldVisits_PlacementID",
                 table: "FieldVisits",
                 column: "PlacementID");
@@ -1102,6 +1151,11 @@ namespace Project.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Specialties_DepartmentID",
+                table: "Specialties",
+                column: "DepartmentID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Specialties_Name",
                 table: "Specialties",
                 column: "Name",
@@ -1154,6 +1208,11 @@ namespace Project.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Students_UniversityID",
+                table: "Students",
+                column: "UniversityID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Students_UserID",
                 table: "Students",
                 column: "UserID",
@@ -1199,7 +1258,8 @@ namespace Project.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_TrainingInstitutions_UserID",
                 table: "TrainingInstitutions",
-                column: "UserID");
+                column: "UserID",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_TrainingOpportunities_InstitutionID",
@@ -1283,6 +1343,11 @@ namespace Project.Migrations
                 column: "TermID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_TrainingPlacements_TrainingOpportunityOpportunityID",
+                table: "TrainingPlacements",
+                column: "TrainingOpportunityOpportunityID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TrainingPlacements_UniversitySupervisorID",
                 table: "TrainingPlacements",
                 column: "UniversitySupervisorID");
@@ -1290,7 +1355,8 @@ namespace Project.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Universities_UserID",
                 table: "Universities",
-                column: "UserID");
+                column: "UserID",
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -1316,6 +1382,9 @@ namespace Project.Migrations
 
             migrationBuilder.DropTable(
                 name: "AttendanceRecords");
+
+            migrationBuilder.DropTable(
+                name: "EmailVerificationCodes");
 
             migrationBuilder.DropTable(
                 name: "FieldVisits");
