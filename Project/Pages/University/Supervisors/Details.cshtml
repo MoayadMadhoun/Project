@@ -1,4 +1,4 @@
-﻿@page "{ïd}"
+﻿@page "{id}"
 @model Project.Pages.University.Supervisors.DetailsModel
 
 @{
@@ -21,7 +21,7 @@
                 <p class="mb-0 fs-5 opacity-75">
                     عرض بيانات المشرف وصلاحياته داخل الجامعة.
                 </p>
-
+                
             </div>
 
             <div class="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center"
@@ -74,7 +74,7 @@
                 }
                 else
                 {
-                    <span class="badge bg-success">
+                    <span class="badge bg-danger">
                         الحساب  غير فعال
                     </span>
                 }
@@ -146,7 +146,7 @@
                 </label>
 
                 <div>
-
+                     
                     @if (Model.Supervisor.IsActive)
                     {
                         <span class="badge bg-success">
@@ -155,7 +155,7 @@
                     }
                     else
                     {
-                        <span class="badge bg-success">
+                        <span class="badge bg-danger">
                             الحساب  غير فعال
                         </span>
                     }
