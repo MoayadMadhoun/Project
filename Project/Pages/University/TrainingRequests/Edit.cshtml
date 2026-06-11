@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "{RequestId}"
 @model Project.Pages.University.TrainingRequests.EditModel
 
 @{
@@ -68,7 +68,7 @@
                     </label>
 
                     <div class="fw-semibold">
-                        REQ-2026-015
+                        @Model.OpportunityRequest?.RequestID
                     </div>
 
                 </div>
@@ -80,7 +80,7 @@
                     </label>
 
                     <div class="fw-semibold">
-                        01/06/2026
+                        @Model.OpportunityRequest?.CreatedAt
                     </div>
 
                 </div>
@@ -92,7 +92,7 @@
                     </label>
 
                     <div class="fw-semibold">
-                        مسؤول التدريب العام
+                        @(Model.OpportunityRequest?.UniversityAdmin?.FullName ?? Model.OpportunityRequest?.DepartmentHead?.FullName)
                     </div>
 
                 </div>
@@ -105,7 +105,7 @@
 
                     <div>
                         <span class="badge bg-success">
-                            منشور
+                            @Model.TrainingRequest?.Status
                         </span>
                     </div>
 
@@ -139,8 +139,7 @@
                         عنوان الطلب
                     </label>
 
-                    <input type="text"
-                           value="فرص تدريب لطلبة هندسة البرمجيات"
+                    <input asp-for="TrainingRequest.Title" type="text"
                            class="form-control shadow-sm rounded-3 bg-light border-0" />
 
                 </div>
@@ -151,20 +150,20 @@
                         عدد المقاعد المطلوبة
                     </label>
 
-                    <input type="number"
-                           value="30"
+                    <input type="number" asp-for="TrainingRequest.RequestedSeats"
                            class="form-control shadow-sm rounded-3 bg-light border-0" />
 
                 </div>
 
+                
                 <div class="col-md-12">
 
                     <label class="form-label fw-semibold">
                         وصف الطلب
                     </label>
 
-                    <textarea rows="5"
-                              class="form-control shadow-sm rounded-3 bg-light border-0">توفير فرص تدريب ميداني لطلبة قسم هندسة البرمجيات في مجالات تطوير الويب وتطوير تطبيقات الهواتف الذكية.</textarea>
+                    <textarea asp-for="TrainingRequest.Description" rows="5"
+                              class="form-control shadow-sm rounded-3 bg-light border-0"></textarea>
 
                 </div>
 
@@ -196,17 +195,13 @@
                         فترة التدريب
                     </label>
 
-                    <select class="form-select shadow-sm rounded-3 bg-light border-0">
-
-                        <option selected>
-                            الفصل الأول 2026-2027
+                    
+                    <select asp-items="Model.TrainingTermsList" asp-for="TrainingRequest.TermID" class="form-select shadow-sm rounded-3 bg-light border-0">
+                        <option value="">
+                            اختر الفصل
                         </option>
-
-                        <option>
-                            الفصل الثاني 2026-2027
-                        </option>
-
                     </select>
+                    <span class="text-danger" asp-validation-for="TrainingRequest.TermID"></span>
 
                 </div>
 
@@ -217,7 +212,7 @@
                     </label>
 
                     <input type="date"
-                           value="2026-09-01"
+                           asp-for="TrainingRequest.PreferredStartDate"
                            class="form-control shadow-sm rounded-3 bg-light border-0" />
 
                 </div>
@@ -229,7 +224,7 @@
                     </label>
 
                     <input type="date"
-                           value="2026-12-31"
+                           asp-for="TrainingRequest.PreferredEndDate"
                            class="form-control shadow-sm rounded-3 bg-light border-0" />
 
                 </div>
@@ -240,8 +235,7 @@
                         آخر موعد لتقديم الطلبة
                     </label>
 
-                    <input type="date"
-                           value="2026-08-15"
+                    <input asp-for="TrainingRequest.ApplicationDeadline" type="date"
                            class="form-control shadow-sm rounded-3 bg-light border-0" />
 
                 </div>
@@ -306,21 +300,21 @@
 
         <div class="card-body">
 
-            <select class="form-select shadow-sm rounded-3 bg-light border-0">
+            <select asp-for="TrainingRequest.Status" class="form-select shadow-sm rounded-3 bg-light border-0">
 
-                <option>
+                <option value="0">
                     مسودة
                 </option>
 
-                <option selected>
+                <option value="1">
                     منشور
                 </option>
 
-                <option>
+                <option value="2">
                     مغلق
                 </option>
 
-                <option>
+                <option value="3">
                     ملغى
                 </option>
 
@@ -344,7 +338,7 @@
 
         <div class="card-body">
 
-            <textarea rows="4"
+            <textarea asp-for="TrainingRequest.Notes" rows="4"
                       class="form-control shadow-sm rounded-3 bg-light border-0">يفضل أن تكون الفرص التدريبية داخل المحافظة وأن تشمل إشرافاً مباشراً على الطلبة.</textarea>
 
         </div>
@@ -387,16 +381,8 @@
 
     <div class="d-flex gap-2 mb-5">
 
+        
         <button type="submit"
-                class="btn btn-success px-5">
-
-            <i class="bi bi-check-circle me-1"></i>
-
-            حفظ التعديلات
-
-        </button>
-
-        <button type="button"
                 class="btn btn-outline-success px-5">
 
             <i class="bi bi-send me-1"></i>
@@ -406,7 +392,7 @@
         </button>
 
         <a href="#"
-           class="btn btn-light px-5">
+               class="btn btn-light px-5">
 
             <i class="bi bi-arrow-right-circle me-1"></i>
 

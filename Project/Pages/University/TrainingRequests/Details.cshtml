@@ -66,7 +66,7 @@
                 </label>
 
                 <div class="fw-semibold">
-                @Model.TrainingOpportunityRequest?.RequestID
+                    @Model.TrainingOpportunityRequest?.RequestID
                 </div>
 
             </div>
@@ -78,7 +78,7 @@
                 </label>
 
                 <div class="fw-semibold">
-                    @Model.TrainingOpportunityRequest?.Title
+                    @(Model.TrainingOpportunityRequest?.Title ?? "_")
                 </div>
 
             </div>
@@ -162,7 +162,7 @@
                 </label>
 
                 <div class="fw-semibold">
-                    @Model.TrainingOpportunityRequest?.Department.Name
+                    @(Model.TrainingOpportunityRequest?.Department?.Name ?? "-")
                 </div>
 
             </div>
@@ -189,7 +189,7 @@
 
         <p class="mb-0 text-muted">
 
-            @(Model.TrainingOpportunityRequest?.Description??"_")
+            @(Model.TrainingOpportunityRequest?.Description ?? "_")
 
         </p>
 
@@ -283,7 +283,7 @@
 
         <p class="mb-0 text-muted">
 
-            @(Model.TrainingOpportunityRequest?.Notes??"_")
+            @(Model.TrainingOpportunityRequest?.Notes ?? "_")
 
         </p>
 
@@ -319,18 +319,7 @@
 
             </div>
 
-            <div class="col-md-6">
-
-                <label class="text-muted">
-                    آخر تحديث
-                </label>
-
-                <div class="fw-semibold">
-                    05/06/2026
-                </div>
-
-            </div>
-
+            
         </div>
 
     </div>
@@ -341,17 +330,14 @@
 
 <div class="d-flex gap-2 mb-5">
 
-    <a href="#"
-       class="btn btn-success px-5">
-
+    <a asp-route-RequestId="@Model.TrainingOpportunityRequest?.RequestID" asp-page="Edit"
+           class="btn btn-success px-5">
         <i class="bi bi-pencil-square me-1"></i>
-
         تعديل الطلب
-
     </a>
 
     <a href="#"
-       class="btn btn-light px-5">
+           class="btn btn-light px-5">
 
         <i class="bi bi-arrow-right-circle me-1"></i>
 

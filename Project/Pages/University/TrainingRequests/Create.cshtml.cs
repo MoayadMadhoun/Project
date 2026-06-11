@@ -47,7 +47,7 @@ namespace Project.Pages.University.TrainingRequests
             [MaxLength(1000, ErrorMessage = "Description can't be more than 1000 characters")]
             public string? Description { get; set; }
             [Required(ErrorMessage = "Requested seats number is required")]
-
+            [Range(0, 200, ErrorMessage = "Seats can't be less than zero")]
             public int RequestedSeats { get; set; }
             public int InstitutionID { get; set; }
             public DateTime? PreferredStartDate { get; set; }
