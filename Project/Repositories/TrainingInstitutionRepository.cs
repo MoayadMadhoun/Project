@@ -241,6 +241,14 @@ namespace Project.Repository
                 .Where(to => to.InstitutionID == institutionId && to.TrainingPlacement.Any(tp=>tp.Status== TrainingPlacement.PlacementStatus.InProgress))
                 .AsNoTracking().AsQueryable();
         }
+        public IQueryable<AttendanceRecord> GetAttendanceForInstitution(int institutionId)
+        {
+            return _dbContext.AttendanceRecords
+                .Include(to => to.TrainingPlacement)
+                .ThenInclude( p => p.Student)
+                .Where(to => to.TrainingPlacement.InstitutionID == institutionId)
+                .AsNoTracking().AsQueryable();
+        }
     }
 }
 
