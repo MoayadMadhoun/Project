@@ -18,6 +18,17 @@
     <!-- MAIN -->
     <div class="main-wrap">
 
+        @if (Model.CurrentPlacement == null)
+        {
+            <div class="alert alert-info">
+                لا يوجد تدريب حالي لك.
+            </div>
+        }
+        else
+        {
+            // بقية الصفحة
+       
+
         <!-- ── Hero Card ── -->
         <div class="hero-card">
             <div class="hero-top">
@@ -33,7 +44,28 @@
                 <!-- Left: icon + badge -->
                 <div class="hero-left">
                     <div class="bcase-circle"><i class="bi bi-briefcase-fill"></i></div>
-                    <span class="status-badge"><span class="status-dot"></span>نشط</span>
+                        @if (Model.CurrentPlacement?.Status ==
+                                   Models.TrainingPlacement.PlacementStatus.InProgress)
+                        {
+                            <span class="status-badge">
+                                <span class="status-dot"></span>
+                                نشط
+                            </span>
+                        }
+                        else if (Model.CurrentPlacement?.Status ==
+                                 Models.TrainingPlacement.PlacementStatus.Assigned)
+                        {
+                            <span class="status-badge">
+                                تم التعيين
+                            </span>
+                        }
+                        else if (Model.CurrentPlacement?.Status ==
+                                 Models.TrainingPlacement.PlacementStatus.Completed)
+                        {
+                            <span class="status-badge">
+                                مكتمل
+                            </span>
+                        }
                 </div>
             </div>
 
@@ -73,7 +105,213 @@
                     <i class="bi bi-calendar-check-fill meta-icon"></i>
                 </div>
             </div>
-        </div><!-- /hero -->
+        </div>
+
+            <div class="row g-3 mb-4">
+
+                <div class="col-md-3">
+                    <a asp-page="/Student/Reports/Create"
+                       asp-route-placementId="@Model.CurrentPlacement?.PlacementID"
+                       class="btn btn-primary w-100 py-3">
+                        <i class="bi bi-upload me-2"></i>
+                        رفع تقرير
+                    </a>
+                </div>
+
+                <div class="col-md-3">
+                    <a asp-page="/Student/Reports/Index"
+                       class="btn btn-success w-100 py-3">
+                        <i class="bi bi-file-earmark-text me-2"></i>
+                        التقارير
+                    </a>
+                </div>
+
+                <div class="col-md-3">
+                    <a asp-page="/Student/Attendance"
+                       class="btn btn-warning w-100 py-3">
+                        <i class="bi bi-calendar-check me-2"></i>
+                        الحضور
+                    </a>
+                </div>
+
+                <div class="col-md-3">
+                    <a asp-page="/Student/Evaluations"
+                       class="btn btn-info w-100 py-3">
+                        <i class="bi bi-star-fill me-2"></i>
+                        التقييمات
+                    </a>
+                </div>
+
+            </div>
+
+            <div class="card shadow-sm border-0 mb-4">
+
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        آخر التقارير المرفوعة
+                    </h5>
+                </div>
+
+                <div class="card-body">
+
+                    <table class="table align-middle">
+
+                        <thead>
+
+                            <tr>
+                                <th>العنوان</th>
+                                <th>النوع</th>
+                                <th>التاريخ</th>
+                                <th>الحالة</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            @foreach (var report in Model.RecentReports)
+                            {
+                                <tr>
+
+                                    <td>@report.Title</td>
+
+                                    <td>@report.Type</td>
+
+                                    <td>
+                                        @report.SubmittedAt.ToString("dd/MM/yyyy")
+                                    </td>
+
+                                    <td>
+
+                                        <span class="badge bg-success">
+                                            @report.Status
+                                        </span>
+
+                                    </td>
+
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+            <div class="card shadow-sm border-0 mb-4">
+
+                <div class="card-header bg-white">
+
+                    <h5 class="mb-0">
+                        ملخص الحضور
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <div class="row text-center">
+
+                        <div class="col-md-3">
+                            <h2 class="text-success">
+                                @Model.PresentCount
+                            </h2>
+                            <div>حضور</div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <h2 class="text-danger">
+                                @Model.AbsentCount
+                            </h2>
+                            <div>غياب</div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <h2 class="text-warning">
+                                @Model.LateCount
+                            </h2>
+                            <div>تأخير</div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <h2 class="text-info">
+                                @Model.ExcusedCount
+                            </h2>
+                            <div>بعذر</div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-header bg-white">
+
+                    <h5 class="mb-0">
+                        التقييمات
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <table class="table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>النوع</th>
+                                <th>الدرجة</th>
+                                <th>التاريخ</th>
+                                <th>الحالة</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            @foreach (var evaluation in Model.Evaluations)
+                            {
+                                <tr>
+
+                                    <td>@evaluation.Type</td>
+
+                                    <td>
+                                        @evaluation.Score / @evaluation.MaxScore
+                                    </td>
+
+                                    <td>
+                                        @evaluation.EvaluationDate.ToString("dd/MM/yyyy")
+                                    </td>
+
+                                    <td>
+                                        @evaluation.Status
+                                    </td>
+
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+
+        
+        }
+
+
+        <!-- /hero -->
         @*
         <!-- ── Tasks Card ── -->
         <div class="tasks-card">

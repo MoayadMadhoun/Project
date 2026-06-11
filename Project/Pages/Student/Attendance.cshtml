@@ -47,11 +47,18 @@
         <div class="input-group shadow-sm" style="width:190px;">
             <select name="TermFilter" class="form-select form-select-sm border-none rounded-3 py-2" onchange="this.form.submit()">
                 <option value="">جميع التدريبات</option>
-                @if (Model.TermList?.Count() > 0)
+                @if (Model.TermList != null && Model.TermList.Any())
                 {
                     @foreach (var item in Model.TermList)
                     {
-                        <option value="@item.Value" selected="@(item.Selected ? "selected" : null)">@item.Text</option>
+                        if (item.Selected)
+                        {
+                            <option value="@item.Value" selected>@item.Text</option>
+                        }
+                        else
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
                     }
                 }
             </select>
@@ -62,7 +69,14 @@
             <select name="StatusFilter" class="form-select form-select-sm border-none rounded-3 py-2" onchange="this.form.submit()">
                 @foreach (var opt in Model.StatusOptions)
                 {
-                    <option value="@opt.Value" selected="@(opt.Value == Model.StatusFilter ? "selected" : null)">@opt.Text</option>
+                    @if (opt.Value == Model.StatusFilter)
+                    {
+                        <option value="@opt.Value" selected>@opt.Text</option>
+                    }
+                    else
+                    {
+                        <option value="@opt.Value">@opt.Text</option>
+                    }
                 }
             </select>
         </div>

@@ -43,6 +43,7 @@ namespace Project
             builder.Services.AddScoped<StudentsRepository>();
             builder.Services.AddScoped<DepartmentRepository>();
             builder.Services.AddScoped<SpecialtyRepository>();
+            builder.Services.AddScoped<TrainingOpportunityRepository>();
             builder.Services.AddScoped<OptService>();
             builder.Services.AddScoped<CreateUserService>();
 

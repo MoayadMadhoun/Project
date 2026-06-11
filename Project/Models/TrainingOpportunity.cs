@@ -56,7 +56,11 @@ namespace Project.Models
             Cancelled =3
         }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
-        public ICollection<RequestSpecialty> Specialties { get; set; } = new List<RequestSpecialty>();
+        
         public ICollection<TrainingPlacement> TrainingPlacement { get; set; }=new List<TrainingPlacement>();
+
+        public ICollection<OpportunitySpecialty> OpportunitySpecialties{ get; set; } = new List<OpportunitySpecialty>();
+
+        public ICollection<OpportunitySkill> OpportunitySkills { get; set; } = new List<OpportunitySkill>();
     }
 }

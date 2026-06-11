@@ -311,7 +311,22 @@ namespace Project.Repositories
         // Get  Training Placement By Student Id 
         public async Task<TrainingPlacement?> GetTrainingPlacementByStudentId(int id)
         {
-            return await _context.TrainingPlacements.AsNoTracking().FirstOrDefaultAsync(tp => tp.StudentID == id);
+            return await _context.TrainingPlacements
+                .Include(tp => tp.TrainingOpportunity)
+                .Include(tp => tp.TrainingInstitution)
+                .Include(tp => tp.InstitutionSupervisor)
+
+                .Include(tp => tp.StudentReports)
+
+                .Include(tp => tp.StudentEvaluations)
+
+                .Include(tp => tp.AttendanceRecords)
+
+                .Include(tp => tp.TrainingTerm)
+
+                .AsNoTracking()
+
+                .FirstOrDefaultAsync(tp => tp.StudentID == id);
         }
 
         // Retrieve the training term for a specific opportunity

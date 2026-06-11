@@ -193,10 +193,16 @@ namespace Project.Repositories
         {
             return await _dbContext.Specialties
                 .Include(s => s.Department)
+
                 .Include(s => s.Students)
+                    .ThenInclude(st => st.User)
+
                 .Include(s => s.OpportunitySpecialties)
+
                 .Include(s => s.RequestSpecialties)
+
                 .AsNoTracking()
+
                 .FirstOrDefaultAsync(s => s.SpecialtyID == specialtyId);
         }
 

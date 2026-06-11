@@ -221,7 +221,7 @@ namespace Project.Repository
         public IQueryable<TrainingOpportunity> GetTrainingOpportunitiesQueryable(int? InstituationID)
         {
             return _dbContext.TrainingOpportunities
-                .Include(tr=>tr.Specialties)
+                .Include(tr=>tr.OpportunitySpecialties)
                 .ThenInclude(s=>s.Specialty)
                 .Where(t=>t.InstitutionID== InstituationID)
                 .AsNoTracking().AsQueryable();

@@ -62,5 +62,6 @@ namespace Project.Models
         public ICollection<RequestSpecialty> Specialties { get; set; } = new List<RequestSpecialty>();   
         public ICollection<RequestSkill> Skills { get; set; }= new List<RequestSkill>();
         public ICollection<TrainingOpportunity> Opportunities { get; set; } = new List<TrainingOpportunity>();
+
     }
 }

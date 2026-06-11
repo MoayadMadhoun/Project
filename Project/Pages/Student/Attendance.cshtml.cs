@@ -65,7 +65,7 @@ namespace Project.Pages.Student
                 .Distinct()
                 .ToListAsync();
 
-            TermList = new SelectList(placementTerms, "TermId", "Name", TermFilter);
+            TermList = new SelectList(placementTerms, "TermID", "Name", TermFilter);
 
             // ── Base query ─────────────────────────────────────────────────
             var query = _context.AttendanceRecords
@@ -114,7 +114,7 @@ namespace Project.Pages.Student
                 AttendanceDate   = a.AttendanceDate,
                 CheckInTime      = a.CheckInTime,
                 CheckOutTime     = a.CheckOutTime,
-                //Status           = a.Status ?? "—",
+                Status           = a.Status.ToString(),
                 TrainingTitle    = a.TrainingPlacement?.TrainingOpportunity?.Title ?? "—",
                 RecordedBy       = a.InstitutionSupervisor?.FullName ?? "—",
                 Notes            = a.Notes,
