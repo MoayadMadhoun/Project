@@ -223,7 +223,7 @@ namespace Project.Repostory
             return await _dbContext.Users
              .Include(u => u.RoleScope)
                  .ThenInclude(rs => rs.University)
-             .Include(u=>u.)
+             
              .FirstOrDefaultAsync(u => u.Id == UserId);
         }
 
