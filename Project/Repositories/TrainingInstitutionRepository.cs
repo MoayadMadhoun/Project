@@ -249,6 +249,51 @@ namespace Project.Repository
                 .Where(to => to.TrainingPlacement.InstitutionID == institutionId)
                 .AsNoTracking().AsQueryable();
         }
+
+        public async Task<TrainingOpportunity?> GetTrainingOpportunityDetailsForInstitutionAsync(int opportunityId, int institutionId)
+        {
+            return await _dbContext.TrainingOpportunities
+                .Include(to => to.TrainingPlacement)
+                    .ThenInclude(tp => tp.Student)
+                        .ThenInclude(s => s.Specialty)
+                .Include(to => to.TrainingPlacement)
+                    .ThenInclude(tp => tp.Student)
+                        .ThenInclude(s => s.Department)
+                .Include(to => to.TrainingPlacement)
+                    .ThenInclude(tp => tp.InstitutionSupervisor)
+                .Include(to => to.OpportunitySpecialties)
+                    .ThenInclude(os => os.Specialty)
+                .Include(to => to.OpportunitySkills)
+                    .ThenInclude(os => os.Skill)
+                .Include(to => to.Request)
+                    .ThenInclude(r => r!.Specialties)
+                        .ThenInclude(rs => rs.Specialty)
+                .Include(to => to.Request)
+                    .ThenInclude(r => r!.Skills)
+                        .ThenInclude(rs => rs.Skill)
+                .Include(to => to.InstitutionOfficer)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(to => to.OpportunityID == opportunityId && to.InstitutionID == institutionId);
+        }
+
+        public async Task<bool> HasActivePlacementsForInstitutionAsync(int opportunityId, int institutionId)
+        {
+            return await _dbContext.TrainingPlacements
+                .AsNoTracking()
+                .AnyAsync(tp =>
+                    tp.OpportunityID == opportunityId &&
+                    tp.InstitutionID == institutionId &&
+                    tp.Status == TrainingPlacement.PlacementStatus.InProgress);
+        }
+
+        public async Task<List<string>> GetOpportunitySkillNamesAsync(int opportunityId)
+        {
+            return await _dbContext.OpportunitySkills
+                .Where(os => os.OpportunityID == opportunityId)
+                .Select(os => os.Skill.Name)
+                .AsNoTracking()
+                .ToListAsync();
+        }
     }
 }
 
