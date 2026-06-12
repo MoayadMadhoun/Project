@@ -1,157 +1,68 @@
 using Microsoft.AspNetCore.Authorization;
-
 using Microsoft.AspNetCore.Identity;
-
 using Microsoft.AspNetCore.Mvc;
-
 using Microsoft.AspNetCore.Mvc.RazorPages;
-
 using Microsoft.EntityFrameworkCore;
-
 using Project.Data;
-
-using Project.Extensions;
-
 using Project.Models;
-
 using Project.Pages.Institution.ViewModels;
-
 using Project.Repository;
 
-
-
-namespace Project.Pages.Institution
-
+namespace Project.Pages.Institution.CurrentTraining
 {
-
     [Authorize(Roles = "InstitutionTrainingOfficer,InstitutionSupervisor")]
-
-    public class CurrentTrainingModel : PageModel
-
+    public class DetailsModel : PageModel
     {
-
         private readonly ApplicationDbContext _dbContext;
-
         private readonly TrainingInstitutionRepository _institutionRepository;
-
         private readonly UserManager<AspNetUser> _userManager;
 
-
-
-        public CurrentTrainingModel(
-
+        public DetailsModel(
             ApplicationDbContext dbContext,
-
             TrainingInstitutionRepository institutionRepository,
-
             UserManager<AspNetUser> userManager)
-
         {
-
             _dbContext = dbContext;
-
             _institutionRepository = institutionRepository;
-
             _userManager = userManager;
-
         }
 
-
-
-        [BindProperty(SupportsGet = true)]
-
-        public string? SearchTerm { get; set; }
-
-
-
-        [BindProperty(SupportsGet = true)]
-
-        public int PageIndex { get; set; } = 1;
-
-
-
-        [BindProperty(SupportsGet = true)]
-
-        public int PageSize { get; set; } = 10;
-
-
-
-        public PaginatedList<TrainingOpportunity> CurrentTrainings { get; set; } =
-
-            new PaginatedList<TrainingOpportunity>(new List<TrainingOpportunity>(), 1, 0, 10);
-
-
-
+        public TrainingDetailsVM Details { get; set; } = null!;
         public TrainingInstitution? CurrentInstitution { get; private set; }
 
-
-
-        public static string GetDurationText(DateTime startDate, DateTime endDate) =>
-
-            TrainingDetailsVM.GetDurationText(startDate, endDate);
-
-
-
-        public static int GetActiveTraineeCount(TrainingOpportunity opportunity) =>
-
-            opportunity.TrainingPlacement.Count(tp => tp.Status == TrainingPlacement.PlacementStatus.InProgress);
-
-
-
-        public async Task<IActionResult> OnGetAsync()
-
+        public async Task<IActionResult> OnGetAsync(int id)
         {
-
             var user = await _userManager.GetUserAsync(User);
-
             if (user == null)
-
                 return RedirectToPage("/Account/Login", new { area = "Identity" });
-
-
 
             var scope = await _dbContext.AspNetRoleScopes
-
                 .AsNoTracking()
-
                 .FirstOrDefaultAsync(s => s.UserID == user.Id && s.IsActive);
 
-
-
             if (scope?.InstitutionID == null)
-
                 return RedirectToPage("/Account/Login", new { area = "Identity" });
 
-
-
             var institutionId = scope.InstitutionID.Value;
-
             CurrentInstitution = await _institutionRepository.GetByIdAsync(institutionId);
-
             if (CurrentInstitution == null)
-
                 return RedirectToPage("/Index");
 
+            var opportunity = await _institutionRepository
+                .GetTrainingOpportunityDetailsForInstitutionAsync(id, institutionId);
 
+            if (opportunity == null)
+                return NotFound();
 
-            var query = _institutionRepository.GetCurrentTrainingsForInstitution(institutionId);
+            var hasActivePlacements = await _institutionRepository
+                .HasActivePlacementsForInstitutionAsync(id, institutionId);
+            if (!hasActivePlacements)
+                return NotFound();
 
-
-
-            if (!string.IsNullOrWhiteSpace(SearchTerm))
-
-                query = query.Where(tp => tp.Title.Contains(SearchTerm));
-
-
-
-            CurrentTrainings = await PaginatedList<TrainingOpportunity>.CreateAsync(query, PageSize, PageIndex);
+            var skillNames = await _institutionRepository.GetOpportunitySkillNamesAsync(id);
+            Details = TrainingDetailsVM.FromOpportunity(opportunity, skillNames);
 
             return Page();
-
         }
-
     }
-
 }
-
-

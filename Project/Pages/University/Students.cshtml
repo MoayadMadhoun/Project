@@ -52,9 +52,9 @@
         100% { background-position: 400px 0; }
     }
     @@keyframes pulse-ring {
-        0%   { box-shadow: 0 0 0 0 rgba(22, 163, 163, 0.35); }
-        70%  { box-shadow: 0 0 0 10px rgba(22, 163, 163, 0); }
-        100% { box-shadow: 0 0 0 0 rgba(22, 163, 163, 0); }
+        0%   { box-shadow: 0 0 0 0 rgba(26, 188, 156, 0.35); }
+        70%  { box-shadow: 0 0 0 10px rgba(26, 188, 156, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(26, 188, 156, 0); }
     }
     @@keyframes float {
         0%, 100% { transform: translateY(0px); }
@@ -68,21 +68,21 @@
 
     /* ===== PAGE VARIABLES ===== */
     :root {
-        --teal-primary: #0d9488;
-        --teal-dark:    #0f766e;
+        --teal-primary: #1abc9c;
+        --teal-dark:    #1a9e8f;
         --teal-light:   #ccfbf1;
-        --teal-mid:     #5eead4;
+        --teal-mid:     #6ff9d6;
         --accent:       #f59e0b;
         --row-hover:    #f0fdfa;
         --radius-lg:    1rem;
         --radius-md:    .6rem;
-        --shadow-card:  0 4px 24px rgba(13,148,136,.12);
-        --shadow-hover: 0 8px 32px rgba(13,148,136,.22);
+        --shadow-card:  0 4px 24px rgba(26,188,156,.12);
+        --shadow-hover: 0 8px 32px rgba(26,188,156,.22);
     }
 
     /* ===== HERO BANNER ===== */
     .students-hero {
-            background: linear-gradient(135deg, #0d9488 0%, #0f766e 40%, #0d9488 100%);
+            background: linear-gradient(135deg, #1abc9c 0%, #1a9e8f 40%, #1abc9c 100%);
         background-size: 200% 200%;
         animation: gradientShift 8s ease infinite, scaleIn .6s ease both;
         border-radius: var(--radius-lg);
@@ -188,7 +188,7 @@
     .filter-bar .form-select:focus,
     .filter-bar .form-control:focus {
         border-color: var(--teal-primary);
-        box-shadow: 0 0 0 3px rgba(13,148,136,.12);
+        box-shadow: 0 0 0 3px rgba(26,188,156,.12);
     }
     .btn-search {
         background: linear-gradient(135deg, var(--teal-primary), var(--teal-dark));
@@ -203,7 +203,7 @@
     }
     .btn-search:hover {
         transform: translateY(-2px);
-        box-shadow: 0 6px 18px rgba(13,148,136,.35);
+        box-shadow: 0 6px 18px rgba(26,188,156,.35);
         color: #fff;
     }
     .btn-filter {
@@ -269,7 +269,7 @@
     .students-table thead th {
         padding: .85rem 1rem;
         font-weight: 700;
-        color: #0f766e;
+        color: #1a9e8f;
         font-size: .82rem;
         letter-spacing: .02em;
         white-space: nowrap;
@@ -297,7 +297,7 @@
     .students-table tbody tr:hover {
         background: var(--row-hover);
         transform: scale(1.005);
-        box-shadow: 0 2px 12px rgba(13,148,136,.08);
+        box-shadow: 0 2px 12px rgba(26,188,156,.08);
         z-index: 1;
         position: relative;
     }
@@ -382,7 +382,7 @@
         color: #fff;
         border-color: var(--teal-primary);
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(13,148,136,.28);
+        box-shadow: 0 4px 12px rgba(26,188,156,.28);
     }
     .btn-details svg {
         width: 14px; height: 14px;
@@ -418,7 +418,7 @@
         background: linear-gradient(135deg, var(--teal-primary), var(--teal-dark));
         border-color: var(--teal-primary);
         color: #fff;
-        box-shadow: 0 4px 12px rgba(13,148,136,.3);
+        box-shadow: 0 4px 12px rgba(26,188,156,.3);
     }
     .per-page-select {
         border-radius: var(--radius-md);
@@ -430,7 +430,7 @@
     }
     .per-page-select:focus {
         border-color: var(--teal-primary);
-        box-shadow: 0 0 0 3px rgba(13,148,136,.1);
+        box-shadow: 0 0 0 3px rgba(26,188,156,.1);
     }
     .pagination-info {
         font-size: .82rem;
@@ -543,7 +543,7 @@
             <div class="col-12 col-md-3">
                 <div class="input-group input-group-sm">
                     <span class="input-group-text bg-white border-end-0" style="border-color:#d1faf4;border-radius:var(--radius-md) 0 0 var(--radius-md);">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#0d9488" stroke-width="2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#1abc9c" stroke-width="2">
                             <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
                         </svg>
                     </span>

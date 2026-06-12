@@ -1,6 +1,56 @@
 ﻿@using Project.Models
 @inject UserManager<AspNetUser> UserManager
 
+@functions {
+    private const string NavInactive = "flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md";
+    private const string NavActive = "flex items-center gap-md px-4 py-3 rounded-xl bg-primary/10 text-primary border-r-4 border-primary font-bold font-body-md text-body-md";
+
+    private static bool IsNavPathActive(string currentPath, string targetPath)
+    {
+        currentPath = (currentPath ?? "").TrimEnd('/').ToLowerInvariant();
+        targetPath = targetPath.TrimEnd('/').ToLowerInvariant();
+
+        if (string.IsNullOrEmpty(targetPath) || targetPath == "#")
+            return false;
+
+        var homePaths = new HashSet<string>
+        {
+            "/institution", "/institution/index",
+            "/university", "/university/index",
+            "/student", "/student/index"
+        };
+
+        if (homePaths.Contains(targetPath))
+            return homePaths.Contains(currentPath);
+
+        return currentPath == targetPath || currentPath.StartsWith(targetPath + "/");
+    }
+
+    private string NavClass(string targetPath, string pageKey = null)
+    {
+        var currentPath = Context.Request.Path.Value ?? "";
+        var activePage = ViewData["ActivePage"]?.ToString();
+        var isActive = false;
+
+        if (!string.IsNullOrEmpty(activePage) && !string.IsNullOrEmpty(pageKey))
+        {
+            isActive = string.Equals(activePage, pageKey, StringComparison.OrdinalIgnoreCase);
+        }
+        else
+        {
+            isActive = IsNavPathActive(currentPath, targetPath);
+
+            if (string.Equals(pageKey, "Evaluations", StringComparison.OrdinalIgnoreCase) &&
+                IsNavPathActive(currentPath, "/Institution/Index"))
+            {
+                isActive = false;
+            }
+        }
+
+        return isActive ? NavActive : NavInactive;
+    }
+}
+
 @{
     AspNetUser user = null;
 
@@ -165,6 +215,32 @@
         transform: translateX(-5px);
     }
 
+    :root {
+        --bs-primary: #006b58;
+        --bs-primary-rgb: 0, 107, 88;
+        --bs-link-color: #006b58;
+        --bs-link-hover-color: #005141;
+    }
+
+    a:not([class*="text-"]):not([class*="btn"]) {
+        color: #006b58;
+    }
+
+    .btn-primary,
+    .nav-pills .nav-link.active,
+    .nav-pills .show > .nav-link {
+        background-color: #006b58 !important;
+        border-color: #005141 !important;
+    }
+
+    .text-primary {
+        color: #006b58 !important;
+    }
+
+    .bg-primary {
+        background-color: #006b58 !important;
+    }
+
 
     </style>
     <script id="tailwind-config">
@@ -293,72 +369,72 @@
             @if(User.IsInRole("InstitutionTrainingOfficer") || User.IsInRole("InstitutionSupervisor"))
             {
                 @* ===== قائمة بوابة المؤسسة ===== *@
-                <a class="flex items-center gap-md px-4 py-3 rounded-xl font-body-md text-body-md" asp-page="/Institution/Index">
+                <a class="@NavClass("/Institution/Index", "Home")" asp-page="/Institution/Index">
                     <span class="material-symbols-outlined">dashboard</span>الرئيسية
                 </a>
-                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" asp-page="/Institution/AvailableOpportunities">
+                <a class="@NavClass("/Institution/AvailableOpportunities", "Opportunities")" asp-page="/Institution/AvailableOpportunities">
                     <span class="material-symbols-outlined">explore</span>الفرص التدريبية
                 </a>
-                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" asp-page="/Institution/TrainingRequests">
+                <a class="@NavClass("/Institution/TrainingRequests", "TrainingRequests")" asp-page="/Institution/TrainingRequests">
                     <span class="material-symbols-outlined">group</span>طلبات الطلبة
                 </a>
-                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" asp-page="/Institution/CurrentTraining">
+                <a class="@NavClass("/Institution/CurrentTraining", "CurrentTraining")" asp-page="/Institution/CurrentTraining">
                     <span class="material-symbols-outlined">work</span>التدريب الحالي
                 </a>
-                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" asp-page="/Institution/Supervisors">
+                <a class="@NavClass("/Institution/Supervisors", "Supervisors")" asp-page="/Institution/Supervisors">
                     <span class="material-symbols-outlined">manage_accounts</span>المشرفون
                 </a>
-                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" asp-page="/Institution/Reports">
+                <a class="@NavClass("/Institution/Reports", "Reports")" asp-page="/Institution/Reports">
                     <span class="material-symbols-outlined">description</span>التقارير
                 </a>
-                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" asp-page="/Institution/index">
+                <a class="@NavClass("/Institution/Index", "Evaluations")" asp-page="/Institution/Index">
                     <span class="material-symbols-outlined">grading</span>التقييمات
                 </a>
-                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" asp-page="/Institution/Profile">
+                <a class="@NavClass("/Institution/Profile", "Profile")" asp-page="/Institution/Profile">
                     <span class="material-symbols-outlined">person</span>ملف المؤسسة
                 </a>
             }
             else if (User.IsInRole("UniversityTrainingAdmin") || User.IsInRole("DepartmentHead") || User.IsInRole("UniversitySupervisor"))
             {
                 @* ===== قائمة بوابة الجامعة ===== *@
-                <a class="flex items-center gap-md px-4 py-3 rounded-xl font-body-md text-body-md" asp-page="/University/Index">
+                <a class="@NavClass("/University/Index", "Home")" asp-page="/University/Index">
                     <span class="material-symbols-outlined">dashboard</span>الرئيسية
                 </a>
-                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" asp-page="/University/AvailabelOpportunities">
+                <a class="@NavClass("/University/AvailabelOpportunities", "Opportunities")" asp-page="/University/AvailabelOpportunities">
                     <span class="material-symbols-outlined">explore</span>الفرص التدريبية
                 </a>
                 @if (User.IsInRole("UniversityTrainingAdmin") || User.IsInRole("DepartmentHead"))
                 {
-                    <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" asp-page="@(User.IsInRole("UniversityTrainingAdmin") ? "/University/UniAdminTrainigRequests" : User.IsInRole("DepartmentHead") ? "/University/DepartmentHeadTrainingRequests" : "")">
+                    <a class="@NavClass(User.IsInRole("UniversityTrainingAdmin") ? "/University/UniAdminTrainigRequests" : "/University/DepartmentHeadTrainingRequests", "TrainingRequests")" asp-page="@(User.IsInRole("UniversityTrainingAdmin") ? "/University/UniAdminTrainigRequests" : User.IsInRole("DepartmentHead") ? "/University/DepartmentHeadTrainingRequests" : "")">
                         <span class="material-symbols-outlined">group</span>طلبات الطلبة
                     </a>
                 }
                
-                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" asp-page="/University/Students">
+                <a class="@NavClass("/University/Students", "Students")" asp-page="/University/Students">
                     <span class="material-symbols-outlined">school</span>الطلاب
                 </a>
-                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" asp-page="/University/Attendance">
+                <a class="@NavClass("/University/Attendance", "Attendance")" asp-page="/University/Attendance">
                     <span class="material-symbols-outlined">event_available</span>الحضور
                 </a>
-                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" href="#">
+                <a class="@NavClass("#", "Institutions")" href="#">
                     <span class="material-symbols-outlined">business</span>المؤسسات
                 </a>
-                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" asp-page="/University/Departments">
+                <a class="@NavClass("/University/Departments", "Departments")" asp-page="/University/Departments">
                     <span class="material-symbols-outlined">apartment</span>الأقسام
                 </a>
-                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" asp-page="/University/Specialties/index">
+                <a class="@NavClass("/University/Specialties", "Specialties")" asp-page="/University/Specialties/index">
                     <span class="material-symbols-outlined">school</span>التخصصات
                 </a>
-                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" asp-page="/University/DepartmentsHeads">
+                <a class="@NavClass("/University/DepartmentsHeads", "DepartmentHeads")" asp-page="/University/DepartmentsHeads">
                     <span class="material-symbols-outlined">manage_accounts</span>رؤساء الأقسام
                 </a>
-                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" asp-page="/University/Supervisors">
+                <a class="@NavClass("/University/Supervisors", "Supervisors")" asp-page="/University/Supervisors">
                     <span class="material-symbols-outlined">manage_accounts</span>المشرفون
                 </a>
-                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" href="#">
+                <a class="@NavClass("#", "Reports")" href="#">
                     <span class="material-symbols-outlined">description</span>التقارير
                 </a>
-                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" href="#">
+                <a class="@NavClass("#", "Evaluations")" href="#">
                     <span class="material-symbols-outlined">grading</span>التقييمات
                 </a>
 
@@ -366,33 +442,33 @@
             else if(User.IsInRole("Student"))
             {
                 @* ===== قائمة بوابة الطالب (الافتراضية) ===== *@
-                <a class="flex items-center gap-md px-4 py-3 rounded-xl font-body-md text-body-md" asp-page="/Student/Index">
+                <a class="@NavClass("/Student/Index", "Home")" asp-page="/Student/Index">
                     <span class="material-symbols-outlined">dashboard</span>الرئيسية
                 </a>
-                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" asp-page="/Student/AvaliabelOpportunities">
+                <a class="@NavClass("/Student/AvaliabelOpportunities", "Opportunities")" asp-page="/Student/AvaliabelOpportunities">
                     <span class="material-symbols-outlined">explore</span>الفرص التدريبية
                 </a>
-                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" asp-page="/Student/MyApplications">
+                <a class="@NavClass("/Student/MyApplications", "MyApplications")" asp-page="/Student/MyApplications">
                     <span class="material-symbols-outlined">assignment</span>طلباتي
                 </a>
-                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" asp-page="/Student/CurrentTraining">
+                <a class="@NavClass("/Student/CurrentTraining", "CurrentTraining")" asp-page="/Student/CurrentTraining">
                     <span class="material-symbols-outlined">work</span>التدريب الحالي
                 </a>
-                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" asp-page="/Student/Attendance">
+                <a class="@NavClass("/Student/Attendance", "Attendance")" asp-page="/Student/Attendance">
                     <span class="material-symbols-outlined">event_available</span>الحضور
                 </a>
-                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" asp-page="/Student/Reports">
+                <a class="@NavClass("/Student/Reports", "Reports")" asp-page="/Student/Reports">
                     <span class="material-symbols-outlined">description</span>التقارير
                 </a>
-                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" asp-page="/Student/Evaluations">
+                <a class="@NavClass("/Student/Evaluations", "Evaluations")" asp-page="/Student/Evaluations">
                     <span class="material-symbols-outlined">grading</span>التقييمات
                 </a>
-                <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" href="#">
+                <a class="@NavClass("#", "Profile")" href="#">
                     <span class="material-symbols-outlined">person</span>الملف الشخصي
                 </a>
             }
 
-            <a class="flex items-center gap-md px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-r-4 border-transparent hover:border-slate-200 transition-all hover:translate-x-1 font-body-md text-body-md" asp-area="Identity" asp-page="/Account/Settings">
+            <a class="@NavClass("/Identity/Account/Settings", "Settings")" asp-area="Identity" asp-page="/Account/Settings">
                     <span class="material-symbols-outlined">settings</span>الإعدادات
              </a>
         </nav>
@@ -498,47 +574,6 @@
    
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-   <script>
-    // =========================
-    // Active Nav Link Highlight
-    // =========================
-
-    const currentPath = window.location.pathname.toLowerCase().replace(/\/$/, '');
-    let anyActive = false;
-
-    document.querySelectorAll('#sidebar nav a').forEach(link => {
-        const linkPath = new URL(link.href).pathname.toLowerCase().replace(/\/$/, '');
-        if (!linkPath || linkPath === '#') return;
-
-        if (currentPath === linkPath) {
-            anyActive = true;
-            link.classList.remove(
-                'text-slate-600', 'hover:bg-slate-50',
-                'hover:text-slate-900', 'border-transparent',
-                'hover:border-slate-200', 'hover:translate-x-1'
-            );
-            link.classList.add(
-                'bg-teal-50', 'text-teal-600',
-                'border-r-4', 'border-teal-500', 'font-bold'
-            );
-        }
-    });
-
-    if (!anyActive) {
-        const homeLink = document.querySelector('#sidebar nav a:first-child');
-        if (homeLink) {
-            homeLink.classList.remove(
-                'text-slate-600', 'hover:bg-slate-50',
-                'hover:text-slate-900', 'border-transparent',
-                'hover:border-slate-200', 'hover:translate-x-1'
-            );
-            homeLink.classList.add(
-                'bg-teal-50', 'text-teal-600',
-                'border-r-4', 'border-teal-500', 'font-bold'
-            );
-        }
-    }
-</script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

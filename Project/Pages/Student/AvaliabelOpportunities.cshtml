@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model Project.Pages.Student.AvaliabelOpportunitiesModel
 @using Project.Models;
 @{
@@ -27,26 +27,24 @@
 
 @* ===== Filters Bar ===== *@
 
-<div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] p-4 mb-lg">
-    <div class="flex flex-wrap gap-3 items-center justify-end">
-     <form method="get">
+<div class="rounded-xl border border-primary-container/30 shadow-[0_4px_20px_rgba(26,188,156,0.15)] p-4 mb-lg bg-primary-container text-on-primary">
+    <form method="get" class="flex flex-col lg:flex-row flex-wrap lg:flex-nowrap gap-3 items-stretch lg:items-center w-full">
         <div class="relative flex-1 min-w-[180px]">
-            <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
-            <input asp-for="search" class="w-full pr-10 pl-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20" placeholder="ابحث عن شركة أو تخصص..." type="text" />
+            <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-white/70 text-lg">search</span>
+            <input asp-for="search" class="w-full pr-10 pl-4 py-2.5 bg-white/95 border-none rounded-xl text-sm text-slate-800 focus:ring-2 focus:ring-white/40" placeholder="ابحث عن شركة أو تخصص..." type="text" />
         </div>
-        <select asp-for="specialtyId" asp-items="@Model.Specialty" dir="rtl" class="border-slate-200 rounded-xl text-sm font-bold text-slate-700 py-2.5 px-4 focus:ring-2 focus:ring-primary/20 cursor-pointer">
+        <select asp-for="specialtyId" asp-items="@Model.Specialty" dir="rtl" class="flex-1 min-w-[140px] lg:flex-initial bg-white/95 border-none rounded-xl text-sm font-bold text-slate-700 py-2.5 px-4 focus:ring-2 focus:ring-white/40 cursor-pointer">
             <option value="">التخصص</option>
         </select>
-        <select asp-for="location" asp-items="@Model.Location" class="border-slate-200 rounded-xl text-sm font-bold text-slate-700 py-2.5 px-4 focus:ring-2 focus:ring-primary/20 cursor-pointer">
+        <select asp-for="location" asp-items="@Model.Location" class="flex-1 min-w-[140px] lg:flex-initial bg-white/95 border-none rounded-xl text-sm font-bold text-slate-700 py-2.5 px-4 focus:ring-2 focus:ring-white/40 cursor-pointer">
             <option value="">المدينة</option>  
         </select>
-        <select asp-for="status" asp-items="@Html.GetEnumSelectList<Models.TrainingOpportunity.Opportunity>()"  class="border-slate-200 rounded-xl text-sm font-bold text-slate-700 py-2.5 px-4 focus:ring-2 focus:ring-primary/20 cursor-pointer">
+        <select asp-for="status" asp-items="@Html.GetEnumSelectList<Models.TrainingOpportunity.Opportunity>()" class="flex-1 min-w-[140px] lg:flex-initial bg-white/95 border-none rounded-xl text-sm font-bold text-slate-700 py-2.5 px-4 focus:ring-2 focus:ring-white/40 cursor-pointer">
             <option value="">حالة الفرصة</option>
           
         </select>
-        <button  type="submit" class="bg-primary text-white font-button px-6 py-2.5 rounded-xl hover:bg-primary/90 transition-colors">بحث</button>
-        </form>
-    </div>
+        <button type="submit" class="w-full lg:w-auto shrink-0 bg-white text-primary font-button px-6 py-2.5 rounded-xl hover:bg-surface-container transition-colors">بحث</button>
+    </form>
 </div>
 
 @* ===== Opportunities Table ===== *@
