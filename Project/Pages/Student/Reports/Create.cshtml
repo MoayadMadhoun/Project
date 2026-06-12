@@ -1,4 +1,5 @@
-﻿@page
+﻿@page "{id}"
+@using Project.Models
 @model CreateModel
 
 @{
@@ -7,7 +8,7 @@
 }
 
 <form method="post" enctype="multipart/form-data">
-
+    <input asp-for="VM.StudentId" type="hidden" />
     <!-- Hero -->
 
     <div class="card border-0 shadow-sm mb-4">
@@ -65,7 +66,7 @@
                     </label>
 
                     <div class="fw-semibold">
-                        متدرب ASP.NET Core
+                        @Model.VM.OpportunityTitle
                     </div>
 
                 </div>
@@ -76,10 +77,9 @@
                         المؤسسة
                     </label>
 
-                    <div class="fw-semibold">
-                        شركة التقنية الحديثة
+                    <<div class="fw-semibold">
+                        @Model.VM.InstitutionName
                     </div>
-
                 </div>
 
                 <div class="col-md-4">
@@ -89,7 +89,7 @@
                     </label>
 
                     <div class="fw-semibold">
-                        د. أحمد خالد
+                        @Model.VM.UniversitySupervisorName
                     </div>
 
                 </div>
@@ -118,21 +118,15 @@
 
                 <div class="col-md-4">
 
-                    <label class="form-label">
-                        نوع التقرير
-                    </label>
+                    <label asp-for="VM.Type" class="form-label"></label>
 
-                    <select class="form-select">
-
-                        <option>
-                            تقرير أسبوعي
-                        </option>
-
-                        <option>
-                            تقرير نهائي
-                        </option>
-
+                    <select asp-for="VM.Type"
+                            asp-items="Html.GetEnumSelectList<StudentReport.ReportType>()"
+                            class="form-select">
                     </select>
+
+                    <span asp-validation-for="VM.Type"
+                          class="text-danger"></span>
 
                 </div>
 
@@ -142,9 +136,11 @@
                         عنوان التقرير
                     </label>
 
-                    <input type="text"
-                           class="form-control"
-                           placeholder="أدخل عنوان التقرير" />
+                    <input asp-for="VM.Title"
+                           class="form-control" />
+
+                    <span asp-validation-for="VM.Title"
+                          class="text-danger"></span>
 
                 </div>
 
@@ -154,10 +150,12 @@
                         محتوى التقرير
                     </label>
 
-                    <textarea rows="8"
-                              class="form-control"
-                              placeholder="اكتب تفاصيل التقرير هنا..."></textarea>
+                    <textarea asp-for="VM.Content"
+                              rows="8"
+                              class="form-control"></textarea>
 
+                    <span asp-validation-for="VM.Content"
+                          class="text-danger"></span>
                 </div>
 
             </div>
@@ -191,9 +189,12 @@
                 <p class="text-muted">
                     PDF أو DOCX بحد أقصى 20MB
                 </p>
+                <input asp-for="VM.ReportFile"
+                       type="file"
+                       class="form-control" />
 
-                <input type="file"
-                       class="form-control mt-3" />
+                <span asp-validation-for="VM.ReportFile"
+                      class="text-danger"></span>
 
             </div>
 
@@ -254,3 +255,7 @@
 
 </form>
 
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+}
