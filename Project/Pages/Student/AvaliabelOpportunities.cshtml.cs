@@ -56,7 +56,9 @@ namespace Project.Pages.Student
 
             int months = days / 30;
 
-            return $"{months} شهر";
+            if (months == 1) return "شهر";
+            if (months == 2) return "شهرين";
+            return $"{months} اشهر ";
         }
         public async Task<IActionResult> OnGet()
         {
@@ -68,11 +70,7 @@ namespace Project.Pages.Student
           
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var user = await _studentRepo.GetStudentByUserId(userId);
-
-            if (user == null) return NotFound();
-
-            var student = await _studentRepo.GetStudentById(user.StudentID);
+            var student = await _studentRepo.GetStudentByUserId(userId);
 
             if (student == null) return NotFound();
 
@@ -94,8 +92,7 @@ namespace Project.Pages.Student
             }
             if (status.HasValue)
             {
-
-               
+ 
                 Opportunity = Opportunity.Where(O => O.Status == status);
             }
             if (!string.IsNullOrWhiteSpace(location))
