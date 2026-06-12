@@ -258,10 +258,10 @@ public class ApplicationDbContext : IdentityDbContext<AspNetUser>
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.Entity<TrainingPlacement>()
-            .HasOne(p => p.UniversitySupervisor)
-            .WithMany()
-            .HasForeignKey(p => p.UniversitySupervisorID)
-            .OnDelete(DeleteBehavior.Restrict);
+        .HasOne(p => p.TrainingOpportunity)
+        .WithMany(o => o.TrainingPlacement)
+        .HasForeignKey(p => p.OpportunityID)
+        .OnDelete(DeleteBehavior.Restrict);
 
         builder.Entity<TrainingPlacement>()
             .HasOne(p => p.InstitutionSupervisor)
@@ -275,11 +275,6 @@ public class ApplicationDbContext : IdentityDbContext<AspNetUser>
             .HasForeignKey(p => p.StudentID)
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.Entity<TrainingPlacement>()
-            .HasOne(p => p.TrainingOpportunity)
-            .WithMany()
-            .HasForeignKey(p => p.OpportunityID)
-            .OnDelete(DeleteBehavior.Restrict);
 
         builder.Entity<TrainingPlacement>()
             .HasOne(p => p.TrainingInstitution)
