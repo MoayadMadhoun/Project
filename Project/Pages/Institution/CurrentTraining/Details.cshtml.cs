@@ -32,6 +32,7 @@ namespace Project.Pages.Institution.CurrentTraining
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
+
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
                 return RedirectToPage("/Account/Login", new { area = "Identity" });
@@ -54,10 +55,11 @@ namespace Project.Pages.Institution.CurrentTraining
             if (opportunity == null)
                 return NotFound();
 
-            var hasActivePlacements = await _institutionRepository
-                .HasActivePlacementsForInstitutionAsync(id, institutionId);
-            if (!hasActivePlacements)
-                return NotFound();
+
+            //var hasActivePlacements = await _institutionRepository
+            //    .HasActivePlacementsForInstitutionAsync(id, institutionId);
+            //if (!hasActivePlacements)
+            //    return NotFound();
 
             var skillNames = await _institutionRepository.GetOpportunitySkillNamesAsync(id);
             Details = TrainingDetailsVM.FromOpportunity(opportunity, skillNames);

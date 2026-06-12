@@ -236,10 +236,24 @@ namespace Project.Repository
         }
         public IQueryable<TrainingOpportunity> GetCurrentTrainingsForInstitution(int institutionId)
         {
+            var today = DateTime.Today;
+
             return _dbContext.TrainingOpportunities
-                .Include(to => to.TrainingPlacement)
-                .Where(to => to.InstitutionID == institutionId && to.TrainingPlacement.Any(tp=>tp.Status== TrainingPlacement.PlacementStatus.InProgress))
-                .AsNoTracking().AsQueryable();
+                .Include(x => x.TrainingPlacement)
+                .Where(x =>
+                    x.InstitutionID == institutionId &&
+                    x.StartDate <= today &&
+                    x.EndDate >= today)
+                .AsNoTracking();
+        }
+
+        public IQueryable<TrainingOpportunity> GetTrainingsForInstitution(int institutionId)
+        {
+            return _dbContext.TrainingOpportunities
+                .Include(x => x.TrainingPlacement)
+                .Where(x => x.InstitutionID == institutionId)
+                .OrderByDescending(x => x.CreatedAt)
+                .AsNoTracking();
         }
         public IQueryable<AttendanceRecord> GetAttendanceForInstitution(int institutionId)
         {

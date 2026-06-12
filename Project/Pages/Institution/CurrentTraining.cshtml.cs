@@ -92,10 +92,13 @@ namespace Project.Pages.Institution
 
 
 
-        public static int GetActiveTraineeCount(TrainingOpportunity opportunity) =>
-
-            opportunity.TrainingPlacement.Count(tp => tp.Status == TrainingPlacement.PlacementStatus.InProgress);
-
+        public static int GetTraineeCount(TrainingOpportunity opportunity)
+        {
+            return opportunity.TrainingPlacement
+                .Count(tp =>
+                    tp.Status !=
+                    TrainingPlacement.PlacementStatus.Cancelled);
+        }
 
 
         public async Task<IActionResult> OnGetAsync()
@@ -134,8 +137,7 @@ namespace Project.Pages.Institution
 
 
 
-            var query = _institutionRepository.GetCurrentTrainingsForInstitution(institutionId);
-
+            var query  = _institutionRepository.GetTrainingsForInstitution(institutionId);
 
 
             if (!string.IsNullOrWhiteSpace(SearchTerm))
@@ -148,6 +150,33 @@ namespace Project.Pages.Institution
 
             return Page();
 
+        }
+
+
+        public static string GetTrainingStatus(TrainingOpportunity opportunity)
+        {
+            var today = DateTime.Today;
+
+            if (today < opportunity.StartDate)
+                return "قادم";
+
+            if (today > opportunity.EndDate)
+                return "منتهي";
+
+            return "نشط";
+        }
+
+        public static string GetTrainingStatusClass(TrainingOpportunity opportunity)
+        {
+            var today = DateTime.Today;
+
+            if (today < opportunity.StartDate)
+                return "bg-blue-50 text-blue-700";
+
+            if (today > opportunity.EndDate)
+                return "bg-red-50 text-red-700";
+
+            return "bg-green-50 text-green-700";
         }
 
     }

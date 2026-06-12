@@ -37,12 +37,12 @@ namespace Project.Pages.Institution.ViewModels
         public static TrainingDetailsVM FromOpportunity(TrainingOpportunity opportunity, List<string> skillNames)
 
         {
+            var activePlacements = opportunity.TrainingPlacement.ToList();
+            //var activePlacements = opportunity.TrainingPlacement
 
-            var activePlacements = opportunity.TrainingPlacement
+            //    .Where(tp => tp.Status == TrainingPlacement.PlacementStatus.InProgress || tp.Status == TrainingPlacement.PlacementStatus.Completed || tp.Status == TrainingPlacement.PlacementStatus.Completed)
 
-                .Where(tp => tp.Status == TrainingPlacement.PlacementStatus.InProgress)
-
-                .ToList();
+            //    .ToList();
 
 
 

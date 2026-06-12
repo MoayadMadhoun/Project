@@ -74,17 +74,54 @@ namespace Project.Pages.Institution
                 }
                 var query = _institutionRepo.GetApplicationsForInstitution(institutionID).Where(tr => tr.Status == TrainingApplication.ApplicationStatus.UniversityApproved);
                
+
                 if (ApproveApplicationId > 0)
-                { 
-                   var currentApplication=_dbContext.TrainingApplications.FirstOrDefault(a=>a.ApplicationID==ApproveApplicationId);
+                {
+                    var currentApplication = await _dbContext.TrainingApplications
+                                 .Include(a => a.TrainingOpportunity)
+                                 .FirstOrDefaultAsync(a => a.ApplicationID == ApproveApplicationId);
+
+
                     if (currentApplication != null) 
                     {
                         currentApplication.InstitutionDecision = TrainingApplication.Decision.Approved;
+
+                        currentApplication.Status = TrainingApplication.ApplicationStatus.Placed;
+
+                        currentApplication.InstitutionOfficerID = user.Id;
+
+                        currentApplication.InstitutionReviewedAt = DateTime.Now;
+
+                        var exists = await _dbContext.TrainingPlacements
+                             .AnyAsync(p => p.ApplicationID == currentApplication.ApplicationID);
+
+                        if (!exists)
+                        {
+                            var placement = new TrainingPlacement
+                            {
+                                OpportunityID = currentApplication.OpportunityID,
+                                ApplicationID = currentApplication.ApplicationID,
+                                StudentID = currentApplication.StudentID,
+                                InstitutionID = institutionID,
+                                TermID = currentApplication.TrainingOpportunity.TermID,
+                                StartDate = currentApplication.TrainingOpportunity.StartDate,
+                                EndDate = currentApplication.TrainingOpportunity.EndDate,
+                                Status = TrainingPlacement.PlacementStatus.InProgress
+                            };
+
+                            _dbContext.TrainingPlacements.Add(placement);
+                        }
+
                         _dbContext.TrainingApplications.Update(currentApplication);
                         _dbContext.SaveChanges();
-                    }  
+                    }
+
+                    if (currentApplication.InstitutionDecision == TrainingApplication.Decision.Approved)
+                    {
+                        return RedirectToPage();
+                    }
                 }
-                if (RejectApplicationId >= 0)
+                if (RejectApplicationId > 0)
                 {
                     var currentApplication = _dbContext.TrainingApplications.FirstOrDefault(a => a.ApplicationID == RejectApplicationId);
                     if (currentApplication != null)
@@ -95,6 +132,8 @@ namespace Project.Pages.Institution
                         _dbContext.SaveChanges();
                     }
                 }
+
+
 
                 if (!string.IsNullOrEmpty(SearchTerm))
                 {

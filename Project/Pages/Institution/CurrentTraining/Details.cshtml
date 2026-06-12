@@ -119,6 +119,7 @@
     }
     else
     {
+
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             @foreach (var trainee in Model.Details.EnrolledTrainees)
             {
@@ -145,11 +146,16 @@
                             <span class="text-slate-400">السنة الدراسية:</span> @trainee.AcademicYear
                         </p>
                     }
-                    <button type="button" class="w-full text-sm text-emerald-600 border border-emerald-200 rounded-lg py-2 hover:bg-emerald-50 transition-colors">
+                    <a asp-page="/Institution/CurrentTraining/StudentDetails"
+                       asp-route-placementId="@trainee.PlacementId"
+                       class="w-full inline-flex justify-center text-sm text-emerald-600 border border-emerald-200 rounded-lg py-2 hover:bg-emerald-50">
+
                         متابعة الطالب
-                    </button>
+
+                    </a>
                 </div>
             }
         </div>
     }
 </div>
+

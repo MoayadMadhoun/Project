@@ -102,7 +102,7 @@ namespace Project.Pages.Student.Applications
 
             await studentsRepository.AddTrainingApplication(newTrainingApplication);
 
-            return RedirectToPage("Student/AvaliabelOpportunities");
+            return RedirectToPage("/Student/AvaliabelOpportunities");
 
         }
     }

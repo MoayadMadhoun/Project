@@ -14,7 +14,7 @@
     <div class="relative z-10 max-w-2xl text-right">
         <h1 class="font-h1 text-2xl md:text-h1 mb-md">التدريبات الحالية</h1>
         <p class="font-body-lg text-sm md:text-body-lg opacity-90">
- استعرض جميع برامح التدريب النشطة الخاصة بمؤسستك وتابع تفاصيلها بسهولة
+            استعرض جميع الفرص التدريبية التي أنشأتها مؤسستك وتابع حالة كل تدريب والمتدربين الملتحقين به
         </p>
     </div>
     <div class="absolute -bottom-10 -left-10 w-48 h-48 md:w-64 md:h-64 bg-white/10 rounded-full blur-3xl"></div>
@@ -47,7 +47,9 @@
                 <div class="flex items-center gap-2 mb-3">
 
                     <h2 class="text-lg font-semibold text-slate-800"> @(ct.Title) </h2>
-                    <span class="bg-green-50 text-green-700 text-xs font-semibold px-3 py-0.5 rounded-full">@TrainingDetailsVM.GetStatusLabel(ct, CurrentTrainingModel.GetActiveTraineeCount(ct))</span>
+                    <span class="@CurrentTrainingModel.GetTrainingStatusClass(ct) text-xs font-semibold px-3 py-1 rounded-full">
+                        @CurrentTrainingModel.GetTrainingStatus(ct)
+                    </span>
                 </div>
                 <p class="text-sm text-slate-500 mb-8 leading-relaxed">
                     @(ct.Description ?? "_")
@@ -60,7 +62,7 @@
                         </span>
                         <span class="flex items-center gap-1.5">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2h5M12 12a4 4 0 100-8 4 4 0 000 8z" /></svg>
-                            @CurrentTrainingModel.GetActiveTraineeCount(ct) متدربين
+                            @CurrentTrainingModel.GetTraineeCount(ct) متدرب
                         </span>
                         <span class="flex items-center gap-1.5">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
