@@ -1,42 +1,132 @@
-﻿@page
-@model Project.Pages.Student.Applications.CreateModel
+﻿@page "{OpportunityId}"
+@model CreateModel 
 
 @{
-    ViewData["Title"] = "التقديم على فرصة تدريب";
+    ViewData["Title"] = "رفع تقرير";
     ViewData["UserType"] = "Student";
-    ViewData["PortalTitle"] = "بوابة الطالب";
-    ViewData["PortalSubtitle"] = "إدارة التدريب الميداني";
-    ViewData["SearchPlaceholder"] = "بحث...";
 }
 
-<form method="post">
 
-    <!-- Hero Section -->
+<!-- Hero Section -->
 
-    <div class="card border-0 shadow-sm mb-4">
+<div class="card border-0 shadow-sm mb-4">
 
-        <div class="card-body p-5 text-white"
-             style="background:#1ab29a;border-radius:24px;">
+    <div class="card-body p-5 text-white"
+         style="background:#1ab29a;border-radius:24px;">
 
-            <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex justify-content-between align-items-center">
+
+            <div>
+
+                <h1 class="fw-bold mb-3">
+                    التقديم على فرصة تدريب
+                </h1>
+
+                <p class="mb-0 fs-5 opacity-75">
+                    قم بمراجعة بياناتك وإرسال طلب الالتحاق بالفرصة التدريبية.
+                </p>
+
+            </div>
+
+            <div class="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center"
+                 style="width:90px;height:90px;">
+
+                <i class="bi bi-send-check-fill fs-1"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Opportunity Information -->
+
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+
+    <div class="card-header bg-white">
+
+        <h5 class="fw-bold mb-0">
+            معلومات الفرصة التدريبية
+        </h5>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row g-4">
+
+            <div class="col-md-6">
+
+                <label class="text-muted">
+                    عنوان الفرصة
+                </label>
+
+                <div class="fw-semibold">
+                    @(Model.opportunity?.Title ?? "")
+                </div>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <label class="text-muted">
+                    المؤسسة
+                </label>
+
+                <div class="fw-semibold">
+                    @(Model.opportunity?.TrainingInstitution?.Name?? "")
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <label class="text-muted">
+                    فترة التدريب
+                </label>
+
+                <div class="fw-semibold">
+                    @(Model.opportunity?.TrainingTerm?.Name ?? "")
+                    @(Model.opportunity?.TrainingTerm?.AcademicYear ?? "")
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <label class="text-muted">
+                    تاريخ البداية
+                </label>
+
+                <div class="fw-semibold">
+
+                    @(Model.opportunity?.TrainingTerm?.StartDate.ToString("dd-MM-yyyy") ?? "")
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <label class="text-muted">
+                    تاريخ النهاية
+                </label>
+
+                <div class="fw-semibold">
+                    @(Model.opportunity?.TrainingTerm?.EndDate.ToString("dd-MM-yyyy") ?? "")
+                </div>
+
+            </div>
+
+            <div class="col-md-12">
+
+                <label class="text-muted">
+                    وصف الفرصة
+                </label>
 
                 <div>
-
-                    <h1 class="fw-bold mb-3">
-                        التقديم على فرصة تدريب
-                    </h1>
-
-                    <p class="mb-0 fs-5 opacity-75">
-                        قم بمراجعة بياناتك وإرسال طلب الالتحاق بالفرصة التدريبية.
-                    </p>
-
-                </div>
-
-                <div class="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center"
-                     style="width:90px;height:90px;">
-
-                    <i class="bi bi-send-check-fill fs-1"></i>
-
+                    @(Model.opportunity?.Description ?? "")
                 </div>
 
             </div>
@@ -45,93 +135,80 @@
 
     </div>
 
-    <!-- Opportunity Information -->
+</div>
 
-    <div class="card border-0 shadow-sm rounded-4 mb-4">
+<!-- Student Information -->
 
-        <div class="card-header bg-white">
+<div class="card border-0 shadow-sm rounded-4 mb-4">
 
-            <h5 class="fw-bold mb-0">
-                معلومات الفرصة التدريبية
-            </h5>
+    <div class="card-header bg-white">
 
-        </div>
+        <h5 class="fw-bold mb-0">
+            بيانات الطالب
+        </h5>
 
-        <div class="card-body">
+    </div>
 
-            <div class="row g-4">
+    <div class="card-body">
 
-                <div class="col-md-6">
+        <div class="row g-4">
 
-                    <label class="text-muted">
-                        عنوان الفرصة
-                    </label>
+            <div class="col-md-4">
 
-                    <div class="fw-semibold">
-                        مطور Full Stack
-                    </div>
+                <label class="text-muted">
+                    الاسم
+                </label>
 
+                <div class="fw-semibold">
+                    @(Model.student?.Name ?? "")
                 </div>
 
-                <div class="col-md-6">
+            </div>
 
-                    <label class="text-muted">
-                        المؤسسة
-                    </label>
+            <div class="col-md-4">
 
-                    <div class="fw-semibold">
-                        شركة التقنية المتقدمة
-                    </div>
+                <label class="text-muted">
+                    الرقم الجامعي
+                </label>
 
+                <div class="fw-semibold">
+                    @(Model.student?.StudentNumber ?? "")
                 </div>
 
-                <div class="col-md-4">
+            </div>
 
-                    <label class="text-muted">
-                        فترة التدريب
-                    </label>
+            <div class="col-md-4">
 
-                    <div class="fw-semibold">
-                        الفصل الثاني 2025
-                    </div>
+                <label class="text-muted">
+                    المعدل
+                </label>
 
+                <div class="fw-semibold">
+                    @(Model.student?.GPA?.ToString() ?? "")
                 </div>
 
-                <div class="col-md-4">
+            </div>
 
-                    <label class="text-muted">
-                        تاريخ البداية
-                    </label>
+            <div class="col-md-6">
 
-                    <div class="fw-semibold">
-                        01/07/2025
-                    </div>
+                <label class="text-muted">
+                    القسم
+                </label>
 
+                <div class="fw-semibold">
+                    @(Model.student?.Department?.Name ?? "")
                 </div>
 
-                <div class="col-md-4">
+            </div>
 
-                    <label class="text-muted">
-                        تاريخ النهاية
-                    </label>
+            <div class="col-md-6">
 
-                    <div class="fw-semibold">
-                        01/10/2025
-                    </div>
+                <label class="text-muted">
+                    التخصص
+                </label>
 
-                </div>
-
-                <div class="col-md-12">
-
-                    <label class="text-muted">
-                        وصف الفرصة
-                    </label>
-
-                    <div>
-                        تدريب عملي في تطوير تطبيقات الويب باستخدام .NET و Angular
-                        مع فريق التطوير في المؤسسة.
-                    </div>
-
+                <div class="fw-semibold">
+                    @(Model.student?.Specialty?.Name ?? "")
                 </div>
 
             </div>
@@ -140,87 +217,8 @@
 
     </div>
 
-    <!-- Student Information -->
-
-    <div class="card border-0 shadow-sm rounded-4 mb-4">
-
-        <div class="card-header bg-white">
-
-            <h5 class="fw-bold mb-0">
-                بيانات الطالب
-            </h5>
-
-        </div>
-
-        <div class="card-body">
-
-            <div class="row g-4">
-
-                <div class="col-md-4">
-
-                    <label class="text-muted">
-                        الاسم
-                    </label>
-
-                    <div class="fw-semibold">
-                        محمد أحمد
-                    </div>
-
-                </div>
-
-                <div class="col-md-4">
-
-                    <label class="text-muted">
-                        الرقم الجامعي
-                    </label>
-
-                    <div class="fw-semibold">
-                        20201234
-                    </div>
-
-                </div>
-
-                <div class="col-md-4">
-
-                    <label class="text-muted">
-                        المعدل
-                    </label>
-
-                    <div class="fw-semibold">
-                        88.5
-                    </div>
-
-                </div>
-
-                <div class="col-md-6">
-
-                    <label class="text-muted">
-                        القسم
-                    </label>
-
-                    <div class="fw-semibold">
-                        هندسة الحاسوب
-                    </div>
-
-                </div>
-
-                <div class="col-md-6">
-
-                    <label class="text-muted">
-                        التخصص
-                    </label>
-
-                    <div class="fw-semibold">
-                        هندسة البرمجيات
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
+</div>
+<form method="post">
 
     <!-- Student Notes -->
 
@@ -236,9 +234,11 @@
 
         <div class="card-body">
 
-            <textarea class="form-control"
+            <textarea asp-for="@Model.studentNotes" class="form-control"
                       rows="6"
-                      placeholder="أضف أي معلومات أو ملاحظات ترغب بإرسالها مع طلب التدريب..."></textarea>
+                      placeholder="أضف أي معلومات أو ملاحظات ترغب بإرسالها مع طلب التدريب..."> </textarea>
+
+            <span class="text-danger" asp-validation-for="@Model.studentNotes"></span>
 
         </div>
 
@@ -370,7 +370,7 @@
 
             <div class="form-check">
 
-                <input class="form-check-input"
+                <input asp-for="@Model.IsAgree" class="form-check-input"
                        type="checkbox"
                        id="agree" />
 
@@ -380,6 +380,8 @@
                     أقر بأن جميع البيانات المقدمة صحيحة وأتحمل مسؤولية أي معلومات غير صحيحة.
 
                 </label>
+
+                <span class="text-danger" asp-validation-for="@Model.IsAgree"></span>
 
             </div>
 
@@ -400,7 +402,7 @@
 
         </button>
 
-        <a href="#"
+        <a asp-page="/Student/AvaliabelOpportunities"
            class="btn btn-light px-5">
 
             <i class="bi bi-x-circle me-1"></i>

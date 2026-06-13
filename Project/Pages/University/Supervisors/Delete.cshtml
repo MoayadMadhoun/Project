@@ -77,7 +77,7 @@
                     </label>
 
                     <div class="fw-semibold">
-                        @Model.Supervisor.FullName
+                        @Model.Supervisor?.Name
                     </div>
 
                 </div>
@@ -89,7 +89,7 @@
                     </label>
 
                     <div class="fw-semibold">
-                        @Model.Supervisor.Email
+                        @Model.Supervisor?.Email
                     </div>
 
                 </div>
@@ -101,7 +101,7 @@
                     </label>
 
                     <div class="fw-semibold">
-                        @Model.Supervisor.PhoneNumber
+                        @Model.Supervisor?.PhoneNumber
                     </div>
 
                 </div>
@@ -115,17 +115,11 @@
                     <div>
                         @if (Model.Supervisor.IsActive)
                         {
-
-                            <span class="badge bg-success">
-                                فعال
-                            </span>
+                            <span class="badge bg-success">فعال</span>
                         }
                         else
                         {
-
-                            <span class="badge bg-success">
-                                غير فعال
-                            </span>
+                            <span class="badge bg-danger">غير فعال</span>
                         }
 
 
@@ -174,7 +168,7 @@
                     </label>
 
                     <div class="fw-semibold">
-                         @Model.Supervisor.University.Name
+                        @(Model.Supervisor.UniversityName ?? "غير مرتبط بجامعة")
                      </div>
 
                 </div>
@@ -186,7 +180,7 @@
                     </label>
 
                     <div class="fw-semibold">
-                        @Model.Supervisor.CreatedAt
+                        @* @Model.Supervisor.CreatedAt *@
                     </div>
 
                 </div>

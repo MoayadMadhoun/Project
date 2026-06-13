@@ -226,7 +226,17 @@ namespace Project.Repostory
              
              .FirstOrDefaultAsync(u => u.Id == UserId);
         }
-
+        public IQueryable<AspNetUser> GetUniversitySuperVisorBy()
+        {
+            return _dbContext.Users
+                .Include(u => u.RoleScope)
+                    .ThenInclude(rs => rs.Role)
+                .Include(u => u.RoleScope)
+                    .ThenInclude(rs => rs.University)
+                .Where(u => u.RoleScope != null &&
+                            u.RoleScope.Role.Name == "UniversitySupervisor")
+                .AsNoTracking();
+        }
 
     }
 }

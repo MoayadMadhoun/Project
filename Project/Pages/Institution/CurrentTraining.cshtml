@@ -1,4 +1,5 @@
-﻿@page
+@page
+@using Project.Pages.Institution.ViewModels
 @model Project.Pages.Institution.CurrentTrainingModel
 @{
     ViewData["Title"] = "التدريب الحالي";
@@ -13,24 +14,21 @@
     <div class="relative z-10 max-w-2xl text-right">
         <h1 class="font-h1 text-2xl md:text-h1 mb-md">التدريبات الحالية</h1>
         <p class="font-body-lg text-sm md:text-body-lg opacity-90">
- استعرض جميع برامح التدريب النشطة الخاصة بمؤسستك وتابع تفاصيلها بسهولة
+            استعرض جميع الفرص التدريبية التي أنشأتها مؤسستك وتابع حالة كل تدريب والمتدربين الملتحقين به
         </p>
     </div>
     <div class="absolute -bottom-10 -left-10 w-48 h-48 md:w-64 md:h-64 bg-white/10 rounded-full blur-3xl"></div>
     <div class="absolute -top-20 -left-20 w-64 h-64 md:w-80 md:h-80 bg-secondary-fixed-dim/20 rounded-full blur-3xl"></div>
 </section>
 <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] p-4 mb-lg">
-    <div class="flex flex-wrap gap-3 items-center justify-start flex-row">
-
+    <form method="get" class="flex flex-wrap gap-3 items-center justify-start flex-row">
+        <input type="hidden" name="PageSize" value="@Model.PageSize" />
         <div class="relative flex-1 min-w-[200px]">
             <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
-            <input class="w-1/4 pr-10 pl-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20 text-right" placeholder="ابحث عن تدريب ..." type="text" />
+            <input name="SearchTerm" value="@Model.SearchTerm" class="w-full pr-10 pl-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20 text-right" placeholder="ابحث عن تدريب ..." type="text" />
         </div>
-
-           
-
-        <button class="bg-primary text-white font-button px-6 py-2.5 rounded-xl hover:bg-primary/90 transition-colors">بحث</button>
-    </div>
+        <button type="submit" class="bg-primary text-white font-button px-6 py-2.5 rounded-xl hover:bg-primary/90 transition-colors">بحث</button>
+    </form>
 </div>
 <div class="space-y-4">
     @if (!Model.CurrentTrainings.Any())
@@ -49,7 +47,9 @@
                 <div class="flex items-center gap-2 mb-3">
 
                     <h2 class="text-lg font-semibold text-slate-800"> @(ct.Title) </h2>
-                    <span class="bg-green-50 text-green-700 text-xs font-semibold px-3 py-0.5 rounded-full">نشط</span>
+                    <span class="@CurrentTrainingModel.GetTrainingStatusClass(ct) text-xs font-semibold px-3 py-1 rounded-full">
+                        @CurrentTrainingModel.GetTrainingStatus(ct)
+                    </span>
                 </div>
                 <p class="text-sm text-slate-500 mb-8 leading-relaxed">
                     @(ct.Description ?? "_")
@@ -58,18 +58,18 @@
                     <div class="flex items-center gap-5 flex-wrap text-slate-400 text-sm">
                         <span class="flex items-center gap-1.5">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                            مدة التدريب: @((ct.StartDate.Month - ct.EndDate.Month) + 12 * (ct.StartDate.Year - ct.EndDate.Year) )  شهر
+                            مدة التدريب: @CurrentTrainingModel.GetDurationText(ct.StartDate, ct.EndDate)
                         </span>
                         <span class="flex items-center gap-1.5">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2h5M12 12a4 4 0 100-8 4 4 0 000 8z" /></svg>
-                            @ct.TrainingPlacement.Count() متدربين
+                            @CurrentTrainingModel.GetTraineeCount(ct) متدرب
                         </span>
                         <span class="flex items-center gap-1.5">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                            تاريخ البداية: @ct.StartDate
+                            تاريخ البداية: @ct.StartDate.ToString("dd-MM-yyyy")
                         </span>
                     </div>
-                    <a href="#" class="text-sm text-emerald-600 flex items-center gap-1 hover:underline">
+                    <a asp-page="/Institution/CurrentTraining/Details" asp-route-id="@ct.OpportunityID" class="text-sm text-emerald-600 flex items-center gap-1 hover:underline">
                         ← عرض التفاصيل
                     </a>
                 </div>

@@ -7,6 +7,7 @@ using Project.Data;
 using Project.Extensions;
 using Project.Models;
 using Project.Repositories;
+using System.Security.Claims;
 
 namespace Project.Pages.Student
 {
@@ -24,7 +25,7 @@ namespace Project.Pages.Student
         public string? location { get; set; }
 
         [BindProperty(SupportsGet = true)]
-        public int? status { get; set; }
+        public TrainingOpportunity.Opportunity? status { get; set; }
 
         [BindProperty(SupportsGet = true)]
         public int PageSize { get; set; } = 10;
@@ -33,10 +34,10 @@ namespace Project.Pages.Student
         public int PageIndex { get; set; } = 1;
         public SelectList? Location { get; set; }
         public SelectList? Specialty { get; set; }
-
+        public HashSet<int> AppliedIds { get; set; } = new();
         public PaginatedList<TrainingOpportunity>? Opportunities { get; set; }
-        public int TotalCount => Opportunities?.Count() ?? 0;
-        public int CurrentCount => Opportunities?.TotalCount ?? 0;
+        public int CurrentCount => Opportunities?.Count() ?? 0;
+        public int TotalCount { get; set; }
 
         public AvaliabelOpportunitiesModel(ApplicationDbContext context, StudentsRepository studentRepo, SpecialtyRepository SpecialtyRepository)
         {
@@ -55,15 +56,28 @@ namespace Project.Pages.Student
 
             int months = days / 30;
 
-            return $"{months} شهر";
+            if (months == 1) return "شهر";
+            if (months == 2) return "شهرين";
+            return $"{months} اشهر ";
         }
-        public async Task OnGet()
+        public async Task<IActionResult> OnGet()
         {
             var city = await _context.TrainingOpportunities.Where(p => p.Location != null).Select(p => p.Location).Distinct().ToListAsync();
             var state = await _context.TrainingOpportunities.Select(p => p.Status).Distinct().ToListAsync();
             Location = new SelectList(city);
             Specialty = await _specialtyRepository.CreateSpecialtySelectList();
             var Opportunity = _context.TrainingOpportunities.Include(t=>t.OpportunitySpecialties).ThenInclude(s => s.Specialty).Include(t => t.TrainingInstitution).AsNoTracking();
+          
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var student = await _studentRepo.GetStudentByUserId(userId);
+
+            if (student == null) return NotFound();
+
+            var applications = _studentRepo.GetAllApplicationByStudentId(student.StudentID);
+
+            AppliedIds = applications.Select(a => a.OpportunityID).ToHashSet();
+
             if (!string.IsNullOrWhiteSpace(search))
             {
                 Opportunity = Opportunity.Where(
@@ -78,17 +92,19 @@ namespace Project.Pages.Student
             }
             if (status.HasValue)
             {
-
-               
-                Opportunity = Opportunity.Where(O => (int)O.Status == status);
+ 
+                Opportunity = Opportunity.Where(O => O.Status == status);
             }
             if (!string.IsNullOrWhiteSpace(location))
             {
                 Opportunity = Opportunity.Where(O => O.Location != null && O.Location.Equals(location));
             }
+            
+            TotalCount = await Opportunity.CountAsync();
 
             Opportunities = await PaginatedList<TrainingOpportunity>.CreateAsync(Opportunity, PageSize, PageIndex);
 
+            return Page();
         }
     }
 }

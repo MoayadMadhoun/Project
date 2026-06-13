@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Project.Data;
 using Project.Models;
+using Project.Pages.University.ViewModels;
 using Project.Repostory;
 
 namespace Project.Pages.University.Supervisors
@@ -13,41 +14,60 @@ namespace Project.Pages.University.Supervisors
         private readonly ApplicationDbContext _dbContext;
         private readonly UniversityRepository _repUniversity;
 
-        public DeleteModel(ApplicationDbContext dbContext,UniversityRepository repUniversity)
+        public DeleteModel(
+            ApplicationDbContext dbContext,
+            UniversityRepository repUniversity)
         {
             _dbContext = dbContext;
             _repUniversity = repUniversity;
         }
 
-        public AspNetUser? Supervisor { get; set; }
+        public SupervisorsVM Supervisor { get; set; }
+
         public async Task<IActionResult> OnGet(string id)
         {
-            Supervisor = await _repUniversity.GetUniversitySuperVisorByUserId(id);
+            if (string.IsNullOrEmpty(id))
+                return NotFound();
 
-            if(Supervisor == null)
+            var user = await _repUniversity.GetUniversitySuperVisorByUserId(id);
+
+            if (user == null)
+                return NotFound();
+
+            Supervisor = new SupervisorsVM
             {
-                ModelState.AddModelError(nameof(Supervisor), "·« ÌÊÃœ „‘—› Ã«„⁄… ");
+                Id = user.Id,
+                Name = user.FullName,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                IsActive = user.IsActive,
 
-                return Page();
-            }
+                //UniversityName = user.University.Name ?? null
+            };
+
             return Page();
         }
 
         public async Task<IActionResult> OnPost(string id)
         {
-            var UniversitySupervisor = await _repUniversity.GetUniversitySuperVisorByUserId(id);
+            if (string.IsNullOrEmpty(id))
+                return NotFound();
 
-            if (Supervisor == null)
-            {
-                ModelState.AddModelError(nameof(Supervisor), "·« ÌÊÃœ „‘—› Ã«„⁄… ");
-                return Page();
-            }
-            UniversitySupervisor?.IsActive = false;
+            var user = await _repUniversity.GetUniversitySuperVisorByUserId(id);
+
+            if (user == null)
+                return NotFound();
+
+            user.IsActive = false;
+
+            _dbContext.Users.Update(user);
             await _dbContext.SaveChangesAsync();
-            TempData["SuccessMessafe"] = " „  ⁄ÿÌ· „‘—› «·Ã«„⁄… »‰Ã«Õ";
 
-            return Page();
+            TempData["SuccessMessage"] = " „  ⁄ÿÌ· „‘—› «·Ã«„⁄… »‰Ã«Õ";
+
+            return RedirectToPage("/University/Supervisors");
         }
+        
 
     }
 }

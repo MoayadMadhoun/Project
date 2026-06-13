@@ -141,33 +141,33 @@ public class CreateModel : PageModel
         _context.TrainingOpportunities.Add(opportunity);
         await _context.SaveChangesAsync();
 
-        if (Input.SelectedSpecialties.Any())
-        {
-            _context.OpportunitySpecialties.AddRange(
+        //if (Input.SelectedSpecialties.Any())
+        //{
+        //    _context.OpportunitySpecialties.AddRange(
 
-                Input.SelectedSpecialties.Select(x =>
-                    new OpportunitySpecialty
-                    {
-                        OpportunityID = opportunity.OpportunityID,
-                        SpecialtyID = x
-                    }));
-        }
+        //        Input.SelectedSpecialties.Select(x =>
+        //            new OpportunitySpecialty
+        //            {
+        //                OpportunityID = opportunity.OpportunityID,
+        //                SpecialtyID = x
+        //            }));
+        //}
 
-        if (Input.SelectedSkills.Any())
-        {
-            _context.OpportunitySkills.AddRange(
+        //if (Input.SelectedSkills.Any())
+        //{
+        //    _context.OpportunitySkills.AddRange(
 
-                Input.SelectedSkills.Select(skillId =>
-                    new OpportunitySkill
-                    {
-                        OpportunityID = opportunity.OpportunityID,
-                        SkillID = skillId,
+        //        Input.SelectedSkills.Select(skillId =>
+        //            new OpportunitySkill
+        //            {
+        //                OpportunityID = opportunity.OpportunityID,
+        //                SkillID = skillId,
 
-                        IsRequired =
-                            Input.SkillTypes.TryGetValue(skillId, out var required)
-                            && required
-                    }));
-        }
+        //                IsRequired =
+        //                    Input.SkillTypes.TryGetValue(skillId, out var required)
+        //                    && required
+        //            }));
+        //}
         await _context.SaveChangesAsync();
 
         TempData["SuccessMessage"] = "تمت إضافة الفرصة التدريبية بنجاح";

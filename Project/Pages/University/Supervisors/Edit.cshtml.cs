@@ -25,7 +25,7 @@ namespace Project.Pages.University.Supervisors
         }
 
         [BindProperty]
-        public SupervisorsVM SupervisorsVM { get; set; }
+        public SupervisorsVM SupervisorsVM { get; set; } 
 
         public AspNetUser? SuperInfo {  get; set; }
         public async Task<IActionResult> OnGet(string id)
@@ -39,6 +39,7 @@ namespace Project.Pages.University.Supervisors
                 ModelState.AddModelError(nameof(supervisor), "„‘—› «·Ã«„⁄… Â–« €Ì— „ÊÃÊœ ");
                 return Page();
             }
+            SupervisorsVM = new SupervisorsVM();
             FullViewModel(supervisor, SupervisorsVM);
 
             return Page();
@@ -46,12 +47,26 @@ namespace Project.Pages.University.Supervisors
 
         public async Task<IActionResult> OnPost(string id)
         {
-            if(!ModelState.IsValid)
+           
+            var supervisor = await _repUniversity.GetUniversitySuperVisorByUserId(id);
+            foreach (var item in ModelState)
             {
+                var field = item.Key;
+                var errors = item.Value.Errors;
+
+                foreach (var error in errors)
+                {
+                    Console.WriteLine($"{field}: {error.ErrorMessage}");
+                }
+            }
+            if (!ModelState.IsValid)
+            {
+                
+
                 return Page();
             }
 
-            var supervisor = await _repUniversity.GetUniversitySuperVisorByUserId(id);
+          
 
             if (supervisor == null)
             {
@@ -59,14 +74,17 @@ namespace Project.Pages.University.Supervisors
                 return Page();
             }
 
-            await FullSuperVisor(SupervisorsVM, supervisor);
-
+           await  FullSuperVisor(SupervisorsVM,supervisor);
+            await _dbContext.SaveChangesAsync();
+            SuperInfo = await _repUniversity.GetUniversitySuperVisorByUserId(id);
             return Page();
         }
 
 
         private void FullViewModel(AspNetUser user, SupervisorsVM vM)
         {
+           
+            vM.Id=user.Id;
             vM.Name = user.FullName;
             vM.Email = user.Email;
             vM.IsActive = user.IsActive;
@@ -76,11 +94,14 @@ namespace Project.Pages.University.Supervisors
         private async Task FullSuperVisor(SupervisorsVM vM,AspNetUser user)
         {
             user.FullName = vM.Name;
+            
             user.Email = vM.Email;
             user.PhoneNumber = vM.PhoneNumber;
             user.IsActive = vM.IsActive;
-
             await _dbContext.SaveChangesAsync();
+
+
         }
+
     }
 }

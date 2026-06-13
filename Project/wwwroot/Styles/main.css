@@ -1,7 +1,7 @@
     :root {
       --navy: #0F2D52;
       --teal: #00B793;
-      --teal-light: #1665D7;
+      --teal-light: #4eddbb;
       --gray-bg: #F7F9FC;
       --border: #E4EAF2;
       --text-muted: #6C7A8D;
@@ -224,7 +224,7 @@
     .pb-green { background:#e8f8f3; color:#00B793; }
     .pb-orange { background:#fff3e8; color:#e87b00; }
     .pb-red { background:#ffecec; color:#e84040; }
-    .pb-blue { background:#e8f0ff; color:#1665D7; }
+    .pb-blue { background:#e6f7f5; color:#006b58; }
 
     /* ── FEATURES BAR ───────────────────────────────── */
     .features-bar {
