@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Project.Data;
 using Project.Models;
+using Project.Pages.University.ViewModels;
 using Project.Repository;
 using Project.Repostory;
 using System.ComponentModel.DataAnnotations;
@@ -35,29 +36,8 @@ namespace Project.Pages.University.TrainingRequests
         public SelectList TrainingTermsList { get; set; }
         public SelectList InstitutionsList { get; set; }
         [BindProperty]
-        public RequestInput TrainingRequest { get; set; }
-        public class RequestInput
-        {
-            [Required(ErrorMessage = "Title is required")]
-            [MaxLength(300, ErrorMessage = "Title can't be more than 200 characters")]
-            [MinLength(3, ErrorMessage = "Title can't be less than 3 characters")]
-            public string Title { get; set; } = string.Empty;
-            [MaxLength(1000, ErrorMessage = "Description can't be more than 1000 characters")]
-            public string? Description { get; set; }
-            [Required(ErrorMessage = "Requested seats number is required")]
-            [Range(0, 200, ErrorMessage = "Seats can't be less than zero")]
-            public int RequestedSeats { get; set; }
-            public DateTime? PreferredStartDate { get; set; }
-            public DateTime? PreferredEndDate { get; set; }
-
-            public DateTime? ApplicationDeadline { get; set; }
-            [MaxLength(1000, ErrorMessage = "Notes can't be more than 1000 characters")]
-            public string? Notes { get; set; }
-
-            public int TermID { get; set; }
-            public RequestStatus Status { get; set; } = RequestStatus.Draft;
-
-        }
+        public EditTrainingRequestVM TrainingRequest { get; set; }
+      
 
         public async Task<IActionResult> OnGet([FromRoute] int RequestId)
         {
@@ -69,7 +49,7 @@ namespace Project.Pages.University.TrainingRequests
             {
                 return NotFound();
             }
-            TrainingRequest = new RequestInput
+            TrainingRequest = new EditTrainingRequestVM
             {
                 Title = OpportunityRequest.Title,
                 Description = OpportunityRequest.Description,

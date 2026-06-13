@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Project.Data;
 using Project.Models;
+using Project.Pages.University.ViewModels;
 using Project.Repository;
 using Project.Repostory;
 using System.ComponentModel.DataAnnotations;
@@ -30,7 +31,7 @@ namespace Project.Pages.University.TrainingRequests
 
         }
         [BindProperty]
-        public RequestInput TrainingRequest { get; set; }
+        public TrainingRequestVM TrainingRequest { get; set; }
         public SelectList TrainingTermsList { get; set; }
         public SelectList InstitutionsList { get; set; }
 
@@ -38,29 +39,7 @@ namespace Project.Pages.University.TrainingRequests
         public TrainingOpportunityRequest OpportunityRequest { get; set; } = new TrainingOpportunityRequest();
         public Models.University? CurrentUniversity { get; set; }
 
-        public class RequestInput
-        {
-            [Required(ErrorMessage = "Title is required")]
-            [MaxLength(300, ErrorMessage = "Title can't be more than 200 characters")]
-            [MinLength(3, ErrorMessage = "Title can't be less than 3 characters")]
-            public string Title { get; set; } = string.Empty;
-            [MaxLength(1000, ErrorMessage = "Description can't be more than 1000 characters")]
-            public string? Description { get; set; }
-            [Required(ErrorMessage = "Requested seats number is required")]
-            [Range(0, 200, ErrorMessage = "Seats can't be less than zero")]
-            public int RequestedSeats { get; set; }
-            public int InstitutionID { get; set; }
-            public DateTime? PreferredStartDate { get; set; }
-            public DateTime? PreferredEndDate { get; set; }
-
-            public DateTime? ApplicationDeadline { get; set; }
-            [MaxLength(1000, ErrorMessage = "Notes can't be more than 1000 characters")]
-            public string? Notes { get; set; }
-
-            public int TermID { get; set; }
-            public RequestStatus Status { get; set; } = RequestStatus.Draft;
-
-        }
+       
         public async void OnGet()
         {
             var query = _dbContext.TrainingTerms.ToList();
@@ -69,7 +48,28 @@ namespace Project.Pages.University.TrainingRequests
         }
         public async Task<IActionResult> OnPost()
         {
-            
+            if (TrainingRequest.PreferredStartDate != default &&
+            TrainingRequest.PreferredStartDate < DateTime.Today)
+            {
+                ModelState.AddModelError(
+                    nameof(TrainingRequest.PreferredStartDate),
+                    "لا يمكن اختيار تاريخ بداية في الماضي");
+            }
+
+            if (TrainingRequest.PreferredEndDate != default &&
+                TrainingRequest.PreferredEndDate < DateTime.Today)
+            {
+                ModelState.AddModelError(
+                    nameof(TrainingRequest.PreferredEndDate),
+                    "لا يمكن اختيار تاريخ نهاية في الماضي");
+            }
+
+            if (TrainingRequest.PreferredEndDate <= TrainingRequest.PreferredStartDate)
+            {
+                ModelState.AddModelError(
+                    nameof(TrainingRequest.PreferredEndDate),
+                    "يجب أن يكون تاريخ النهاية بعد تاريخ البداية");
+            }
             if (!ModelState.IsValid)
             {
                 var query = _dbContext.TrainingTerms.ToList();
