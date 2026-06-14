@@ -17,7 +17,8 @@
         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg>
         رجوع
     </a>
-
+    <a href="c:\users\badar\source\repos\project\project\pages\institution\profile.cshtml.cs">c:\users\badar\source\repos\project\project\pages\institution\profile.cshtml.cs</a>
+    <a href="c:\users\badar\source\repos\project\project\pages\institution\profile.cshtml">c:\users\badar\source\repos\project\project\pages\institution\profile.cshtml</a>
     <!-- Header Banner -->
     @* ===== Hero Section  ===== *@
 
@@ -41,6 +42,7 @@
    
 
     <!-- ─── Section 1: Basic Info ─── -->
+<form method="post">
     <div class="section-card">
         <div class="flex items-center justify-between mb-1">
             <h3 class="font-h3 text-2xl md:text-h1 mb-md">المعلومات الأساسية</h3>
@@ -49,56 +51,27 @@
 
         <div class="grid-2 mb-4">
             <div>
-                <label class="field-label required">اسم المتعلم</label>
-                <input class="field-input" type="text" value="TechAdv" />
+                <label class="field-label ">اسم المتعلم</label>
+                <input asp-for="InstitutionProfile.ContactPersonName" class="field-input" type="text"  />
+                <span class="text-danger" asp-validation-for="InstitutionProfile.ContactPersonName"></span>
             </div>
             <div>
-                <label class="field-label">الشركة التقنية المتقدمة</label>
-                <input class="field-input" type="text" value="شركة التقنية المتقدمة" disabled />
+                    <label class="field-label required">اسم المؤسسة</label>
+                <input asp-for="InstitutionProfile.Name" class="field-input" type="text"   />
             </div>
         </div>
 
         <div class="grid-2 mb-4">
             <div>
-                <label class="field-label required">نوع المؤسسة</label>
-                <select class="field-input">
-                    <option>شركة تقنية متقدمة</option>
-                    <option>مؤسسة تعليمية</option>
-                    <option>جهة حكومية</option>
+                <label class="field-label ">نوع المؤسسة</label>
+                <select asp-items="Model.InstitutionTypeList" asp-for="InstitutionProfile.InstitutionType" class="field-input">
+                    <option value="">نوع المؤسسة</option>
                 </select>
+                    <span class="text-danger" asp-validation-for="InstitutionProfile.InstitutionType"></span>
             </div>
-            <div>
-                <label class="field-label">السجل التجاري</label>
-                <div class="flex gap-2">
-                    <input class="field-input" type="text" value="1018254960" style="flex:1" />
-                    <button class="px-3 rounded-lg border border-slate-200 text-slate-400 hover:bg-slate-50 transition-colors">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
-                    </button>
-                </div>
-            </div>
+           
         </div>
-
-        <div class="grid-2 mb-4">
-            <div>
-                <label class="field-label">سنة التأسيس</label>
-                <input class="field-input" type="text" value="2015" />
-            </div>
-            <div>
-                <label class="field-label">رقم الهوية</label>
-                <input class="field-input" type="text" value="300987654300003" />
-            </div>
-        </div>
-
-        <div class="mb-2">
-            <label class="field-label">نبذة عن المؤسسة</label>
-            <textarea class="field-input" rows="3" style="resize:none;">شركة تقنية متخصصة في مجال الحلول البرمجية والتقييم الميداني لخدمات الدخول الرقمي لتشاركات والمؤسسات.</textarea>
-        </div>
-
-        <div class="mt-4 pt-4 border-t border-slate-100">
-            <button class="bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold px-6 py-2.5 rounded-lg transition-colors">
-                حفظ التغييرات
-            </button>
-        </div>
+       
     </div>
 
     <!-- ─── Section 2: Contact Info ─── -->
@@ -108,35 +81,19 @@
 
         <div class="grid-2 mb-4">
             <div>
-                <label class="field-label">الموقع الإلكتروني الرسمي</label>
-                <input class="field-input" type="url" value="https://www.techadv.com" />
-            </div>
-            <div>
                 <label class="field-label">البريد الإلكتروني الرسمي</label>
-                <input class="field-input" type="email" value="info@techadv.com" />
+                <input asp-for="InstitutionProfile.Email" class="field-input" type="email" />
+                    <span class="text-danger" asp-validation-for="InstitutionProfile.Email"></span>
             </div>
         </div>
 
         <div class="grid-2">
             <div>
-                <label class="field-label">رقم الفاكس</label>
-                <div class="flex gap-2">
-                    <select class="field-input" style="width:80px;flex-shrink:0;">
-                        <option>🇸🇦 +966</option>
-                        <option>🇺🇸 +1</option>
-                    </select>
-                    <input class="field-input" type="text" value="11 256 8478" style="flex:1" />
-                </div>
-            </div>
-            <div>
                 <label class="field-label">الجوال الرسمي</label>
                 <div class="flex gap-2">
-                    <select class="field-input" style="width:80px;flex-shrink:0;">
-                        <option>🇸🇦 +966</option>
-                        <option>🇺🇸 +1</option>
-                    </select>
-                    <input class="field-input" type="text" value="11 256 8478" style="flex:1" />
+                    <input asp-for="InstitutionProfile.PhoneNumber" class="field-input" type="text" style="flex:1" />
                 </div>
+                <span class="text-danger" asp-validation-for="InstitutionProfile.PhoneNumber"></span>
             </div>
         </div>
     </div>
@@ -144,77 +101,18 @@
     <!-- ─── Section 3: Address ─── -->
     <div class="section-card">
         <p class="section-title">العنوان والموقع</p>
-        <p class="section-subtitle">العنوان الفعلي للمؤسسة</p>
-
-        <div class="grid-2 mb-4">
-            <div>
-                <label class="field-label">المدينة</label>
-                <select class="field-input">
-                    <option>الرياض</option>
-                    <option>جدة</option>
-                    <option>الدمام</option>
-                </select>
-            </div>
-            <div>
-                <label class="field-label">الدولة</label>
-                <select class="field-input">
-                    <option>المملكة العربية السعودية</option>
-                    <option>الإمارات</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="grid-3 mb-4">
-            <div>
-                <label class="field-label">الحي</label>
-                <input class="field-input" type="text" placeholder="الحي" />
-            </div>
-            <div>
-                <label class="field-label">المنطقة</label>
-                <input class="field-input" type="text" placeholder="المنطقة" />
-            </div>
-            <div>
-                <label class="field-label">الرمز البريدي</label>
-                <input class="field-input" type="text" value="12936" />
-            </div>
-        </div>
-
         <div>
             <label class="field-label">العنوان التفصيلي</label>
-            <input class="field-input" type="text" value="طريق أنس، فهد، حي، شقة التقنية، الجزء 12" />
+            <input asp-for="InstitutionProfile.Address"  class="field-input" type="text" />
+                <span class="text-danger" asp-validation-for="InstitutionProfile.Address"></span>
         </div>
     </div>
-
-    <!-- ─── Section 4: Logo & Identity ─── -->
-    <div class="section-card">
-        <p class="section-title">الشعار والهوية</p>
-        <p class="section-subtitle">شعار المؤسسة الحالي</p>
-
-        <div class="grid-2 gap-6">
-            <!-- Upload -->
-            <div>
-                <p class="field-label mb-2">تغيير الشعار</p>
-                <div class="upload-box">
-                    <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-slate-100 flex items-center justify-center">
-                        <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
-                        </svg>
-                    </div>
-                    <p class="text-xs text-slate-500 mb-2">اسحب وأفلت هنا</p>
-                    <button class="text-xs text-emerald-600 border border-emerald-200 bg-emerald-50 hover:bg-emerald-100 px-4 py-1.5 rounded-lg font-semibold transition-colors">
-                        اختر ملف
-                    </button>
-                    <p class="text-[11px] text-slate-400 mt-2">PNG, JPG, SVG (حتى 2MB)</p>
-                </div>
-            </div>
-
-            <!-- Current logo preview -->
-            <div>
-                <p class="field-label mb-2">الشعار الحالي</p>
-                <div class="border border-slate-200 rounded-xl p-6 bg-slate-50 flex items-center justify-center min-h-[140px]">
-                    <span class="text-3xl font-black text-slate-800 tracking-tight">TechAdv</span>
-                </div>
-            </div>
+        <div class="mt-4 pt-4 border-t border-slate-100">
+            <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold px-6 py-2.5 rounded-lg transition-colors">
+                حفظ التغييرات
+            </button>
         </div>
-    </div>
+
+    </form>
 </div>
+
