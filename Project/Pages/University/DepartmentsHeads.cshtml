@@ -124,15 +124,19 @@
                                             <span>✎</span>
                                             تعديل
                                         </a>
-                                        <form method="post" asp-page-handler="RemoveDeptHead">
-                                            <input type="hidden" name="PageSize" value="@Model.PageSize" />
-                                            <input type="hidden" name="PageIndex" value="@Model.PageIndex" />
-                                            <input type="hidden" name="SortOrder" value="@Model.SortOrder" />
-                                            <input type="hidden" name="SearchTerm" value="@Model.SearchTerm" />
-                                            <input type="hidden" name="DepartmentHeadId" value="@DH.Id" />
-                                            <a asp-page="/University/DepartmentHeads/Delete"
-                                               asp-route-id="@DH.Id" class="btn border border-rose-200 text-rose-600 text-xs font-bold px-4 py-2 rounded hover:bg-rose-50 flex items-center gap-1"> <span>🗑</span>حذف</a>
-                                        </form>
+                                        @if (DH.IsActive)
+                                        {
+                                            <form method="post" asp-page-handler="RemoveDeptHead">
+                                                <input type="hidden" name="PageSize" value="@Model.PageSize" />
+                                                <input type="hidden" name="PageIndex" value="@Model.PageIndex" />
+                                                <input type="hidden" name="SortOrder" value="@Model.SortOrder" />
+                                                <input type="hidden" name="SearchTerm" value="@Model.SearchTerm" />
+                                                <input type="hidden" name="DepartmentHeadId" value="@DH.Id" />
+                                                <a asp-page="/University/DepartmentHeads/Delete"
+                                                   asp-route-id="@DH.Id" class="btn border border-rose-200 text-rose-600 text-xs font-bold px-4 py-2 rounded hover:bg-rose-50 flex items-center gap-1"> <span>🗑</span>حذف</a>
+                                            </form>
+                                        }
+                                       
                                 </div>
                             </td>
                         </tr>

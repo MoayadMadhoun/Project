@@ -94,17 +94,27 @@ namespace Project.Areas.Identity.Pages.Account
 
             await _signInManager.SignInAsync(user, isPersistent: false);
 
-            if (AccountType == AccountType.Institution)
-                return RedirectToPage("/Institution/Index");
-            if (AccountType == AccountType.University)
-                return RedirectToPage("/University/Index");
-            if (AccountType == AccountType.Student)
+            if (await _userManager.IsInRoleAsync(user, "Student"))
+            {
                 return RedirectToPage("/Student/Index");
-            
+            }
+
+            if (await _userManager.IsInRoleAsync(user, "UniversityTrainingAdmin") ||
+                await _userManager.IsInRoleAsync(user, "DepartmentHead") ||
+                await _userManager.IsInRoleAsync(user, "UniversitySupervisor"))
+            {
+                return RedirectToPage("/University/Index");
+            }
+
+            if (await _userManager.IsInRoleAsync(user, "InstitutionTrainingOfficer") ||
+                await _userManager.IsInRoleAsync(user, "InstitutionSupervisor"))
+            {
+                return RedirectToPage("/Institution/Index");
+            }
 
             return RedirectToPage("/Index");
 
-        
+
 
         }
 

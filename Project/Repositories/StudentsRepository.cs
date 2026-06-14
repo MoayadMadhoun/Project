@@ -360,6 +360,30 @@ namespace Project.Repositories
                 .FirstOrDefaultAsync(x => x.PlacementID == placementId);
         }
 
+        public async Task<StudentEvaluation?> GetStudentEvaluation(int evaluationId)
+        {
+            return await _context.StudentEvaluations
+                .FirstOrDefaultAsync(x =>
+                    x.EvaluationID == evaluationId);
+        }
+        public IQueryable<StudentEvaluation> GetStudentEvaluations(int studentId)
+        {
+            return _context.StudentEvaluations
+
+                .Include(x => x.TrainingPlacement)
+                    .ThenInclude(x =>
+                        x.TrainingOpportunity)
+
+                .Include(x => x.UniversitySupervisor)
+
+                .Include(x => x.InstitutionSupervisor)
+
+                .Where(x =>
+                    x.TrainingPlacement.StudentID
+                    == studentId)
+
+                .AsNoTracking();
+        }
         // Retrieve the training term for a specific opportunity
         public async Task<TrainingTerm?> GetTrainingTermByOpportunityId(int id)
         {
@@ -528,6 +552,11 @@ namespace Project.Repositories
                 .Include(s=>s.Applications)
                 .ThenInclude(a=>a.TrainingOpportunity)
                 .Where(s => s.UniversityID == UniversityId).AsQueryable();
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
         }
     }
 }

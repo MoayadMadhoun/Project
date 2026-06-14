@@ -489,6 +489,7 @@
         .hero-title { font-size: 1.6rem; }
     }
 </style>
+
 }
 
 <div class="container-fluid px-3 py-3" dir="rtl">
@@ -504,93 +505,175 @@
     </div> *@
 
     <!-- ===== HERO BANNER ===== -->
-    <div class="students-hero mb-4">
-        <!-- ghost illustration left -->
-        @* <div class="hero-illustration d-none d-lg-block">
-            <div class="ghost-card">
-                <div class="ghost-avatar"></div>
-                <div class="ghost-line"></div>
-                <div class="ghost-line short"></div>
-                <div class="ghost-line"></div>
-            </div>
-        </div> *@
+   <div class="card border-0 shadow-sm mb-4">
 
-        <div class="d-flex align-items-center justify-content-start gap-3 position-relative">
-            <div class="text-end">
-                <h1 class="hero-title mb-1">الطلبة</h1>
-                <p class="hero-subtitle mb-0">
-                    متابعة الطلبة المسجلين في نظام التدريب الميداني<br>
-                    وإدارة بياناتهم الأكاديمية وحالة التدريب الخاصة بهم.
+    <div class="card-body text-white p-5"
+         style="background:#1ab29a;border-radius:24px;">
+
+        <div class="d-flex justify-content-between align-items-center">
+
+            <div>
+
+                <h2 class="fw-bold mb-3">
+                    الطلاب
+                </h2>
+
+                <p class="mb-0">
+                    متابعة وإدارة طلاب الجامعة المسجلين في نظام التدريب الميداني
                 </p>
+
             </div>
-            @* <div class="hero-icon-wrap flex-shrink-0">
-                <!-- graduation cap icon -->
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                    <path d="M12 3 1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/>
-                </svg>
-            </div> *@
+
+            <div class="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center"
+                 style="width:90px;height:90px;">
+
+                <i class="bi bi-mortarboard-fill fs-1"></i>
+
+            </div>
+
         </div>
+
     </div>
 
+</div>
     <!-- ===== FILTER BAR ===== -->
-    <div class="filter-bar mb-4">
-        <form method="get">
-            <input type="hidden" name="PageSize" value="@Model.PageSize" />
-                    <input type="hidden" name="PageIndex" value="@Model.PageIndex" />
-                    <input type="hidden" name="SortOrder" value="@Model.SortOrder" />
-        <div class="row g-2 align-items-center">
-            <!-- Search -->
-            <div class="col-12 col-md-3">
-                <div class="input-group input-group-sm">
-                    <span class="input-group-text bg-white border-end-0" style="border-color:#d1faf4;border-radius:var(--radius-md) 0 0 var(--radius-md);">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#1abc9c" stroke-width="2">
-                            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-                        </svg>
-                    </span>
-                    <input asp-for="SearchTerm" type="text" class="form-control form-control-sm border-start-0 ps-0"
-                           placeholder="ابحث عن طالب..."
-                           style="border-color:#d1faf4;border-radius:0 var(--radius-md) var(--radius-md) 0;" />
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white border-0 pt-4 px-4">
+
+            <div class="d-flex align-items-center gap-2">
+
+                <div class="rounded-circle d-flex align-items-center justify-content-center"
+                     style="width:42px;height:42px;background:#e8faf6;">
+
+                    <i class="bi bi-funnel-fill text-success"></i>
+
                 </div>
+
+                <div>
+                    <h5 class="fw-bold mb-0">
+                        تصفية الطلاب
+                    </h5>
+
+                    <small class="text-muted">
+                        ابحث وقم بتصفية الطلاب حسب القسم والتخصص
+                    </small>
+                </div>
+
             </div>
-            <!-- Specialty -->
-            <div class="col-6 col-md-2">
-                <select asp-for="SelectedSpecialityId" asp-items="@Model.SpecialitiesList" class="form-select form-select-sm">
-                    <option value="-1">التخصص - الكل</option>
-                  
-                </select>
-            </div>
-                @if (User.IsInRole("UniversityTrainingAdmin"))
-                    {
-                        <!-- Department -->
-                        <div class="col-6 col-md-2">
-                            <select asp-for="SelectedDepartmentId" asp-items="@Model.DepartmentsList" class="form-select form-select-sm">
-                                <option value="-1">القسم - الكل</option>
+
+        </div>
+
+        <div class="card-body px-4 pb-4">
+
+            <form method="get">
+
+                <div class="row g-3 align-items-end">
+
+                    <div class="col-lg-4">
+
+                        <label class="form-label fw-semibold">
+                            البحث
+                        </label>
+
+                        <div class="input-group">
+
+                            <span class="input-group-text bg-white border-start-0">
+                                <i class="bi bi-search"></i>
+                            </span>
+
+                            <input asp-for="SearchTerm"
+                                   class="form-control border-end-0"
+                                   placeholder="ابحث عن طالب..." />
+
+                        </div>
+
+                    </div>
+                    @if (!User.IsInRole("DepartmentHead"))
+                        {
+                        <div class="col-lg-2">
+
+                            <label class="form-label fw-semibold">
+                                القسم
+                            </label>
+
+                            <select asp-for="SelectedDepartmentId"
+                                    asp-items="Model.DepartmentsList"
+                                    class="form-select">
+
+                                <option value="-1">
+                                    جميع الأقسام
+                                </option>
 
                             </select>
-                        </div>
-                    }
-                    <!-- Current Training -->
-            <div class="col-6 col-md-2">
-                <select asp-for="IsTraining" class="form-select form-select-sm">
-                    <option value="">التدريب الحالي - الكل</option>
-                    <option value="true">لديه تدريب</option>
-                    <option value="false">لا يوجد تدريب</option>
-                </select>
-            </div>
-            <!-- Buttons -->
-            <div class="col-6 col-md-3 d-flex gap-2 justify-content-end">
-                <button type="submit" class="btn btn-filter">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="me-1 d-flex">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 4h18M7 8h10M11 12h2m-4 4h6"/>
-                    </svg>
-                    تصفية
-                </button>
-                
-            </div>
-        </div>
-        </form>
-    </div>
 
+                        </div>
+                        }
+                       
+
+                    <div class="col-lg-2">
+
+                        <label class="form-label fw-semibold">
+                            التخصص
+                        </label>
+
+                        <select asp-for="SelectedSpecialityId"
+                                asp-items="Model.SpecialitiesList"
+                                class="form-select">
+
+                            <option value="-1">
+                                جميع التخصصات
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-lg-2">
+
+                        <label class="form-label fw-semibold">
+                            التدريب
+                        </label>
+
+                        <select asp-for="IsTraining"
+                                class="form-select">
+
+                            <option value="">
+                                الكل
+                            </option>
+
+                            <option value="true">
+                                ملتحق بتدريب
+                            </option>
+
+                            <option value="false">
+                                غير ملتحق
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-lg-2">
+
+                        <button type="submit"
+                                class="btn btn-success w-100">
+
+                            <i class="bi bi-funnel-fill me-1"></i>
+
+                            تصفية
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
     <!-- ===== TABLE CARD ===== -->
     <div class="table-card">
         <!-- Header -->
@@ -611,6 +694,9 @@
                         <th><a class="text-decoration-none"
        asp-route-PageSize="@Model.PageSize" 
        asp-route-SearchTerm="@Model.SearchTerm"
+                               asp-route-SelectedDepartmentId="@Model.SelectedDepartmentId"
+                               asp-route-SelectedSpecialityId="@Model.SelectedSpecialityId"
+                               asp-route-IsTraining="@Model.IsTraining"
        asp-route-PageIndex="@(Model.PageIndex)"
        asp-route-SortOrder="@(Model.SortOrder == "Name" ? "Name_desc" : "Name")">
     الطالب @SortingIcon("Name", Model.SortOrder)
@@ -620,13 +706,16 @@
                         <th>القسم</th>
                         <th><a class="text-decoration-none"
                                asp-route-PageSize="@Model.PageSize" 
+                               asp-route-SelectedDepartmentId="@Model.SelectedDepartmentId"
+                               asp-route-SelectedSpecialityId="@Model.SelectedSpecialityId"
+                               asp-route-IsTraining="@Model.IsTraining"
                                asp-route-SearchTerm="@Model.SearchTerm"
                                asp-route-PageIndex="@(Model.PageIndex)"
                                asp-route-SortOrder="@(Model.SortOrder == "GPA" ? "GPA_desc" : "GPA")">
                             المعدل @SortingIcon("GPA", Model.SortOrder)
                             </a></th>
                         <th>التدريب الحالي</th>
-                        <th>التفاصيل</th>
+                       <th style="width:260px;">الإجراءات</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -652,11 +741,49 @@
     @(placed?.TrainingOpportunity?.Title ?? "لا يوجد تدريب")
 </span>
                             </td>
-                            <td data-label="التفاصيل">
-                                <a asp-page="/Students/Details" asp-route-id="@student.StudentID" class="btn-details">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.964-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/></svg>
-                                    التفاصيل
-                                </a>
+                            <td data-label="الإجراءات">
+
+                                <div class="btn-group">
+
+                                    <!-- تفاصيل -->
+
+                                    <a asp-page="/University/StudentDetails"
+                                       asp-route-id="@student.StudentID"
+                                       class="btn btn-sm btn-outline-primary"
+                                       title="تفاصيل الطالب">
+
+                                        <i class="bi bi-person-vcard-fill"></i>
+
+                                    </a>
+                                    <a asp-page="/University/Attendance"
+                                       asp-route-studentId="@student.StudentID"
+                                       class="btn btn-sm btn-outline-success"
+                                       title="الحضور">
+
+                                        <i class="bi bi-calendar-check-fill"></i>
+
+                                    </a>
+
+                                    <a asp-page="/University/Evaluations"
+                                       asp-route-studentId="@student.StudentID"
+                                       class="btn btn-sm btn-outline-warning"
+                                       title="التقييمات">
+
+                                        <i class="bi bi-clipboard-data-fill"></i>
+
+                                    </a>
+
+                                    <a asp-page="/University/Reports/Index"
+                                       asp-route-studentId="@student.StudentID"
+                                       class="btn btn-sm btn-outline-info"
+                                       title="التقارير">
+
+                                        <i class="bi bi-file-earmark-text-fill"></i>
+
+                                    </a>
+
+                                </div>
+
                             </td>
                         </tr>
                         @(SIndex++)
@@ -675,10 +802,17 @@
                     <input type="hidden" name="PageIndex" value="@Model.PageIndex" />
                     <input type="hidden" name="SortOrder" value="@Model.SortOrder" />
                     <input type="hidden" name="SearchTerm" value="@Model.SearchTerm" />
-    
+                    <input type="hidden" asp-for="SearchTerm" />
+                    <input type="hidden" asp-for="SelectedDepartmentId" />
+                    <input type="hidden" asp-for="SelectedSpecialityId" />
+                    <input type="hidden" asp-for="IsTraining" />
+                    <input type="hidden" asp-for="SortOrder" />
+
                     <select asp-for="PageSize"
                             onchange="this.form.submit()"
                             class="form-select form-select-sm per-page-select" style="width:70px;">
+
+
                         <option value="10">10</option>
                         <option value="25">25</option>
                         <option value="50">50</option>
@@ -695,6 +829,9 @@
                                asp-route-SearchTerm="@Model.SearchTerm"
                                asp-route-SortOrder="@Model.SortOrder"
                                asp-route-PageSize="@Model.PageSize"
+                               asp-route-SelectedDepartmentId="@Model.SelectedDepartmentId"
+                               asp-route-SelectedSpecialityId="@Model.SelectedSpecialityId"
+                               asp-route-IsTraining="@Model.IsTraining"
                                class="page-link" aria-label="Previous">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="m15 19 7-7-7-7" transform="scale(-1,1) translate(-24,0)"/>
@@ -705,14 +842,17 @@
                      @for (int i = 1; i <= Model.Students.TotalPages; i++)
                 {
                     <li class="page-item @(Model.PageIndex == i ? "active" : "")">
-    <a class="page-link"
-       asp-route-PageIndex="@i"
-       asp-route-SearchTerm="@Model.SearchTerm"
-       asp-route-SortOrder="@Model.SortOrder"
-       asp-route-PageSize="@Model.PageSize">
-        @i
-    </a>
-</li>
+                            <a class="page-link"
+                               asp-route-PageIndex="@i"
+                               asp-route-SearchTerm="@Model.SearchTerm"
+                               asp-route-SortOrder="@Model.SortOrder"
+                               asp-route-PageSize="@Model.PageSize"
+                               asp-route-SelectedDepartmentId="@Model.SelectedDepartmentId"
+                               asp-route-SelectedSpecialityId="@Model.SelectedSpecialityId"
+                               asp-route-IsTraining="@Model.IsTraining">
+                                @i
+                            </a>
+                        </li>
                    
                   }
                    <li>
@@ -722,6 +862,9 @@
                                asp-route-SearchTerm="@Model.SearchTerm"
                                asp-route-SortOrder="@Model.SortOrder"
                                asp-route-PageSize="@Model.PageSize"
+                               asp-route-SelectedDepartmentId="@Model.SelectedDepartmentId"
+                               asp-route-SelectedSpecialityId="@Model.SelectedSpecialityId"
+                               asp-route-IsTraining="@Model.IsTraining"
                                class="page-link" href="#" aria-label="Next">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="m9 5 7 7-7 7"/>

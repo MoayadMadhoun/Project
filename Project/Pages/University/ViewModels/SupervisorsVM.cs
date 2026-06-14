@@ -5,7 +5,7 @@ namespace Project.Pages.University.ViewModels
     public class SupervisorsVM
     {
 
-        public string Id { get; set; }
+        public string? Id { get; set; }
 
 
         [Required(ErrorMessage = "اسم رئيس القسم مطلوب")]

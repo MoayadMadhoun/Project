@@ -11,7 +11,8 @@ using Project.Repostory;
 
 namespace Project.Pages.University
 {
-    [Authorize(Roles = "UniversityTrainingAdmin")]
+    //[Authorize(Roles = "UniversityTrainingAdmin")]
+    [Authorize]
     public class IndexModel : PageModel
     {
 
@@ -31,6 +32,8 @@ namespace Project.Pages.University
         [BindProperty(SupportsGet = true)]
         public int StatusId { get; set; }
         public SelectList StatusList { get; set; }
+        public AspNetUser CUser { get; set; }
+
         private readonly UserManager<AspNetUser> _userManager;
 
         public PaginatedList<TrainingApplication> TrainingApplications { get; set; }
@@ -51,6 +54,7 @@ namespace Project.Pages.University
                     return RedirectToPage("/Account/Login", new { area = "Identity" });
                 }
                 var user = await _userManager.GetUserAsync(User);
+                CUser = user;
                 if (user == null)
                 {
                     return RedirectToPage("/Account/Login", new { area = "Identity" });

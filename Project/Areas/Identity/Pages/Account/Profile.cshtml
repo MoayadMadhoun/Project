@@ -1,0 +1,44 @@
+﻿@page
+@model Project.Areas.Identity.Pages.Account.ProfileModel
+@{
+}
+
+<div class="card shadow-sm border-0 rounded-4">
+
+    <div class="card-header text-white"
+         style="background:#1ab29a">
+
+        <h5 class="mb-0">
+            الصورة الشخصية
+        </h5>
+
+    </div>
+
+    <div class="card-body text-center">
+
+        <img src="@Model.CurrentImage"
+             class="rounded-circle shadow mb-3"
+             width="150"
+             height="150"
+             style="object-fit:cover;" />
+
+        <form method="post"
+              enctype="multipart/form-data">
+
+            <input asp-for="ProfileImage"
+                   class="form-control mb-3" />
+
+            <button type="submit"
+                    class="btn btn-success">
+
+                <i class="bi bi-camera-fill"></i>
+
+                تغيير الصورة
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>

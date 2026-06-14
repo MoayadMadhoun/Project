@@ -36,6 +36,12 @@ namespace Project.Pages.Institution.ViewModels
         public int TermId { get; set; }
 
         public int? RequestId { get; set; }
+        public List<int> SelectedSpecialties { get; set; } = new();
+
+        public List<int> SelectedSkills { get; set; } = new();
+
+        public Dictionary<int, bool> SkillTypes { get; set; } = new();
+
 
         [Required(ErrorMessage = "حالة الفرصة مطلوبة")]
         public Opportunity Status { get; set; } = Opportunity.Open;

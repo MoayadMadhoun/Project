@@ -1,0 +1,423 @@
+﻿@page
+@using Project.Models
+@model Project.Pages.University.EvaluationsModel
+
+@{
+    ViewData["Title"] = "تقييمات الطلاب";
+    ViewData["UserType"] = "University";
+
+var total = Model.Evaluations?.TotalCount ?? 0;
+
+    var approved = Model.Evaluations?
+        .Count(x => x.Status ==
+            StudentEvaluation.StudentEvaluationStatus.Approved) ?? 0;
+
+    var rejected = Model.Evaluations?
+        .Count(x => x.Status ==
+            StudentEvaluation.StudentEvaluationStatus.Rejected) ?? 0;
+
+    var submitted = Model.Evaluations?
+        .Count(x => x.Status ==
+            StudentEvaluation.StudentEvaluationStatus.Submitted) ?? 0;
+
+    var draft = Model.Evaluations?
+        .Count(x => x.Status ==
+            StudentEvaluation.StudentEvaluationStatus.Draft) ?? 0;
+
+}
+
+<div class="container-fluid">
+
+  
+    <!-- Hero -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body p-5 text-white"
+             style="background:linear-gradient(135deg,#1ab29a,#14967f);border-radius:24px;">
+
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+
+                <div>
+
+                    <h1 class="fw-bold mb-3">
+                        تقييمات الطلاب
+                    </h1>
+
+                    <p class="mb-0 fs-5 opacity-75">
+                        متابعة جميع تقييمات التدريب الميداني
+                    </p>
+
+                </div>
+
+                <div class="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center"
+                     style="width:90px;height:90px;">
+
+                    <i class="bi bi-star-fill fs-1"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Statistics -->
+
+    <div class="row g-4 mb-4">
+
+        <div class="col-md-3">
+
+            <div class="card border-0 shadow-sm text-center h-100">
+
+                <div class="card-body">
+
+                    <i class="bi bi-list-check fs-1 text-primary"></i>
+
+                    <h3 class="mt-3">
+                        @total
+                    </h3>
+
+                    <div class="text-muted">
+                        إجمالي التقييمات
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="card border-0 shadow-sm text-center h-100">
+
+                <div class="card-body">
+
+                    <i class="bi bi-check-circle-fill fs-1 text-success"></i>
+
+                    <h3 class="mt-3">
+                        @approved
+                    </h3>
+
+                    <div class="text-muted">
+                        مقبولة
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="card border-0 shadow-sm text-center h-100">
+
+                <div class="card-body">
+
+                    <i class="bi bi-hourglass-split fs-1 text-warning"></i>
+
+                    <h3 class="mt-3">
+                        @submitted
+                    </h3>
+
+                    <div class="text-muted">
+                        قيد المراجعة
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="card border-0 shadow-sm text-center h-100">
+
+                <div class="card-body">
+
+                    <i class="bi bi-x-circle-fill fs-1 text-danger"></i>
+
+                    <h3 class="mt-3">
+                        @rejected
+                    </h3>
+
+                    <div class="text-muted">
+                        مرفوضة
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Filters -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-body">
+
+            <form method="get">
+
+                <div class="row g-3">
+
+                    <div class="col-md-4">
+
+                        <input asp-for="SearchTerm"
+                               class="form-control"
+                               placeholder="بحث باسم الطالب..." />
+
+                    </div>
+
+                    <div class="col-md-3">
+
+                        <select asp-for="EvaluationTypeId"
+                                class="form-select">
+
+                            <option value="">
+                                جميع الأنواع
+                            </option>
+
+                            <option value="0">
+                                University Mid
+                            </option>
+
+                            <option value="1">
+                                University Final
+                            </option>
+
+                            <option value="2">
+                                Institution Mid
+                            </option>
+
+                            <option value="3">
+                                Institution Final
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-3">
+
+                        <select asp-for="EvaluationStatusId"
+                                class="form-select">
+
+                            <option value="">
+                                جميع الحالات
+                            </option>
+
+                            <option value="0">
+                                Draft
+                            </option>
+
+                            <option value="1">
+                                Submitted
+                            </option>
+
+                            <option value="2">
+                                Approved
+                            </option>
+
+                            <option value="3">
+                                Rejected
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-2">
+
+                        <button type="submit"
+                                class="btn btn-primary w-100">
+
+                            <i class="bi bi-search"></i>
+                            بحث
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- Table -->
+
+    <div class="card border-0 shadow-sm rounded-4">
+
+        <div class="card-body p-0">
+
+            <div class="table-responsive">
+
+                <table class="table align-middle mb-0">
+
+                    <thead class="table-light">
+
+                        <tr>
+
+                            <th>الطالب</th>
+                            <th>الرقم الجامعي</th>
+                            <th>القسم</th>
+                            <th>المؤسسة</th>
+                            <th>التدريب</th>
+                            <th>النوع</th>
+                            <th>الدرجة</th>
+                            <th>الحالة</th>
+                            <th>ملف</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var item in Model.Evaluations)
+                        {
+                            <tr>
+
+                                <td>
+                                    @item.TrainingPlacement.Student.Name
+                                </td>
+
+                                <td>
+                                    @item.TrainingPlacement.Student.StudentNumber
+                                </td>
+
+                                <td>
+                                    @item.TrainingPlacement.Student.Department.Name
+                                </td>
+
+                                <td>
+                                    @item.TrainingPlacement.TrainingInstitution.Name
+                                </td>
+
+                                <td>
+                                    @item.TrainingPlacement.TrainingOpportunity.Title
+                                </td>
+
+                                <td>
+                                    @item.Type
+                                </td>
+
+                                <td>
+
+                                    @item.Score /
+                                    @item.MaxScore
+
+                                    <span class="text-muted">
+
+                                        (
+                                        @(((item.Score * 100)
+                                        / item.MaxScore).ToString("0.0"))
+                                        %
+                                        )
+
+                                    </span>
+
+                                </td>
+
+                                <td>
+
+                                    @switch (item.Status)
+                                    {
+                                        case StudentEvaluation.StudentEvaluationStatus.Approved:
+                                            <span class="badge bg-success">
+                                                مقبول
+                                            </span>
+                                            break;
+
+                                        case StudentEvaluation.StudentEvaluationStatus.Rejected:
+                                            <span class="badge bg-danger">
+                                                مرفوض
+                                            </span>
+                                            break;
+
+                                        case StudentEvaluation.StudentEvaluationStatus.Submitted:
+                                            <span class="badge bg-warning text-dark">
+                                                قيد المراجعة
+                                            </span>
+                                            break;
+
+                                        default:
+                                            <span class="badge bg-secondary">
+                                                مسودة
+                                            </span>
+                                            break;
+                                    }
+
+                                </td>
+
+                                <td>
+
+                                    @if (!string.IsNullOrEmpty(item.EvaluationPdfPath))
+                                    {
+                                        <a asp-page-handler="OpenFile"
+                                           asp-route-id="@item.EvaluationID"
+                                           class="btn btn-outline-primary btn-sm">
+
+                                            <i class="bi bi-file-earmark-pdf"></i>
+
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <span>-</span>
+                                    }
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Pagination -->
+    @if (Model.Evaluations.TotalPages > 1)
+    {
+        <nav class="mt-4">
+
+            <ul class="pagination justify-content-center">
+
+                @for (int i = 1; i <= Model.Evaluations.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.PageIndex ? "active" : "")">
+
+                        <a class="page-link"
+                           asp-route-PageIndex="@i"
+                           asp-route-SearchTerm="@Model.SearchTerm"
+                           asp-route-EvaluationTypeId="@Model.EvaluationTypeId"
+                           asp-route-EvaluationStatusId="@Model.EvaluationStatusId">
+
+                            @i
+
+                        </a>
+
+                    </li>
+                }
+
+            </ul>
+
+        </nav>
+    }
+
+</div>

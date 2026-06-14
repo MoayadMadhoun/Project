@@ -1,0 +1,236 @@
+﻿@page "{id:int}"
+@model Project.Pages.Institution.Attendance.DeleteModel
+
+@{
+    ViewData["Title"] = "حذف سجل الحضور";
+    ViewData["UserType"] = "Institution";
+}
+
+<div class="container-fluid">
+
+    <!-- رجوع -->
+
+    <div class="mb-4">
+        <a asp-page="/Institution/Attendance"
+           class="text-decoration-none text-success fw-semibold">
+
+            <i class="bi bi-arrow-right"></i>
+            الرجوع إلى سجل الحضور
+
+        </a>
+    </div>
+
+    <!-- Hero -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body p-5 text-white"
+             style="background:#dc3545;border-radius:24px;">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+
+                    <h1 class="fw-bold mb-3">
+                        حذف سجل حضور
+                    </h1>
+
+                    <p class="mb-0 fs-5 opacity-75">
+                        سيتم حذف سجل الحضور بشكل نهائي ولا يمكن التراجع عن العملية لاحقاً.
+                    </p>
+
+                </div>
+
+                <div class="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center"
+                     style="width:90px;height:90px;">
+
+                    <i class="bi bi-trash fs-1"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- رسالة التحذير -->
+
+    <div class="alert alert-danger border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="d-flex align-items-center">
+
+            <i class="bi bi-exclamation-triangle-fill fs-2 me-3"></i>
+
+            <div>
+
+                <h5 class="fw-bold mb-1">
+                    تحذير
+                </h5>
+
+                <p class="mb-0">
+                    هل أنت متأكد من حذف سجل الحضور؟ لا يمكن استرجاع البيانات بعد الحذف.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- بيانات السجل -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                بيانات السجل
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-4">
+
+                <div class="col-md-4">
+
+                    <label class="text-muted">
+                        اسم الطالب
+                    </label>
+
+                    <div class="fw-semibold fs-5">
+                        @Model.Attendance.TrainingPlacement.Student.Name
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label class="text-muted">
+                        تاريخ الحضور
+                    </label>
+
+                    <div class="fw-semibold fs-5">
+                        @Model.Attendance.AttendanceDate.ToString("yyyy-MM-dd")
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label class="text-muted">
+                        الحالة
+                    </label>
+
+                    <div class="fw-semibold fs-5">
+
+                        @switch (Model.Attendance.Status)
+                        {
+                            case Project.Models.AttendanceRecord.AttendanceStatus.Present:
+                                <span class="badge bg-success">حاضر</span>
+                                break;
+
+                            case Project.Models.AttendanceRecord.AttendanceStatus.Late:
+                                <span class="badge bg-warning text-dark">متأخر</span>
+                                break;
+
+                            case Project.Models.AttendanceRecord.AttendanceStatus.Absent:
+                                <span class="badge bg-danger">غائب</span>
+                                break;
+
+                            case Project.Models.AttendanceRecord.AttendanceStatus.Excused:
+                                <span class="badge bg-info text-dark">بعذر</span>
+                                break;
+                        }
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label class="text-muted">
+                        وقت الدخول
+                    </label>
+
+                    <div class="fw-semibold">
+
+                        @(Model.Attendance.CheckInTime?.ToString(@"hh\:mm") ?? "-")
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label class="text-muted">
+                        وقت الخروج
+                    </label>
+
+                    <div class="fw-semibold">
+
+                        @(Model.Attendance.CheckOutTime?.ToString(@"hh\:mm") ?? "-")
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-12">
+
+                    <label class="text-muted">
+                        الملاحظات
+                    </label>
+
+                    <div class="fw-semibold">
+
+                        @(string.IsNullOrWhiteSpace(Model.Attendance.Notes)
+                            ? "لا توجد ملاحظات"
+                            : Model.Attendance.Notes)
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- أزرار -->
+
+    <div class="card border-0 shadow-sm rounded-4">
+
+        <div class="card-body">
+
+            <form method="post">
+
+                <div class="d-flex gap-2">
+
+                    <button type="submit"
+                            class="btn btn-danger px-5">
+
+                        <i class="bi bi-trash me-2"></i>
+                        تأكيد الحذف
+
+                    </button>
+
+                    <a asp-page="/Institution/Attendance"
+                       class="btn btn-outline-secondary px-5">
+
+                        <i class="bi bi-x-circle me-2"></i>
+                        إلغاء
+
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>

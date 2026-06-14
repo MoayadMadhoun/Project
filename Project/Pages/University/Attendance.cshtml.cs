@@ -27,6 +27,8 @@ namespace Project.Pages.University
             _dbContext = dbContext;
             _studentRepo = studentRepo;
         }
+        [BindProperty(SupportsGet = true)]
+        public int? StudentId { get; set; }
 
         [BindProperty(SupportsGet = true)]
         public int PageIndex { get; set; } = 1;
@@ -43,6 +45,8 @@ namespace Project.Pages.University
         [BindProperty(SupportsGet = true)]
         public int SelectedAttendanceStatusId { get; set; }
         public PaginatedList<Models.AttendanceRecord> AttendanceRecords { get; set; } = new PaginatedList<Models.AttendanceRecord>(new List<Models.AttendanceRecord>(), 0, 1, 10);
+        public Models.Student? SelectedStudent { get; set; }
+
         public async Task<IActionResult> OnGet()
         {
 
@@ -67,13 +71,28 @@ namespace Project.Pages.University
                 return RedirectToPage("/Index");
             }
             var query = _dbContext.AttendanceRecords
-                .Include(at=>at.TrainingPlacement)
-                    .ThenInclude(tp=>tp.Student)
-                .Include(at=>at.TrainingPlacement)
-                    .ThenInclude(tp=>tp.TrainingInstitution)
-                .Include(at => at.TrainingPlacement)
-                    .ThenInclude(tp => tp.TrainingOpportunity).AsQueryable();
+             .Include(at => at.TrainingPlacement)
+                 .ThenInclude(tp => tp.Student)
+             .Include(at => at.TrainingPlacement)
+                 .ThenInclude(tp => tp.TrainingInstitution)
+             .Include(at => at.TrainingPlacement)
+                 .ThenInclude(tp => tp.TrainingOpportunity)
+             .Where(at =>
+                 at.TrainingPlacement.Student.UniversityID == universityId)
+             .AsQueryable();
 
+            if (StudentId.HasValue)
+            {
+                query = query.Where(a =>
+                    a.TrainingPlacement.StudentID ==
+                    StudentId.Value);
+            }
+            if (StudentId.HasValue)
+            {
+                SelectedStudent = await _dbContext.Students
+                    .FirstOrDefaultAsync(s =>
+                        s.StudentID == StudentId.Value);
+            }
             if (User.IsInRole("DepartmentHead"))
             {
                 query = query.Where(at=>at.TrainingPlacement.Student.DepartmentID == scope.DepartmentID);

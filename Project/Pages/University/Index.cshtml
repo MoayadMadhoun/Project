@@ -25,7 +25,40 @@
 @* ===== Hero Section ===== *@
 <section class="mb-lg md:mb-xl relative rounded-xl md:rounded-xxl overflow-hidden bg-primary-container p-6 md:p-xl text-on-primary">
     <div class="relative z-10 max-w-2xl">
-        <h1 class="font-h1 text-2xl md:text-h1 mb-md">مرحباً بك، جامعة @Model.CurrentUniversity.Name</h1>
+            @if (User.IsInRole("UniversityTrainingAdmin"))
+            {
+                @* <p class="text-xs text-slate-500">مسؤول التدريب الميداني</p> *@
+                <h1 class="font-h1 text-2xl md:text-h1 mb-md">
+                    مرحباً بك، جامعة
+                    @Model.CurrentUniversity.Name
+                </h1>
+
+            }
+            else if (User.IsInRole("DepartmentHead"))
+            {
+                @* <p class="text-xs text-slate-500">@user.FullName - رئيس قسم</p> *@
+            <h1 class="font-h1 text-2xl md:text-h1 mb-md">
+                مرحباً بك، 
+                @Model.CUser.FullName - رئيس قسم
+                <br/>
+                @Model.CurrentUniversity.Name
+
+            </h1>
+            }
+            else if (User.IsInRole("UniversitySupervisor"))
+            {
+            <h1 class="font-h1 text-2xl md:text-h1 mb-md">
+                مرحباً بك،
+                @Model.CUser.FullName - مشرف تدريب
+                <br />
+                @Model.CurrentUniversity.Name
+
+            </h1>
+            }
+
+
+
+            
         <p class="font-body-lg text-sm md:text-body-lg opacity-90 mb-lg md:mb-xl">
             يمكنك من هنا إدارة منظومة التدريب، الإشراف على الطلاب، إدارة الفرص، وتقييم المؤسسات بكل يسر وسهولة.
         </p>

@@ -169,6 +169,8 @@ namespace Project.Pages.University
             app.UniversityAdminDecision =
                 TrainingApplication.Decision.Approved;
 
+            app.Status = TrainingApplication.ApplicationStatus.UniversityApproved;
+
             app.UniversityAdminID = userId;
 
             app.UniversityAdminReviewedAt =

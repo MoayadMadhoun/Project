@@ -258,12 +258,33 @@ namespace Project.Repository
         public IQueryable<AttendanceRecord> GetAttendanceForInstitution(int institutionId)
         {
             return _dbContext.AttendanceRecords
-                .Include(to => to.TrainingPlacement)
-                .ThenInclude( p => p.Student)
-                .Where(to => to.TrainingPlacement.InstitutionID == institutionId)
-                .AsNoTracking().AsQueryable();
-        }
 
+                .Include(a => a.TrainingPlacement)
+                    .ThenInclude(p => p.Student)
+
+                .Include(a => a.TrainingPlacement)
+                    .ThenInclude(p => p.TrainingOpportunity)
+
+                .Include(a => a.InstitutionSupervisor)
+
+                .Where(a => a.TrainingPlacement.InstitutionID == institutionId)
+
+                .AsNoTracking();
+        }
+        public IQueryable<StudentEvaluation> GetEvaluationsForInstitution(int institutionId)
+        {
+            return _dbContext.StudentEvaluations
+                .Include(e => e.TrainingPlacement)
+                    .ThenInclude(p => p.Student)
+
+                .Include(e => e.TrainingPlacement)
+                    .ThenInclude(p => p.TrainingOpportunity)
+
+                .Include(e => e.InstitutionSupervisor)
+
+                .Where(e => e.TrainingPlacement.InstitutionID == institutionId)
+                .AsNoTracking();
+        }
         public async Task<TrainingOpportunity?> GetTrainingOpportunityDetailsForInstitutionAsync(int opportunityId, int institutionId)
         {
             return await _dbContext.TrainingOpportunities

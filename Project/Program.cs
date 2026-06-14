@@ -47,6 +47,7 @@ namespace Project
             builder.Services.AddScoped<OptService>();
             builder.Services.AddScoped<CreateUserService>();
 
+            builder.Services.AddKeyedScoped<IUploadFils, UploadDocxFile >("file");
             builder.Services.AddRazorPages();
 
             var app = builder.Build();

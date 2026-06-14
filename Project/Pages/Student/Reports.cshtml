@@ -24,11 +24,12 @@
     </div>
     @*    <div class="absolute -bottom-10 -left-10 w-48 h-48 md:w-64 md:h-64 bg-white/10 rounded-full blur-3xl"></div>
     <div class="absolute -top-20 -left-20 w-64 h-64 md:w-80 md:h-80 bg-secondary-fixed-dim/20 rounded-full blur-3xl"></div> *@
-    <button class="w-full py-2 sm:w-auto bg-white text-primary font-button px-xl py-3 rounded-xl shadow-lg hover:bg-surface-container transition-colors"> ＋ رفع تقرير جديد</button>
-
+    <a asp-page="/Student/Reports/Create" class="inline-block w-full sm:w-auto bg-white text-primary font-button px-xl py-3 rounded-xl shadow-lg hover:bg-surface-container transition-colors text-center">
+        ＋ رفع تقرير جديد
+    </a>
 </section>
 @* Alert *@
-<div class="bg-emerald-50  border border-emerald-600 rounded-xl px-5 py-3.5 mb-6 flex items-start gap-3">
+@* <div class="bg-emerald-50  border border-emerald-600 rounded-xl px-5 py-3.5 mb-6 flex items-start gap-3">
     <svg class="w-5 h-5 text-emerald-600 mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
     </svg>
@@ -36,7 +37,7 @@
         <p class="text-emerald-600 font-semibold text-sm">آخر موعد لرفع التقرير الأسبوعي القادم: الخميس 15 مايو 2025 - 11:59 مساءً</p>
         <p class="text-slate-700 text-xs mt-0.5">يجب رفع التقرير قبل الموعد المحدد لتجنب التأخير في التقييم.</p>
     </div>
-</div>
+</div> *@
 
 
 @* ===== Filters Bar ===== *@
@@ -157,11 +158,12 @@
 
                             @if (report.ReviewNotes is not null)
                             {
-                                <button class="border border-slate-200 text-emerald-600 px-4 py-1 rounded hover:bg-emerald-50 transition-colors">
+                               <span>@report.ReviewNotes</span> 
+                                @* <button class="border border-slate-200 text-emerald-600 px-4 py-1 rounded hover:bg-emerald-50 transition-colors">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
                                     </svg>
-                                </button>
+                                </button> *@
                             }
                             else
                             {
@@ -170,21 +172,33 @@
 
 
                         </td>
+                        <td class="px-4 py-3">
 
-                        <td class="px-4 py-3"> 
-
-                            @*  عرض ايقونة ملف في حالة تم تسليم الملف  *@
-                            @if (report.Status != Models.StudentReport.StudentReportStatus.NotSubmitted)
+                            @if (!string.IsNullOrEmpty(report.FilePath))
                             {
-                                <a asp-page-handler="OpenFile" asp-route-reportId="@report.ReportID" class="border border-slate-200 text-emerald-600 px-4 py-1 rounded hover:bg-emerald-50 transition-colors">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                <a asp-page-handler="OpenFile"
+                                   asp-route-reportId="@report.ReportID"
+                                   title="عرض الملف"
+                                   class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-all">
+
+                                    <svg class="w-6 h-6"
+                                         fill="none"
+                                         stroke="currentColor"
+                                         stroke-width="2"
+                                         viewBox="0 0 24 24">
+                                        <path stroke-linecap="round"
+                                              stroke-linejoin="round"
+                                              d="M7 3h7l5 5v13a1 1 0 01-1 1H7a1 1 0 01-1-1V4a1 1 0 011-1z" />
+                                        <path stroke-linecap="round"
+                                              stroke-linejoin="round"
+                                              d="M14 3v5h5" />
                                     </svg>
+
                                 </a>
                             }
                             else
                             {
-                                <p>-</p>
+                                <span class="text-slate-400">-</span>
                             }
 
                         </td>
@@ -193,34 +207,62 @@
 
                         <td class="px-4 py-3">
 
-                            @if (report.Status == Models.StudentReport.StudentReportStatus.Rejected || report.Status == Models.StudentReport.StudentReportStatus.Approved)
+                            @if (report.Status == Models.StudentReport.StudentReportStatus.Rejected ||
+                                 report.Status == Models.StudentReport.StudentReportStatus.Approved)
                             {
-                                 <div class="flex items-center gap-1.5">
+                                
+                                @* <div class="flex items-center gap-2">
 
-                                    <button class="border border-slate-200 text-emerald-600 text-xs font-bold px-4 py-2 rounded hover:bg-emerald-50 flex items-center gap-1"><span>👁</span> عرض </button>
+                                    <a asp-page="/Student/Reports/View"
+                                       asp-route-reportId="@report.ReportID"
+                                       class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 transition"
+                                       title="عرض">
 
-                                </div>
+                                        <i class="bi bi-eye-fill"></i>
+
+                                    </a>
+
+                                </div> *@
                             }
-                            @if (report.Status == Models.StudentReport.StudentReportStatus.Submitted )
+
+                            @if (report.Status == Models.StudentReport.StudentReportStatus.Submitted)
                             {
-                                <button class="border border-emerald-200 text-emerald-600 text-xs font-bold px-4 py-2 rounded hover:bg-emerald-50 flex items-center gap-1"><span>✎</span>تعديل </button>
-                                <a asp-page-handler="Delete" asp-route-reportId="@report.ReportID"  class="btn border border-rose-200 text-rose-600 text-xs font-bold px-4 py-2 rounded hover:bg-rose-50 flex items-center gap-1"> <span>🗑</span></a>
-                               
-                            }
-                            @if (report.Status == Models.StudentReport.StudentReportStatus.NotSubmitted)
-                            {
-                                <div class="flex items-center gap-1.5">
-                                    <a asp-page="/Student/Reports/Create" asp-route-id="@report.StudentID" class="flex items-center gap-1.5 text-xs  border border-slate-200 text-emerald-600 text-xs font-bold px-4 py-2 rounded hover:bg-emerald-50 gap-1">
-                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-                                        </svg>
-                                        رفع التقرير
+                                <div class="flex items-center gap-2">
+
+                                    <a asp-page="/Student/Reports/Edit"
+                                       asp-route-reportId="@report.ReportID"
+                                       class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition"
+                                       title="تعديل">
+
+                                        <i class="bi bi-pencil-square"></i>
+
+                                    </a>
+
+                                    <a asp-page="/Student/Reports/Delete"
+                                       asp-route-reportId="@report.ReportID"
+                                       class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-rose-50 text-rose-600 hover:bg-rose-100 transition"
+                                       title="حذف">
+
+                                        <i class="bi bi-trash-fill"></i>
+
                                     </a>
 
                                 </div>
                             }
 
-                            
+                            @if (report.Status == Models.StudentReport.StudentReportStatus.NotSubmitted)
+                            {
+                                <a asp-page="/Student/Reports/Create"
+                                   asp-route-id="@report.StudentID"
+                                   class="inline-flex items-center gap-2 bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-2 rounded-lg hover:bg-emerald-100 transition text-sm font-medium">
+
+                                    <i class="bi bi-cloud-upload"></i>
+
+                                    <span>رفع التقرير</span>
+
+                                </a>
+                            }
+
                         </td>
 
                    

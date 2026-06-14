@@ -63,20 +63,16 @@ namespace Project.Pages.Student
 
             return Page();
         }
-         public async Task<IActionResult> OnGetOpenFile(int reportId) 
-         {
+        public async Task<IActionResult> OnGetOpenFile(int reportId)
+        {
+            var report = await studentsRepository.GetStudentReport(reportId);
 
-            var report = await  studentsRepository.GetStudentReport(reportId);
             if (report == null || string.IsNullOrEmpty(report.FilePath))
                 return NotFound();
-            var FilePath = report?.FilePath ?? "" ;
-            var provider = new FileExtensionContentTypeProvider();
-            if (!provider.TryGetContentType(FilePath,out string? contentType)) {
-                contentType = "application/octet-stream"; 
-            }
-            return PhysicalFile(FilePath, contentType);
 
-         }
+            return Redirect(report.FilePath);
+        }
+
         public async Task<IActionResult> OnPostDelete(int reportId) {
 
            await studentsRepository.DeleteStudentReportByReportId(reportId);

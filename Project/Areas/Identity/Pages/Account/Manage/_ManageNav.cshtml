@@ -1,15 +1,103 @@
 ﻿@inject SignInManager<AspNetUser> SignInManager
+
 @{
-    var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
+    var hasExternalLogins =
+    (await SignInManager
+    .GetExternalAuthenticationSchemesAsync())
+    .Any();
 }
-<ul class="nav nav-pills flex-column">
-    <li class="nav-item"><a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">Profile</a></li>
-    <li class="nav-item"><a class="nav-link @ManageNavPages.EmailNavClass(ViewContext)" id="email" asp-page="./Email">Email</a></li>
-    <li class="nav-item"><a class="nav-link @ManageNavPages.ChangePasswordNavClass(ViewContext)" id="change-password" asp-page="./ChangePassword">Password</a></li>
-    @if (hasExternalLogins)
-    {
-        <li id="external-logins" class="nav-item"><a id="external-login" class="nav-link @ManageNavPages.ExternalLoginsNavClass(ViewContext)" asp-page="./ExternalLogins">External logins</a></li>
+
+<div class="card border-0 shadow-sm rounded-4">
+
+    <div class="card-header text-white"
+         style="background:#1ab29a;">
+
+        <h6 class="mb-0">
+            إعدادات الحساب
+        </h6>
+
+    </div>
+
+    <div class="list-group list-group-flush">
+
+        <a asp-page="./Index"
+           class="list-group-item list-group-item-action @ManageNavPages.IndexNavClass(ViewContext)">
+
+            <i class="bi bi-person-fill me-2"></i>
+
+            الملف الشخصي
+
+        </a>
+
+        <a asp-page="./Email"
+           class="list-group-item list-group-item-action @ManageNavPages.EmailNavClass(ViewContext)">
+
+            <i class="bi bi-envelope-fill me-2"></i>
+
+            البريد الإلكتروني
+
+        </a>
+
+        <a asp-page="./ChangePassword"
+           class="list-group-item list-group-item-action @ManageNavPages.ChangePasswordNavClass(ViewContext)">
+
+            <i class="bi bi-shield-lock-fill me-2"></i>
+
+            كلمة المرور
+
+        </a>
+
+        @if (hasExternalLogins)
+        {
+            <a asp-page="./ExternalLogins"
+               class="list-group-item list-group-item-action @ManageNavPages.ExternalLoginsNavClass(ViewContext)">
+
+                <i class="bi bi-box-arrow-in-right me-2"></i>
+
+                تسجيلات الدخول الخارجية
+
+            </a>
+        }
+
+        <a asp-page="./TwoFactorAuthentication"
+           class="list-group-item list-group-item-action @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)">
+
+            <i class="bi bi-phone-fill me-2"></i>
+
+            التحقق الثنائي
+
+        </a>
+
+        <a asp-page="./PersonalData"
+           class="list-group-item list-group-item-action @ManageNavPages.PersonalDataNavClass(ViewContext)">
+
+            <i class="bi bi-database-fill me-2"></i>
+
+            البيانات الشخصية
+
+        </a>
+
+    </div>
+
+</div>
+
+<style>
+
+    .list-group-item.active {
+        background: #1ab29a !important;
+        border-color: #1ab29a !important;
+        color: white !important;
+        font-weight: 600;
     }
-    <li class="nav-item"><a class="nav-link @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)" id="two-factor" asp-page="./TwoFactorAuthentication">Two-factor authentication</a></li>
-    <li class="nav-item"><a class="nav-link @ManageNavPages.PersonalDataNavClass(ViewContext)" id="personal-data" asp-page="./PersonalData">Personal data</a></li>
-</ul>
+
+    .list-group-item {
+        border: none;
+        padding: 14px 18px;
+    }
+
+        .list-group-item:hover {
+            background: #f5fffd;
+            color: #1ab29a;
+        }
+
+</style>

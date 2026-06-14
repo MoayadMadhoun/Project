@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -10,6 +11,8 @@ using Project.Repostory;
 
 namespace Project.Pages.University
 {
+
+    [Authorize(Roles ="UniversityTrainingAdmin")]
     public class AvailabelOpportunitiesModel : PageModel
     {
         private readonly UniversityRepository _uniRepo;

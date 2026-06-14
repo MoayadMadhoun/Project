@@ -125,16 +125,11 @@
             {
                 <div class="bg-white border border-slate-200 rounded-xl p-5 hover:shadow-sm transition-shadow text-right">
                     <div class="flex items-center gap-3 mb-4">
-                        @if (!string.IsNullOrWhiteSpace(trainee.ProfileImagePath))
-                        {
-                            <img src="@trainee.ProfileImagePath" alt="@trainee.Name" class="w-12 h-12 rounded-full object-cover" />
-                        }
-                        else
-                        {
-                            <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-semibold text-lg">
-                                @(trainee.Name.Length > 0 ? trainee.Name[0] : '?')
-                            </div>
-                        }
+                        <img src="@(string.IsNullOrWhiteSpace(trainee.ProfileImagePath)
+                                         ? "/images/default-user.jpg"
+                                         : trainee.ProfileImagePath)"
+                             alt="@trainee.Name"
+                             class="w-12 h-12 rounded-full object-cover" />
                         <div>
                             <p class="font-semibold text-slate-800">@trainee.Name</p>
                             <p class="text-xs text-slate-400">@trainee.Major</p>

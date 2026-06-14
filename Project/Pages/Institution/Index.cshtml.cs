@@ -32,6 +32,7 @@ namespace Project.Pages.Institution
         public int UniversityId { get; set; }
         public SelectList Universities { get; set; }
         private readonly UserManager<AspNetUser> _userManager;
+        public AspNetUser CUser { get; set; }
 
         public PaginatedList<TrainingApplication> TrainingApplications { get; set; }
         public IndexModel(TrainingInstitutionRepository institutionRepo, ApplicationDbContext dbContext, UniversityRepository universityRepo, UserManager<AspNetUser> userManager)
@@ -50,6 +51,7 @@ namespace Project.Pages.Institution
                     return RedirectToPage("/Account/Login", new { area = "Identity" });
                 }
                 var user = await _userManager.GetUserAsync(User);
+                CUser = user;
                 if (user == null)
                 {
                     return RedirectToPage("/Account/Login", new { area = "Identity" });
