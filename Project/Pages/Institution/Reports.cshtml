@@ -1,4 +1,5 @@
 ﻿@page
+@using Microsoft.AspNetCore.Html
 @model Project.Pages.Institution.ReportsModel
 @{
     ViewData["Title"] = "لوحة تحكم المؤسسة";
@@ -6,7 +7,20 @@
     ViewData["PortalTitle"] = "بوابة المؤسسة";
     ViewData["PortalSubtitle"] = "إدارة المتدربين والفرص";
     ViewData["SearchPlaceholder"] = "بحث عن طلاب، طلبات...";
-    ViewData["ActivePage"] = "Reports";
+    int RIndex = 1;
+}
+@functions {
+    public IHtmlContent SortingIcon(string column, string currentSort)
+    {
+        if (currentSort == column)
+            return new HtmlString("<span><i class=\"bi bi-caret-up-fill\"></i></span>");
+
+        if (currentSort == column + "_desc")
+            return new HtmlString("<span><i class=\"bi bi-caret-down-fill\"></i></span>");
+
+        return new HtmlString("<span><i class=\"bi bi-arrow-down-up\"></i></span>");
+    }
+
 }
 <link rel="stylesheet" href="~/Styles/Reports.css" />
 <main class="main-content">
@@ -39,34 +53,31 @@
        
     </div>  <!-- ← closing tag was here before, now moved to end -->
     <!-- Filter Bar -->
-    <div class="filter-bar">
+    <form method="get">
+        <div class="filter-bar">
 
     
-        <div class="filter-search">
-            <input type="text" placeholder="ابحث عن طالب أو تقرير..." />
-            <i class="bi bi-search"></i>
+            <div class="filter-search">
+                <input asp-for="SearchTerm" type="text" placeholder="ابحث عن طالب أو تقرير..." />
+                <i class="bi bi-search"></i>
+            </div>
+
+            <select asp-for="SelectedReportStatus" asp-items="Model.ReportStatusList" class="filter-select" style="max-width:200px;">
+                <option value=""></option>
+            </select>
+
+            <select asp-for="SelectedReportType" class="filter-select" style="max-width:200px;">
+                <option value="">جميع أنواع التقارير</option>
+                <option value="1">تقرير اسبوعي</option>
+                <option value="2">تقرير نهائي</option>
+            </select>
+            <button type="submit" class="filter-btn">
+                <i class="bi bi-funnel"></i>
+                تصفية
+            </button>
         </div>
 
-        <select class="filter-select" style="max-width:200px;">
-            <option>جميع الحالات</option>
-            <option>بانتظار تعبئة التقرير</option>
-            <option>تم إرسال التقرير</option>
-            <option>متأخرة</option>
-        </select>
-
-        <select class="filter-select" style="max-width:200px;">
-            <option>جميع أنواع التقارير</option>
-            <option>تقرير أداء</option>
-            <option>تقرير حضور</option>
-            <option>تقرير متابعة</option>
-            <option>تقرير نهائي</option>
-        </select>
-        <button class="filter-btn">
-            <i class="bi bi-funnel"></i>
-            تصفية
-        </button>
-    </div>
-
+    </form>
     <!-- Table Card -->
     <div class="table-card">
         <div class="table-card-header">
@@ -84,105 +95,184 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>الطالب</th>
+                        <th>
+                            <a class="text-decoration-none"
+                               asp-route-PageSize="@Model.PageSize"
+                               asp-route-SearchTerm="@Model.SearchTerm"
+                               asp-route-studentId="@Model.StudentId"
+                               asp-route-placementId="@Model.PlacementId"
+                               asp-route-PageIndex="@(Model.PageIndex)"
+                               asp-route-SortOrder="@(Model.SortOrder == "Name" ? "Name_desc" : "Name")">
+                                الطالب @SortingIcon("Name", Model.SortOrder)
+                            </a>
+                        </th>
                         <th>نوع التقرير</th>
                         <th>التدريب</th>
-                        <th>تاريخ الطلب</th>
-                        <th>الموعد النهائي</th>
+                        <th>تاريخ الارسال </th>
                         <th>حالة التقرير</th>
                         <th>ملف مرفق</th>
                         <th>العمليات</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td class="td-name">محمد أحمد البدوي</td>
-                        <td>تقرير أداء</td>
-                        <td class="td-link">تطوير أدائه</td>
-                        <td>01-06-2025</td>
-                        <td>15-06-2025</td>
-                        <td><span class="badge-waiting">بانتظار تعبئة التقرير</span></td>
-                        <td><span style="color:#ccc;">—</span></td>
-                        <td><span class="three-dots">⋮</span></td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td class="td-name">سارة المطيري</td>
-                        <td>تقرير حضور</td>
-                        <td class="td-link">تحليل بيانات</td>
-                        <td>28-05-2025</td>
-                        <td>12-06-2025</td>
-                        <td><span class="badge-waiting">بانتظار تعبئة التقرير</span></td>
-                        <td><span style="color:#ccc;">—</span></td>
-                        <td><span class="three-dots">⋮</span></td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td class="td-name">أحمد العتيبي</td>
-                        <td>تقرير متابعة</td>
-                        <td class="td-link">تصميم جرافيك</td>
-                        <td>25-05-2025</td>
-                        <td>10-06-2025</td>
-                        <td><span class="badge-sent">تم إرسال التقرير</span></td>
-                        <td><span class="file-icon-btn"><i class="bi bi-file-earmark"></i></span></td>
-                        <td><span class="three-dots">⋮</span></td>
-                    </tr>
-                    <tr>
-                        <td>4</td>
-                        <td class="td-name">نورة الحربي</td>
-                        <td>تقرير أداء</td>
-                        <td class="td-link">أمن المعلومات</td>
-                        <td>20-05-2025</td>
-                        <td>08-06-2025</td>
-                        <td><span class="badge-sent">تم إرسال التقرير</span></td>
-                        <td><span class="file-icon-btn"><i class="bi bi-file-earmark"></i></span></td>
-                        <td><span class="three-dots">⋮</span></td>
-                    </tr>
-                    <tr>
-                        <td>5</td>
-                        <td class="td-name">فيصل السبيعي</td>
-                        <td>تقرير نهائي</td>
-                        <td class="td-link">إدارة مشاريع</td>
-                        <td>18-05-2025</td>
-                        <td>05-06-2025</td>
-                        <td><span class="badge-waiting">بانتظار تعبئة التقرير</span></td>
-                        <td><span style="color:#ccc;">—</span></td>
-                        <td><span class="three-dots">⋮</span></td>
-                    </tr>
-                    <tr>
-                        <td>6</td>
-                        <td class="td-name">خالد الدوسري</td>
-                        <td>تقرير أداء</td>
-                        <td class="td-link">تطوير ويب</td>
-                        <td>15-05-2025</td>
-                        <td>02-06-2025</td>
-                        <td><span class="badge-sent">تم إرسال التقرير</span></td>
-                        <td><span class="file-icon-btn"><i class="bi bi-file-earmark"></i></span></td>
-                        <td><span class="three-dots">⋮</span></td>
-                    </tr>
-                    <tr>
-                        <td>7</td>
-                        <td class="td-name">ريم الشهري</td>
-                        <td>تقرير متابعة</td>
-                        <td class="td-link">تحليل بيانات</td>
-                        <td>10-05-2025</td>
-                        <td>30-05-2025</td>
-                        <td><span class="badge-late">متأخرة</span></td>
-                        <td><span style="color:#ccc;">—</span></td>
-                        <td><span class="three-dots">⋮</span></td>
-                    </tr>
-                    <tr>
-                        <td>8</td>
-                        <td class="td-name">عبدالعزيز العنزي</td>
-                        <td>تقرير نهائي</td>
-                        <td class="td-link">تصميم جرافيك</td>
-                        <td>05-05-2025</td>
-                        <td>28-05-2025</td>
-                        <td><span class="badge-waiting">بانتظار تعبئة التقرير</span></td>
-                        <td><span style="color:#ccc;">—</span></td>
-                        <td><span class="three-dots">⋮</span></td>
-                    </tr>
+
+                    @if (!Model.Reports.Any())
+                    {
+                        <tr>
+                            <td colspan="8" class="text-center py-5">
+                                لا توجد تقارير لعرضها
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var report in Model.Reports)
+                        {
+                            <tr>
+
+                                <td>@RIndex</td>
+
+                                <td class="td-name">
+                                    @(report.Student?.Name ?? "-")
+                                </td>
+
+                                <td>
+
+                                    @if (report.Type == Models.StudentReport.ReportType.Weekly)
+                                    {
+                                        <span class="badge bg-info">
+                                            أسبوعي
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-primary">
+                                            نهائي
+                                        </span>
+                                    }
+
+                                </td>
+
+                                <td class="td-link">
+                                    @(report.Placement?.TrainingOpportunity?.Title ?? "-")
+                                </td>
+
+                                <td>
+                                    @report.SubmittedAt.ToString("yyyy/MM/dd")
+                                </td>
+
+                                <td>
+
+                                    @switch (report.Status)
+                                    {
+                                        case Models.StudentReport.StudentReportStatus.Submitted:
+
+                                            <span class="badge bg-warning text-dark">
+                                                قيد المراجعة
+                                            </span>
+
+                                            break;
+
+                                        case Models.StudentReport.StudentReportStatus.Approved:
+
+                                            <span class="badge bg-success">
+                                                مقبول
+                                            </span>
+
+                                            break;
+
+                                        case Models.StudentReport.StudentReportStatus.Rejected:
+
+                                            <span class="badge bg-danger">
+                                                مرفوض
+                                            </span>
+
+                                            break;
+
+                                        case Models.StudentReport.StudentReportStatus.Reviewed:
+
+                                            <span class="badge bg-primary">
+                                                تمت المراجعة
+                                            </span>
+
+                                            break;
+
+                                        default:
+
+                                            <span class="badge bg-secondary">
+                                                غير مسلّم
+                                            </span>
+
+                                            break;
+                                    }
+
+                                </td>
+
+                                <!-- الملف -->
+
+                                <td>
+
+                                    @if (!string.IsNullOrEmpty(report.FilePath))
+                                    {
+                                        <a asp-page-handler="OpenFile"
+                                           asp-route-reportId="@report.ReportID"
+                                           class="action-btn view-btn"
+                                           title="عرض الملف">
+
+                                            <i class="bi bi-file-earmark-pdf-fill"></i>
+
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <span>-</span>
+                                    }
+
+                                </td>
+
+                                <!-- العمليات -->
+
+                                <td>
+
+                                    <div class="d-flex justify-content-center gap-2">
+
+                                        <a asp-page="/Institution/Reports/Details"
+                                           asp-route-reportId="@report.ReportID"
+                                           class="action-btn view-btn"
+                                           title="التفاصيل">
+
+                                            <i class="bi bi-eye-fill"></i>
+
+                                        </a>
+
+                                        <a asp-page="/Institution/Reports/Edit"
+                                           asp-route-reportId="@report.ReportID"
+                                           class="action-btn review-btn"
+                                           title="تعديل">
+
+                                            <i class="bi bi-pencil-square"></i>
+
+                                        </a>
+
+                                        <a asp-page="/Institution/Reports/Delete"
+                                           asp-route-reportId="@report.ReportID"
+                                           class="action-btn delete-btn"
+                                           title="حذف">
+
+                                            <i class="bi bi-trash-fill"></i>
+
+                                        </a>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                            RIndex++;
+                        }
+                    }
+
                 </tbody>
             </table>
         </div>
@@ -190,33 +280,53 @@
         <!-- Pagination -->
         <div class="pagination-bar">
             <div class="pagination-info">
-                عرض 1 إلى 8 من 28 تقرير
-                <select>
-                    <option>8</option>
-                    <option>16</option>
-                    <option>24</option>
-                </select>
+                عرض @((Model.Reports.PageSize * (Model.Reports.PageIndex - 1)) + 1) إلى @Model.Reports.Count() من @Model.Reports.TotalCount تقرير
+                <form>
+                    <select asp-for="PageSize"
+                            onchange="this.form.submit()">
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                    </select>
+                </form>
                 <i class="bi bi-chevron-down" style="font-size:11px;"></i>
             </div>
             <div class="pagination-pages">
-                <button class="page-btn page-arrow"><i class="bi bi-chevron-right"></i></button>
-                <button class="page-btn">3</button>
-                <button class="page-btn">2</button>
-                <button class="page-btn active">1</button>
-                <button class="page-btn page-arrow"><i class="bi bi-chevron-left"></i></button>
+
+                @if (Model.Reports.HasPrevPage)
+                {
+                    <a asp-route-SearchTerm="@Model.SearchTerm"
+                       asp-route-studentId="@Model.StudentId"
+                       asp-route-placementId="@Model.PlacementId"
+                       asp-route-PageSize="@Model.PageSize"
+                       asp-route-PageIndex="@(Model.PageIndex - 1)"
+                       class="page-btn page-arrow"><i class="bi bi-chevron-right"></i></a>
+                }
+
+                @for (int i = 1; i <= Model.Reports.TotalPages; i++)
+                {
+
+                    <a asp-route-SearchTerm="@Model.SearchTerm"
+                       asp-route-studentId="@Model.StudentId"
+                       asp-route-placementId="@Model.PlacementId"
+                       asp-route-PageSize="@Model.PageSize"
+                       asp-route-PageIndex="@i"
+                       class="page-btn  @(Model.PageIndex == i ? "Active" : " ")  text-white text-sm font-bold">@i</a>
+                }
+
+                @if (Model.Reports.HasNextPage)
+                {
+                    <a asp-route-SearchTerm="@Model.SearchTerm"
+                       asp-route-studentId="@Model.StudentId"
+                       asp-route-placementId="@Model.PlacementId"
+                       asp-route-PageSize="@Model.PageSize"
+                       asp-route-PageIndex="@(Model.PageIndex + 1)"
+                       class="page-btn page-arrow"><i class="bi bi-chevron-left"></i></a>
+                }
+
             </div>
         </div>
     </div>
-
-    <!-- Footer -->
-    <footer>
-        <div>جميع الحقوق محفوظة © 2024 • بوابة التدريب الميداني</div>
-        <div style="display:flex; gap:18px;">
-            <a href="#">Technical Support</a>
-            <a href="#">Terms of Service</a>
-            <a href="#">Privacy Policy</a>
-        </div>
-    </footer>
 
 </main>
 
