@@ -44,6 +44,14 @@ namespace Project.Pages.Institution
         [BindProperty(SupportsGet = true)]
         public int? PlacementId { get; set; }
 
+
+        //public int SelectedReportType { get; set; }
+        //[BindProperty(SupportsGet = true)]
+        //public int SelectedReportStatus { get; set; }
+        //public SelectList ReportStatusList { get; set; }
+        //public PaginatedList<StudentReport> Reports { get; set; } = new PaginatedList<StudentReport>(new List<StudentReport>(), 1, 0, 10);
+        //public TrainingInstitution? CurrentInstitution { get; private set; }
+
         public async Task<IActionResult> OnGet()
         {
             try
@@ -85,19 +93,13 @@ namespace Project.Pages.Institution
 
                 ReportStatusList = new SelectList(selectList, "Value", "Text");
                 var query = _dbContext.StudentReports
-
                  .Include(r => r.Student)
-
                  .Include(r => r.Placement)
                      .ThenInclude(p => p.TrainingOpportunity)
-
                  .Include(r => r.Placement)
                      .ThenInclude(p => p.TrainingInstitution)
-
                  .Include(r => r.UniversitySupervisor)
-
                  .Where(r => r.Placement.InstitutionID == institutionId)
-
                  .AsQueryable();
 
                 if (StudentId.HasValue)
@@ -111,6 +113,7 @@ namespace Project.Pages.Institution
                     query = query.Where(r =>
                         r.PlacementID == PlacementId.Value);
                 }
+                  
                 if (!string.IsNullOrEmpty(SearchTerm))
                 {
                     query = query.Where(a => a.Student.Name.Contains(SearchTerm));
