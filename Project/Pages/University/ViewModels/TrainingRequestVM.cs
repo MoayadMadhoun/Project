@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Runtime.CompilerServices;
 using static Project.Models.TrainingOpportunityRequest;
 
 namespace Project.Pages.University.ViewModels
@@ -32,6 +33,7 @@ namespace Project.Pages.University.ViewModels
         [Required(ErrorMessage = "المؤسسة  مطلوبة")]
 
         public int InstitutionID { get; set; }
+        
         public DateTime? ApplicationDeadline { get; set; }
 
 
