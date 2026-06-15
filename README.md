@@ -34,13 +34,13 @@
 
 #  Project Overview | نبذة عن المشروع
 
-## 🇬🇧 English
+##   English
 
 Spaceara is a comprehensive Field Training Management Platform designed to digitize and automate the entire training lifecycle between students, universities, and training institutions.
 
 The platform enables students to apply for training opportunities, allows universities to supervise and evaluate trainees, and provides institutions with tools to manage attendance, reports, and evaluations through a centralized role-based system.
 
-## 🇸🇦 العربية
+##   العربية
 
 Spaceara هي منصة متكاملة لإدارة التدريب الميداني تهدف إلى رقمنة وأتمتة جميع مراحل التدريب بين الطالب والجامعة ومؤسسة التدريب.
 
@@ -50,7 +50,7 @@ Spaceara هي منصة متكاملة لإدارة التدريب الميدان
 
 #  Project Objectives | أهداف المشروع
 
-### 🇬🇧 English
+###   English
 
 - Automate field training processes.
 - Improve communication among stakeholders.
@@ -58,7 +58,7 @@ Spaceara هي منصة متكاملة لإدارة التدريب الميدان
 - Enhance supervision quality.
 - Generate statistics and reports for decision making.
 
-### 🇸🇦 العربية
+###   العربية
 
 - أتمتة عمليات التدريب الميداني.
 - تحسين التواصل بين جميع الأطراف.
@@ -70,11 +70,11 @@ Spaceara هي منصة متكاملة لإدارة التدريب الميدان
 
 #  Problem Statement | المشكلة
 
-### 🇬🇧 English
+###   English
 
 Many universities still rely on manual and paper-based procedures to manage field training, resulting in inefficient communication, delayed approvals, and fragmented data.
 
-### 🇸🇦 العربية
+###   العربية
 
 تعتمد العديد من الجامعات على الإجراءات الورقية والتقليدية لإدارة التدريب الميداني، مما يؤدي إلى ضعف المتابعة وتأخر الموافقات وتشتت البيانات.
 
@@ -82,11 +82,11 @@ Many universities still rely on manual and paper-based procedures to manage fiel
 
 #  Proposed Solution | الحل المقترح
 
-### 🇬🇧 English
+###   English
 
 Developing a centralized platform that manages the entire field training process, from opportunity publication and student applications to placements, attendance tracking, evaluations, reports, and supervision.
 
-### 🇸🇦 العربية
+###   العربية
 
 تطوير منصة موحدة تدير دورة التدريب الميداني كاملة بدءاً من نشر الفرص والتقديم عليها وحتى التقييم والتقارير والحضور والإشراف الأكاديمي.
 
@@ -94,11 +94,11 @@ Developing a centralized platform that manages the entire field training process
 
 #  Key Feature | أبرز ميزة
 
-### 🇬🇧 English
+###   English
 
 The most distinctive feature of Spaceara is its ability to manage the complete training lifecycle through a single platform while enforcing advanced role-based access control to ensure that every stakeholder only accesses relevant information.
 
-### 🇸🇦 العربية
+###   العربية
 
 أبرز ما يميز Spaceara هو قدرته على إدارة دورة التدريب الميداني كاملة من خلال منصة واحدة مع نظام صلاحيات متقدم يضمن وصول كل مستخدم فقط إلى البيانات المرتبطة بدوره.
 
