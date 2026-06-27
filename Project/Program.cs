@@ -35,6 +35,12 @@ namespace Project
                 .AddDefaultUI()
                 .AddDefaultTokenProviders();
 
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Identity/Account/Login";
+                options.AccessDeniedPath = "/AccessDenied";
+            });
+
             builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection("SMTP"));
             builder.Services.AddTransient<IEmailSender, EmailSender>();
 
