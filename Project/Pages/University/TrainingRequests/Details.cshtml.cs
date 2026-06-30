@@ -26,20 +26,34 @@ namespace Project.Pages.University.TrainingRequests
 
         }
         public TrainingOpportunityRequest? TrainingOpportunityRequest { get; set; } = new TrainingOpportunityRequest();
+        public List<RequestSpecialty> RequestSpecialties { get; set; } = new();
+        public List<RequestSkill> RequestSkills { get; set; } = new();
+
         public IActionResult OnGet([FromRoute] int RequestId)
         {
 
             TrainingOpportunityRequest = _dbContext.TrainingOpportunityRequests
                 .Include(to => to.TrainingTerm)
                  .Include(to => to.University)
-                . Include(to => to.UniversityAdmin)
-                . Include(to => to.Department)
+                 .Include(to => to.UniversityAdmin)
+                 .Include(to => to.Department)
                  .Include(to => to.DepartmentHead)
                 .Where(to => to.RequestID == RequestId).FirstOrDefault();
             if (TrainingOpportunityRequest == null)
             {
                 return NotFound();
             }
+
+            RequestSpecialties = _dbContext.RequestSpecialties
+                .Include(x => x.Specialty)
+                .Where(x => x.RequestID == RequestId)
+                .ToList();
+
+            RequestSkills = _dbContext.RequestSkills
+                .Include(x => x.Skill)
+                .Where(x => x.RequestID == RequestId)
+                .ToList();
+
             return Page();
         }
     }

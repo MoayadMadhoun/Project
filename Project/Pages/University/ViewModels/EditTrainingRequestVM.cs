@@ -31,6 +31,10 @@ namespace Project.Pages.University.ViewModels
         [Range(0, 200, ErrorMessage = "عدد المقاعد لا يمكن ان يكون اقل من صفر")]
         public int RequestedSeats { get; set; }
         public DateTime? ApplicationDeadline { get; set; }
+        public int InstitutionID { get; set; }
+
+        public List<int> SelectedSpecialties { get; set; } = new();
+        public List<RequestSkillVM> Skills { get; set; } = new();
 
     }
 }
