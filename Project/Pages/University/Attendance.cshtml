@@ -14,39 +14,42 @@
     public IHtmlContent SortingIcon(string column, string currentSort)
     {
         if (currentSort == column)
-            return new HtmlString("<span><i class=\"bi bi-caret-up-fill\"></i></span>");
-
+            return new HtmlString("<i class=\"bi bi-caret-up-fill text-primary text-xs\"></i>");
         if (currentSort == column + "_desc")
-            return new HtmlString("<span><i class=\"bi bi-caret-down-fill\"></i></span>");
-
-        return new HtmlString("<span><i class=\"bi bi-arrow-down-up\"></i></span>");
+            return new HtmlString("<i class=\"bi bi-caret-down-fill text-primary text-xs\"></i>");
+        return new HtmlString("<i class=\"bi bi-arrow-down-up text-slate-400 text-xs\"></i>");
     }
-
 }
-<link rel="stylesheet" href="~/css/attendance.css" />
+<link rel="stylesheet" href="~/Styles/opportunities.css">
 
-<div class="attendance-page mt-5">
+<div dir="rtl">
 
-    <div class="hero-card">
-        <div>
-            <h1 class="text-end">الحضور</h1>
-            <p>
+    @* ===== Hero Section ===== *@
+    <section class="mb-lg md:mb-xl relative rounded-xl md:rounded-2xl overflow-hidden bg-primary-container p-6 md:p-xl text-on-primary">
+        <div class="relative z-10 max-w-2xl text-right">
+            <h1 class="font-h1 text-2xl md:text-h1 mb-md">سجلات الحضور</h1>
+            <p class="font-body-lg text-sm md:text-body-lg opacity-90 mb-lg">
                 متابعة وتحليل حضور الطلبة أثناء فترة التدريب
             </p>
         </div>
+        <div class="absolute -bottom-10 -left-10 w-48 h-48 md:w-64 md:h-64 bg-white/10 rounded-full blur-3xl"></div>
+        <div class="absolute -top-20 -left-20 w-64 h-64 md:w-80 md:h-80 bg-secondary-fixed-dim/20 rounded-full blur-3xl"></div>
+    </section>
 
-        <div class="hero-icon">
-            <i class="bi bi-calendar-check"></i>
-        </div>
-    </div>
+    @* ===== Filters Bar ===== *@
+    <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] p-4 mb-lg">
+        <form method="get" class="flex flex-wrap gap-3 items-center justify-end">
 
-   <form method="get">
-        <div class="filter-card">
+            <div class="relative flex-1 min-w-[180px]">
+                <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+                <input asp-for="SearchTerm"
+                       type="text"
+                       class="w-full pr-10 pl-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20"
+                       placeholder="ابحث عن طالب..." />
+            </div>
 
-            <input asp-for="SearchTerm" type="text" class="form-control border-none shadow-sm rounded-3 bg-light"
-                   placeholder="ابحث عن طالب ..." />
-
-            <select asp-for="SelectedAttendanceStatusId" class="form-select border-none shadow-sm rounded-3 bg-light">
+            <select asp-for="SelectedAttendanceStatusId"
+                    class="bg-slate-100 border-none rounded-xl text-sm font-bold text-slate-700 py-2.5 px-4 focus:ring-2 focus:ring-primary/20 cursor-pointer">
                 <option value="0">جميع حالات الحضور</option>
                 <option value="1">حاضر</option>
                 <option value="2">متأخر</option>
@@ -54,185 +57,201 @@
                 <option value="4">معذور</option>
             </select>
 
-            <select asp-for="SelectedInstitutionId" asp-items="Model.Institutions" class="form-select border-none shadow-sm rounded-3 bg-light">
+            <select asp-for="SelectedInstitutionId"
+                    asp-items="Model.Institutions"
+                    class="bg-slate-100 border-none rounded-xl text-sm font-bold text-slate-700 py-2.5 px-4 focus:ring-2 focus:ring-primary/20 cursor-pointer">
                 <option value="">جميع المؤسسات</option>
             </select>
 
-            <button type="submit" class="btn btn-filter">
-                تصفية
+            <button type="submit"
+                    class="bg-primary-container text-white font-button px-6 py-2.5 rounded-xl hover:bg-primary/90 transition-colors">
+                بحث
             </button>
 
-        </div>
-   </form>
+        </form>
+    </div>
 
-    <div class="row g-4 mb-4">
+    @* ===== Stats Cards ===== *@
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-lg">
 
-        <div class="col-md-3">
-            <div class="stat-card">
-                <div class="stat-number">@(Model.AttendanceRecords.TotalCount)</div>
-                <div class="stat-title">إجمالي السجلات</div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="stat-card success">
-                <div class="stat-number">@(Model.AttendanceRecords.Where(ar => ar.Status == Models.AttendanceRecord.AttendanceStatus.Present).Count())</div>
-                <div class="stat-title">حاضر</div>
-            </div>
+        <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] p-4 text-center">
+            <div class="text-2xl font-bold text-slate-900 mb-1">@Model.AttendanceRecords.TotalCount</div>
+            <div class="text-xs text-slate-500 font-label-caps">إجمالي السجلات</div>
         </div>
 
-        <div class="col-md-3">
-            <div class="stat-card warning">
-                <div class="stat-number">@(Model.AttendanceRecords.Where(ar => ar.Status == Models.AttendanceRecord.AttendanceStatus.Late).Count())</div>
-                <div class="stat-title">متأخر</div>
+        <div class="bg-surface-container-lowest rounded-xl border border-green-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] p-4 text-center">
+            <div class="text-2xl font-bold text-green-600 mb-1">
+                @Model.AttendanceRecords.Where(ar => ar.Status == Models.AttendanceRecord.AttendanceStatus.Present).Count()
             </div>
+            <div class="text-xs text-slate-500 font-label-caps">حاضر</div>
         </div>
 
-        <div class="col-md-3">
-            <div class="stat-card danger">
-                <div class="stat-number">@(Model.AttendanceRecords.Where(ar=>ar.Status == Models.AttendanceRecord.AttendanceStatus.Absent).Count())</div>
-                <div class="stat-title">غائب</div>
+        <div class="bg-surface-container-lowest rounded-xl border border-amber-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] p-4 text-center">
+            <div class="text-2xl font-bold text-amber-600 mb-1">
+                @Model.AttendanceRecords.Where(ar => ar.Status == Models.AttendanceRecord.AttendanceStatus.Late).Count()
             </div>
+            <div class="text-xs text-slate-500 font-label-caps">متأخر</div>
+        </div>
+
+        <div class="bg-surface-container-lowest rounded-xl border border-red-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] p-4 text-center">
+            <div class="text-2xl font-bold text-red-600 mb-1">
+                @Model.AttendanceRecords.Where(ar => ar.Status == Models.AttendanceRecord.AttendanceStatus.Absent).Count()
+            </div>
+            <div class="text-xs text-slate-500 font-label-caps">غائب</div>
         </div>
 
     </div>
 
-    <div class="table-card">
+    @* ===== Attendance Table ===== *@
+    <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] overflow-hidden">
 
-        <div class="table-header text-end">
-            سجلات الحضور
+        <div class="p-4 md:p-lg border-b border-slate-100 flex justify-between items-center">
+            <h3 class="font-h3 text-lg md:text-h3 text-slate-900">سجلات الحضور</h3>
         </div>
 
-        <div class="table-responsive">
-
-            <table class="table align-middle">
-
-                <thead>
-
+        <div class="overflow-x-auto">
+            <table class="w-full text-right border-collapse min-w-[1000px]">
+                <thead class="bg-surface-container-low">
                     <tr>
-                        <th>#</th>
-                        <th>
-                            <a class="text-decoration-none"
-                               asp-route-PageSize="@Model.PageSize" 
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">#</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">
+                            <a class="flex items-center gap-1 text-slate-500 hover:text-primary transition-colors no-underline"
+                               asp-route-PageSize="@Model.PageSize"
                                asp-route-SearchTerm="@Model.SearchTerm"
-                               asp-route-PageIndex="@(Model.PageIndex)"
+                               asp-route-PageIndex="@Model.PageIndex"
                                asp-route-SortOrder="@(Model.SortOrder == "Name" ? "Name_desc" : "Name")">
-                            الطالب @SortingIcon("Name", Model.SortOrder)
+                                الطالب @SortingIcon("Name", Model.SortOrder)
                             </a>
                         </th>
-                        <th>التدريب</th>
-                        <th>المؤسسة</th>
-                        <th>وقت الدخول</th>
-                        <th>وقت الخروج</th>
-                        <th>الحالة</th>
-                        <th>الملاحظات</th>
-                        @* <th>الإجراءات</th> *@
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">التدريب</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">المؤسسة</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">وقت الدخول</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">وقت الخروج</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الحالة</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الملاحظات</th>
                     </tr>
-
                 </thead>
-
-                <tbody>
-
-                    @foreach(var ar in Model.AttendanceRecords)
+                <tbody class="divide-y divide-slate-50">
+                    @foreach (var ar in Model.AttendanceRecords)
                     {
-                        <tr>
-                            <td>@TrainingRecordIndex</td>
-                            <td> @(ar.TrainingPlacement.Student.Name??"-")</td>
-                            <td>@(ar.TrainingPlacement.TrainingOpportunity.Title??"-") </td>
-                            <td>@(ar.TrainingPlacement.TrainingInstitution.Name??"-") </td>
-                            <td>@(ar.CheckInTime)</td>
-                            <td>@(ar.CheckOutTime)</td>
-                            <td>
-                                <span class="badge bg-success-subtle text-success">
-                                    @(ar.Status == Models.AttendanceRecord.AttendanceStatus.Present ? "حاضر"
-                                    : ar.Status == Models.AttendanceRecord.AttendanceStatus.Absent ? "غائب"
-                                    : ar.Status == Models.AttendanceRecord.AttendanceStatus.Late ? "متأخر" : "معذور")
-                                    
-                                </span>
+                        <tr class="hover:bg-slate-50 transition-colors">
+
+                            <td class="px-4 py-3 text-sm text-slate-400 font-bold">@TrainingRecordIndex</td>
+
+                            <td class="px-4 py-3 text-sm text-slate-900 font-bold">
+                                @(ar.TrainingPlacement.Student.Name ?? "—")
                             </td>
-                            <td>@ar.Notes </td>
-                            @* <td>
-                                <button class="btn btn-sm btn-outline-primary">
-                                    تفاصيل
-                                </button>
-                            </td> *@
+
+                            <td class="px-4 py-3 text-sm text-slate-600">
+                                @(ar.TrainingPlacement.TrainingOpportunity.Title ?? "—")
+                            </td>
+
+                            <td class="px-4 py-3 text-sm text-slate-600">
+                                @(ar.TrainingPlacement.TrainingInstitution.Name ?? "—")
+                            </td>
+
+                            <td class="px-4 py-3 text-sm text-slate-600 whitespace-nowrap">
+                                @ar.CheckInTime
+                            </td>
+
+                            <td class="px-4 py-3 text-sm text-slate-600 whitespace-nowrap">
+                                @ar.CheckOutTime
+                            </td>
+
+                            <td class="px-4 md:px-lg py-4 md:py-md">
+                                @{
+                                    var (bg, label) = ar.Status switch
+                                    {
+                                        Models.AttendanceRecord.AttendanceStatus.Present => ("bg-green-100 text-green-700", "حاضر"),
+                                        Models.AttendanceRecord.AttendanceStatus.Late => ("bg-amber-100 text-amber-700", "متأخر"),
+                                        Models.AttendanceRecord.AttendanceStatus.Absent => ("bg-red-100 text-red-700", "غائب"),
+                                        _ => ("bg-blue-100 text-blue-700", "معذور")
+                                    };
+                                }
+                                <span class="px-3 py-1 rounded-full text-[11px] font-bold @bg">@label</span>
+                            </td>
+
+                            <td class="px-4 py-3 text-sm text-slate-600">@ar.Notes</td>
+
                         </tr>
                         @(TrainingRecordIndex++)
                     }
-
-                  
-
                 </tbody>
-
             </table>
+        </div>
+
+        @* ===== Pagination ===== *@
+        <div class="p-4 md:p-lg flex flex-col md:flex-row items-center justify-between gap-4 border-t border-slate-100">
+
+            <div class="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
+                <p class="text-sm text-slate-500 font-body-sm whitespace-nowrap">
+                    عرض <span class="font-bold text-slate-900">@Model.PageSize</span>
+                    من أصل <span class="font-bold text-slate-900">@Model.AttendanceRecords.TotalCount</span> سجل
+                </p>
+                <div class="flex items-center gap-2">
+                    <label class="text-xs text-slate-500 font-label-caps" for="per-page-att">النتائج:</label>
+                    <form method="get">
+                        <input type="hidden" name="PageIndex" value="@Model.PageIndex" />
+                        <input type="hidden" name="SortOrder" value="@Model.SortOrder" />
+                        <input type="hidden" name="SearchTerm" value="@Model.SearchTerm" />
+                        <input type="hidden" name="SelectedAttendanceStatusId" value="@Model.SelectedAttendanceStatusId" />
+                        <input type="hidden" name="SelectedInstitutionId" value="@Model.SelectedInstitutionId" />
+                        <select asp-for="PageSize"
+                                onchange="this.form.submit()"
+                                id="per-page-att"
+                                class="bg-slate-100 border-none rounded-lg text-xs font-bold text-slate-700 py-1.5 pr-8 pl-3 focus:ring-2 focus:ring-primary/20 appearance-none cursor-pointer">
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                        </select>
+                    </form>
+                </div>
+            </div>
+
+            <nav class="flex items-center gap-2">
+                @if (Model.AttendanceRecords.HasPrevPage)
+                {
+                    <a asp-route-PageIndex="@(Model.PageIndex - 1)"
+                       asp-route-SearchTerm="@Model.SearchTerm"
+                       asp-route-SortOrder="@Model.SortOrder"
+                       asp-route-PageSize="@Model.PageSize"
+                       asp-route-SelectedAttendanceStatusId="@Model.SelectedAttendanceStatusId"
+                       asp-route-SelectedInstitutionId="@Model.SelectedInstitutionId"
+                       class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:bg-slate-50">
+                        <span class="material-symbols-outlined">chevron_right</span>
+                    </a>
+                }
+
+                @for (int i = 1; i <= Model.AttendanceRecords.TotalPages; i++)
+                {
+                    <a asp-route-PageIndex="@i"
+                       asp-route-SearchTerm="@Model.SearchTerm"
+                       asp-route-SortOrder="@Model.SortOrder"
+                       asp-route-PageSize="@Model.PageSize"
+                       asp-route-SelectedAttendanceStatusId="@Model.SelectedAttendanceStatusId"
+                       asp-route-SelectedInstitutionId="@Model.SelectedInstitutionId"
+                       class="w-8 h-8 flex items-center justify-center rounded-lg text-sm font-bold
+                        @(Model.PageIndex == i ? "bg-primary-container text-white" : "border border-slate-200 text-slate-600 hover:bg-slate-50")">
+                        @i
+                    </a>
+                }
+
+                @if (Model.AttendanceRecords.HasNextPage)
+                {
+                    <a asp-route-PageIndex="@(Model.PageIndex + 1)"
+                       asp-route-SearchTerm="@Model.SearchTerm"
+                       asp-route-SortOrder="@Model.SortOrder"
+                       asp-route-PageSize="@Model.PageSize"
+                       asp-route-SelectedAttendanceStatusId="@Model.SelectedAttendanceStatusId"
+                       asp-route-SelectedInstitutionId="@Model.SelectedInstitutionId"
+                       class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:bg-slate-50">
+                        <span class="material-symbols-outlined">chevron_left</span>
+                    </a>
+                }
+            </nav>
 
         </div>
-        <div class="pagination-wrap d-flex align-items-center justify-content-between flex-wrap gap-3">
-            <!-- Info + per-page -->
-            <div class="d-flex align-items-center gap-2">
-                <span class="pagination-info">عرض 1 إلى @Model.PageSize من @Model.AttendanceRecords.TotalCount سجل</span>
-                <form method="get">
-                    <input type="hidden" name="PageSize" value="@Model.PageSize" />
-                    <input type="hidden" name="PageIndex" value="@Model.PageIndex" />
-                    <input type="hidden" name="SortOrder" value="@Model.SortOrder" />
-                    <input type="hidden" name="SearchTerm" value="@Model.SearchTerm" />
-    
-                    <select asp-for="PageSize"
-                            onchange="this.form.submit()"
-                            class="form-select form-select-sm per-page-select" style="width:70px;">
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                    </select>
-                </form>
-            </div>
-            <!-- Pages -->
-            <nav aria-label="Page navigation">
-                <ul class="pagination pagination-sm mb-0 flex-wrap">
-                    <li class="page-item">
-                        @if (Model.AttendanceRecords.HasPrevPage)
-                        {
-                            <a asp-route-PageIndex="@(Model.PageIndex - 1)"
-                                   asp-route-SearchTerm="@Model.SearchTerm"
-                                   asp-route-SortOrder="@Model.SortOrder"
-                                   asp-route-PageSize="@Model.PageSize"
-                                   class="page-link" aria-label="Previous">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="m15 19 7-7-7-7" transform="scale(-1,1) translate(-24,0)" />
-                                </svg>
-                            </a>
-                        }
-                    </li>
-                    @for (int i = 1; i <= Model.AttendanceRecords.TotalPages; i++)
-                    {
-                        <li class="page-item @(Model.PageIndex == i ? "active" : "")">
-                            <a class="page-link"
-                                   asp-route-PageIndex="@i"
-                                   asp-route-SearchTerm="@Model.SearchTerm"
-                                   asp-route-SortOrder="@Model.SortOrder"
-                                   asp-route-PageSize="@Model.PageSize">
-                                @i
-                            </a>
-                        </li>
-                   
-                    }
-                    <li>
-                        @if (Model.AttendanceRecords.HasNextPage)
-                        {
-                            <a asp-route-PageIndex="@(Model.PageIndex + 1)"
-                                   asp-route-SearchTerm="@Model.SearchTerm"
-                                   asp-route-SortOrder="@Model.SortOrder"
-                                   asp-route-PageSize="@Model.PageSize"
-                                   class="page-link" aria-label="Next">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="m9 5 7 7-7 7" />
-                                </svg>
-                            </a>
-                        }
-                    </li>
-                </ul>
-            </nav>
-        </div>
+
     </div>
 
 </div>

@@ -42,6 +42,12 @@ namespace Project.Pages.University
 
         public int PageSize { get; set; } = 10;
 
+        [BindProperty(SupportsGet = true)]
+        public int? DepartmentId { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public TrainingApplication.Decision? UniversityDecisionFilter { get; set; }
+
         public PaginatedList<TrainingApplicationVM> Applications { get; set; }
             = new(new List<TrainingApplicationVM>(), 1, 0, 10);
 
@@ -90,10 +96,21 @@ namespace Project.Pages.University
                 .Include(x => x.TrainingOpportunity)
                     .ThenInclude(o => o.TrainingInstitution)
                 .Where(x =>
-                    x.Student.UniversityID == universityId &&
-                    x.UniversityAdminDecision ==
-                    TrainingApplication.Decision.Pending)
+                    x.Student.UniversityID == universityId)
                 .AsQueryable();
+
+            // Department Filter
+            if (DepartmentId.HasValue)
+            {
+                query = query.Where(x =>
+                    x.Student.DepartmentID == DepartmentId.Value);
+            }
+            // University Decision Filter
+            if (UniversityDecisionFilter.HasValue)
+            {
+                query = query.Where(x =>
+                    x.UniversityAdminDecision == UniversityDecisionFilter.Value);
+            }
 
             // Search
             if (!string.IsNullOrWhiteSpace(Search))

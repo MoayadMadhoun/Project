@@ -4,787 +4,208 @@
 @{
     ViewData["Title"] = "الطلبة";
     Layout = "_Layout";
-    ViewData["Title"] = "لوحة تحكم الجامعة";
     ViewData["UserType"] = "University";
     ViewData["PortalTitle"] = "بوابة الجامعة";
     ViewData["PortalSubtitle"] = "إدارة التدريب الميداني";
     ViewData["SearchPlaceholder"] = "بحث عن طلاب، مؤسسات، فرص...";
+    ViewData["ActivePage"] = "Students";
     int SIndex = 1;
 }
 @functions {
     public IHtmlContent SortingIcon(string column, string currentSort)
     {
         if (currentSort == column)
-            return new HtmlString("<span><i class=\"bi bi-caret-up-fill\"></i></span>");
-
+            return new HtmlString("<i class=\"bi bi-caret-up-fill text-primary text-xs\"></i>");
         if (currentSort == column + "_desc")
-            return new HtmlString("<span><i class=\"bi bi-caret-down-fill\"></i></span>");
-
-        return new HtmlString("<span><i class=\"bi bi-arrow-down-up\"></i></span>");
+            return new HtmlString("<i class=\"bi bi-caret-down-fill text-primary text-xs\"></i>");
+        return new HtmlString("<i class=\"bi bi-arrow-down-up text-slate-400 text-xs\"></i>");
     }
-
 }
-@section Styles {
-<style>
-    /* ===== ANIMATIONS ===== */
-    @@keyframes fadeSlideDown {
-        from { opacity: 0; transform: translateY(-28px); }
-        to   { opacity: 1; transform: translateY(0); }
-    }
-    @@keyframes fadeSlideUp {
-        from { opacity: 0; transform: translateY(28px); }
-        to   { opacity: 1; transform: translateY(0); }
-    }
-    @@keyframes fadeSlideRight {
-        from { opacity: 0; transform: translateX(-28px); }
-        to   { opacity: 1; transform: translateX(0); }
-    }
-    @@keyframes scaleIn {
-        from { opacity: 0; transform: scale(0.88); }
-        to   { opacity: 1; transform: scale(1); }
-    }
-    @@keyframes rowReveal {
-        from { opacity: 0; transform: translateX(22px); }
-        to   { opacity: 1; transform: translateX(0); }
-    }
-    @@keyframes shimmer {
-        0%   { background-position: -400px 0; }
-        100% { background-position: 400px 0; }
-    }
-    @@keyframes pulse-ring {
-        0%   { box-shadow: 0 0 0 0 rgba(26, 188, 156, 0.35); }
-        70%  { box-shadow: 0 0 0 10px rgba(26, 188, 156, 0); }
-        100% { box-shadow: 0 0 0 0 rgba(26, 188, 156, 0); }
-    }
-    @@keyframes float {
-        0%, 100% { transform: translateY(0px); }
-        50%       { transform: translateY(-8px); }
-    }
-    @@keyframes gradientShift {
-        0%   { background-position: 0% 50%; }
-        50%  { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
-    }
+<link rel="stylesheet" href="~/Styles/opportunities.css">
 
-    /* ===== PAGE VARIABLES ===== */
-    :root {
-        --teal-primary: #1abc9c;
-        --teal-dark:    #1a9e8f;
-        --teal-light:   #ccfbf1;
-        --teal-mid:     #6ff9d6;
-        --accent:       #f59e0b;
-        --row-hover:    #f0fdfa;
-        --radius-lg:    1rem;
-        --radius-md:    .6rem;
-        --shadow-card:  0 4px 24px rgba(26,188,156,.12);
-        --shadow-hover: 0 8px 32px rgba(26,188,156,.22);
-    }
+<div dir="rtl">
 
-    /* ===== HERO BANNER ===== */
-    .students-hero {
-            background: linear-gradient(135deg, #1abc9c 0%, #1a9e8f 40%, #1abc9c 100%);
-        background-size: 200% 200%;
-        animation: gradientShift 8s ease infinite, scaleIn .6s ease both;
-        border-radius: var(--radius-lg);
-        position: relative;
-        overflow: hidden;
-        min-height: 170px;
-        padding: 2rem 2.5rem;
-    }
-    .students-hero::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-        pointer-events: none;
-    }
-    .students-hero::after {
-        content: '';
-        position: absolute;
-        bottom: -40px; left: -40px;
-        width: 200px; height: 200px;
-        border-radius: 50%;
-        background: rgba(255,255,255,.06);
-        pointer-events: none;
-    }
-    .hero-title {
-        font-size: 2.2rem;
-        font-weight: 800;
-        color: #fff;
-        letter-spacing: -.5px;
-        animation: fadeSlideDown .5s .1s ease both;
-    }
-    .hero-subtitle {
-        color: rgba(255,255,255,.82);
-        font-size: .97rem;
-        line-height: 1.7;
-        animation: fadeSlideDown .5s .22s ease both;
-    }
-    .hero-icon-wrap {
-        width: 70px; height: 70px;
-        border-radius: 50%;
-        background: rgba(255,255,255,.18);
-        display: flex; align-items: center; justify-content: center;
-        animation: float 3.5s ease-in-out infinite, scaleIn .5s .1s ease both;
-        backdrop-filter: blur(4px);
-    }
-    .hero-icon-wrap svg { width: 36px; height: 36px; fill: #fff; }
-
-    /* hero illustration ghost card */
-    .hero-illustration {
-        position: absolute;
-        left: 2rem; top: 50%;
-        transform: translateY(-50%);
-        animation: fadeSlideRight .6s .3s ease both;
-        opacity: .85;
-    }
-    .hero-illustration .ghost-card {
-        background: rgba(255,255,255,.16);
-        border-radius: var(--radius-md);
-        width: 110px; height: 130px;
-        backdrop-filter: blur(6px);
-        border: 1px solid rgba(255,255,255,.25);
-        position: relative;
-        overflow: hidden;
-    }
-    .hero-illustration .ghost-card::after {
-        content: '';
-        position: absolute;
-        top: 0; left: -100%;
-        width: 60%; height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,.2), transparent);
-        animation: shimmer 2.5s 1s infinite;
-    }
-    .ghost-avatar {
-        width: 44px; height: 44px;
-        border-radius: 50%;
-        background: rgba(255,255,255,.3);
-        margin: 18px auto 10px;
-    }
-    .ghost-line {
-        height: 6px; border-radius: 3px;
-        background: rgba(255,255,255,.3);
-        margin: 0 14px 7px;
-    }
-    .ghost-line.short { width: 55%; margin: 0 auto 7px; }
-
-    /* ===== FILTER BAR ===== */
-    .filter-bar {
-        background: #fff;
-        border-radius: var(--radius-lg);
-        box-shadow: var(--shadow-card);
-        padding: 1rem 1.4rem;
-        animation: fadeSlideUp .5s .35s ease both;
-        border: 1px solid #e2f8f5;
-    }
-    .filter-bar .form-select,
-    .filter-bar .form-control {
-        border-radius: var(--radius-md);
-        border-color: #d1faf4;
-        font-size: .88rem;
-        transition: border-color .2s, box-shadow .2s;
-        direction: rtl;
-    }
-    .filter-bar .form-select:focus,
-    .filter-bar .form-control:focus {
-        border-color: var(--teal-primary);
-        box-shadow: 0 0 0 3px rgba(26,188,156,.12);
-    }
-    .btn-search {
-        background: linear-gradient(135deg, var(--teal-primary), var(--teal-dark));
-        color: #fff;
-        border: none;
-        border-radius: var(--radius-md);
-        padding: .45rem 1.3rem;
-        font-size: .88rem;
-        font-weight: 600;
-        transition: transform .18s, box-shadow .18s;
-        animation: pulse-ring 2.5s 1s infinite;
-    }
-    .btn-search:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 18px rgba(26,188,156,.35);
-        color: #fff;
-    }
-    .btn-filter {
-        background: #f0fdfa;
-        color: var(--teal-primary);
-        border: 1.5px solid var(--teal-mid);
-        border-radius: var(--radius-md);
-        padding: .45rem 1.1rem;
-        font-size: .88rem;
-        font-weight: 600;
-        transition: background .18s, transform .18s;
-    }
-    .btn-filter:hover {
-        background: var(--teal-light);
-        transform: translateY(-2px);
-    }
-
-    /* ===== TABLE CARD ===== */
-    .table-card {
-        background: #fff;
-        border-radius: var(--radius-lg);
-        box-shadow: var(--shadow-card);
-        overflow: hidden;
-        border: 1px solid #e2f8f5;
-        animation: fadeSlideUp .55s .45s ease both;
-    }
-    .table-card-header {
-        padding: 1.1rem 1.6rem .6rem;
-        border-bottom: 1px solid #f0fdfa;
-    }
-    .table-title {
-        font-size: 1.15rem;
-        font-weight: 800;
-        color: #134e4a;
-    }
-    .table-count {
-        font-size: .82rem;
-        color: #64748b;
-        font-weight: 500;
-    }
-    .count-badge {
-        display: inline-block;
-        background: linear-gradient(135deg, var(--teal-primary), var(--teal-dark));
-        color: #fff;
-        border-radius: 20px;
-        padding: .1rem .65rem;
-        font-size: .78rem;
-        font-weight: 700;
-        margin-inline-start: .4rem;
-    }
-
-    /* Table */
-    .students-table {
-        width: 100%;
-        border-collapse: separate;
-        border-spacing: 0;
-        font-size: .88rem;
-        direction: rtl;
-    }
-    .students-table thead tr {
-        background: linear-gradient(135deg, #f0fdfa, #e6faf6);
-    }
-    .students-table thead th {
-        padding: .85rem 1rem;
-        font-weight: 700;
-        color: #1a9e8f;
-        font-size: .82rem;
-        letter-spacing: .02em;
-        white-space: nowrap;
-        border-bottom: 2px solid var(--teal-mid);
-        text-align: right;
-    }
-    .students-table tbody tr {
-        border-bottom: 1px solid #f0fdfa;
-        transition: background .18s, transform .18s, box-shadow .18s;
-        animation: rowReveal .4s ease both;
-    }
-
-    /* staggered row animations */
-    .students-table tbody tr:nth-child(1)  { animation-delay: .55s; }
-    .students-table tbody tr:nth-child(2)  { animation-delay: .62s; }
-    .students-table tbody tr:nth-child(3)  { animation-delay: .69s; }
-    .students-table tbody tr:nth-child(4)  { animation-delay: .76s; }
-    .students-table tbody tr:nth-child(5)  { animation-delay: .83s; }
-    .students-table tbody tr:nth-child(6)  { animation-delay: .90s; }
-    .students-table tbody tr:nth-child(7)  { animation-delay: .97s; }
-    .students-table tbody tr:nth-child(8)  { animation-delay:1.04s; }
-    .students-table tbody tr:nth-child(9)  { animation-delay:1.11s; }
-    .students-table tbody tr:nth-child(10) { animation-delay:1.18s; }
-
-    .students-table tbody tr:hover {
-        background: var(--row-hover);
-        transform: scale(1.005);
-        box-shadow: 0 2px 12px rgba(26,188,156,.08);
-        z-index: 1;
-        position: relative;
-    }
-    .students-table td {
-        padding: .78rem 1rem;
-        color: #1e293b;
-        vertical-align: middle;
-        text-align: right;
-    }
-    .col-num {
-        font-weight: 700;
-        color: #94a3b8;
-        font-size: .8rem;
-        width: 40px;
-    }
-    .col-name {
-        font-weight: 700;
-        color: #134e4a;
-    }
-    .col-id {
-        font-family: 'Courier New', monospace;
-        font-size: .84rem;
-        color: #475569;
-        letter-spacing: .5px;
-    }
-    .col-spec span,
-    .col-dept span {
-        display: inline-block;
-        background: #f0fdfa;
-        color: var(--teal-dark);
-        border-radius: 20px;
-        padding: .15rem .65rem;
-        font-size: .78rem;
-        font-weight: 600;
-        border: 1px solid #b2f5ea;
-    }
-    .col-gpa {
-        font-weight: 700;
-        font-size: .92rem;
-    }
-    .gpa-high   { color: #059669; }
-    .gpa-mid    { color: #d97706; }
-    .gpa-low    { color: #dc2626; }
-
-    .training-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: .3rem;
-        font-size: .78rem;
-        font-weight: 600;
-        padding: .2rem .7rem;
-        border-radius: 20px;
-    }
-    .training-active {
-        background: #dcfce7;
-        color: #15803d;
-        border: 1px solid #86efac;
-    }
-    .training-none {
-        background: #f1f5f9;
-        color: #94a3b8;
-        border: 1px dashed #cbd5e1;
-    }
-
-    /* Details button */
-    .btn-details {
-        display: inline-flex;
-        align-items: center;
-        gap: .3rem;
-        background: transparent;
-        border: 1.5px solid var(--teal-mid);
-        color: var(--teal-primary);
-        border-radius: var(--radius-md);
-        padding: .28rem .75rem;
-        font-size: .78rem;
-        font-weight: 600;
-        transition: all .2s;
-        white-space: nowrap;
-    }
-    .btn-details:hover {
-        background: var(--teal-primary);
-        color: #fff;
-        border-color: var(--teal-primary);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(26,188,156,.28);
-    }
-    .btn-details svg {
-        width: 14px; height: 14px;
-        transition: transform .2s;
-    }
-    .btn-details:hover svg { transform: scale(1.2); }
-
-    /* ===== PAGINATION ===== */
-    .pagination-wrap {
-        padding: 1rem 1.6rem;
-        border-top: 1px solid #f0fdfa;
-        animation: fadeSlideUp .5s 1.2s ease both;
-    }
-    .pagination .page-link {
-        border-radius: var(--radius-md) !important;
-        border: 1.5px solid #e2e8f0;
-        color: #475569;
-        font-size: .84rem;
-        font-weight: 600;
-        margin: 0 2px;
-        transition: all .18s;
-        padding: .35rem .7rem;
-        min-width: 36px;
-        text-align: center;
-    }
-    .pagination .page-link:hover {
-        background: var(--teal-light);
-        border-color: var(--teal-mid);
-        color: var(--teal-dark);
-        transform: translateY(-2px);
-    }
-    .pagination .page-item.active .page-link {
-        background: linear-gradient(135deg, var(--teal-primary), var(--teal-dark));
-        border-color: var(--teal-primary);
-        color: #fff;
-        box-shadow: 0 4px 12px rgba(26,188,156,.3);
-    }
-    .per-page-select {
-        border-radius: var(--radius-md);
-        border-color: #d1faf4;
-        font-size: .82rem;
-        color: #475569;
-        direction: rtl;
-        transition: border-color .2s;
-    }
-    .per-page-select:focus {
-        border-color: var(--teal-primary);
-        box-shadow: 0 0 0 3px rgba(26,188,156,.1);
-    }
-    .pagination-info {
-        font-size: .82rem;
-        color: #64748b;
-    }
-
-    /* ===== BACK BUTTON ===== */
-    .btn-back {
-        display: inline-flex;
-        align-items: center;
-        gap: .4rem;
-        background: #fff;
-        border: 1.5px solid #e2e8f0;
-        color: #475569;
-        border-radius: var(--radius-md);
-        padding: .4rem 1rem;
-        font-size: .88rem;
-        font-weight: 600;
-        text-decoration: none;
-        transition: all .2s;
-        animation: fadeSlideDown .4s ease both;
-    }
-    .btn-back:hover {
-        background: #f8fafc;
-        border-color: var(--teal-mid);
-        color: var(--teal-primary);
-        transform: translateX(3px);
-    }
-    .btn-back svg { width: 16px; height: 16px; }
-
-    /* ===== RESPONSIVE ===== */
-    @@media (max-width: 768px) {
-        .students-table thead { display: none; }
-        .students-table td {
-            display: block;
-            text-align: right !important;
-            border: none;
-            padding: .3rem 1rem;
-        }
-        .students-table td::before {
-            content: attr(data-label);
-            font-weight: 700;
-            color: #64748b;
-            font-size: .75rem;
-            display: block;
-        }
-        .students-table tbody tr {
-            display: block;
-            border: 1px solid #e2f8f5;
-            border-radius: var(--radius-md);
-            margin-bottom: .75rem;
-            padding: .5rem 0;
-        }
-        .hero-illustration { display: none; }
-        .students-hero { padding: 1.5rem; }
-        .hero-title { font-size: 1.6rem; }
-    }
-</style>
-
-}
-
-<div class="container-fluid px-3 py-3" dir="rtl">
-
-    <!-- Back button -->
-    @* <div class="mb-3">
-        <a href="javascript:history.back()" class="btn-back">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/>
-            </svg>
-            رجوع
-        </a>
-    </div> *@
-
-    <!-- ===== HERO BANNER ===== -->
-   <div class="card border-0 shadow-sm mb-4">
-
-    <div class="card-body text-white p-5"
-         style="background:#1ab29a;border-radius:24px;">
-
-        <div class="d-flex justify-content-between align-items-center">
-
-            <div>
-
-                <h2 class="fw-bold mb-3">
-                    الطلاب
-                </h2>
-
-                <p class="mb-0">
-                    متابعة وإدارة طلاب الجامعة المسجلين في نظام التدريب الميداني
-                </p>
-
-            </div>
-
-            <div class="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center"
-                 style="width:90px;height:90px;">
-
-                <i class="bi bi-mortarboard-fill fs-1"></i>
-
-            </div>
-
+    @* ===== Hero Section ===== *@
+    <section class="mb-lg md:mb-xl relative rounded-xl md:rounded-2xl overflow-hidden bg-primary-container p-6 md:p-xl text-on-primary">
+        <div class="relative z-10 max-w-2xl text-right">
+            <h1 class="font-h1 text-2xl md:text-h1 mb-md">إدارة الطلبة</h1>
+            <p class="font-body-lg text-sm md:text-body-lg opacity-90 mb-lg">
+                متابعة وإدارة طلاب الجامعة المسجلين في نظام التدريب الميداني
+            </p>
         </div>
+        <div class="absolute -bottom-10 -left-10 w-48 h-48 md:w-64 md:h-64 bg-white/10 rounded-full blur-3xl"></div>
+        <div class="absolute -top-20 -left-20 w-64 h-64 md:w-80 md:h-80 bg-secondary-fixed-dim/20 rounded-full blur-3xl"></div>
+    </section>
 
+    @* ===== Filters Bar ===== *@
+    <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] p-4 mb-lg">
+        <form method="get" class="flex flex-wrap gap-3 items-center justify-end">
+
+            <input type="hidden" name="PageIndex" value="1" />
+            <input type="hidden" name="SortOrder" value="@Model.SortOrder" />
+
+            <div class="relative flex-1 min-w-[180px]">
+                <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+                <input asp-for="SearchTerm"
+                       class="w-full pr-10 pl-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20"
+                       placeholder="ابحث عن طالب..."
+                       type="text" />
+            </div>
+
+            @if (!User.IsInRole("DepartmentHead"))
+            {
+                <select asp-for="SelectedDepartmentId"
+                        asp-items="Model.DepartmentsList"
+                        class="bg-slate-100 border-none rounded-xl text-sm font-bold text-slate-700 py-2.5 px-4 focus:ring-2 focus:ring-primary/20 cursor-pointer">
+                    <option value="-1">جميع الأقسام</option>
+                </select>
+            }
+
+            <select asp-for="SelectedSpecialityId"
+                    asp-items="Model.SpecialitiesList"
+                    class="bg-slate-100 border-none rounded-xl text-sm font-bold text-slate-700 py-2.5 px-4 focus:ring-2 focus:ring-primary/20 cursor-pointer">
+                <option value="-1">جميع التخصصات</option>
+            </select>
+
+            <select asp-for="IsTraining"
+                    class="bg-slate-100 border-none rounded-xl text-sm font-bold text-slate-700 py-2.5 px-4 focus:ring-2 focus:ring-primary/20 cursor-pointer">
+                <option value="">الكل</option>
+                <option value="true">ملتحق بتدريب</option>
+                <option value="false">غير ملتحق</option>
+            </select>
+
+            <button type="submit"
+                    class="bg-primary-container text-white font-button px-6 py-2.5 rounded-xl hover:bg-primary/90 transition-colors">
+                بحث
+            </button>
+
+        </form>
     </div>
 
-</div>
-    <!-- ===== FILTER BAR ===== -->
-    <div class="card border-0 shadow-sm rounded-4 mb-4">
+    @* ===== Students Table ===== *@
+    <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] overflow-hidden">
 
-        <div class="card-header bg-white border-0 pt-4 px-4">
-
-            <div class="d-flex align-items-center gap-2">
-
-                <div class="rounded-circle d-flex align-items-center justify-content-center"
-                     style="width:42px;height:42px;background:#e8faf6;">
-
-                    <i class="bi bi-funnel-fill text-success"></i>
-
-                </div>
-
-                <div>
-                    <h5 class="fw-bold mb-0">
-                        تصفية الطلاب
-                    </h5>
-
-                    <small class="text-muted">
-                        ابحث وقم بتصفية الطلاب حسب القسم والتخصص
-                    </small>
-                </div>
-
-            </div>
-
+        <div class="p-4 md:p-lg border-b border-slate-100 flex justify-between items-center">
+            <h3 class="font-h3 text-lg md:text-h3 text-slate-900">
+                الطلبة المسجلون
+                <span class="mr-2 px-2 py-0.5 bg-primary-container text-white text-xs font-bold rounded-full">
+                    @Model.Students.TotalCount
+                </span>
+            </h3>
+            <span class="text-sm text-slate-500 font-body-sm">إجمالي @Model.Students.TotalCount طالب وطالبة</span>
         </div>
 
-        <div class="card-body px-4 pb-4">
-
-            <form method="get">
-
-                <div class="row g-3 align-items-end">
-
-                    <div class="col-lg-4">
-
-                        <label class="form-label fw-semibold">
-                            البحث
-                        </label>
-
-                        <div class="input-group">
-
-                            <span class="input-group-text bg-white border-start-0">
-                                <i class="bi bi-search"></i>
-                            </span>
-
-                            <input asp-for="SearchTerm"
-                                   class="form-control border-end-0"
-                                   placeholder="ابحث عن طالب..." />
-
-                        </div>
-
-                    </div>
-                    @if (!User.IsInRole("DepartmentHead"))
-                        {
-                        <div class="col-lg-2">
-
-                            <label class="form-label fw-semibold">
-                                القسم
-                            </label>
-
-                            <select asp-for="SelectedDepartmentId"
-                                    asp-items="Model.DepartmentsList"
-                                    class="form-select">
-
-                                <option value="-1">
-                                    جميع الأقسام
-                                </option>
-
-                            </select>
-
-                        </div>
-                        }
-                       
-
-                    <div class="col-lg-2">
-
-                        <label class="form-label fw-semibold">
-                            التخصص
-                        </label>
-
-                        <select asp-for="SelectedSpecialityId"
-                                asp-items="Model.SpecialitiesList"
-                                class="form-select">
-
-                            <option value="-1">
-                                جميع التخصصات
-                            </option>
-
-                        </select>
-
-                    </div>
-
-                    <div class="col-lg-2">
-
-                        <label class="form-label fw-semibold">
-                            التدريب
-                        </label>
-
-                        <select asp-for="IsTraining"
-                                class="form-select">
-
-                            <option value="">
-                                الكل
-                            </option>
-
-                            <option value="true">
-                                ملتحق بتدريب
-                            </option>
-
-                            <option value="false">
-                                غير ملتحق
-                            </option>
-
-                        </select>
-
-                    </div>
-
-                    <div class="col-lg-2">
-
-                        <button type="submit"
-                                class="btn btn-success w-100">
-
-                            <i class="bi bi-funnel-fill me-1"></i>
-
-                            تصفية
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </form>
-
-        </div>
-
-    </div>
-    <!-- ===== TABLE CARD ===== -->
-    <div class="table-card">
-        <!-- Header -->
-        <div class="table-card-header d-flex align-items-center justify-content-between flex-wrap gap-2">
-            <div>
-                <span class="table-title">الطلبة المسجلون</span>
-                <span class="count-badge">@Model.Students.TotalCount</span>
-            </div>
-            <span class="table-count">إجمالي @Model.Students.TotalCount طالب وطالبة</span>
-        </div>
-
-        <!-- Table -->
-        <div class="table-responsive">
-            <table class="students-table">
-                <thead>
+        <div class="overflow-x-auto">
+            <table class="w-full text-right border-collapse min-w-[1100px]">
+                <thead class="bg-surface-container-low">
                     <tr>
-                        <th class="col-num">#</th>
-                        <th><a class="text-decoration-none"
-       asp-route-PageSize="@Model.PageSize" 
-       asp-route-SearchTerm="@Model.SearchTerm"
-                               asp-route-SelectedDepartmentId="@Model.SelectedDepartmentId"
-                               asp-route-SelectedSpecialityId="@Model.SelectedSpecialityId"
-                               asp-route-IsTraining="@Model.IsTraining"
-       asp-route-PageIndex="@(Model.PageIndex)"
-       asp-route-SortOrder="@(Model.SortOrder == "Name" ? "Name_desc" : "Name")">
-    الطالب @SortingIcon("Name", Model.SortOrder)
-</a></th>
-                        <th>الرقم الجامعي</th>
-                        <th>التخصص</th>
-                        <th>القسم</th>
-                        <th><a class="text-decoration-none"
-                               asp-route-PageSize="@Model.PageSize" 
-                               asp-route-SelectedDepartmentId="@Model.SelectedDepartmentId"
-                               asp-route-SelectedSpecialityId="@Model.SelectedSpecialityId"
-                               asp-route-IsTraining="@Model.IsTraining"
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps w-10">#</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">
+                            <a class="flex items-center gap-1 text-slate-500 hover:text-primary transition-colors no-underline"
+                               asp-route-PageSize="@Model.PageSize"
                                asp-route-SearchTerm="@Model.SearchTerm"
-                               asp-route-PageIndex="@(Model.PageIndex)"
+                               asp-route-SelectedDepartmentId="@Model.SelectedDepartmentId"
+                               asp-route-SelectedSpecialityId="@Model.SelectedSpecialityId"
+                               asp-route-IsTraining="@Model.IsTraining"
+                               asp-route-PageIndex="@Model.PageIndex"
+                               asp-route-SortOrder="@(Model.SortOrder == "Name" ? "Name_desc" : "Name")">
+                                الطالب @SortingIcon("Name", Model.SortOrder)
+                            </a>
+                        </th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الرقم الجامعي</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">التخصص</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">القسم</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">
+                            <a class="flex items-center gap-1 text-slate-500 hover:text-primary transition-colors no-underline"
+                               asp-route-PageSize="@Model.PageSize"
+                               asp-route-SearchTerm="@Model.SearchTerm"
+                               asp-route-SelectedDepartmentId="@Model.SelectedDepartmentId"
+                               asp-route-SelectedSpecialityId="@Model.SelectedSpecialityId"
+                               asp-route-IsTraining="@Model.IsTraining"
+                               asp-route-PageIndex="@Model.PageIndex"
                                asp-route-SortOrder="@(Model.SortOrder == "GPA" ? "GPA_desc" : "GPA")">
-                            المعدل @SortingIcon("GPA", Model.SortOrder)
-                            </a></th>
-                        <th>التدريب الحالي</th>
-                       <th style="width:260px;">الإجراءات</th>
+                                المعدل @SortingIcon("GPA", Model.SortOrder)
+                            </a>
+                        </th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">التدريب الحالي</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الإجراءات</th>
                     </tr>
                 </thead>
-                <tbody>
-                    @* -------- Row 1 -------- *@
+                <tbody class="divide-y divide-slate-50">
                     @foreach (var student in Model.Students)
                     {
+                        <tr class="hover:bg-slate-50 transition-colors">
 
+                            <td class="px-4 py-3 text-sm text-slate-400 font-bold">@SIndex</td>
 
-                        <tr>
-                            <td class="col-num" data-label="#">@SIndex</td>
-                            <td class="col-name" data-label="الطالب">@student.Name</td>
-                            <td class="col-id" data-label="الرقم الجامعي">@student.StudentNumber</td>
-                            <td class="col-spec" data-label="التخصص"><span>@student.Specialty</span></td>
-                            <td class="col-dept" data-label="القسم"><span>@(student.Department?.Name??"_") </span></td>
-                            <td class="col-gpa gpa-high" data-label="المعدل">@student.GPA</td>
-                            <td data-label="التدريب الحالي">
-                                @{
-    var placed = student.Applications?
-        .FirstOrDefault(a => a.Status == Models.TrainingApplication.ApplicationStatus.Placed);
-}
+                            <td class="px-4 py-3 text-sm text-slate-900 font-bold">@student.Name</td>
 
-<span class="training-badge @(placed != null ? "training-active" : "training-none")">
-    @(placed?.TrainingOpportunity?.Title ?? "لا يوجد تدريب")
-</span>
+                            <td class="px-4 py-3 text-sm text-slate-600 font-mono tracking-wide">@student.StudentNumber</td>
+
+                            <td class="px-4 py-3 text-sm">
+                                <span class="px-3 py-1 rounded-full text-[11px] font-bold bg-green-50 text-green-700 border border-green-100">
+                                    @student.Specialty
+                                </span>
                             </td>
-                            <td data-label="الإجراءات">
 
-                                <div class="btn-group">
+                            <td class="px-1 py-3 text-sm">
+                                <span class="px-3 py-1 rounded-full text-[11px] font-bold text-blue-700 ">
+                                    @(student.Department?.Name ?? "—")
+                                </span>
+                            </td>
 
-                                    <!-- تفاصيل -->
+                            <td class="px-4 py-3 text-sm fw-bold
+                                @(
+                                    !student.GPA.HasValue ? "text-slate-400" :
+                                    student.GPA >= 3.5m ? "text-emerald-600" :
+                                    student.GPA >= 2.5m ? "text-amber-600" :
+                                    "text-red-600"
+                                )">
 
+                                @(student.GPA?.ToString("0.00") ?? "-")
+
+                            </td>
+
+                            <td class="px-4 py-3 text-sm">
+                                @{
+                                    var placed = student.Applications?
+                                        .FirstOrDefault(a => a.Status == Models.TrainingApplication.ApplicationStatus.Placed);
+                                }
+                                <span class="px-3 py-1 rounded-full text-[11px] font-bold
+                                    @(placed != null ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-400")">
+                                    @(placed?.TrainingOpportunity?.Title ?? "لا يوجد تدريب")
+                                </span>
+                            </td>
+
+                            <td class="px-4 py-3">
+                                <div class="flex gap-1">
                                     <a asp-page="/University/StudentDetails"
                                        asp-route-id="@student.StudentID"
-                                       class="btn btn-sm btn-outline-primary"
+                                       class="btn border border-primary text-primary text-xs font-bold px-2 py-2 rounded hover:bg-blue-50 flex items-center gap-1"
                                        title="تفاصيل الطالب">
-
                                         <i class="bi bi-person-vcard-fill"></i>
-
                                     </a>
                                     <a asp-page="/University/Attendance"
                                        asp-route-studentId="@student.StudentID"
-                                       class="btn btn-sm btn-outline-success"
+                                       class="btn border border-success text-success text-xs font-bold px-2 py-2 rounded hover:bg-emerald-50 flex items-center gap-1"
                                        title="الحضور">
-
                                         <i class="bi bi-calendar-check-fill"></i>
-
                                     </a>
-
                                     <a asp-page="/University/Evaluations"
                                        asp-route-studentId="@student.StudentID"
-                                       class="btn btn-sm btn-outline-warning"
+                                       class="btn border border-warning text-warning text-xs font-bold px-2 py-2 rounded hover:bg-amber-50 flex items-center gap-1"
                                        title="التقييمات">
-
                                         <i class="bi bi-clipboard-data-fill"></i>
-
                                     </a>
-
                                     <a asp-page="/University/Reports/Index"
                                        asp-route-studentId="@student.StudentID"
-                                       class="btn btn-sm btn-outline-info"
+                                       class="btn border border-info text-info text-xs font-bold px-2 py-2 rounded hover:bg-sky-50 flex items-center gap-1"
                                        title="التقارير">
-
                                         <i class="bi bi-file-earmark-text-fill"></i>
-
                                     </a>
-
                                 </div>
-
                             </td>
+
                         </tr>
                         @(SIndex++)
                     }
@@ -792,89 +213,82 @@
             </table>
         </div>
 
-        <!-- ===== PAGINATION ===== -->
-        <div class="pagination-wrap d-flex align-items-center justify-content-between flex-wrap gap-3">
-            <!-- Info + per-page -->
-            <div class="d-flex align-items-center gap-2">
-                <span class="pagination-info">عرض 1 إلى @Model.PageSize من @Model.Students.TotalCount طالب</span>
-                <form method="get">
-                    <input type="hidden" name="PageSize" value="@Model.PageSize" />
-                    <input type="hidden" name="PageIndex" value="@Model.PageIndex" />
-                    <input type="hidden" name="SortOrder" value="@Model.SortOrder" />
-                    <input type="hidden" name="SearchTerm" value="@Model.SearchTerm" />
-                    <input type="hidden" asp-for="SearchTerm" />
-                    <input type="hidden" asp-for="SelectedDepartmentId" />
-                    <input type="hidden" asp-for="SelectedSpecialityId" />
-                    <input type="hidden" asp-for="IsTraining" />
-                    <input type="hidden" asp-for="SortOrder" />
+        @* ===== Pagination ===== *@
+        <div class="p-4 md:p-lg flex flex-col md:flex-row items-center justify-between gap-4 border-t border-slate-100">
 
-                    <select asp-for="PageSize"
-                            onchange="this.form.submit()"
-                            class="form-select form-select-sm per-page-select" style="width:70px;">
-
-
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                    </select>
-                </form>
+            <div class="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
+                <p class="text-sm text-slate-500 font-body-sm whitespace-nowrap">
+                    عرض <span class="font-bold text-slate-900">@Model.PageSize</span>
+                    من أصل <span class="font-bold text-slate-900">@Model.Students.TotalCount</span> طالب
+                </p>
+                <div class="flex items-center gap-2">
+                    <label class="text-xs text-slate-500 font-label-caps" for="per-page-students">النتائج:</label>
+                    <form>
+                        <input type="hidden" name="PageIndex" value="@Model.PageIndex" />
+                        <input type="hidden" name="SortOrder" value="@Model.SortOrder" />
+                        <input type="hidden" name="SearchTerm" value="@Model.SearchTerm" />
+                        <input type="hidden" name="SelectedDepartmentId" value="@Model.SelectedDepartmentId" />
+                        <input type="hidden" name="SelectedSpecialityId" value="@Model.SelectedSpecialityId" />
+                        <input type="hidden" name="IsTraining" value="@Model.IsTraining" />
+                        <select asp-for="PageSize"
+                                onchange="this.form.submit()"
+                                id="per-page-students"
+                                class="bg-slate-100 border-none rounded-lg text-xs font-bold text-slate-700 py-1.5 pr-8 pl-3 focus:ring-2 focus:ring-primary/20 appearance-none cursor-pointer">
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                        </select>
+                    </form>
+                </div>
             </div>
-            <!-- Pages -->
-            <nav aria-label="Page navigation">
-                <ul class="pagination pagination-sm mb-0 flex-wrap">
-                    <li class="page-item">
-                         @if (Model.Students.HasPrevPage)
-                        {
-                            <a asp-route-PageIndex="@(Model.PageIndex - 1)"
-                               asp-route-SearchTerm="@Model.SearchTerm"
-                               asp-route-SortOrder="@Model.SortOrder"
-                               asp-route-PageSize="@Model.PageSize"
-                               asp-route-SelectedDepartmentId="@Model.SelectedDepartmentId"
-                               asp-route-SelectedSpecialityId="@Model.SelectedSpecialityId"
-                               asp-route-IsTraining="@Model.IsTraining"
-                               class="page-link" aria-label="Previous">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="m15 19 7-7-7-7" transform="scale(-1,1) translate(-24,0)"/>
-                                </svg>
-                            </a>            
-                        }
-                    </li>
-                     @for (int i = 1; i <= Model.Students.TotalPages; i++)
-                {
-                    <li class="page-item @(Model.PageIndex == i ? "active" : "")">
-                            <a class="page-link"
-                               asp-route-PageIndex="@i"
-                               asp-route-SearchTerm="@Model.SearchTerm"
-                               asp-route-SortOrder="@Model.SortOrder"
-                               asp-route-PageSize="@Model.PageSize"
-                               asp-route-SelectedDepartmentId="@Model.SelectedDepartmentId"
-                               asp-route-SelectedSpecialityId="@Model.SelectedSpecialityId"
-                               asp-route-IsTraining="@Model.IsTraining">
-                                @i
-                            </a>
-                        </li>
-                   
-                  }
-                   <li>
-                         @if (Model.Students.HasNextPage)
-                        {
-                            <a asp-route-PageIndex="@(Model.PageIndex + 1)"
-                               asp-route-SearchTerm="@Model.SearchTerm"
-                               asp-route-SortOrder="@Model.SortOrder"
-                               asp-route-PageSize="@Model.PageSize"
-                               asp-route-SelectedDepartmentId="@Model.SelectedDepartmentId"
-                               asp-route-SelectedSpecialityId="@Model.SelectedSpecialityId"
-                               asp-route-IsTraining="@Model.IsTraining"
-                               class="page-link" href="#" aria-label="Next">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="m9 5 7 7-7 7"/>
-                                </svg>
-                            </a>            
-                        }
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    </div><!-- /table-card -->
 
-</div><!-- /container-fluid -->
+            <nav class="flex items-center gap-2">
+                @if (Model.Students.HasPrevPage)
+                {
+                    <a asp-route-PageIndex="@(Model.PageIndex - 1)"
+                       asp-route-SearchTerm="@Model.SearchTerm"
+                       asp-route-SortOrder="@Model.SortOrder"
+                       asp-route-PageSize="@Model.PageSize"
+                       asp-route-SelectedDepartmentId="@Model.SelectedDepartmentId"
+                       asp-route-SelectedSpecialityId="@Model.SelectedSpecialityId"
+                       asp-route-IsTraining="@Model.IsTraining"
+                       class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:bg-slate-50">
+                        <span class="material-symbols-outlined">chevron_right</span>
+                    </a>
+                }
+
+                @for (int i = 1; i <= Model.Students.TotalPages; i++)
+                {
+                    <a asp-route-PageIndex="@i"
+                       asp-route-SearchTerm="@Model.SearchTerm"
+                       asp-route-SortOrder="@Model.SortOrder"
+                       asp-route-PageSize="@Model.PageSize"
+                       asp-route-SelectedDepartmentId="@Model.SelectedDepartmentId"
+                       asp-route-SelectedSpecialityId="@Model.SelectedSpecialityId"
+                       asp-route-IsTraining="@Model.IsTraining"
+                       class="w-8 h-8 flex items-center justify-center rounded-lg text-sm font-bold
+                        @(Model.PageIndex == i ? "bg-primary-container text-white" : "border border-slate-200 text-slate-600 hover:bg-slate-50")">
+                        @i
+                    </a>
+                }
+
+                @if (Model.Students.HasNextPage)
+                {
+                    <a asp-route-PageIndex="@(Model.PageIndex + 1)"
+                       asp-route-SearchTerm="@Model.SearchTerm"
+                       asp-route-SortOrder="@Model.SortOrder"
+                       asp-route-PageSize="@Model.PageSize"
+                       asp-route-SelectedDepartmentId="@Model.SelectedDepartmentId"
+                       asp-route-SelectedSpecialityId="@Model.SelectedSpecialityId"
+                       asp-route-IsTraining="@Model.IsTraining"
+                       class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:bg-slate-50">
+                        <span class="material-symbols-outlined">chevron_left</span>
+                    </a>
+                }
+            </nav>
+
+        </div>
+
+    </div>
+
+</div>

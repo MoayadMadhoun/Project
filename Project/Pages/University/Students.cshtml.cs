@@ -41,13 +41,16 @@ namespace Project.Pages.University
         public string SearchTerm { get; set; } = string.Empty;
         public Models.University CurrentUniversity { get; set; }
         [BindProperty(SupportsGet = true)]
-        public int SelectedSpecialityId { get; set; }
+        public int SelectedSpecialityId { get; set; } = -1;
         public SelectList SpecialitiesList { get; set; }
         [BindProperty(SupportsGet = true)]
-        public int SelectedDepartmentId { get; set; }
+        public int SelectedDepartmentId { get; set; } = -1;
         public SelectList DepartmentsList { get; set; }
         [BindProperty(SupportsGet = true)]
         public bool? IsTraining { get; set; }
+
+
+
         public PaginatedList<Models.Student> Students { get; set; } = new PaginatedList<Models.Student>(new List<Models.Student>(), 0, 1, 10);
         public async Task<IActionResult> OnGetAsync()
         {
