@@ -4,107 +4,73 @@
     ViewData["Title"] = "الملف الشخصي";
     ViewData["ActivePage"] = ManageNavPages.Index;
 }
+<link rel="stylesheet" href="~/Styles/opportunities.css">
 
-<div class="container-fluid">
+<div dir="rtl">
 
-    <!-- Header -->
+    @* ===== Hero Section ===== *@
+    <section class="mb-lg md:mb-xl relative rounded-xl md:rounded-2xl overflow-hidden bg-primary-container p-6 md:p-xl text-on-primary">
+        <div class="relative z-10 max-w-2xl text-right">
+            <h1 class="font-h1 text-2xl md:text-h1 mb-md">الملف الشخصي</h1>
+            <p class="font-body-lg text-sm md:text-body-lg opacity-90 mb-lg">
+                إدارة معلومات حسابك الشخصية
+            </p>
+        </div>
+        <div class="absolute -bottom-10 -left-10 w-48 h-48 md:w-64 md:h-64 bg-white/10 rounded-full blur-3xl"></div>
+        <div class="absolute -top-20 -left-20 w-64 h-64 md:w-80 md:h-80 bg-secondary-fixed-dim/20 rounded-full blur-3xl"></div>
+    </section>
 
-    <div class="card border-0 shadow-sm mb-4">
+    @* ===== Status Message ===== *@
+    <partial name="_StatusMessage" for="StatusMessage" />
 
-        <div class="card-body text-white p-4"
-             style="background:#1ab29a;border-radius:20px;">
+    @* ===== Form Card ===== *@
+    <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] overflow-hidden">
 
-            <div class="d-flex justify-content-between align-items-center">
-
-                <div>
-
-                    <h3 class="fw-bold mb-2">
-                        الملف الشخصي
-                    </h3>
-
-                    <p class="mb-0">
-                        إدارة معلومات حسابك الشخصية
-                    </p>
-
-                </div>
-
-                <div class="bg-white bg-opacity-25 rounded-circle
-                    d-flex align-items-center
-                    justify-content-center"
-                     style="width:80px;height:80px;">
-
-                    <i class="bi bi-person-fill fs-1"></i>
-
-                </div>
-
-            </div>
-
+        <div class="p-4 md:p-lg border-b border-slate-100">
+            <h3 class="font-h3 text-lg md:text-h3 text-slate-900">معلومات الحساب</h3>
         </div>
 
-    </div>
-
-    <partial name="_StatusMessage"
-             for="StatusMessage" />
-
-    <div class="card border-0 shadow-sm rounded-4">
-
-        <div class="card-header bg-white border-0 pt-4">
-
-            <h5 class="fw-bold mb-0">
-                معلومات الحساب
-            </h5>
-
-        </div>
-
-        <div class="card-body p-4">
-
+        <div class="p-4 md:p-lg">
             <form id="profile-form" method="post">
 
                 <div asp-validation-summary="ModelOnly"
-                     class="alert alert-danger">
+                     class="mb-lg px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm">
                 </div>
 
-                <div class="mb-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                    <label asp-for="Username"
-                           class="form-label fw-semibold">
-                    </label>
+                    @* اسم المستخدم *@
+                    <div class="flex flex-col gap-1">
+                        <label asp-for="Username"
+                               class="text-sm font-bold text-slate-700"></label>
+                        <input asp-for="Username"
+                               class="w-full px-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm text-slate-400 cursor-not-allowed"
+                               disabled />
+                    </div>
 
-                    <input asp-for="Username"
-                           class="form-control"
-                           disabled />
-
-                </div>
-
-                <div class="mb-4">
-
-                    <label asp-for="Input.PhoneNumber"
-                           class="form-label fw-semibold">
-                    </label>
-
-                    <input asp-for="Input.PhoneNumber"
-                           class="form-control"
-                           placeholder="أدخل رقم الهاتف" />
-
-                    <span asp-validation-for="Input.PhoneNumber"
-                          class="text-danger">
-                    </span>
+                    @* رقم الهاتف *@
+                    <div class="flex flex-col gap-1">
+                        <label asp-for="Input.PhoneNumber"
+                               class="text-sm font-bold text-slate-700"></label>
+                        <input asp-for="Input.PhoneNumber"
+                               class="w-full px-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20"
+                               placeholder="أدخل رقم الهاتف" />
+                        <span asp-validation-for="Input.PhoneNumber"
+                              class="text-xs text-red-500"></span>
+                    </div>
 
                 </div>
 
-                <button id="update-profile-button"
-                        type="submit"
-                        class="btn text-white px-4"
-                        style="background:#1ab29a;">
-
-                    <i class="bi bi-check-circle-fill me-2"></i>
-
-                    حفظ التغييرات
-
-                </button>
+                <div class="mt-6 flex justify-start">
+                    <button id="update-profile-button"
+                            type="submit"
+                            class="bg-primary-container text-white font-button px-xl py-3 rounded-xl hover:bg-primary/90 transition-colors flex items-center gap-2">
+                        <i class="bi bi-check-circle-fill"></i>
+                        حفظ التغييرات
+                    </button>
+                </div>
 
             </form>
-
         </div>
 
     </div>
