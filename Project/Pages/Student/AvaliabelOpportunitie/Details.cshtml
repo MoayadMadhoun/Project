@@ -1,0 +1,330 @@
+﻿@page "{id:int}"
+@model Project.Pages.Student.AvaliabelOpportunitie.DetailsModel
+@{
+    ViewData["Title"] = "تفاصيل الفرصة التدريبية";
+}
+
+<!-- Hero -->
+
+<div class="card border-0 shadow-sm mb-4">
+<div class="card-body p-5 text-white"
+     style="background:#198754;border-radius:24px;">
+
+    <div class="d-flex justify-content-between align-items-center">
+
+        <div>
+
+            <h1 class="fw-bold mb-3">
+                تفاصيل الفرصة التدريبية
+            </h1>
+
+            <p class="mb-0 fs-5 opacity-75">
+                عرض كافة المعلومات المتعلقة بالفرصة التدريبية.
+            </p>
+
+        </div>
+
+        <div class="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center"
+             style="width:90px;height:90px;">
+
+            <i class="bi bi-briefcase-fill fs-1"></i>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+</div>
+
+<!-- Opportunity Information -->
+
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+
+
+<div class="card-header bg-white">
+
+    <h5 class="fw-bold mb-0">
+        معلومات الفرصة
+    </h5>
+
+</div>
+
+<div class="card-body">
+
+    <div class="row g-4">
+
+        <div class="col-md-6">
+
+            <label class="text-muted">
+                عنوان الفرصة
+            </label>
+
+            <div class="fw-semibold">
+                @Model.Opportunity?.Title
+            </div>
+
+        </div>
+
+        <div class="col-md-6">
+
+            <label class="text-muted">
+                المؤسسة
+            </label>
+
+            <div class="fw-semibold">
+                @Model.Opportunity?.TrainingInstitution?.Name
+            </div>
+
+        </div>
+
+        <div class="col-md-12">
+
+            <label class="text-muted">
+                وصف الفرصة
+            </label>
+
+            <div class="fw-semibold">
+                @Model.Opportunity?.Description
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <label class="text-muted">
+                عدد المقاعد
+            </label>
+
+            <div class="fw-semibold">
+                @Model.Opportunity?.Capacity
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <label class="text-muted">
+                مكان التدريب
+            </label>
+
+            <div class="fw-semibold">
+                @Model.Opportunity?.Location
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <label class="text-muted">
+                الحالة
+            </label>
+
+            <div>
+
+                 @if (Model.Opportunity?.Status == Models.TrainingOpportunity.Opportunity.Open)
+                    {
+                    <span class="badge bg-success">
+                        مفتوحة
+                    </span>
+                    }
+                    else if (Model.Opportunity?.Status == Models.TrainingOpportunity.Opportunity.Closed)
+                    {
+                    <span class="badge bg-warning">
+                        مغلقة
+                    </span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">
+                            ملغاة
+                        </span>
+                    }
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+</div>
+
+<!-- Training Period -->
+
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+
+
+<div class="card-header bg-white">
+
+    <h5 class="fw-bold mb-0">
+        فترة التدريب
+    </h5>
+
+</div>
+
+<div class="card-body">
+
+    <div class="row">
+
+        <div class="col-md-4">
+
+            <label class="text-muted">
+                فترة التدريب
+            </label>
+
+            <div class="fw-semibold">
+                @Model.Opportunity?.TrainingTerm?.Name
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <label class="text-muted">
+                تاريخ البداية
+            </label>
+
+            <div class="fw-semibold">
+                @Model.Opportunity?.StartDate.ToString("yyyy/MM/dd")
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <label class="text-muted">
+                تاريخ النهاية
+            </label>
+
+            <div class="fw-semibold">
+                @Model.Opportunity?.EndDate.ToString("yyyy/MM/dd")
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+<!-- Specialties -->
+
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+
+
+<div class="card-header bg-white">
+
+    <h5 class="fw-bold mb-0">
+        التخصصات المستهدفة
+    </h5>
+
+</div>
+
+<div class="card-body">
+
+    @if (Model.Opportunity?.OpportunitySpecialties.Any() == true)
+    {
+        <div class="d-flex flex-wrap gap-2">
+
+            @foreach (var item in Model.Opportunity.OpportunitySpecialties)
+            {
+                <span class="badge bg-primary p-2">
+                    @item.Specialty.Name
+                </span>
+            }
+
+        </div>
+    }
+
+</div>
+
+
+</div>
+
+<!-- Skills -->
+
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+
+
+<div class="card-header bg-white">
+
+    <h5 class="fw-bold mb-0">
+        المهارات المطلوبة
+    </h5>
+
+</div>
+
+<div class="card-body">
+
+    <table class="table table-hover">
+
+        <thead>
+
+            <tr>
+
+                <th>المهارة</th>
+
+                <th>النوع</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            @foreach (var item in Model.Opportunity.OpportunitySkills)
+            {
+                <tr>
+
+                    <td>
+                        @item.Skill.Name
+                    </td>
+
+                    <td>
+
+                        @if (item.IsRequired)
+                        {
+                            <span class="badge bg-danger">
+                                أساسية
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-info">
+                                مفضلة
+                            </span>
+                        }
+
+                    </td>
+
+                </tr>
+            }
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+</div>
+
+<!-- Buttons -->
+
+<div class="d-flex gap-2 mb-5">
+
+
+    <a asp-page="/Student/AvaliabelOpportunities"
+   class="btn btn-light px-5">
+
+    رجوع
+
+</a>
+
+
+</div>
