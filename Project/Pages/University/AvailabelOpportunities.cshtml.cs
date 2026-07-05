@@ -34,7 +34,7 @@ namespace Project.Pages.University
         public SelectList Specialities { get; set; }
         private readonly UserManager<AspNetUser> _userManager;
 
-        public PaginatedList<TrainingOpportunityRequest> OpportunityRequests { get; set; }
+        public PaginatedList<TrainingOpportunityRequest> OpportunityRequests { get; set; } = new PaginatedList<TrainingOpportunityRequest>(new List<TrainingOpportunityRequest>(), 1, 0, 10);
         public AvailabelOpportunitiesModel(UniversityRepository uniRepo, ApplicationDbContext dbContext, UserManager<AspNetUser> userManager)
         {
             _uniRepo = uniRepo;

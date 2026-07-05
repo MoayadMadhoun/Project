@@ -96,7 +96,7 @@ namespace Project.Repositories
 
 
         // Full Delete { I Will Delete The Department From The DataBase }
-        public async Task FullDeleteUniversity(int DepartmentID)
+        public async Task FullDeleteDepartment(int DepartmentID)
         {
             var department = await GetByIdModifyAsync(DepartmentID);
 
@@ -108,7 +108,7 @@ namespace Project.Repositories
             }
             else
             {
-                throw new Exception($"Unable To Find the University {DepartmentID}");
+                throw new Exception($"Unable To Find the Department {DepartmentID}");
             }
 
         }

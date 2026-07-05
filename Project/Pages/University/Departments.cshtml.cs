@@ -34,7 +34,7 @@ namespace Project.Pages.University
         public int PageSize { get; set; } = 10;
         [BindProperty(SupportsGet = true)]
         public string SortOrder { get; set; } = string.Empty;
-        public Models.University CurrentUniversity { get; set; }
+        public Models.University CurrentUniversity { get; set; } = new Models.University();
         [BindProperty(SupportsGet = true)]
         public string SearchTerm { get; set; } = string.Empty;
         [BindProperty(SupportsGet = true)]
@@ -42,11 +42,11 @@ namespace Project.Pages.University
         [BindProperty(SupportsGet = true)]
         public int RemoveDeptId { get; set; }
 
-        public PaginatedList<Department> Departments { get; set; }
+        public PaginatedList<Department> Departments { get; set; } = new PaginatedList<Department>(new List<Department>(), 1, 0, 10);
 
         public async Task<IActionResult> OnGet()
         {
-            Departments = new PaginatedList<Department>(new List<Department>(), PageIndex,0, PageSize);
+            
             try
             {
                 
@@ -83,14 +83,7 @@ namespace Project.Pages.University
                 {
                     query = query.Where(a => !a.IsActive);
                 }
-                if (RemoveDeptId > 0)
-                {
-                    var deptToRemove = await _deptRepo.GetByIdAsync(RemoveDeptId);
-                    if (deptToRemove != null && deptToRemove.UniversityID == universityId)
-                    {
-                        await _deptRepo.DeleteSoftAsync(RemoveDeptId);
-                    }
-                }
+               
                 query = SortOrder switch
                 {
                     "StuCount" => query.OrderBy(a => a.Students.Count),
@@ -107,7 +100,8 @@ namespace Project.Pages.University
             }
 
         }
-        public async Task<IActionResult> OnPostDeleteAsync(int id)
+     
+        public async Task<IActionResult> OnPostDeleteAsync(int RemoveDeptId)
         {
             try
             {
@@ -131,10 +125,10 @@ namespace Project.Pages.University
                 {
                     return RedirectToPage("/Index");
                 }
-                var deptToRemove = await _deptRepo.GetByIdAsync(id);
+                var deptToRemove = await _deptRepo.GetByIdAsync(RemoveDeptId);
                 if (deptToRemove != null && deptToRemove.UniversityID == universityId)
                 {
-                    await _deptRepo.DeleteSoftAsync(id);
+                    await _deptRepo.FullDeleteDepartment(RemoveDeptId);
                 }
                 return RedirectToPage(new { SearchTerm, IsActive, SortOrder, PageIndex, PageSize });
             }
