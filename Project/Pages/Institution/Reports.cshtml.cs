@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Project.Data;
 using Project.Extensions;
@@ -31,14 +32,27 @@ namespace Project.Pages.Institution
         [BindProperty(SupportsGet = true)]
         public string SearchTerm { get; set; }
         [BindProperty(SupportsGet = true)]
-        public int SelectedReportType { get; set; }
+        public int? SelectedReportType { get; set; }
         [BindProperty(SupportsGet = true)]
-        public int SelectedReportStatus { get; set; }
+        public int? SelectedReportStatus { get; set; }
         public SelectList ReportStatusList { get; set; }
         public PaginatedList<StudentReport> Reports { get; set; } = new PaginatedList<StudentReport>(new List<StudentReport>(), 1, 0, 10);
         public TrainingInstitution? CurrentInstitution { get; private set; }
+        [BindProperty(SupportsGet = true)]
+        public int? StudentId { get; set; }
 
-        public  async Task<IActionResult> OnGet()
+        [BindProperty(SupportsGet = true)]
+        public int? PlacementId { get; set; }
+
+
+        //public int SelectedReportType { get; set; }
+        //[BindProperty(SupportsGet = true)]
+        //public int SelectedReportStatus { get; set; }
+        //public SelectList ReportStatusList { get; set; }
+        //public PaginatedList<StudentReport> Reports { get; set; } = new PaginatedList<StudentReport>(new List<StudentReport>(), 1, 0, 10);
+        //public TrainingInstitution? CurrentInstitution { get; private set; }
+
+        public async Task<IActionResult> OnGet()
         {
             try
             {
@@ -79,19 +93,35 @@ namespace Project.Pages.Institution
 
                 ReportStatusList = new SelectList(selectList, "Value", "Text");
                 var query = _dbContext.StudentReports
-                    .Include(r => r.Student)
-                    .Include(r => r.Placement)
-                    .ThenInclude(p=>p.TrainingOpportunity)
-                    .Where(r=>r.Placement.InstitutionID==institutionId)
-                    .AsQueryable();
+                 .Include(r => r.Student)
+                 .Include(r => r.Placement)
+                     .ThenInclude(p => p.TrainingOpportunity)
+                 .Include(r => r.Placement)
+                     .ThenInclude(p => p.TrainingInstitution)
+                 .Include(r => r.UniversitySupervisor)
+                 .Where(r => r.Placement.InstitutionID == institutionId)
+                 .AsQueryable();
+
+                if (StudentId.HasValue)
+                {
+                    query = query.Where(r =>
+                        r.StudentID == StudentId.Value);
+                }
+
+                if (PlacementId.HasValue)
+                {
+                    query = query.Where(r =>
+                        r.PlacementID == PlacementId.Value);
+                }
+                  
                 if (!string.IsNullOrEmpty(SearchTerm))
                 {
                     query = query.Where(a => a.Student.Name.Contains(SearchTerm));
                 }
-                if (SelectedReportStatus >= 0)
+                if (SelectedReportStatus.HasValue)
                 {
-                    query = query.Where(r => r.Status == (StudentReport.StudentReportStatus)SelectedReportStatus );
-
+                    query = query.Where(r =>
+                        (int)r.Status == SelectedReportStatus.Value);
                 }
                 if (SelectedReportType > 0)
                 {
@@ -99,7 +129,7 @@ namespace Project.Pages.Institution
                     {
                         1 => StudentReport.ReportType.Weekly,
                         2 => StudentReport.ReportType.Final,
-                        _=> StudentReport.ReportType.Weekly
+                        _ => StudentReport.ReportType.Weekly
                     };
                     query = query.Where(r => r.Type == type);
                 }
@@ -117,6 +147,30 @@ namespace Project.Pages.Institution
                 return RedirectToPage("/Index");
 
             }
+        }
+
+        public async Task<IActionResult> OnGetOpenFile(int reportId)
+        {
+            var report = await _dbContext.StudentReports
+                .FirstOrDefaultAsync(x => x.ReportID == reportId);
+
+            if (report == null || string.IsNullOrEmpty(report.FilePath))
+                return NotFound();
+
+            var provider = new FileExtensionContentTypeProvider();
+
+            if (!provider.TryGetContentType(report.FilePath,
+                out string? contentType))
+            {
+                contentType = "application/octet-stream";
+            }
+
+            var physicalPath = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "wwwroot",
+                report.FilePath.TrimStart('/'));
+
+            return PhysicalFile(physicalPath, contentType);
         }
     }
 }

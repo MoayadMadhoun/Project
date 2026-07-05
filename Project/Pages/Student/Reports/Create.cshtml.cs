@@ -117,7 +117,7 @@ namespace Project.Pages.Student.Reports
 
             await _context.SaveChangesAsync();
 
-            return RedirectToPage("Index");
+            return RedirectToPage("/Student/CurrentTraining");
         }
 
         private async Task ReloadTrainingInfo()

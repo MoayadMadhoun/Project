@@ -7,424 +7,231 @@
     ViewData["PortalTitle"] = "بوابة الطالب";
     ViewData["PortalSubtitle"] = "إدارة التدريب الأكاديمي";
     ViewData["SearchPlaceholder"] = "بحث عن شيء...";
-    ViewData["ActivePage"] = "CurrentTrainig";
+    ViewData["ActivePage"] = "CurrentTraining";
 }
-<link href="~/css/CurrentTraining.css" rel="stylesheet" />
-<!-- ═══════ CONTENT COLUMN ═══════ -->
-<div class="content-col">
+<link rel="stylesheet" href="~/Styles/opportunities.css">
 
+<div dir="rtl">
 
+    @if (Model.CurrentPlacement == null)
+    {
+        @* ===== No Training ===== *@
+        <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] p-12 text-center">
+            <span class="material-symbols-outlined text-slate-300 text-5xl mb-4 block">work_off</span>
+            <p class="text-slate-500 text-sm">لا يوجد تدريب حالي لك.</p>
+        </div>
+    }
+    else
+    {
+        @* ===== Hero Card ===== *@
+        <section class="mb-lg md:mb-xl relative rounded-xl md:rounded-2xl overflow-hidden bg-primary-container p-6 md:p-xl text-on-primary">
+            <div class="relative z-10 flex flex-col md:flex-row justify-between gap-6">
 
-    <!-- MAIN -->
-    <div class="main-wrap">
+                <div class="text-right">
+                    <h1 class="font-h1 text-2xl md:text-h1 mb-2">
+                        @(Model.CurrentPlacement?.TrainingOpportunity?.Title ?? "")
+                    </h1>
+                    <p class="font-body-lg text-sm md:text-body-lg opacity-80 mb-2">
+                        @(Model.CurrentPlacement?.TrainingInstitution?.Name ?? "")
+                    </p>
+                    @if (!string.IsNullOrEmpty(Model.CurrentPlacement?.TrainingOpportunity?.Location))
+                    {
+                        <div class="flex items-center gap-1 opacity-75 text-sm justify-end">
+                            <span>@Model.CurrentPlacement.TrainingOpportunity.Location</span>
+                            <i class="bi bi-geo-alt-fill"></i>
+                        </div>
+                    }
+                </div>
 
-        @if (Model.CurrentPlacement == null)
-        {
-            <div class="alert alert-info">
-                لا يوجد تدريب حالي لك.
-            </div>
-        }
-        else
-        {
-            // بقية الصفحة
-       
-
-        <!-- ── Hero Card ── -->
-        <div class="hero-card">
-            <div class="hero-top">
-                <!-- Right: title + company + location -->
-                <div class="hero-right">
-                    <h1 class="hero-title">@(Model.CurrentPlacement?.TrainingOpportunity?.Title??"")</h1>
-                    <p class="hero-company">@(Model.CurrentPlacement?.TrainingInstitution?.Name ?? "")</p>
-                    <div class="hero-loc">
-                        <span>@(Model.CurrentPlacement?.TrainingOpportunity?.Location??"")</span>
-                        <i class="bi bi-geo-alt-fill"></i>
+                <div class="flex flex-col items-center gap-3 flex-shrink-0">
+                    <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
+                        <i class="bi bi-briefcase-fill text-2xl text-white"></i>
                     </div>
+                    @{
+                        var (statusBg, statusLabel) = Model.CurrentPlacement?.Status switch
+                        {
+                            Models.TrainingPlacement.PlacementStatus.InProgress => ("bg-green-100 text-green-700", "نشط"),
+                            Models.TrainingPlacement.PlacementStatus.Assigned => ("bg-blue-100 text-blue-700", "تم التعيين"),
+                            Models.TrainingPlacement.PlacementStatus.Completed => ("bg-slate-100 text-slate-700", "مكتمل"),
+                            _ => ("bg-orange-100 text-orange-700", "غير محدد")
+                        };
+                    }
+                    <span class="px-3 py-1 rounded-full text-[11px] font-bold @statusBg">
+                        @if (Model.CurrentPlacement?.Status == Models.TrainingPlacement.PlacementStatus.InProgress)
+                        {
+                            <span class="inline-block w-2 h-2 bg-green-500 rounded-full ml-1 animate-pulse"></span>
+                        }
+                        @statusLabel
+                    </span>
                 </div>
-                <!-- Left: icon + badge -->
-                <div class="hero-left">
-                    <div class="bcase-circle"><i class="bi bi-briefcase-fill"></i></div>
-                        @if (Model.CurrentPlacement?.Status ==
-                                   Models.TrainingPlacement.PlacementStatus.InProgress)
-                        {
-                            <span class="status-badge">
-                                <span class="status-dot"></span>
-                                نشط
-                            </span>
-                        }
-                        else if (Model.CurrentPlacement?.Status ==
-                                 Models.TrainingPlacement.PlacementStatus.Assigned)
-                        {
-                            <span class="status-badge">
-                                تم التعيين
-                            </span>
-                        }
-                        else if (Model.CurrentPlacement?.Status ==
-                                 Models.TrainingPlacement.PlacementStatus.Completed)
-                        {
-                            <span class="status-badge">
-                                مكتمل
-                            </span>
-                        }
-                </div>
+
             </div>
 
-            <hr class="hero-divider" />
+            @* Meta Info *@
+            <div class="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 pt-6 border-t border-white/20">
+                <div class="text-right">
+                    <div class="text-xs opacity-60 mb-1">المشرف في المؤسسة</div>
+                    <div class="text-sm font-bold">@(Model.CurrentPlacement?.InstitutionSupervisor?.FullName ?? "—")</div>
+                </div>
+                <div class="text-right">
+                    <div class="text-xs opacity-60 mb-1">مدة التدريب</div>
+                    <div class="text-sm font-bold">@Model.TrainingDuration</div>
+                </div>
+                <div class="text-right">
+                    <div class="text-xs opacity-60 mb-1">تاريخ البداية</div>
+                    <div class="text-sm font-bold">@(Model.CurrentPlacement?.TrainingTerm.StartDate.ToString("dd-MM-yyyy") ?? "—")</div>
+                </div>
+                <div class="text-right">
+                    <div class="text-xs opacity-60 mb-1">تاريخ النهاية</div>
+                    <div class="text-sm font-bold">@(Model.CurrentPlacement?.TrainingTerm.EndDate.ToString("dd-MM-yyyy") ?? "—")</div>
+                </div>
+            </div>
 
-            <!-- Meta info -->
-            <div class="hero-meta">
-                <div class="meta-item">
-                    <div class="text-end">
-                        <span class="meta-label">المشرف في المؤسسة</span>
-                        <span class="meta-val">@(Model.CurrentPlacement?.InstitutionSupervisor?.FullName??"")</span>
-                    </div>
-                    <i class="bi bi-person-fill meta-icon"></i>
+            <div class="absolute -bottom-10 -left-10 w-48 h-48 md:w-64 md:h-64 bg-white/10 rounded-full blur-3xl"></div>
+            <div class="absolute -top-20 -left-20 w-64 h-64 md:w-80 md:h-80 bg-secondary-fixed-dim/20 rounded-full blur-3xl"></div>
+        </section>
+
+        @* ===== Quick Actions ===== *@
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-lg">
+
+            <a asp-page="/Student/Reports/Create"
+               asp-route-Id="@Model.CurrentPlacement?.PlacementID"
+               class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] p-4 flex flex-col items-center gap-2 text-center hover:shadow-md hover:-translate-y-1 transition-all no-underline">
+                <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                    <i class="bi bi-upload text-primary"></i>
                 </div>
-                <div class="meta-sep"></div>
-                <div class="meta-item">
-                    <div class="text-end">
-                        <span class="meta-label">مدة التدريب</span>
-                        <span class="meta-val">@Model.TrainingDuration</span>
-                    </div>
-                    <i class="bi bi-clock-fill meta-icon"></i>
+                <span class="text-sm font-bold text-slate-900">رفع تقرير</span>
+            </a>
+
+            <a asp-page="/Student/Reports/Index"
+               class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] p-4 flex flex-col items-center gap-2 text-center hover:shadow-md hover:-translate-y-1 transition-all no-underline">
+                <div class="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center">
+                    <i class="bi bi-file-earmark-text text-green-600"></i>
                 </div>
-                <div class="meta-sep"></div>
-                <div class="meta-item">
-                    <div class="text-end">
-                        <span class="meta-label">تاريخ البداية</span>
-                        <span class="meta-val">@(Model.CurrentPlacement?.TrainingTerm.StartDate.ToString("dd-MM-yyyy") ?? "")</span>
-                    </div>
-                    <i class="bi bi-calendar3 meta-icon"></i>
+                <span class="text-sm font-bold text-slate-900">التقارير</span>
+            </a>
+
+            <a asp-page="/Student/Attendance"
+               class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] p-4 flex flex-col items-center gap-2 text-center hover:shadow-md hover:-translate-y-1 transition-all no-underline">
+                <div class="w-10 h-10 bg-amber-50 rounded-lg flex items-center justify-center">
+                    <i class="bi bi-calendar-check text-amber-600"></i>
                 </div>
-                <div class="meta-sep"></div>
-                <div class="meta-item">
-                    <div class="text-end">
-                        <span class="meta-label">تاريخ النهاية</span>
-                        <span class="meta-val">@(Model.CurrentPlacement?.TrainingTerm.EndDate.ToString("dd-MM-yyyy") ?? "")</span>
-                    </div>
-                    <i class="bi bi-calendar-check-fill meta-icon"></i>
+                <span class="text-sm font-bold text-slate-900">الحضور</span>
+            </a>
+
+            <a asp-page="/Student/Evaluations"
+               class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] p-4 flex flex-col items-center gap-2 text-center hover:shadow-md hover:-translate-y-1 transition-all no-underline">
+                <div class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
+                    <i class="bi bi-star-fill text-blue-600"></i>
                 </div>
+                <span class="text-sm font-bold text-slate-900">التقييمات</span>
+            </a>
+
+        </div>
+
+        @* ===== Attendance Summary ===== *@
+        <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] overflow-hidden mb-lg">
+            <div class="p-4 md:p-lg border-b border-slate-100">
+                <h3 class="font-h3 text-lg md:text-h3 text-slate-900">ملخص الحضور</h3>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-px bg-slate-100">
+
+                <div class="bg-surface-container-lowest p-6 text-center">
+                    <div class="text-2xl font-bold text-green-600 mb-1">@Model.PresentCount</div>
+                    <div class="text-xs text-slate-500 font-label-caps">حضور</div>
+                </div>
+
+                <div class="bg-surface-container-lowest p-6 text-center">
+                    <div class="text-2xl font-bold text-red-600 mb-1">@Model.AbsentCount</div>
+                    <div class="text-xs text-slate-500 font-label-caps">غياب</div>
+                </div>
+
+                <div class="bg-surface-container-lowest p-6 text-center">
+                    <div class="text-2xl font-bold text-amber-600 mb-1">@Model.LateCount</div>
+                    <div class="text-xs text-slate-500 font-label-caps">تأخير</div>
+                </div>
+
+                <div class="bg-surface-container-lowest p-6 text-center">
+                    <div class="text-2xl font-bold text-blue-600 mb-1">@Model.ExcusedCount</div>
+                    <div class="text-xs text-slate-500 font-label-caps">بعذر</div>
+                </div>
+
             </div>
         </div>
 
-            <div class="row g-3 mb-4">
-
-                <div class="col-md-3">
-                    <a asp-page="/Student/Reports/Create"
-                       asp-route-placementId="@Model.CurrentPlacement?.PlacementID"
-                       class="btn btn-primary w-100 py-3">
-                        <i class="bi bi-upload me-2"></i>
-                        رفع تقرير
-                    </a>
-                </div>
-
-                <div class="col-md-3">
-                    <a asp-page="/Student/Reports/Index"
-                       class="btn btn-success w-100 py-3">
-                        <i class="bi bi-file-earmark-text me-2"></i>
-                        التقارير
-                    </a>
-                </div>
-
-                <div class="col-md-3">
-                    <a asp-page="/Student/Attendance"
-                       class="btn btn-warning w-100 py-3">
-                        <i class="bi bi-calendar-check me-2"></i>
-                        الحضور
-                    </a>
-                </div>
-
-                <div class="col-md-3">
-                    <a asp-page="/Student/Evaluations"
-                       class="btn btn-info w-100 py-3">
-                        <i class="bi bi-star-fill me-2"></i>
-                        التقييمات
-                    </a>
-                </div>
-
+        @* ===== Recent Reports ===== *@
+        <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] overflow-hidden mb-lg">
+            <div class="p-4 md:p-lg border-b border-slate-100">
+                <h3 class="font-h3 text-lg md:text-h3 text-slate-900">آخر التقارير المرفوعة</h3>
             </div>
-
-            <div class="card shadow-sm border-0 mb-4">
-
-                <div class="card-header bg-white">
-                    <h5 class="mb-0">
-                        آخر التقارير المرفوعة
-                    </h5>
-                </div>
-
-                <div class="card-body">
-
-                    <table class="table align-middle">
-
-                        <thead>
-
-                            <tr>
-                                <th>العنوان</th>
-                                <th>النوع</th>
-                                <th>التاريخ</th>
-                                <th>الحالة</th>
-                            </tr>
-
-                        </thead>
-
-                        <tbody>
-
-                            @foreach (var report in Model.RecentReports)
-                            {
-                                <tr>
-
-                                    <td>@report.Title</td>
-
-                                    <td>@report.Type</td>
-
-                                    <td>
-                                        @report.SubmittedAt.ToString("dd/MM/yyyy")
-                                    </td>
-
-                                    <td>
-
-                                        <span class="badge bg-success">
-                                            @report.Status
-                                        </span>
-
-                                    </td>
-
-                                </tr>
-                            }
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-            </div>
-
-            <div class="card shadow-sm border-0 mb-4">
-
-                <div class="card-header bg-white">
-
-                    <h5 class="mb-0">
-                        ملخص الحضور
-                    </h5>
-
-                </div>
-
-                <div class="card-body">
-
-                    <div class="row text-center">
-
-                        <div class="col-md-3">
-                            <h2 class="text-success">
-                                @Model.PresentCount
-                            </h2>
-                            <div>حضور</div>
-                        </div>
-
-                        <div class="col-md-3">
-                            <h2 class="text-danger">
-                                @Model.AbsentCount
-                            </h2>
-                            <div>غياب</div>
-                        </div>
-
-                        <div class="col-md-3">
-                            <h2 class="text-warning">
-                                @Model.LateCount
-                            </h2>
-                            <div>تأخير</div>
-                        </div>
-
-                        <div class="col-md-3">
-                            <h2 class="text-info">
-                                @Model.ExcusedCount
-                            </h2>
-                            <div>بعذر</div>
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="card shadow-sm border-0">
-
-                <div class="card-header bg-white">
-
-                    <h5 class="mb-0">
-                        التقييمات
-                    </h5>
-
-                </div>
-
-                <div class="card-body">
-
-                    <table class="table">
-
-                        <thead>
-
-                            <tr>
-
-                                <th>النوع</th>
-                                <th>الدرجة</th>
-                                <th>التاريخ</th>
-                                <th>الحالة</th>
-
-                            </tr>
-
-                        </thead>
-
-                        <tbody>
-
-                            @foreach (var evaluation in Model.Evaluations)
-                            {
-                                <tr>
-
-                                    <td>@evaluation.Type</td>
-
-                                    <td>
-                                        @evaluation.Score / @evaluation.MaxScore
-                                    </td>
-
-                                    <td>
-                                        @evaluation.EvaluationDate.ToString("dd/MM/yyyy")
-                                    </td>
-
-                                    <td>
-                                        @evaluation.Status
-                                    </td>
-
-                                </tr>
-                            }
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-            </div>
-
-
-        
-        }
-
-
-        <!-- /hero -->
-        @*
-        <!-- ── Tasks Card ── -->
-        <div class="tasks-card">
-            <div class="tasks-head">
-                <div class="tasks-head-title">
-                    <span>المهام المطلوبة</span>
-                    <i class="bi bi-clipboard2-check"></i>
-                </div>
-                <p class="tasks-sub">قائمة بالمهام المطلوبة منك خلال فترة التدريب</p>
-            </div>
-
-            <div class="table-responsive">
-                <table class="tasks-tbl">
-                    <thead>
+            <div class="overflow-x-auto">
+                <table class="w-full text-right border-collapse min-w-[600px]">
+                    <thead class="bg-surface-container-low">
                         <tr>
-                            <th>#</th>
-                            <th>المهمة</th>
-                            <th>تفاصيل المهمة</th>
-                            <th>تاريخ الاستحقاق</th>
-                            <th>حالة التسليم</th>
-                            <th>تقييم المدرب (%)</th>
-                            <th>ملف التسليم</th>
-                            <th>الملاحظات</th>
+                            <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">العنوان</th>
+                            <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">النوع</th>
+                            <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">التاريخ</th>
+                            <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الحالة</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td class="row-num">1</td>
-                            <td class="task-name">التعرف على بيئة العمل وإعداد الأدوات</td>
-                            <td><a href="#" class="file-lnk"><i class="bi bi-file-earmark-text"></i> عرض الملف</a></td>
-                            <td>15-09-2025</td>
-                            <td><span class="badge-done">مكتملة</span></td>
-                            <td><span class="rating">90%</span></td>
-                            <td><a href="#" class="view-btn"><i class="bi bi-eye"></i> عرض الملف</a></td>
-                            <td>عمل ممتاز</td>
-                        </tr>
-                        <tr>
-                            <td class="row-num">2</td>
-                            <td class="task-name">تصميم قاعدة بيانات للمشروع</td>
-                            <td><a href="#" class="file-lnk"><i class="bi bi-file-earmark-text"></i> عرض الملف</a></td>
-                            <td>29-09-2025</td>
-                            <td><span class="badge-done">مكتملة</span></td>
-                            <td><span class="rating">85%</span></td>
-                            <td><a href="#" class="view-btn"><i class="bi bi-eye"></i> عرض الملف</a></td>
-                            <td>جيد جداً</td>
-                        </tr>
-                        <tr>
-                            <td class="row-num">3</td>
-                            <td class="task-name">تطوير واجهة المستخدم (Frontend)</td>
-                            <td><a href="#" class="file-lnk"><i class="bi bi-file-earmark-text"></i> عرض الملف</a></td>
-                            <td>13-10-2025</td>
-                            <td><span class="badge-done">مكتملة</span></td>
-                            <td><span class="rating">80%</span></td>
-                            <td><a href="#" class="view-btn"><i class="bi bi-eye"></i> عرض الملف</a></td>
-                            <td>جيد</td>
-                        </tr>
-                        <tr>
-                            <td class="row-num">4</td>
-                            <td class="task-name">تطوير واجهة برمجة التطبيقات (API)</td>
-                            <td><a href="#" class="file-lnk"><i class="bi bi-file-earmark-text"></i> عرض الملف</a></td>
-                            <td>27-10-2025</td>
-                            <td><span class="badge-pend">لم يتم التسليم</span></td>
-                            <td>-</td>
-                            <td><button class="upload-btn"><i class="bi bi-upload"></i> رفع ملف</button></td>
-                            <td>-</td>
-                        </tr>
-                        <tr>
-                            <td class="row-num">5</td>
-                            <td class="task-name">ربط الواجهة مع API</td>
-                            <td><a href="#" class="file-lnk"><i class="bi bi-file-earmark-text"></i> عرض الملف</a></td>
-                            <td>10-11-2025</td>
-                            <td><span class="badge-pend">لم يتم التسليم</span></td>
-                            <td>-</td>
-                            <td><button class="upload-btn"><i class="bi bi-upload"></i> رفع ملف</button></td>
-                            <td>-</td>
-                        </tr>
-                        <tr>
-                            <td class="row-num">6</td>
-                            <td class="task-name">اختبار المشروع وإصلاح الأخطاء</td>
-                            <td><a href="#" class="file-lnk"><i class="bi bi-file-earmark-text"></i> عرض الملف</a></td>
-                            <td>24-11-2025</td>
-                            <td><span class="badge-pend">لم يتم التسليم</span></td>
-                            <td>-</td>
-                            <td><button class="upload-btn"><i class="bi bi-upload"></i> رفع ملف</button></td>
-                            <td>-</td>
-                        </tr>
-                        <tr>
-                            <td class="row-num">7</td>
-                            <td class="task-name">التوثيق ورفع المشروع النهائي</td>
-                            <td><a href="#" class="file-lnk"><i class="bi bi-file-earmark-text"></i> عرض الملف</a></td>
-                            <td>01-12-2025</td>
-                            <td><span class="badge-pend">لم يتم التسليم</span></td>
-                            <td>-</td>
-                            <td><button class="upload-btn"><i class="bi bi-upload"></i> رفع ملف</button></td>
-                            <td>-</td>
-                        </tr>
+                    <tbody class="divide-y divide-slate-50">
+                        @foreach (var report in Model.RecentReports)
+                        {
+                            <tr class="hover:bg-slate-50 transition-colors">
+                                <td class="px-4 py-3 text-sm text-slate-900 font-bold">@report.Title</td>
+                                <td class="px-4 py-3 text-sm text-slate-600">@report.Type</td>
+                                <td class="px-4 py-3 text-sm text-slate-600 whitespace-nowrap">@report.SubmittedAt.ToString("dd/MM/yyyy")</td>
+                                <td class="px-4 md:px-lg py-4 md:py-md">
+                                    <span class="px-3 py-1 rounded-full text-[11px] font-bold bg-green-100 text-green-700">
+                                        @report.Status
+                                    </span>
+                                </td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>
+        </div>
 
-            <div class="info-banner">
-                <i class="bi bi-info-circle-fill"></i>
-                <span>يمكنك رفع ملف التسليم بصيغة ZIP، أم أو أي صيغة أخرى بحد أقصى 20MB.</span>
+        @* ===== Evaluations ===== *@
+        <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] overflow-hidden">
+            <div class="p-4 md:p-lg border-b border-slate-100">
+                <h3 class="font-h3 text-lg md:text-h3 text-slate-900">التقييمات</h3>
             </div>
-        </div><!-- /tasks -->
+            <div class="overflow-x-auto">
+                <table class="w-full text-right border-collapse min-w-[600px]">
+                    <thead class="bg-surface-container-low">
+                        <tr>
+                            <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">النوع</th>
+                            <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الدرجة</th>
+                            <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">التاريخ</th>
+                            <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الحالة</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-50">
+                        @foreach (var evaluation in Model.Evaluations)
+                        {
+                            <tr class="hover:bg-slate-50 transition-colors">
+                                <td class="px-4 py-3 text-sm text-slate-900 font-bold">@evaluation.Type</td>
+                                <td class="px-4 py-3 text-sm text-slate-900 font-bold whitespace-nowrap">
+                                    @evaluation.Score
+                                    <span class="text-slate-400 font-normal">/ @evaluation.MaxScore</span>
+                                    <span class="text-xs text-slate-400 font-normal mr-1">
+                                        (@(((evaluation.Score * 100) / evaluation.MaxScore).ToString("0.0"))%)
+                                    </span>
+                                </td>
+                                <td class="px-4 py-3 text-sm text-slate-600 whitespace-nowrap">@evaluation.EvaluationDate.ToString("dd/MM/yyyy")</td>
+                                <td class="px-4 md:px-lg py-4 md:py-md">
+                                    <span class="px-3 py-1 rounded-full text-[11px] font-bold bg-blue-100 text-blue-700">
+                                        @evaluation.Status
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
 
-    </div><!-- /main-wrap -->
-
-    <footer class="page-footer">
-        جميع الحقوق محفوظة © 2025 بوابة التدريب الأكاديمي
-    </footer> 
-    *@
- </div>
-</div><!-- /content-col -->
-
-
+</div>

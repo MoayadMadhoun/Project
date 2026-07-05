@@ -44,10 +44,11 @@ namespace Project.Services
 
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-               
+                Console.WriteLine(ex.ToString());
+                throw;
             }
         }
     }

@@ -311,8 +311,7 @@
     <p class="section-label" style="animation-delay:.3s">معلومات الحساب</p>
 
     <div class="d-flex flex-column gap-3 mb-4">
-
-        <a asp-page="/Settings/AccountInfo"
+           <a asp-page="./Manage/Index"
            class="setting-card card-animate"
            style="animation-delay:.35s">
             <div class="card-icon"><i class="bi bi-person-circle"></i></div>
@@ -323,7 +322,8 @@
             <div class="card-arrow"><i class="bi bi-chevron-left"></i></div>
         </a>
 
-        <a asp-page="/Settings/ChangeEmail"
+        <a
+           asp-page="./Manage/Email"
            class="setting-card card-animate"
            style="animation-delay:.45s">
             <div class="card-icon"><i class="bi bi-envelope-fill"></i></div>
@@ -334,7 +334,7 @@
             <div class="card-arrow"><i class="bi bi-chevron-left"></i></div>
         </a>
 
-        <a asp-page="/Settings/ChangePassword"
+        <a asp-page="./Manage/ChangePassword"
            class="setting-card card-animate"
            style="animation-delay:.55s">
             <div class="card-icon"><i class="bi bi-lock-fill"></i></div>
@@ -354,7 +354,7 @@
 
     <div class="d-flex flex-column gap-3 mb-4">
 
-        <a asp-page="/Settings/ProfilePicture"
+            <a asp-page="/Account/Profile"
            class="setting-card card-animate"
            style="animation-delay:.65s">
             <div class="card-icon"><i class="bi bi-camera-fill"></i></div>

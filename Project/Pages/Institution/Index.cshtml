@@ -28,13 +28,31 @@
 @* ===== Hero Section ===== *@
 <section class="mb-lg md:mb-xl relative rounded-xl md:rounded-xxl overflow-hidden bg-primary-container p-6 md:p-xl text-on-primary">
     <div class="relative z-10 max-w-2xl">
-        <h1 class="font-h1 text-2xl md:text-h1 mb-md">مرحباً بك،  @Model.CurrentInstitution.Name</h1>
+        @if (User.IsInRole("InstitutionTrainingOfficer"))
+        {
+            <h1 class="font-h1 text-2xl md:text-h1 mb-md">
+                مرحباً بك، شركة
+                @Model.CurrentInstitution.Name
+            </h1>
+
+        }
+        else if (User.IsInRole("InstitutionSupervisor"))
+        {
+            <h1 class="font-h1 text-2xl md:text-h1 mb-md">
+                مرحباً بك،
+                @Model.CUser.FullName - مشرف تدريب
+                <br />
+                @Model.CurrentInstitution.Name
+
+            </h1>
+        }
+
         <p class="font-body-lg text-sm md:text-body-lg opacity-90 mb-lg md:mb-xl">
             أهلاً، يمكنك إدارة طلبات التدريب الواردة، متابعة المتدربين الحاليين، وتواصل مع الجامعة بكل سهولة.
         </p>
         <div class="flex flex-col sm:flex-row gap-md">
-            <button class="w-full sm:w-auto bg-white text-primary font-button px-xl py-3 rounded-xl shadow-lg hover:bg-surface-container transition-colors">مراجعة طلبات</button>
-            <button class="w-full sm:w-auto bg-primary/20 backdrop-blur-md border border-white/30 text-white font-button px-xl py-3 rounded-xl hover:bg-primary/30 transition-colors">إدارة الطلاب</button>
+            <a asp-page="/Institution/TrainingRequests" class="w-full sm:w-auto bg-white text-primary font-button px-xl py-3 rounded-xl shadow-lg hover:bg-surface-container transition-colors">مراجعة طلبات</a>
+            <a asp-page="/Institution/CurrentTraining" class="w-full sm:w-auto bg-primary/20 backdrop-blur-md border border-white/30 text-white font-button px-xl py-3 rounded-xl hover:bg-primary/30 transition-colors">إدارة الطلاب</a>
         </div>
     </div>
     <div class="absolute -bottom-10 -left-10 w-48 h-48 md:w-64 md:h-64 bg-white/10 rounded-full blur-3xl"></div>

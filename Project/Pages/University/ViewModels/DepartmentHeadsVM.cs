@@ -5,7 +5,7 @@ namespace Project.ViewModel
     public class DepartmentHeadsVM
     {
 
-        public string Id { get; set; }
+        public int Id { get; set; }
         [Required(ErrorMessage = "اسم رئيس القسم مطلوب")]
         [StringLength(200,
                 MinimumLength = 2,

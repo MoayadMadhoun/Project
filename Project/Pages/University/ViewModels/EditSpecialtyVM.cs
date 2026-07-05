@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Project.Pages.University.ViewModels
 {
@@ -8,12 +9,15 @@ namespace Project.Pages.University.ViewModels
 
         [Required]
         [StringLength(200)]
+        [DisplayName("الاسم")]
         public string Name { get; set; }
 
         [StringLength(500)]
+        [DisplayName("الوصف")]
         public string? Description { get; set; }
 
         [StringLength(100)]
+        [DisplayName("التصنيف")]
         public string? Category { get; set; }
 
         [Required]

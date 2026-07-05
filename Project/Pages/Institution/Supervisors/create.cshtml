@@ -1,11 +1,11 @@
 ﻿@page
 @model Project.Pages.Institution.Supervisors.createModel
 @{
-    // ViewData["Title"] = "إضافة مشرف مؤسسة";
-    // ViewData["UserType"] = "Institution";
-    // ViewData["PortalTitle"] = "بوابة المؤسسة";
-    // ViewData["PortalSubtitle"] = "إدارة التدريب الميداني";
-    // ViewData["SearchPlaceholder"] = "بحث...";
+    ViewData["Title"] = "إضافة مشرف مؤسسة";
+    ViewData["UserType"] = "Institution";
+    ViewData["PortalTitle"] = "بوابة المؤسسة";
+    ViewData["PortalSubtitle"] = "إدارة التدريب الميداني";
+    ViewData["SearchPlaceholder"] = "بحث...";
 }
 
 <form method="post">
@@ -351,7 +351,7 @@
 
         </button>
 
-        <a href="#"
+        <a asp-page="/Institution/Supervisors"
            class="btn btn-light px-5">
 
             <i class="bi bi-x-circle me-1"></i>

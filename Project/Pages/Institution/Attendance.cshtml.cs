@@ -27,10 +27,16 @@ namespace Project.Pages.Institution
             _institutionRepository = institutionRepository;
             _userManager = userManager;
         }
+
+        [BindProperty(SupportsGet = true)]
+        public int? StudentId { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public int? PlacementId { get; set; }
+
         [BindProperty(SupportsGet = true)]
         public int SelectedAttendanceStatusId { get; set; }
-        [BindProperty(SupportsGet = true)]
-        public DateTime SelectedDate { get; set;  }
+       
         [BindProperty(SupportsGet = true)]
         public string SelectedTrainig {  get; set; }
         public SelectList Trainings { get; set; }
@@ -52,6 +58,7 @@ namespace Project.Pages.Institution
         };
         public async Task<IActionResult> OnGetAsync()
         {
+
             try
             {
                 var user = await _userManager.GetUserAsync(User);
@@ -74,7 +81,27 @@ namespace Project.Pages.Institution
                 {
                     return RedirectToPage("/Index");
                 }
+               
                 var query = _institutionRepository.GetAttendanceForInstitution(institutionId);
+
+                if (StudentId.HasValue)
+                {
+                    query = query.Where(a =>
+                        a.TrainingPlacement.StudentID == StudentId.Value);
+                }
+
+                if (PlacementId.HasValue)
+                {
+                    query = query.Where(a =>
+                        a.PlacementID == PlacementId.Value);
+                }
+                if (StudentId.HasValue && string.IsNullOrEmpty(SearchTerm))
+                {
+                    SearchTerm = await _dbContext.TrainingPlacements
+                        .Where(p => p.StudentID == StudentId.Value)
+                        .Select(p => p.Student.Name)
+                        .FirstOrDefaultAsync();
+                }
                 if (!string.IsNullOrEmpty(SearchTerm))
                 {
                     query = query.Where(tp => tp.TrainingPlacement.Student.Name.Contains(SearchTerm));
@@ -102,10 +129,7 @@ namespace Project.Pages.Institution
                 {
                    query = query.Where(ar => ar.TrainingPlacement.TrainingOpportunity.Title == SelectedTrainig);
                 }
-                if (SelectedDate != default)
-                {
-                    query = query.Where(ar => ar.AttendanceDate.Date == SelectedDate.Date);
-                }
+               
 
                 //pagination
                 AttendanceRecords = await PaginatedList<AttendanceRecord>.CreateAsync(query, PageSize, PageIndex);
@@ -115,7 +139,7 @@ namespace Project.Pages.Institution
             }
             catch (Exception ex)
             {
-                return RedirectToPage("/Index");
+                throw;
             }
 
         }

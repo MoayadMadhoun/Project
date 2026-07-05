@@ -53,7 +53,7 @@
        
     </div>  <!-- ← closing tag was here before, now moved to end -->
     <!-- Filter Bar -->
-   <form method="get">
+    <form method="get">
         <div class="filter-bar">
 
     
@@ -63,11 +63,11 @@
             </div>
 
             <select asp-for="SelectedReportStatus" asp-items="Model.ReportStatusList" class="filter-select" style="max-width:200px;">
-                <option value="-1"></option>
+                <option value=""></option>
             </select>
 
             <select asp-for="SelectedReportType" class="filter-select" style="max-width:200px;">
-                <option value="0">جميع أنواع التقارير</option>
+                <option value="">جميع أنواع التقارير</option>
                 <option value="1">تقرير اسبوعي</option>
                 <option value="2">تقرير نهائي</option>
             </select>
@@ -77,7 +77,7 @@
             </button>
         </div>
 
-   </form>
+    </form>
     <!-- Table Card -->
     <div class="table-card">
         <div class="table-card-header">
@@ -97,10 +97,12 @@
                         <th>#</th>
                         <th>
                             <a class="text-decoration-none"
-                                   asp-route-PageSize="@Model.PageSize"
-                                   asp-route-SearchTerm="@Model.SearchTerm"
-                                   asp-route-PageIndex="@(Model.PageIndex)"
-                                   asp-route-SortOrder="@(Model.SortOrder == "Name" ? "Name_desc" : "Name")">
+                               asp-route-PageSize="@Model.PageSize"
+                               asp-route-SearchTerm="@Model.SearchTerm"
+                               asp-route-studentId="@Model.StudentId"
+                               asp-route-placementId="@Model.PlacementId"
+                               asp-route-PageIndex="@(Model.PageIndex)"
+                               asp-route-SortOrder="@(Model.SortOrder == "Name" ? "Name_desc" : "Name")">
                                 الطالب @SortingIcon("Name", Model.SortOrder)
                             </a>
                         </th>
@@ -113,33 +115,164 @@
                     </tr>
                 </thead>
                 <tbody>
-                    
-                        @if (!Model.Reports.Any())
+
+                    @if (!Model.Reports.Any())
+                    {
+                        <tr>
+                            <td colspan="8" class="text-center py-5">
+                                لا توجد تقارير لعرضها
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var report in Model.Reports)
                         {
                             <tr>
-                                <td colspan="5" class="px-4 py-6 text-center text-slate-500">
-                                    لا توجد تقارير لعرضها.
-                                </td>
-                            </tr>
-                        }
-                        else
-                        {
-                            foreach(var report in Model.Reports)
-                            {
-                            <tr>
+
                                 <td>@RIndex</td>
-                                <td class="td-name">@(report.Student.Name??"_")</td>
-                                <td>@report.Type</td>
-                                <td class="td-link"> @(report.Placement.TrainingOpportunity.Title??"_")</td>
-                                <td>@report.SubmittedAt</td>
-                                <td><span class="badge-waiting">@report.Status</span></td>
-                                <td><span style="color:#ccc;">@report.FilePath</span></td>
-                                <td><span class="three-dots">⋮</span></td>
+
+                                <td class="td-name">
+                                    @(report.Student?.Name ?? "-")
+                                </td>
+
+                                <td>
+
+                                    @if (report.Type == Models.StudentReport.ReportType.Weekly)
+                                    {
+                                        <span class="badge bg-info">
+                                            أسبوعي
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-primary">
+                                            نهائي
+                                        </span>
+                                    }
+
+                                </td>
+
+                                <td class="td-link">
+                                    @(report.Placement?.TrainingOpportunity?.Title ?? "-")
+                                </td>
+
+                                <td>
+                                    @report.SubmittedAt.ToString("yyyy/MM/dd")
+                                </td>
+
+                                <td>
+
+                                    @switch (report.Status)
+                                    {
+                                        case Models.StudentReport.StudentReportStatus.Submitted:
+
+                                            <span class="badge bg-warning text-dark">
+                                                قيد المراجعة
+                                            </span>
+
+                                            break;
+
+                                        case Models.StudentReport.StudentReportStatus.Approved:
+
+                                            <span class="badge bg-success">
+                                                مقبول
+                                            </span>
+
+                                            break;
+
+                                        case Models.StudentReport.StudentReportStatus.Rejected:
+
+                                            <span class="badge bg-danger">
+                                                مرفوض
+                                            </span>
+
+                                            break;
+
+                                        case Models.StudentReport.StudentReportStatus.Reviewed:
+
+                                            <span class="badge bg-primary">
+                                                تمت المراجعة
+                                            </span>
+
+                                            break;
+
+                                        default:
+
+                                            <span class="badge bg-secondary">
+                                                غير مسلّم
+                                            </span>
+
+                                            break;
+                                    }
+
+                                </td>
+
+                                <!-- الملف -->
+
+                                <td>
+
+                                    @if (!string.IsNullOrEmpty(report.FilePath))
+                                    {
+                                        <a asp-page-handler="OpenFile"
+                                           asp-route-reportId="@report.ReportID"
+                                           class="action-btn view-btn"
+                                           title="عرض الملف">
+
+                                            <i class="bi bi-file-earmark-pdf-fill"></i>
+
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <span>-</span>
+                                    }
+
+                                </td>
+
+                                <!-- العمليات -->
+
+                                <td>
+
+                                    <div class="d-flex justify-content-center gap-2">
+
+                                        <a asp-page="/Institution/Reports/Details"
+                                           asp-route-reportId="@report.ReportID"
+                                           class="action-btn view-btn"
+                                           title="التفاصيل">
+
+                                            <i class="bi bi-eye-fill"></i>
+
+                                        </a>
+
+                                        <a asp-page="/Institution/Reports/Edit"
+                                           asp-route-reportId="@report.ReportID"
+                                           class="action-btn review-btn"
+                                           title="تعديل">
+
+                                            <i class="bi bi-pencil-square"></i>
+
+                                        </a>
+
+                                        <a asp-page="/Institution/Reports/Delete"
+                                           asp-route-reportId="@report.ReportID"
+                                           class="action-btn delete-btn"
+                                           title="حذف">
+
+                                            <i class="bi bi-trash-fill"></i>
+
+                                        </a>
+
+                                    </div>
+
+                                </td>
+
                             </tr>
-                            @(RIndex+1)
-                            }
+
+                            RIndex++;
                         }
-                    
+                    }
+
                 </tbody>
             </table>
         </div>
@@ -159,45 +292,40 @@
                 <i class="bi bi-chevron-down" style="font-size:11px;"></i>
             </div>
             <div class="pagination-pages">
-                
-                    @if (Model.Reports.HasPrevPage)
-                    {
-                        <a asp-route-SearchTerm="@Model.SearchTerm"
-                           asp-route-PageSize="@Model.PageSize"
-                           asp-route-PageIndex="@(Model.PageIndex - 1)"
-                       class="page-btn page-arrow"><i class="bi bi-chevron-right"></i></a>
-                    }
-           
-                    @for (int i = 1; i <= Model.Reports.TotalPages; i++)
-                    {
 
-                        <a asp-route-SearchTerm="@Model.SearchTerm"
-                           asp-route-PageSize="@Model.PageSize"
-                           asp-route-PageIndex="@i"
+                @if (Model.Reports.HasPrevPage)
+                {
+                    <a asp-route-SearchTerm="@Model.SearchTerm"
+                       asp-route-studentId="@Model.StudentId"
+                       asp-route-placementId="@Model.PlacementId"
+                       asp-route-PageSize="@Model.PageSize"
+                       asp-route-PageIndex="@(Model.PageIndex - 1)"
+                       class="page-btn page-arrow"><i class="bi bi-chevron-right"></i></a>
+                }
+
+                @for (int i = 1; i <= Model.Reports.TotalPages; i++)
+                {
+
+                    <a asp-route-SearchTerm="@Model.SearchTerm"
+                       asp-route-studentId="@Model.StudentId"
+                       asp-route-placementId="@Model.PlacementId"
+                       asp-route-PageSize="@Model.PageSize"
+                       asp-route-PageIndex="@i"
                        class="page-btn  @(Model.PageIndex == i ? "Active" : " ")  text-white text-sm font-bold">@i</a>
                 }
 
-                    @if (Model.Reports.HasNextPage)
-                    {
-                        <a asp-route-SearchTerm="@Model.SearchTerm"
-                           asp-route-PageSize="@Model.PageSize"
-                           asp-route-PageIndex="@(Model.PageIndex + 1)"
+                @if (Model.Reports.HasNextPage)
+                {
+                    <a asp-route-SearchTerm="@Model.SearchTerm"
+                       asp-route-studentId="@Model.StudentId"
+                       asp-route-placementId="@Model.PlacementId"
+                       asp-route-PageSize="@Model.PageSize"
+                       asp-route-PageIndex="@(Model.PageIndex + 1)"
                        class="page-btn page-arrow"><i class="bi bi-chevron-left"></i></a>
-                    }
-              
+                }
             </div>
         </div>
     </div>
-
-    <!-- Footer -->
-    <footer>
-        <div>جميع الحقوق محفوظة © 2024 • بوابة التدريب الميداني</div>
-        <div style="display:flex; gap:18px;">
-            <a href="#">Technical Support</a>
-            <a href="#">Terms of Service</a>
-            <a href="#">Privacy Policy</a>
-        </div>
-    </footer>
 
 </main>
 

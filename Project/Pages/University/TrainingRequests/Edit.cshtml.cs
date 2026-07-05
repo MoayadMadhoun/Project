@@ -3,52 +3,68 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Project.Data;
 using Project.Models;
 using Project.Pages.University.ViewModels;
 using Project.Repository;
 using Project.Repostory;
-using System.ComponentModel.DataAnnotations;
-using static Project.Models.TrainingOpportunityRequest;
+using Project.Services;
 
 namespace Project.Pages.University.TrainingRequests
 {
-
     [Authorize(Roles = "UniversityTrainingAdmin, DepartmentHead")]
     public class EditModel : PageModel
     {
-
         private readonly ApplicationDbContext _dbContext;
         private readonly UserManager<AspNetUser> _userManager;
-        private readonly UniversityRepository _universityRepo;
         private readonly TrainingInstitutionRepository _institutionRepository;
+        private readonly TrainingRequestService _trainingRequestService;
 
-        public Models.University? CurrentUniversity { get; set; }
-        public EditModel(ApplicationDbContext dbContext, UserManager<AspNetUser> userManager, UniversityRepository universityRepo, TrainingInstitutionRepository institutionRepository)
+        public EditModel(
+            ApplicationDbContext dbContext,
+            UserManager<AspNetUser> userManager,
+            TrainingInstitutionRepository institutionRepository,
+            TrainingRequestService trainingRequestService)
         {
             _dbContext = dbContext;
             _userManager = userManager;
-            _universityRepo = universityRepo;
             _institutionRepository = institutionRepository;
-
+            _trainingRequestService = trainingRequestService;
         }
-        public TrainingOpportunityRequest? OpportunityRequest { get; set; } = new TrainingOpportunityRequest();
+
+        public TrainingOpportunityRequest? OpportunityRequest { get; set; }
         public SelectList TrainingTermsList { get; set; }
         public SelectList InstitutionsList { get; set; }
+        public List<SelectListItem> SpecialtiesList { get; set; } = new();
+
         [BindProperty]
         public EditTrainingRequestVM TrainingRequest { get; set; }
-      
 
         public async Task<IActionResult> OnGet([FromRoute] int RequestId)
         {
-            var query = _dbContext.TrainingTerms.ToList();
-            TrainingTermsList = new SelectList(query, nameof(TrainingTerm.TermID), nameof(TrainingTerm.Name));
-            InstitutionsList = new SelectList(await _institutionRepository.GetAllAsync(), nameof(TrainingInstitution.InstituationID), nameof(TrainingInstitution.Name));
-            OpportunityRequest = _dbContext.TrainingOpportunityRequests.Where(tr => tr.RequestID == RequestId).FirstOrDefault();
+            await ReloadDropdownsAsync();
+
+            OpportunityRequest = _dbContext.TrainingOpportunityRequests
+                .FirstOrDefault(tr => tr.RequestID == RequestId);
+
             if (OpportunityRequest == null)
-            {
                 return NotFound();
-            }
+
+            var selectedSpecialties = _dbContext.RequestSpecialties
+                .Where(rs => rs.RequestID == RequestId)
+                .Select(rs => rs.SpecialtyID)
+                .ToList();
+
+            var selectedSkills = _dbContext.RequestSkills
+                .Where(rs => rs.RequestID == RequestId)
+                .ToList();
+
+            var allSkills = await _dbContext.Skills
+                .OrderBy(s => s.Name)
+                .ToListAsync();
+
+
             TrainingRequest = new EditTrainingRequestVM
             {
                 Title = OpportunityRequest.Title,
@@ -59,65 +75,91 @@ namespace Project.Pages.University.TrainingRequests
                 Notes = OpportunityRequest.Notes,
                 TermID = OpportunityRequest.TermID,
                 ApplicationDeadline = OpportunityRequest.ApplicationDeadline,
-                Status = OpportunityRequest.Status
+                Status = OpportunityRequest.Status,
+                SelectedSpecialties = selectedSpecialties,
+                //InstitutionID = selectedInstition.InstituationID,
 
+                Skills = allSkills.Select(s =>
+                {
+                    var requestSkill = selectedSkills
+                        .FirstOrDefault(rs => rs.SkillID == s.SkillID);
+
+                    return new RequestSkillVM
+                    {
+                        SkillId = s.SkillID,
+                        SkillName = s.Name,
+                        Selected = requestSkill != null,
+                        IsRequired = requestSkill?.IsRequired ?? true
+                    };
+                }).ToList()
+            
             };
+
+            var requestInstitution = await _dbContext.OpportunityRequestInstitutions
+                        .FirstOrDefaultAsync(x => x.RequestID == RequestId);
+
+            if (requestInstitution != null)
+            {
+                TrainingRequest.InstitutionID = requestInstitution.InstitutionID;
+            }
+
             return Page();
         }
+
         public async Task<IActionResult> OnPost([FromRoute] int RequestId)
         {
-
             if (!ModelState.IsValid)
             {
-                var query = _dbContext.TrainingTerms.ToList();
-                TrainingTermsList = new SelectList(query, nameof(TrainingTerm.TermID), nameof(TrainingTerm.Name));
-                OpportunityRequest = _dbContext.TrainingOpportunityRequests.Where(tr => tr.RequestID == RequestId).FirstOrDefault();
+                await ReloadDropdownsAsync();
+                OpportunityRequest = _dbContext.TrainingOpportunityRequests
+                    .FirstOrDefault(tr => tr.RequestID == RequestId);
                 return Page();
             }
-            AspNetUser? user = await _userManager.GetUserAsync(User);
-            AspNetRoleScope? scope = _dbContext.AspNetRoleScopes.FirstOrDefault(s => s.UserID == user.Id && s.IsActive);
 
-            if (scope == null)
-            {
+            var user = await _userManager.GetUserAsync(User);
+            var scope = _dbContext.AspNetRoleScopes
+                .FirstOrDefault(s => s.UserID == user.Id && s.IsActive);
+
+            if (scope?.UniversityID == null)
                 return RedirectToPage("/Account/Login", new { area = "Identity" });
-            }
 
-            if (scope.UniversityID == null)
-            {
-                return RedirectToPage("/Account/Login", new { area = "Identity" });
-            }
+            var success = await _trainingRequestService
+                .UpdateTrainingRequestAsync(RequestId, TrainingRequest, user, scope);
 
-            int universityId = (int)scope.UniversityID;
-
-            CurrentUniversity = await _universityRepo.GetByIdAsync(universityId);
-            if (CurrentUniversity == null)
-            {
+            if (!success)
                 return RedirectToPage("/Index");
-            }
-            OpportunityRequest = _dbContext.TrainingOpportunityRequests.Where(tr => tr.RequestID == RequestId).FirstOrDefault();
-            if (CurrentUniversity.UniversityID != OpportunityRequest?.UniversityID)
-            {
-                return RedirectToPage("/Account/Login", new { area = "Identity" });
-            }
-            if (OpportunityRequest != null)
-            {
-
-                OpportunityRequest.Title = TrainingRequest.Title;
-                OpportunityRequest.Description = TrainingRequest.Description;
-                OpportunityRequest.PreferredEndDate = TrainingRequest.PreferredEndDate;
-                OpportunityRequest.PreferredStartDate = TrainingRequest.PreferredStartDate;
-                OpportunityRequest.RequestedSeats = TrainingRequest.RequestedSeats;
-                OpportunityRequest.ApplicationDeadline = TrainingRequest.ApplicationDeadline;
-                OpportunityRequest.Notes = TrainingRequest.Notes;
-                OpportunityRequest.TermID = TrainingRequest.TermID;
-                OpportunityRequest.Status = TrainingRequest.Status;
-                _dbContext.TrainingOpportunityRequests.Update(OpportunityRequest);
-                await _dbContext.SaveChangesAsync();
-            }
-
-
 
             return RedirectToPage("/University/AvailabelOpportunities");
+        }
+
+        private async Task ReloadDropdownsAsync()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var scope = _dbContext.AspNetRoleScopes
+                .FirstOrDefault(x => x.UserID == user.Id && x.IsActive);
+
+            TrainingTermsList = new SelectList(
+                _dbContext.TrainingTerms,
+                nameof(TrainingTerm.TermID),
+                nameof(TrainingTerm.Name));
+
+            InstitutionsList = new SelectList(
+                await _institutionRepository.GetAllAsync(),
+                nameof(TrainingInstitution.InstituationID),
+                nameof(TrainingInstitution.Name));
+
+            if (scope?.UniversityID != null)
+            {
+                SpecialtiesList = await _dbContext.Specialties
+                    .Where(x => x.Department.UniversityID == scope.UniversityID)
+                    .OrderBy(x => x.Name)
+                    .Select(x => new SelectListItem
+                    {
+                        Value = x.SpecialtyID.ToString(),
+                        Text = x.Name
+                    })
+                    .ToListAsync();
+            }
         }
     }
 }

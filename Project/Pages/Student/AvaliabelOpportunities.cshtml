@@ -111,7 +111,9 @@
                               class="bg-primary text-white text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-primary/90">تقديم </a>
 
                               }                               
-                                <a href="#" class="text-primary text-xs font-bold hover:underline whitespace-nowrap">عرض التفاصيل</a>
+                                <a asp-page="/Student/AvaliabelOpportunitie/Details" asp-route-id="@Opportunity.OpportunityID" class="text-primary text-xs font-bold hover:underline whitespace-nowrap">عرض التفاصيل</a>
+                                <a asp-page="/Student/Applications/Cancel" asp-route-id="@Opportunity.OpportunityID" class="text-primary text-xs font-bold hover:underline whitespace-nowrap">الغاء التقديم </a>
+
                              </div>
                         </td>
                     </tr>

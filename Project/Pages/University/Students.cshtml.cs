@@ -13,7 +13,7 @@ using static Project.Models.TrainingApplication;
 
 namespace Project.Pages.University
 {
-    [Authorize(Roles = "UniversityTrainingAdmin, DepartmentHead")]
+    [Authorize(Roles = "UniversityTrainingAdmin, DepartmentHead, UniversitySupervisor")]
     public class StudentsModel : PageModel
     {
 
@@ -41,13 +41,16 @@ namespace Project.Pages.University
         public string SearchTerm { get; set; } = string.Empty;
         public Models.University CurrentUniversity { get; set; }
         [BindProperty(SupportsGet = true)]
-        public int SelectedSpecialityId { get; set; }
+        public int SelectedSpecialityId { get; set; } = -1;
         public SelectList SpecialitiesList { get; set; }
         [BindProperty(SupportsGet = true)]
-        public int SelectedDepartmentId { get; set; }
+        public int SelectedDepartmentId { get; set; } = -1;
         public SelectList DepartmentsList { get; set; }
         [BindProperty(SupportsGet = true)]
-        public bool IsTraining { get; set; }
+        public bool? IsTraining { get; set; }
+
+
+
         public PaginatedList<Models.Student> Students { get; set; } = new PaginatedList<Models.Student>(new List<Models.Student>(), 0, 1, 10);
         public async Task<IActionResult> OnGetAsync()
         {
@@ -87,21 +90,27 @@ namespace Project.Pages.University
                 {
                     query = query.Where(s => s.SpecialtyID == SelectedSpecialityId);
                 }
-                if (SelectedDepartmentId > -1)
+                if (User.IsInRole("UniversityTrainingAdmin"))
                 {
-                    query = query.Where(s => s.DepartmentID == SelectedDepartmentId);
+                    if (SelectedDepartmentId > -1)
+                    {
+                        query = query.Where(s =>
+                            s.DepartmentID == SelectedDepartmentId);
+                    }
                 }
-                if (IsTraining)
+                if (IsTraining == true)
                 {
-                    query = query.Where(s => s.Applications.Any(a =>
-                        a.Status == ApplicationStatus.Placed));
+                    query = query.Where(s =>
+                        s.Applications.Any(a =>
+                            a.Status == ApplicationStatus.Placed));
                 }
                 else if (IsTraining == false)
                 {
-                    query = query.Where(s => !s.Applications.Any(a =>
-                        a.Status == ApplicationStatus.Placed));
+                    query = query.Where(s =>
+                        !s.Applications.Any(a =>
+                            a.Status == ApplicationStatus.Placed));
                 }
-                
+
                 query = SortOrder switch
                 {
                     "Name" => query.OrderBy(a => a.Name),
@@ -110,7 +119,35 @@ namespace Project.Pages.University
                     "GPA_desc" => query.OrderByDescending(a => a.GPA),
                     _ => query.OrderBy(p => p.StudentNumber),
                 };
-                Students = await PaginatedList<Models.Student>.CreateAsync(query, PageIndex, PageSize);
+                DepartmentsList = new SelectList(
+                    await _dbContext.Departments
+                        .Where(d => d.UniversityID == universityId)
+                        .OrderBy(d => d.Name)
+                        .ToListAsync(),
+                    "DepartmentID",
+                    "Name");
+
+                var specialtiesQuery = _dbContext.Specialties.AsQueryable();
+
+if (SelectedDepartmentId > 0)
+{
+    specialtiesQuery = specialtiesQuery
+        .Where(s => s.DepartmentID == SelectedDepartmentId);
+}
+else
+{
+    specialtiesQuery = specialtiesQuery
+        .Where(s => s.Department.UniversityID == universityId);
+}
+
+SpecialitiesList = new SelectList(
+    await specialtiesQuery
+        .OrderBy(s => s.Name)
+        .ToListAsync(),
+    "SpecialtyID",
+    "Name");
+
+                Students = await PaginatedList<Models.Student>.CreateAsync(query,PageSize ,PageIndex );
                 return Page();
             }
             catch

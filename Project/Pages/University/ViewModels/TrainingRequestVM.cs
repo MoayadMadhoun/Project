@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Project.Models;
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.CompilerServices;
 using static Project.Models.TrainingOpportunityRequest;
 
@@ -35,6 +36,10 @@ namespace Project.Pages.University.ViewModels
         public int InstitutionID { get; set; }
         
         public DateTime? ApplicationDeadline { get; set; }
+
+        public List<int> SelectedSpecialties { get; set; } = new();
+
+        public List<RequestSkillVM> Skills { get; set; } = new();
 
 
     }

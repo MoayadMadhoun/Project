@@ -1,0 +1,156 @@
+﻿@page
+@model Project.Pages.Student.ProfileModel
+
+@{
+    ViewData["Title"] = "الملف الشخصي";
+    ViewData["UserType"] = "Student";
+}
+
+<div class="container-fluid">
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["Success"]
+        </div>
+    }
+
+    <!-- Hero -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body p-5 text-white"
+             style="background:#1ab29a;border-radius:24px;">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+
+                    <h2 class="fw-bold mb-3">
+                        الملف الشخصي
+                    </h2>
+
+                    <p class="mb-0">
+                        إدارة بياناتك الشخصية
+                    </p>
+
+                </div>
+
+                <div class="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center"
+                     style="width:90px;height:90px;">
+
+                    <i class="bi bi-person-circle fs-1"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <form method="post">
+
+        <input asp-for="CurrentStudent.StudentID" type="hidden" />
+        <input asp-for="CurrentStudent.UserID" type="hidden" />
+
+        <div class="card border-0 shadow-sm rounded-4">
+
+            <div class="card-header bg-white">
+
+                <h5 class="fw-bold mb-0">
+                    بيانات الطالب
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="row g-4">
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            الاسم
+                        </label>
+
+                        <input asp-for="CurrentStudent.Name"
+                               class="form-control" />
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            الرقم الجامعي
+                        </label>
+
+                        <input asp-for="CurrentStudent.StudentNumber"
+                               class="form-control"
+                               readonly />
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            رقم الهاتف
+                        </label>
+
+                        <input asp-for="CurrentStudent.PhoneNumber"
+                               class="form-control" />
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            المعدل التراكمي
+                        </label>
+
+                        <input asp-for="CurrentStudent.GPA"
+                               class="form-control"
+                               readonly />
+
+                    </div>
+
+                    <div class="col-12">
+
+                        <label class="form-label">
+                            نبذة شخصية
+                        </label>
+
+                        <textarea asp-for="CurrentStudent.Bio"
+                                  rows="5"
+                                  class="form-control">
+                        </textarea>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="card-footer bg-white">
+
+                <button type="submit"
+                        class="btn btn-success px-5">
+
+                    <i class="bi bi-check-circle"></i>
+
+                    حفظ التعديلات
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+}

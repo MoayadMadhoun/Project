@@ -7,161 +7,179 @@
     ViewData["UserName"] = "أحمد محمد";
     ViewData["PortalTitle"] = "بوابة الجامعة";
     ViewData["PortalSubtitle"] = "إدارة التدريب الميداني";
-    ViewData["SearchPlaceholder"] = "بحث عن رؤساء أقسام ...";
-    ViewData["ActivePage"] = "DepartmentsadHeads";
+    ViewData["SearchPlaceholder"] = "بحث عن رؤساء أقسام...";
+    ViewData["ActivePage"] = "DepartmentsHeads";
     int dHIndex = 1;
 }
 @functions {
     public IHtmlContent SortingIcon(string column, string currentSort)
     {
         if (currentSort == column)
-            return new HtmlString("<span><i class=\"bi bi-caret-up-fill\"></i></span>");
-
+            return new HtmlString("<i class=\"bi bi-caret-up-fill text-primary text-xs\"></i>");
         if (currentSort == column + "_desc")
-            return new HtmlString("<span><i class=\"bi bi-caret-down-fill\"></i></span>");
-
-        return new HtmlString("<span><i class=\"bi bi-arrow-down-up\"></i></span>");
+            return new HtmlString("<i class=\"bi bi-caret-down-fill text-primary text-xs\"></i>");
+        return new HtmlString("<i class=\"bi bi-arrow-down-up text-slate-400 text-xs\"></i>");
     }
-
 }
+<link rel="stylesheet" href="~/Styles/opportunities.css">
+
 <div dir="rtl" class="w-full text-right">
 
-    @* ===== Hero Section  ===== *@
+    @* ===== Hero Section ===== *@
     <section class="mb-lg md:mb-xl relative rounded-xl md:rounded-2xl overflow-hidden bg-primary-container p-6 md:p-xl text-on-primary">
         <div class="relative z-10 max-w-2xl text-right">
-            <h1 class="font-h1 text-2xl md:text-h1 mb-md">رؤساء الأقسام </h1>
+            <h1 class="font-h1 text-2xl md:text-h1 mb-md">رؤساء الأقسام</h1>
             <p class="font-body-lg text-sm md:text-body-lg opacity-90 mb-lg">
-                    إدارة ومتابعة رؤساء ألاقسام            </p>
-            <a asp-page="/University/DepartmentHeads/Create" class="w-full sm:w-auto bg-white text-primary font-button px-xl py-3 rounded-xl shadow-lg hover:bg-surface-container transition-colors"> ＋ إضافة رئيس قسم جديد</a>
-            
+                إدارة ومتابعة رؤساء الأقسام
+            </p>
+            <a asp-page="/University/DepartmentHeads/Create"
+               class="w-full sm:w-auto bg-white text-primary font-button px-xl py-3 rounded-xl shadow-lg hover:bg-surface-container transition-colors">
+                + إضافة رئيس قسم جديد
+            </a>
         </div>
+        <div class="absolute -bottom-10 -left-10 w-48 h-48 md:w-64 md:h-64 bg-white/10 rounded-full blur-3xl"></div>
+        <div class="absolute -top-20 -left-20 w-64 h-64 md:w-80 md:h-80 bg-secondary-fixed-dim/20 rounded-full blur-3xl"></div>
     </section>
 
-    @* ===== Searching & Filtering===== *@
+    @* ===== Filters Bar ===== *@
     <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] p-4 mb-lg">
-
-        <form method="get" class="flex flex-wrap gap-3 items-center justify-start flex-row">
+        <form method="get" class="flex flex-wrap gap-3 items-center justify-end">
             <input type="hidden" name="PageSize" value="@Model.PageSize" />
-            <input type="hidden" name="PageIndex" value="@Model.PageIndex" />
+            <input type="hidden" name="PageIndex" value="1" />
             <input type="hidden" name="SortOrder" value="@Model.SortOrder" />
-            <div class="relative flex-1 min-w-[200px]">
-                <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
-                <input asp-for="SearchTerm" class="w-1/4 pr-10 pl-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20 text-right" placeholder="ابحث عن رئيس قسم ..." type="text" />
-            </div>
-            <div class="relative flex-1 min-w-[200px]">
-                <select asp-for="IsActive" class="form-select flex items-center gap-2 px-5 py-2 bg-white border border-slate-200 rounded-xl text-slate-600 hover:bg-slate-50 transition-colors text-sm font-bold">
 
-                    <option value="">الحالة</option>
-                    <option value="true">نشط</option>
-                    <option value="false">غير نشط</option>
-                </select>
+            <div class="relative flex-1 min-w-[180px]">
+                <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+                <input asp-for="SearchTerm"
+                       class="w-full pr-10 pl-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20"
+                       placeholder="ابحث عن رئيس قسم..."
+                       type="text" />
             </div>
-            <button type="submit" class="bg-primary text-white font-button px-6 py-2.5 rounded-xl hover:bg-primary/90 transition-colors">بحث</button>
+
+            <select asp-for="IsActive"
+                    class="bg-slate-100 border-none rounded-xl text-sm font-bold text-slate-700 py-2.5 px-4 focus:ring-2 focus:ring-primary/20 cursor-pointer">
+                <option value="">الحالة</option>
+                <option value="true">نشط</option>
+                <option value="false">غير نشط</option>
+            </select>
+
+            <button type="submit"
+                    class="bg-primary-container text-white font-button px-6 py-2.5 rounded-xl hover:bg-primary/90 transition-colors">
+                بحث
+            </button>
         </form>
     </div>
 
-    @* ===== Request tables===== *@
-    <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] overflow-hidden text-center">
-        <div class="p-4 md:p-lg border-b border-slate-100 flex justify-between items-center ">
-            <h3 class="font-h3 text-lg md:text-h3 text-slate-900 font-bold">قائمة رؤساء الأقسام</h3>
-            <p class="text-slate-600">جميع رؤساء الأقسام في الجامعة</p>
+    @* ===== Table ===== *@
+    <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] overflow-hidden">
+
+        <div class="p-4 md:p-lg border-b border-slate-100 flex justify-between items-center">
+            <h3 class="font-h3 text-lg md:text-h3 text-slate-900">قائمة رؤساء الأقسام</h3>
+            <span class="text-sm text-slate-500 font-body-sm">جميع رؤساء الأقسام في الجامعة</span>
         </div>
+
         <div class="overflow-x-auto">
             <table class="w-full text-right border-collapse min-w-[1000px]">
-                <thead class="bg-surface-container-low text-slate-500 font-bold text-sm">
+                <thead class="bg-surface-container-low">
                     <tr>
-                        <th class="px-6 py-3 text-right">#</th>
-                        <th class="px-6 py-3 text-right">
-                            <a class="text-decoration-none"
-                                   asp-route-PageSize="@Model.PageSize" 
-                                   asp-route-SearchTerm="@Model.SearchTerm"
-                                   asp-route-PageIndex="@(Model.PageIndex)"
-                                   asp-route-SortOrder="@(Model.SortOrder == "Name" ? "Name_desc" : "Name")">
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">#</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">
+                            <a class="flex items-center gap-1 text-slate-500 hover:text-primary transition-colors no-underline"
+                               asp-route-PageSize="@Model.PageSize"
+                               asp-route-SearchTerm="@Model.SearchTerm"
+                               asp-route-IsActive="@Model.IsActive"
+                               asp-route-PageIndex="@Model.PageIndex"
+                               asp-route-SortOrder="@(Model.SortOrder == "Name" ? "Name_desc" : "Name")">
                                 اسم رئيس القسم @SortingIcon("Name", Model.SortOrder)
                             </a>
                         </th>
-                        <th class="px-6 py-3 text-right">القسم</th>
-                        <th class="px-6 py-3 text-right">البريد الألكتروني</th>
-                        <th class="px-6 py-3 text-right">رقم الهاتف</th>
-                        <th class="px-6 py-3 text-right">تاريخ تعيينه</th>
-                        <th class="px-6 py-3 text-right">الإجراءات</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">القسم</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">البريد الإلكتروني</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">رقم الهاتف</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">تاريخ التعيين</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الإجراءات</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-50 text-sm">
+                <tbody class="divide-y divide-slate-50">
                     @if (!(Model.DepartmentsHeads?.Any() ?? false))
                     {
                         <tr>
-                            <td colspan="5" class="px-4 py-6 text-center text-slate-500">
-                               لا يوجد رؤساء اقسام لعرضهم
+                            <td colspan="7" class="px-4 py-12 text-center text-sm text-slate-400">
+                                لا يوجد رؤساء أقسام لعرضهم.
                             </td>
                         </tr>
                     }
                     else
                     {
-                  
-                    @foreach (var DH in Model.DepartmentsHeads)
-                    {
-                        <tr class="hover:bg-slate-50 transition-colors">
-                                <td class="px-6 py-3 text-slate-900 font-bold">@dHIndex</td>
-                            <td class="px-6 py-3 text-slate-600">@DH.FullName</td>
-                            <td class="px-6 py-3 text-slate-600">@(DH.RoleScope?.Department?.Name ?? "_")</td>
-                            <td class="px-6 py-3 text-slate-600">@DH.Email</td>
-                            <td class="px-6 py-3 text-slate-600">@DH.PhoneNumber</td>
-                            <td class="px-6 py-3 text-slate-600">@DH.CreatedAt</td>
+                        @foreach (var DH in Model.DepartmentsHeads)
+                        {
+                            <tr class="hover:bg-slate-50 transition-colors">
 
-                            <td class="px-6 py-3">
-                                <div class="flex gap-3">
-                                        <a asp-page="/University/DepartmentHeads/Details" 
+                                <td class="px-4 py-3 text-sm text-slate-400 font-bold">@dHIndex</td>
+
+                                <td class="px-4 py-3 text-sm text-slate-900 font-bold">@DH.FullName</td>
+
+                                <td class="px-4 py-3 text-sm text-slate-600">@(DH.RoleScope?.Department?.Name ?? "—")</td>
+
+                                <td class="px-4 py-3 text-sm text-slate-600">@DH.Email</td>
+
+                                <td class="px-4 py-3 text-sm text-slate-600">@DH.PhoneNumber</td>
+
+                                <td class="px-4 py-3 text-sm text-slate-600 whitespace-nowrap">@DH.CreatedAt.ToString("yyyy-MM-dd")</td>
+
+                                <td class="px-4 py-3">
+                                    <div class="flex gap-1">
+                                        <a asp-page="/University/DepartmentHeads/Details"
                                            asp-route-id="@DH.Id"
-                                           class="border border-emerald-200 text-emerald-600 text-xs font-bold px-4 py-2 rounded hover:bg-emerald-50 flex items-center gap-1">
-                                            <span>👁</span>
-                                            التفاصيل
+                                           class="btn border border-primary text-primary text-xs font-bold px-2 py-2 rounded hover:bg-blue-50 flex items-center gap-1"
+                                           title="التفاصيل">
+                                            <i class="bi bi-eye"></i>
                                         </a>
-
                                         <a asp-page="/University/DepartmentHeads/Edit"
                                            asp-route-id="@DH.Id"
-                                           class="border border-emerald-200 text-emerald-600 text-xs font-bold px-4 py-2 rounded hover:bg-emerald-50 flex items-center gap-1">
-                                            <span>✎</span>
-                                            تعديل
+                                           class="btn border border-warning text-warning text-xs font-bold px-2 py-2 rounded hover:bg-amber-50 flex items-center gap-1"
+                                           title="تعديل">
+                                            <i class="bi bi-pen"></i>
                                         </a>
-                                        <form method="post" asp-page-handler="RemoveDeptHead">
-                                            <input type="hidden" name="PageSize" value="@Model.PageSize" />
-                                            <input type="hidden" name="PageIndex" value="@Model.PageIndex" />
-                                            <input type="hidden" name="SortOrder" value="@Model.SortOrder" />
-                                            <input type="hidden" name="SearchTerm" value="@Model.SearchTerm" />
-                                            <input type="hidden" name="DepartmentHeadId" value="@DH.Id" />
+                                        @if (DH.IsActive)
+                                        {
                                             <a asp-page="/University/DepartmentHeads/Delete"
-                                               asp-route-id="@DH.Id" class="btn border border-rose-200 text-rose-600 text-xs font-bold px-4 py-2 rounded hover:bg-rose-50 flex items-center gap-1"> <span>🗑</span>حذف</a>
-                                        </form>
-                                </div>
-                            </td>
-                        </tr>
+                                               asp-route-id="@DH.Id"
+                                               class="btn border border-danger text-danger text-xs font-bold px-2 py-2 rounded hover:bg-rose-50 flex items-center gap-1"
+                                               title="حذف">
+                                                <i class="bi bi-trash3"></i>
+                                            </a>
+                                        }
+                                    </div>
+                                </td>
+
+                            </tr>
                             @(dHIndex += 1)
                         }
                     }
-                  
                 </tbody>
             </table>
         </div>
 
-        @* ===== Pagining ===== *@
+        @* ===== Pagination ===== *@
         <div class="p-4 md:p-lg flex flex-col md:flex-row items-center justify-between gap-4 border-t border-slate-100">
+
             <div class="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
                 <p class="text-sm text-slate-500 font-body-sm whitespace-nowrap">
-                    عرض <span class="font-bold text-slate-900">@(Model.DepartmentsHeads?.Count ?? 0)</span> من أصل <span class="font-bold text-slate-900">@(Model.DepartmentsHeads?.TotalCount??0)</span> رؤساء
+                    عرض <span class="font-bold text-slate-900">@(Model.DepartmentsHeads?.Count ?? 0)</span>
+                    من أصل <span class="font-bold text-slate-900">@(Model.DepartmentsHeads?.TotalCount ?? 0)</span> رئيس قسم
                 </p>
                 <div class="flex items-center gap-2">
-                    <label class="text-xs text-slate-500 font-label-caps" for="per-page-inst">النتائج:</label>
+                    <label class="text-xs text-slate-500 font-label-caps" for="per-page-dh">النتائج:</label>
                     <form method="get">
-                        <input type="hidden" name="PageSize" value="@Model.PageSize" />
                         <input type="hidden" name="PageIndex" value="@Model.PageIndex" />
                         <input type="hidden" name="SortOrder" value="@Model.SortOrder" />
                         <input type="hidden" name="SearchTerm" value="@Model.SearchTerm" />
-                        
+                        <input type="hidden" name="IsActive" value="@Model.IsActive" />
                         <select asp-for="PageSize"
                                 onchange="this.form.submit()"
-                                class="bg-slate-100 border-none rounded-lg text-xs font-bold text-slate-700 py-1.5 pr-8 pl-3 focus:ring-2 focus:ring-primary/20 appearance-none cursor-pointer"
-                                id="per-page-inst">
+                                id="per-page-dh"
+                                class="bg-slate-100 border-none rounded-lg text-xs font-bold text-slate-700 py-1.5 pr-8 pl-3 focus:ring-2 focus:ring-primary/20 appearance-none cursor-pointer">
                             <option value="10">10</option>
                             <option value="25">25</option>
                             <option value="50">50</option>
@@ -171,41 +189,46 @@
             </div>
 
             <nav class="flex items-center gap-2">
-                @if (Model.DepartmentsHeads.HasPrevPage)
+                @if (Model.DepartmentsHeads?.HasPrevPage ?? false)
                 {
-
                     <a asp-route-PageIndex="@(Model.PageIndex - 1)"
                        asp-route-SearchTerm="@Model.SearchTerm"
-                       
+                       asp-route-IsActive="@Model.IsActive"
                        asp-route-SortOrder="@Model.SortOrder"
                        asp-route-PageSize="@Model.PageSize"
-                       class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:bg-slate-50"><span class="material-symbols-outlined">chevron_right</span></a>
+                       class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:bg-slate-50">
+                        <span class="material-symbols-outlined">chevron_right</span>
+                    </a>
                 }
-           
+
                 @for (int i = 1; i <= Model.DepartmentsHeads.TotalPages; i++)
                 {
-
                     <a asp-route-PageIndex="@i"
                        asp-route-SearchTerm="@Model.SearchTerm"
-                       
+                       asp-route-IsActive="@Model.IsActive"
                        asp-route-SortOrder="@Model.SortOrder"
                        asp-route-PageSize="@Model.PageSize"
-                       class="w-8 h-8 flex items-center justify-center rounded-lg @(Model.PageIndex == i ? "bg-primary" : "border border-slate-200 text-slate-600 hover:bg-slate-50 ")  text-white text-sm font-bold">@i</a>
+                       class="w-8 h-8 flex items-center justify-center rounded-lg text-sm font-bold
+                        @(Model.PageIndex == i ? "bg-primary-container text-white" : "border border-slate-200 text-slate-600 hover:bg-slate-50")">
+                        @i
+                    </a>
                 }
-                @if (Model.DepartmentsHeads.HasNextPage)
+
+                @if (Model.DepartmentsHeads?.HasNextPage ?? false)
                 {
                     <a asp-route-PageIndex="@(Model.PageIndex + 1)"
                        asp-route-SearchTerm="@Model.SearchTerm"
-                       
+                       asp-route-IsActive="@Model.IsActive"
                        asp-route-SortOrder="@Model.SortOrder"
                        asp-route-PageSize="@Model.PageSize"
-                       class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:bg-slate-50"><span class="material-symbols-outlined">chevron_left</span></a>
+                       class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:bg-slate-50">
+                        <span class="material-symbols-outlined">chevron_left</span>
+                    </a>
                 }
-
-            
             </nav>
+
         </div>
+
     </div>
 
 </div>
-

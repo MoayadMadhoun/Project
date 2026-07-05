@@ -58,7 +58,15 @@
     {
         user = await UserManager.GetUserAsync(User);
     }
+
+    var profileImage =
+        string.IsNullOrEmpty(user?.ProfileImagePath)
+        ? "/images/default-user.jpg"
+        : user.ProfileImagePath;
 }
+
+@* <img src="@profileImage"
+     class="rounded-circle" /> *@
 
 <!DOCTYPE html>
 <html class="light" dir="rtl" lang="ar">
@@ -71,6 +79,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="icon" href="/wwwroot/favicon.jpg" />
 
     <style>
         .material-symbols-outlined {
@@ -241,7 +250,27 @@
         background-color: #006b58 !important;
     }
 
+        .profile-image {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        object-fit: cover;
+        display: block;
+        }
 
+        .profile-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 2px solid #1ab29a;
+        }
+
+        .profile-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        }
     </style>
     <script id="tailwind-config">
         tailwind.config = {
@@ -319,9 +348,9 @@
         </div>
         <div class="flex items-center gap-md">
             <span class="text-slate-700 dark:text-slate-200 font-bold text-sm hidden sm:block">@user?.FullName</span>
-            <div class="w-8 h-8 rounded-full overflow-hidden border-2 border-primary-container">
+            <div class="w-8 h-8 rounded-full overflow-hidden border-2 border-primary-container profile-avatar">
                 <img alt="User Profile"
-                     src="./images/Logos/logoBottomnavbar" />
+                     src="@profileImage" class="rounded-circle profile-image" />
             </div>
         </div>
     </header>
@@ -359,10 +388,12 @@
                         <p class="text-xs text-slate-500">@(ViewData["PortalSubtitle"]?.ToString())</p>
                     </div>
                 </div>
+                
                 <button class="lg:hidden p-2 text-slate-400 hover:bg-slate-100 rounded-lg" id="close-menu">
                     <span class="material-symbols-outlined">close</span>
                 </button>
             </div>
+           
         </div>
 
         <nav class="flex-1 px-4 space-y-1 overflow-y-auto">
@@ -372,27 +403,40 @@
                 <a class="@NavClass("/Institution/Index", "Home")" asp-page="/Institution/Index">
                     <span class="material-symbols-outlined">dashboard</span>الرئيسية
                 </a>
-                <a class="@NavClass("/Institution/AvailableOpportunities", "Opportunities")" asp-page="/Institution/AvailableOpportunities">
-                    <span class="material-symbols-outlined">explore</span>الفرص التدريبية
-                </a>
-                <a class="@NavClass("/Institution/TrainingRequests", "TrainingRequests")" asp-page="/Institution/TrainingRequests">
-                    <span class="material-symbols-outlined">group</span>طلبات الطلبة
-                </a>
+                @if (User.IsInRole("InstitutionTrainingOfficer")){
+                    <a class="@NavClass("/Institution/AvailableOpportunities", "Opportunities")" asp-page="/Institution/AvailableOpportunities">
+                        <span class="material-symbols-outlined">explore</span>الفرص التدريبية
+                    </a>
+                    <a class="@NavClass("/Institution/TrainingRequests", "TrainingRequests")" asp-page="/Institution/TrainingRequests">
+                        <span class="material-symbols-outlined">group</span>طلبات الطلبة
+                    </a>
+                    <a class="@NavClass("/Institution/Supervisors", "Supervisors")" asp-page="/Institution/Supervisors">
+                        <span class="material-symbols-outlined">manage_accounts</span>المشرفون
+                    </a>
+                 }
+                
                 <a class="@NavClass("/Institution/CurrentTraining", "CurrentTraining")" asp-page="/Institution/CurrentTraining">
                     <span class="material-symbols-outlined">work</span>التدريب الحالي
                 </a>
-                <a class="@NavClass("/Institution/Supervisors", "Supervisors")" asp-page="/Institution/Supervisors">
-                    <span class="material-symbols-outlined">manage_accounts</span>المشرفون
-                </a>
+               
                 <a class="@NavClass("/Institution/Reports", "Reports")" asp-page="/Institution/Reports">
                     <span class="material-symbols-outlined">description</span>التقارير
                 </a>
-                <a class="@NavClass("/Institution/Index", "Evaluations")" asp-page="/Institution/Index">
+                <a class="@NavClass("/Institution/Index", "Evaluations")" asp-page="/Institution/Evaluations">
                     <span class="material-symbols-outlined">grading</span>التقييمات
                 </a>
-                <a class="@NavClass("/Institution/Profile", "Profile")" asp-page="/Institution/Profile">
-                    <span class="material-symbols-outlined">person</span>ملف المؤسسة
+                <a class="@NavClass("/Institution/Attendance", "Attendance")" asp-page="/Institution/Attendance">
+                    <span class="material-symbols-outlined">event_available</span>الحضور
                 </a>
+                @if (User.IsInRole("InstitutionTrainingOfficer"))
+                    {
+                    <a class="@NavClass("/Institution/Profile", "Profile")" asp-page="/Institution/Profile">
+                        <span class="material-symbols-outlined">person</span>ملف المؤسسة
+                    </a>
+
+                   }
+
+                  
             }
             else if (User.IsInRole("UniversityTrainingAdmin") || User.IsInRole("DepartmentHead") || User.IsInRole("UniversitySupervisor"))
             {
@@ -400,11 +444,12 @@
                 <a class="@NavClass("/University/Index", "Home")" asp-page="/University/Index">
                     <span class="material-symbols-outlined">dashboard</span>الرئيسية
                 </a>
-                <a class="@NavClass("/University/AvailabelOpportunities", "Opportunities")" asp-page="/University/AvailabelOpportunities">
-                    <span class="material-symbols-outlined">explore</span>الفرص التدريبية
-                </a>
+               
                 @if (User.IsInRole("UniversityTrainingAdmin") || User.IsInRole("DepartmentHead"))
                 {
+                    <a class="@NavClass("/University/AvailabelOpportunities", "Opportunities")" asp-page="/University/AvailabelOpportunities">
+                        <span class="material-symbols-outlined">explore</span>الفرص التدريبية
+                    </a>
                     <a class="@NavClass(User.IsInRole("UniversityTrainingAdmin") ? "/University/UniAdminTrainigRequests" : "/University/DepartmentHeadTrainingRequests", "TrainingRequests")" asp-page="@(User.IsInRole("UniversityTrainingAdmin") ? "/University/UniAdminTrainigRequests" : User.IsInRole("DepartmentHead") ? "/University/DepartmentHeadTrainingRequests" : "")">
                         <span class="material-symbols-outlined">group</span>طلبات الطلبة
                     </a>
@@ -413,32 +458,43 @@
                 <a class="@NavClass("/University/Students", "Students")" asp-page="/University/Students">
                     <span class="material-symbols-outlined">school</span>الطلاب
                 </a>
+               
                 <a class="@NavClass("/University/Attendance", "Attendance")" asp-page="/University/Attendance">
                     <span class="material-symbols-outlined">event_available</span>الحضور
                 </a>
-                <a class="@NavClass("#", "Institutions")" href="#">
+                @* <a class="@NavClass("#", "Institutions")" href="#">
                     <span class="material-symbols-outlined">business</span>المؤسسات
-                </a>
-                <a class="@NavClass("/University/Departments", "Departments")" asp-page="/University/Departments">
-                    <span class="material-symbols-outlined">apartment</span>الأقسام
-                </a>
-                <a class="@NavClass("/University/Specialties", "Specialties")" asp-page="/University/Specialties/index">
-                    <span class="material-symbols-outlined">school</span>التخصصات
-                </a>
-                <a class="@NavClass("/University/DepartmentsHeads", "DepartmentHeads")" asp-page="/University/DepartmentsHeads">
-                    <span class="material-symbols-outlined">manage_accounts</span>رؤساء الأقسام
-                </a>
-                <a class="@NavClass("/University/Supervisors", "Supervisors")" asp-page="/University/Supervisors">
-                    <span class="material-symbols-outlined">manage_accounts</span>المشرفون
-                </a>
-                <a class="@NavClass("#", "Reports")" href="#">
+                </a> *@
+                @if (User.IsInRole("UniversityTrainingAdmin"))
+                    {
+                    <a class="@NavClass("/University/Departments", "Departments")" asp-page="/University/Departments">
+                        <span class="material-symbols-outlined">apartment</span>الأقسام
+                    </a>
+                    <a class="@NavClass("/University/Specialties", "Specialties")" asp-page="/University/Specialties/index">
+                        <span class="material-symbols-outlined">school</span>التخصصات
+                    </a>
+                    <a class="@NavClass("/University/DepartmentsHeads", "DepartmentsHeads")" asp-page="/University/DepartmentsHeads">
+                        <span class="material-symbols-outlined">manage_accounts</span>رؤساء الأقسام
+                    </a>
+                    <a class="@NavClass("/University/Supervisors", "Supervisors")" asp-page="/University/Supervisors">
+                        <span class="material-symbols-outlined">manage_accounts</span>المشرفون
+                    </a>
+                    }
+
+                <a class="@NavClass("/University/Reports/Index", "Reports")" asp-page="/University/Reports/Index">
                     <span class="material-symbols-outlined">description</span>التقارير
                 </a>
-                <a class="@NavClass("#", "Evaluations")" href="#">
+                <a class="@NavClass("/University/Evaluations", "Evaluations")" asp-page="/University/Evaluations">
                     <span class="material-symbols-outlined">grading</span>التقييمات
                 </a>
+                @if (User.IsInRole("UniversityTrainingAdmin"))
+                    {
+                        <a class="@NavClass("/University/Profile", "Profile")" asp-page="/University/Profile">
+                            <span class="material-symbols-outlined">person</span>ملف الجامعة
+                        </a>
+                    }
 
-            }
+                }
             else if(User.IsInRole("Student"))
             {
                 @* ===== قائمة بوابة الطالب (الافتراضية) ===== *@
@@ -463,14 +519,14 @@
                 <a class="@NavClass("/Student/Evaluations", "Evaluations")" asp-page="/Student/Evaluations">
                     <span class="material-symbols-outlined">grading</span>التقييمات
                 </a>
-                <a class="@NavClass("#", "Profile")" href="#">
+                <a class="@NavClass("/Student/Profile", "Profile")" asp-page="/Student/Profile">
                     <span class="material-symbols-outlined">person</span>الملف الشخصي
                 </a>
             }
 
             <a class="@NavClass("/Identity/Account/Settings", "Settings")" asp-area="Identity" asp-page="/Account/Settings">
-                    <span class="material-symbols-outlined">settings</span>الإعدادات
-             </a>
+                <span class="material-symbols-outlined">settings</span>الإعدادات
+            </a>
         </nav>
 
         <div class="p-4 border-t border-slate-100">

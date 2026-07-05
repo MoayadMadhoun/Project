@@ -35,6 +35,12 @@ namespace Project
                 .AddDefaultUI()
                 .AddDefaultTokenProviders();
 
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Identity/Account/Login";
+                options.AccessDeniedPath = "/AccessDenied";
+            });
+
             builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection("SMTP"));
             builder.Services.AddTransient<IEmailSender, EmailSender>();
 
@@ -46,7 +52,9 @@ namespace Project
             builder.Services.AddScoped<TrainingOpportunityRepository>();
             builder.Services.AddScoped<OptService>();
             builder.Services.AddScoped<CreateUserService>();
+            builder.Services.AddScoped<TrainingRequestService>();
 
+            builder.Services.AddKeyedScoped<IUploadFils, UploadDocxFile >("file");
             builder.Services.AddRazorPages();
 
             var app = builder.Build();

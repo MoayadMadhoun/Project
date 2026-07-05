@@ -34,13 +34,21 @@ namespace Project.Pages.University.DepartmentHeads
         {
             DepartmentHeadInfo = await _repUniversity.GetDpartmentHeadByUserId(id);
             var DepartmentHead = await _repUniversity.GetDpartmentHeadByUserId(id);
-            DepartmentList = await _repDeparrtment.GetUniversityDepartmentsSelectListAsync(DepartmentHeadInfo.RoleScope.UniversityID.Value);
+
             if (DepartmentHead is null)
             {
-                ModelState.AddModelError(nameof(DepartmentHead), "·« ÌÊÃœ —∆Ì” ﬁ”„ ");
+                ModelState.AddModelError(nameof(DepartmentHead), "·« ÌÊÃœ —∆Ì” ﬁ”„");
                 return NotFound();
             }
+
+            DepartmentList = await _repDeparrtment
+                .GetUniversityDepartmentsSelectListAsync(
+                    DepartmentHeadInfo.RoleScope.UniversityID.Value);
+
+            DepartmentHeadsVM = new DepartmentHeadsVM();
+
             FullViewModel(DepartmentHead, DepartmentHeadsVM);
+
             return Page();
         }
 
@@ -63,17 +71,19 @@ namespace Project.Pages.University.DepartmentHeads
 
            await FullDepartmentHead(DepartmentHead,DepartmentHeadsVM);
 
-            return Page();
+            await _dbContext.SaveChangesAsync();
 
+            return RedirectToPage("/University/DepartmentsHeads");
         }
 
-        private void FullViewModel(AspNetUser user,DepartmentHeadsVM vM)
+        private void FullViewModel(AspNetUser user, DepartmentHeadsVM vM)
         {
+            //vM.Id = user.Id;
             vM.Name = user.FullName;
             vM.Email = user.Email;
-            vM.isActive = user.IsActive;
             vM.PhoneNumber = user.PhoneNumber;
-            
+            vM.isActive = user.IsActive;
+            vM.DepartmentId = user.RoleScope?.DepartmentID ?? 0;
         }
 
         private async Task FullDepartmentHead(AspNetUser departmentHead, DepartmentHeadsVM DepartmentHeadsVM)

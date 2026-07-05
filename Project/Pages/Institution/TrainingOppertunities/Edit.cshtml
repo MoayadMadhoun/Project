@@ -1,0 +1,438 @@
+﻿@page "{id:int}"
+@model Project.Pages.Institution.AvailableOpportunities.EditModel
+
+@{
+    ViewData["Title"] = "تعديل فرصة تدريبية";
+}
+
+<form method="post">
+
+    ```
+    <input type="hidden" asp-for="OpportunityId" />
+
+    <!-- Hero -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body p-5 text-white"
+             style="background:#0d6efd;border-radius:24px;">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+
+                    <h1 class="fw-bold mb-3">
+                        تعديل فرصة تدريبية
+                    </h1>
+
+                    <p class="mb-0 fs-5 opacity-75">
+                        تعديل بيانات الفرصة والتخصصات والمهارات المطلوبة.
+                    </p>
+
+                </div>
+
+                <div class="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center"
+                     style="width:90px;height:90px;">
+
+                    <i class="bi bi-pencil-square fs-1"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Opportunity Information -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                معلومات الفرصة
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-md-4">
+
+                    <label class="text-muted">
+                        رقم الفرصة
+                    </label>
+
+                    <div class="fw-semibold">
+                        #@Model.OpportunityId
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label class="text-muted">
+                        المؤسسة
+                    </label>
+
+                    <div class="fw-semibold">
+                        @Model.CurrentInstitution?.Name
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label class="text-muted">
+                        تاريخ الإنشاء
+                    </label>
+
+                    <div class="fw-semibold">
+                        @Model.CreatedAt.ToString("yyyy/MM/dd")
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Opportunity Details -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                تفاصيل الفرصة
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-4">
+
+                <div class="col-md-8">
+
+                    <label asp-for="Input.Title" class="form-label"></label>
+
+                    <input asp-for="Input.Title"
+                           class="form-control" />
+
+                    <span asp-validation-for="Input.Title"
+                          class="text-danger"></span>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label asp-for="Input.Capacity"
+                           class="form-label"></label>
+
+                    <input asp-for="Input.Capacity"
+                           type="number"
+                           class="form-control" />
+
+                    <span asp-validation-for="Input.Capacity"
+                          class="text-danger"></span>
+
+                </div>
+
+                <div class="col-md-12">
+
+                    <label asp-for="Input.Location"
+                           class="form-label"></label>
+
+                    <input asp-for="Input.Location"
+                           class="form-control" />
+
+                </div>
+
+                <div class="col-md-12">
+
+                    <label asp-for="Input.Description"
+                           class="form-label"></label>
+
+                    <textarea asp-for="Input.Description"
+                              rows="5"
+                              class="form-control"></textarea>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Specialties -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                التخصصات المستهدفة
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+
+                @foreach (var item in Model.Specialties)
+                {
+                    <div class="col-md-4 mb-2">
+
+                        <div class="form-check">
+
+                            <input type="checkbox"
+                                   class="form-check-input"
+                                   name="Input.SelectedSpecialties"
+                                   value="@item.Value"
+                                   checked="@(Model.Input.SelectedSpecialties.Contains(int.Parse(item.Value)))" />
+
+                            <label class="form-check-label">
+
+                                @item.Text
+
+                            </label>
+
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Skills -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                المهارات المطلوبة
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>اختيار</th>
+
+                            <th>المهارة</th>
+
+                            <th>النوع</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var skill in Model.Skills)
+                        {
+                            bool selected =
+                            Model.Input.SelectedSkills.Contains(skill.SkillID);
+
+                            bool required =
+                            Model.Input.SkillTypes.ContainsKey(skill.SkillID)
+                            &&
+                            Model.Input.SkillTypes[skill.SkillID];
+
+                            <tr>
+
+                                <td>
+
+                                    <input type="checkbox"
+                                           class="form-check-input"
+                                           name="Input.SelectedSkills"
+                                           value="@skill.SkillID"
+                                           checked="@selected" />
+
+                                </td>
+
+                                <td>
+
+                                    @skill.Name
+
+                                </td>
+
+                                <td>
+
+                                    <select class="form-select"
+                                            name="Input.SkillTypes[@skill.SkillID]">
+
+                                        @if (required)
+                                        {
+                                            <option value="true" selected>
+                                                أساسية
+                                            </option>
+
+                                            <option value="false">
+                                                مفضلة
+                                            </option>
+                                        }
+                                        else
+                                        {
+                                            <option value="true">
+                                                أساسية
+                                            </option>
+
+                                            <option value="false" selected>
+                                                مفضلة
+                                            </option>
+                                        }
+
+                                    </select>
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Training Period -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                فترة التدريب
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-4">
+
+                <div class="col-md-4">
+
+                    <label class="form-label">
+                        فترة التدريب
+                    </label>
+
+                    <select asp-for="Input.TermId"
+                            asp-items="Model.Terms"
+                            class="form-select">
+                    </select>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label asp-for="Input.StartDate"
+                           class="form-label"></label>
+
+                    <input asp-for="Input.StartDate"
+                           type="date"
+                           class="form-control" />
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label asp-for="Input.EndDate"
+                           class="form-label"></label>
+
+                    <input asp-for="Input.EndDate"
+                           type="date"
+                           class="form-control" />
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Status -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                حالة الفرصة
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <select asp-for="Input.Status"
+                    class="form-select">
+
+                    @foreach (var item in Html.GetEnumSelectList<ViewModels.AddTrainingOpportunityVM.Opportunity>())
+                        {
+                    <option value="@item.Value">
+                        @item.Text
+                    </option>
+                }
+
+            </select>
+
+        </div>
+
+    </div>
+
+    <!-- Buttons -->
+
+    <div class="d-flex gap-2 mb-5">
+
+        <button type="submit"
+                class="btn btn-primary px-5">
+
+            <i class="bi bi-check-circle me-1"></i>
+
+            حفظ التعديلات
+
+        </button>
+
+        <a asp-page="Index"
+           class="btn btn-light px-5">
+
+            إلغاء
+
+        </a>
+
+    </div>
+    ```
+
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

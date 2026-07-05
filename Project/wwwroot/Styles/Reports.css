@@ -491,3 +491,43 @@ footer {
         footer a:hover {
             color: #00b5a3;
         }
+
+
+.action-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: .2s;
+    border: none;
+}
+
+.view-btn {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+    .view-btn:hover {
+        background: #dbeafe;
+    }
+
+.review-btn {
+    background: #ecfdf5;
+    color: #16a34a;
+}
+
+    .review-btn:hover {
+        background: #d1fae5;
+    }
+
+.delete-btn {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+    .delete-btn:hover {
+        background: #fee2e2;
+    }

@@ -602,7 +602,7 @@
     <div class="table-card-header">
         <div>
             <h2>قائمة المشرفين الأكاديميين</h2>
-            <div class="tch-sub">إجمالي 86 مشرف</div>
+            @* <div class="tch-sub">إجمالي 86 مشرف</div> *@
         </div>
         <a asp-page="/University/Supervisors/Create" class="btn-add">
             <i class="bi bi-plus-lg"></i> إضافة مشرف
@@ -709,9 +709,9 @@
             Model.Supervisors.TotalCount);
         }
 
-        <span class="showing-text">
+        @* <span class="showing-text">
             عرض @start إلى @end من @Model.Supervisors.TotalCount مشرف
-        </span>
+        </span> *@
 
         <div class="pagination-btns">
 

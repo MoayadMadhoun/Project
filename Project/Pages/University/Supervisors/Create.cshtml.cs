@@ -85,7 +85,7 @@ namespace Project.Pages.University.Supervisors
             }
 
             TempData["SuccessMessage"] = result.Message;
-            return RedirectToPage("/University/Index");
+            return RedirectToPage("/University/Supervisors");
         }
 
 

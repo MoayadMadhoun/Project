@@ -1,0 +1,331 @@
+﻿@page "{attendanceId:int}"
+@using Project.Models
+@model Project.Pages.Institution.Attendance.EditModel
+
+@{
+    ViewData["Title"] = "تعديل الحضور";
+    ViewData["UserType"] = "Institution";
+}
+
+<div class="mb-4">
+
+    <a asp-page="/Institution/Attendance"
+       class="text-decoration-none text-success fw-semibold">
+
+        <i class="bi bi-arrow-right"></i>
+        الرجوع لسجلات الحضور
+
+    </a>
+
+</div>
+
+<!-- Hero -->
+
+<div class="card border-0 shadow-sm mb-4">
+
+    <div class="card-body p-5 text-white"
+         style="background:linear-gradient(135deg,#14b8a6,#0f766e);border-radius:24px;">
+
+        <div class="d-flex justify-content-between align-items-center flex-wrap">
+
+            <div>
+
+                <h1 class="fw-bold mb-2">
+                    تعديل سجل الحضور
+                </h1>
+
+                <p class="fs-5 mb-2 opacity-75">
+                    @Model.StudentName
+                </p>
+
+                <p class="mb-0 opacity-75">
+                    @Model.OpportunityTitle
+                </p>
+
+            </div>
+
+            <div class="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center"
+                 style="width:90px;height:90px;">
+
+                <i class="bi bi-calendar-check fs-1"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Attendance Information -->
+
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+
+    <div class="card-header bg-white">
+
+        <h5 class="fw-bold mb-0">
+            معلومات سجل الحضور
+        </h5>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row g-4">
+
+            <div class="col-md-3">
+
+                <label class="text-muted">
+                    الطالب
+                </label>
+
+                <div class="fw-semibold">
+                    @Model.StudentName
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <label class="text-muted">
+                    التدريب
+                </label>
+
+                <div class="fw-semibold">
+                    @Model.OpportunityTitle
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <label class="text-muted">
+                    تاريخ الحضور
+                </label>
+
+                <div class="fw-semibold">
+                    @Model.Input.AttendanceDate.ToString("dd/MM/yyyy")
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <label class="text-muted">
+                    الحالة الحالية
+                </label>
+
+                <div>
+
+                    @if (Model.Input.Status == AttendanceRecord.AttendanceStatus.Present)
+                    {
+                        <span class="badge bg-success">
+                            حاضر
+                        </span>
+                    }
+                    else if (Model.Input.Status == AttendanceRecord.AttendanceStatus.Absent)
+                    {
+                        <span class="badge bg-danger">
+                            غائب
+                        </span>
+                    }
+                    else if (Model.Input.Status == AttendanceRecord.AttendanceStatus.Late)
+                    {
+                        <span class="badge bg-warning text-dark">
+                            متأخر
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">
+                            معذور
+                        </span>
+                    }
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Edit Form -->
+
+<form method="post">
+
+    <input asp-for="Input.AttendanceID" type="hidden" />
+    <input asp-for="Input.PlacementID" type="hidden" />
+
+    <div class="card border-0 shadow-sm rounded-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                تعديل بيانات الحضور
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div asp-validation-summary="ModelOnly"
+                 class="alert alert-danger">
+            </div>
+
+            <div class="row g-4">
+
+                <!-- Attendance Date -->
+
+                <div class="col-md-6">
+
+                    <label asp-for="Input.AttendanceDate"
+                           class="form-label">
+
+                        تاريخ الحضور
+
+                    </label>
+
+                    <input asp-for="Input.AttendanceDate"
+                           type="date"
+                           class="form-control" />
+
+                    <span asp-validation-for="Input.AttendanceDate"
+                          class="text-danger"></span>
+
+                </div>
+
+                <!-- Status -->
+
+                <div class="col-md-6">
+
+                    <label asp-for="Input.Status"
+                           class="form-label">
+
+                        حالة الحضور
+
+                    </label>
+
+                    <select asp-for="Input.Status"
+                            class="form-select">
+
+                        <option value="Present">
+                            حاضر
+                        </option>
+
+                        <option value="Absent">
+                            غائب
+                        </option>
+
+                        <option value="Late">
+                            متأخر
+                        </option>
+
+                        <option value="Excused">
+                            معذور
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <!-- Check In -->
+
+                <div class="col-md-6">
+
+                    <label asp-for="Input.CheckInTime"
+                           class="form-label">
+
+                        وقت الدخول
+
+                    </label>
+
+                    <input asp-for="Input.CheckInTime"
+                           type="time"
+                           class="form-control" />
+
+                    <span asp-validation-for="Input.CheckInTime"
+                          class="text-danger"></span>
+
+                </div>
+
+                <!-- Check Out -->
+
+                <div class="col-md-6">
+
+                    <label asp-for="Input.CheckOutTime"
+                           class="form-label">
+
+                        وقت الخروج
+
+                    </label>
+
+                    <input asp-for="Input.CheckOutTime"
+                           type="time"
+                           class="form-control" />
+
+                    <span asp-validation-for="Input.CheckOutTime"
+                          class="text-danger"></span>
+
+                </div>
+
+                <!-- Notes -->
+
+                <div class="col-12">
+
+                    <label asp-for="Input.Notes"
+                           class="form-label">
+
+                        الملاحظات
+
+                    </label>
+
+                    <textarea asp-for="Input.Notes"
+                              rows="5"
+                              class="form-control"></textarea>
+
+                    <span asp-validation-for="Input.Notes"
+                          class="text-danger"></span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="card-footer bg-white">
+
+            <div class="d-flex gap-2 flex-wrap">
+
+                <button type="submit"
+                        class="btn btn-success px-5">
+
+                    <i class="bi bi-check-circle me-2"></i>
+
+                    حفظ التعديلات
+
+                </button>
+
+                <a asp-page="/Institution/Attendance"
+                   class="btn btn-outline-secondary px-5">
+
+                    <i class="bi bi-x-circle me-2"></i>
+
+                    إلغاء
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</form>
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+}

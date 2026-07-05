@@ -261,11 +261,16 @@
 
             <tbody>
 
+                @{
+                    int rowNumber =
+                        ((Model.PageIndex - 1) * Model.PageSize) + 1;
+                }
+
                 @foreach (var item in Model.Specialties)
                 {
                     <tr>
 
-                        <td>@item.SpecialtyID</td>
+                        <td>@rowNumber</td>
 
                         <td>@item.Name</td>
 
@@ -298,7 +303,7 @@
 
                                 <a asp-page="Details"
                                    asp-route-id="@item.SpecialtyID"
-                                   class="btn btn-sm btn-outline-primary">
+                                   class="btn btn-sm btn-outline-primary mx-1 rounded-circle">
 
                                     <i class="bi bi-eye"></i>
 
@@ -306,7 +311,7 @@
 
                                 <a asp-page="Edit"
                                    asp-route-id="@item.SpecialtyID"
-                                   class="btn btn-sm btn-outline-success">
+                                   class="btn btn-sm btn-outline-success mx-1 rounded-circle">
 
                                     <i class="bi bi-pencil"></i>
 
@@ -314,7 +319,7 @@
 
                                 <a asp-page="Delete"
                                    asp-route-id="@item.SpecialtyID"
-                                   class="btn btn-sm btn-outline-danger">
+                                   class="btn btn-sm btn-outline-danger mx-1 rounded-circle">
 
                                     <i class="bi bi-trash"></i>
 
@@ -325,6 +330,7 @@
                         </td>
 
                     </tr>
+                    rowNumber++;
                 }
 
             </tbody>

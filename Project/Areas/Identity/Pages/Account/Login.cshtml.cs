@@ -2,19 +2,20 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Project.Models;
+using Project.Models.Enums;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Project.Areas.Identity.Pages.Account
 {
@@ -120,15 +121,26 @@ namespace Project.Areas.Identity.Pages.Account
                     _logger.LogInformation("User logged in.");
 
                     var user = await _user.FindByEmailAsync(Input.Email);
+
+                    if (!user.EmailConfirmed)
+                    {
+                        return RedirectToPage("/Account/VerifyCodeEmail",
+                            new
+                            {
+                                Email = user.Email,
+                                //AccountType = AccountType.Institution
+                            });
+                    }
+
                     if (await _user.IsInRoleAsync(user, "Student"))
                     {
                         returnUrl = Url.Content("~/Student/Index");
                     }
-                    else if (await _user.IsInRoleAsync(user, "UniversityTrainingAdmin"))
+                    else if (await _user.IsInRoleAsync(user, "UniversityTrainingAdmin") || await _user.IsInRoleAsync(user, "DepartmentHead") || await _user.IsInRoleAsync(user, "UniversitySupervisor"))
                     {
                         returnUrl = Url.Content("~/University/Index");
                     }
-                    else if (await _user.IsInRoleAsync(user, "InstitutionTrainingOfficer"))
+                    else if (await _user.IsInRoleAsync(user, "InstitutionTrainingOfficer") || await _user.IsInRoleAsync(user, "InstitutionSupervisor"))
                     {
                         returnUrl = Url.Content("~/Institution/Index");
                     }

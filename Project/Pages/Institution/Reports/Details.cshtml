@@ -1,0 +1,285 @@
+﻿@page
+@model Project.Pages.Institution.Reports.DetailsModel
+
+@{
+    ViewData["Title"] = "تفاصيل التقرير";
+}
+
+<div class="container-fluid">
+
+    <div class="mb-4">
+
+        <a asp-page="/Institution/Reports"
+           class="text-decoration-none text-success fw-semibold">
+
+            <i class="bi bi-arrow-right"></i>
+
+            العودة للتقارير
+
+        </a>
+
+    </div>
+
+    <!-- Hero -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body p-5 text-white"
+             style="background:#1ab29a;border-radius:24px;">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+
+                    <h2 class="fw-bold mb-3">
+
+                        @Model.Report.Title
+
+                    </h2>
+
+                    <div>
+
+                        الطالب:
+                        @Model.Report.Student.Name
+
+                    </div>
+
+                </div>
+
+                <div class="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center"
+                     style="width:90px;height:90px;">
+
+                    <i class="bi bi-file-earmark-text fs-1"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Information -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+
+                معلومات التقرير
+
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-4">
+
+                <div class="col-md-4">
+
+                    <label class="text-muted">
+                        الطالب
+                    </label>
+
+                    <div class="fw-semibold">
+
+                        @Model.Report.Student.Name
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label class="text-muted">
+                        التدريب
+                    </label>
+
+                    <div class="fw-semibold">
+
+                        @Model.Report.Placement.TrainingOpportunity.Title
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label class="text-muted">
+                        نوع التقرير
+                    </label>
+
+                    <div class="fw-semibold">
+
+                        @Model.Report.Type
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label class="text-muted">
+                        تاريخ الإرسال
+                    </label>
+
+                    <div class="fw-semibold">
+
+                        @Model.Report.SubmittedAt.ToString("yyyy/MM/dd")
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label class="text-muted">
+                        الحالة
+                    </label>
+
+                    <div>
+
+                        @switch (Model.Report.Status)
+                        {
+                            case Models.StudentReport.StudentReportStatus.Submitted:
+
+                                <span class="badge bg-warning text-dark">
+                                    قيد المراجعة
+                                </span>
+                                break;
+
+                            case Models.StudentReport.StudentReportStatus.Approved:
+
+                                <span class="badge bg-success">
+                                    مقبول
+                                </span>
+                                break;
+
+                            case Models.StudentReport.StudentReportStatus.Rejected:
+
+                                <span class="badge bg-danger">
+                                    مرفوض
+                                </span>
+                                break;
+
+                            case Models.StudentReport.StudentReportStatus.Reviewed:
+
+                                <span class="badge bg-primary">
+                                    تمت المراجعة
+                                </span>
+                                break;
+
+                            default:
+
+                                <span class="badge bg-secondary">
+                                    غير مسلّم
+                                </span>
+                                break;
+                        }
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label class="text-muted">
+                        المشرف الجامعي
+                    </label>
+
+                    <div class="fw-semibold">
+
+                        @(Model.Report.UniversitySupervisor?.FullName ?? "-")
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Content -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+
+                محتوى التقرير
+
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            @if (!string.IsNullOrEmpty(Model.Report.Content))
+            {
+                <div style="white-space:pre-wrap">
+
+                    @Model.Report.Content
+
+                </div>
+            }
+            else
+            {
+                <span class="text-muted">
+
+                    لا يوجد محتوى
+
+                </span>
+            }
+
+        </div>
+
+    </div>
+
+    <!-- File -->
+
+    <div class="card border-0 shadow-sm rounded-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+
+                الملف المرفق
+
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            @if (!string.IsNullOrEmpty(Model.Report.FilePath))
+            {
+                <a asp-page="/Institution/Reports"
+                   asp-page-handler="OpenFile"
+                   asp-route-reportId="@Model.Report.ReportID"
+                   class="btn btn-primary">
+
+                    <i class="bi bi-download"></i>
+
+                    فتح الملف
+
+                </a>
+            }
+            else
+            {
+                <span class="text-muted">
+
+                    لا يوجد ملف مرفق
+
+                </span>
+            }
+
+        </div>
+
+    </div>
+
+</div>

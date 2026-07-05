@@ -22,7 +22,7 @@ namespace Project.Models
 
         public TrainingInstitution? TrainingInstitution { get; set; }
 
-
+        public string? ProfileImagePath { get; set; }
         public AccountType AccountType { get; set; }
 
     }

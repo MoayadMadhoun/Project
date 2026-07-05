@@ -1,0 +1,320 @@
+﻿@page "{id:int}"
+@model Project.Pages.Institution.Evaluations.DeleteModel
+
+@{
+    ViewData["Title"] = "حذف التقييم";
+    ViewData["UserType"] = "Institution";
+    ViewData["PortalTitle"] = "بوابة المؤسسة";
+    ViewData["PortalSubtitle"] = "إدارة التقييمات";
+}
+
+<div class="container-fluid">
+
+    <!-- Back -->
+
+    <div class="mb-4">
+
+        <a asp-page="/Institution/Evaluations"
+           class="text-decoration-none text-success fw-semibold">
+
+            <i class="bi bi-arrow-right"></i>
+
+            الرجوع للتقييمات
+
+        </a>
+
+    </div>
+
+    <!-- Hero -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body p-5 text-white"
+             style="background:#dc3545;border-radius:24px;">
+
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+
+                <div>
+
+                    <h1 class="fw-bold mb-3">
+
+                        حذف التقييم
+
+                    </h1>
+
+                    <p class="mb-0 fs-5 opacity-75">
+
+                        سيتم حذف هذا التقييم نهائياً من النظام،
+                        ولا يمكن التراجع عن هذه العملية لاحقاً.
+
+                    </p>
+
+                </div>
+
+                <div class="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center"
+                     style="width:90px;height:90px;">
+
+                    <i class="bi bi-trash fs-1"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Evaluation Information -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+
+                معلومات التقييم
+
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-4">
+
+                <div class="col-md-6">
+
+                    <label class="text-muted">
+                        اسم الطالب
+                    </label>
+
+                    <div class="fw-semibold fs-6">
+
+                        @Model.Evaluation.TrainingPlacement.Student.Name
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <label class="text-muted">
+                        التدريب
+                    </label>
+
+                    <div class="fw-semibold fs-6">
+
+                        @Model.Evaluation.TrainingPlacement.TrainingOpportunity.Title
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label class="text-muted">
+                        نوع التقييم
+                    </label>
+
+                    <div class="fw-semibold">
+
+                        @Model.Evaluation.Type
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label class="text-muted">
+                        الدرجة
+                    </label>
+
+                    <div class="fw-semibold">
+
+                        @Model.Evaluation.Score /
+                        @Model.Evaluation.MaxScore
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label class="text-muted">
+                        النسبة
+                    </label>
+
+                    <div class="fw-semibold text-primary">
+
+                        @(((Model.Evaluation.Score * 100) /
+                            Model.Evaluation.MaxScore).ToString("0.0")) %
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label class="text-muted">
+                        تاريخ التقييم
+                    </label>
+
+                    <div class="fw-semibold">
+
+                        @Model.Evaluation.EvaluationDate.ToString("dd/MM/yyyy")
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label class="text-muted">
+                        الحالة
+                    </label>
+
+                    <div>
+
+                        @switch (Model.Evaluation.Status)
+                        {
+                            case Models.StudentEvaluation.StudentEvaluationStatus.Approved:
+                                <span class="badge bg-success">
+                                    مقبول
+                                </span>
+                                break;
+
+                            case Models.StudentEvaluation.StudentEvaluationStatus.Rejected:
+                                <span class="badge bg-danger">
+                                    مرفوض
+                                </span>
+                                break;
+
+                            case Models.StudentEvaluation.StudentEvaluationStatus.Submitted:
+                                <span class="badge bg-warning text-dark">
+                                    قيد المراجعة
+                                </span>
+                                break;
+
+                            default:
+                                <span class="badge bg-secondary">
+                                    مسودة
+                                </span>
+                                break;
+                        }
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label class="text-muted">
+                        تاريخ الإنشاء
+                    </label>
+
+                    <div class="fw-semibold">
+
+                        @Model.Evaluation.CreatedAt.ToString("dd/MM/yyyy")
+
+                    </div>
+
+                </div>
+
+                <div class="col-12">
+
+                    <label class="text-muted">
+                        الملاحظات
+                    </label>
+
+                    <div class="border rounded-3 p-3 bg-light">
+
+                        @(string.IsNullOrWhiteSpace(Model.Evaluation.Notes)
+                            ? "لا توجد ملاحظات"
+                            : Model.Evaluation.Notes)
+
+                    </div>
+
+                </div>
+
+                @if (!string.IsNullOrEmpty(Model.Evaluation.EvaluationPdfPath))
+                {
+                    <div class="col-12">
+
+                        <label class="text-muted">
+                            الملف المرفق
+                        </label>
+
+                        <div>
+
+                            <a asp-page-handler="OpenFile"
+                               asp-route-id="@Model.Evaluation.EvaluationID"
+                               class="btn btn-outline-primary">
+
+                                <i class="bi bi-file-earmark-pdf me-2"></i>
+
+                                عرض الملف
+
+                            </a>
+
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Warning -->
+
+    <div class="alert alert-danger border-0 shadow-sm">
+
+        <div class="d-flex align-items-center">
+
+            <i class="bi bi-exclamation-triangle-fill fs-4 me-3"></i>
+
+            <div>
+
+                <strong>
+                    تحذير:
+                </strong>
+
+                حذف التقييم سيؤدي إلى إزالة كافة بياناته بشكل نهائي
+                من النظام.
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Actions -->
+
+    <form method="post">
+
+        <div class="d-flex gap-2 mb-5">
+
+            <button type="submit"
+                    class="btn btn-danger px-5">
+
+                <i class="bi bi-trash me-2"></i>
+
+                تأكيد الحذف
+
+            </button>
+
+            <a asp-page="/Institution/Evaluations"
+               class="btn btn-light px-5">
+
+                إلغاء
+
+            </a>
+
+        </div>
+
+    </form>
+
+</div>
