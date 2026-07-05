@@ -199,7 +199,7 @@ namespace Project.Pages.Institution.AvailableOpportunities
             TempData["SuccessMessage"] =
                 "تم تعديل الفرصة التدريبية بنجاح";
 
-            return RedirectToPage("Index");
+            return RedirectToPage("/Institution/AvailableOpportunities");
         }
 
         private async Task LoadPageDataAsync()

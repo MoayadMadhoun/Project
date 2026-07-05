@@ -47,7 +47,7 @@ namespace Project.Pages.Institution.TrainingOppertunities
             TempData["SuccessMessage"] =
                 "تم إلغاء الفرصة التدريبية بنجاح";
 
-            return RedirectToPage("Index");
+            return RedirectToPage("/Institution/AvailableOpportunities");
         }
     }
 }
