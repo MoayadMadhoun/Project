@@ -63,7 +63,8 @@
     </div>
 
 </div>
-
+<form method="post">
+   
 <div class="form-check mt-4 mb-3">
 
     <input class="form-check-input"
@@ -73,13 +74,13 @@
     <label class="form-check-label"
            for="confirmCancel">
 
-        أؤكد رغبتي في إلغاء التقديم على هذه الفرصة.
-
+        أؤكد رغبتي في إلغاء التقدي
+        م على هذه الفرصة.
     </label>
-
+    <span class="text-danger" asp-validation-for="@Model.IsAgree"></span>
 </div>
 
-<button id="btnCancel"
+<button asp-for="@Model.IsAgree"  id="btnCancel"
         disabled
         class="btn btn-danger btn-lg">
 
@@ -95,7 +96,7 @@
     رجوع
 
 </a>
-
+</form>
 <script>
     const check = document.getElementById("confirmCancel");
 

@@ -35,9 +35,12 @@ namespace Project.Pages.Student
         public SelectList? Location { get; set; }
         public SelectList? Specialty { get; set; }
         public HashSet<int> AppliedIds { get; set; } = new();
+        public IQueryable<TrainingApplication> applications { get; set; }
+       public TrainingPlacement? CurrentTraining { get; set; }
         public PaginatedList<TrainingOpportunity>? Opportunities { get; set; }
         public int CurrentCount => Opportunities?.Count() ?? 0;
         public int TotalCount { get; set; }
+        
 
         public AvaliabelOpportunitiesModel(ApplicationDbContext context, StudentsRepository studentRepo, SpecialtyRepository SpecialtyRepository)
         {
@@ -74,17 +77,19 @@ namespace Project.Pages.Student
 
             if (student == null) return NotFound();
 
-            var applications = _studentRepo.GetAllApplicationByStudentId(student.StudentID);
+             applications = _studentRepo.GetAllApplicationByStudentId(student.StudentID);
 
             AppliedIds = applications.Select(a => a.OpportunityID).ToHashSet();
 
+             CurrentTraining = await  _context.TrainingPlacements.FirstOrDefaultAsync(x=>x.StudentID == student.StudentID);
+            
             if (!string.IsNullOrWhiteSpace(search))
             {
                 Opportunity = Opportunity.Where(
-                    O => EF.Functions.Like(O.Title, $"%{search}%") ||
+                O => EF.Functions.Like(O.Title, $"%{search}%") ||
                 EF.Functions.Like(O.OpportunitySpecialties.Select(s => s.Specialty.Name).FirstOrDefault(), $"%{search}%") ||
-                EF.Functions.Like(O.TrainingInstitution.Name, $"%{search}%")
-                );
+                EF.Functions.Like(O.TrainingInstitution.Name, $"%{search}%"));
+                
             }
             if (specialtyId.HasValue)
             {

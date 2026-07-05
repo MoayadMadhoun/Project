@@ -79,6 +79,7 @@
                 
                  @foreach(var Opportunity in  @Model.Opportunities)
                  {
+                     
                     <tr class="hover:bg-slate-50 transition-colors">
                         <td class="px-4 py-3 text-sm text-slate-900">@Opportunity.TrainingInstitution.Name</td>
                         <td class="px-4 py-3 text-sm text-slate-900 font-bold">@Opportunity.Title</td>
@@ -92,27 +93,38 @@
                         <td class="px-4 py-3 text-sm text-slate-600">@Model.GetDateOrMonth(@Opportunity)</td>
                         <td class="px-4 py-3 text-sm text-slate-600">@Opportunity.Capacity</td>
                         <td class="px-4 py-3">
-                            @if (@Opportunity.Status == @Models.TrainingOpportunity.Opportunity.Open) { 
+                            @if (@Opportunity.Status == Models.TrainingOpportunity.Opportunity.Open) { 
                             <span class="px-3 py-1 rounded-full text-[11px] font-bold bg-teal-100 text-primary"> مفتوحة</span> }
-                                @if (@Opportunity.Status == @Models.TrainingOpportunity.Opportunity.Cancelled) { 
+                                @if (@Opportunity.Status == Models.TrainingOpportunity.Opportunity.Cancelled) { 
                             <span class="px-3 py-1 rounded-full text-[11px] font-bold bg-teal-100 text-primary">منتهية</span> }
-                                @if (@Opportunity.Status == @Models.TrainingOpportunity.Opportunity.Closed) { 
+                                @if (@Opportunity.Status == Models.TrainingOpportunity.Opportunity.Closed) { 
                             <span class="px-3 py-1 rounded-full text-[11px] font-bold bg-teal-100 text-primary">مغلقة</span> }
                             </td>
                         <td class="px-4 py-3">
                             <div class="flex gap-2 items-center">
-
-                             @if(!Model.AppliedIds.Contains(Opportunity.OpportunityID) && 
-                             @Opportunity.Status == @Models.TrainingOpportunity.Opportunity.Open )
-                                                         
-                              {
-
+                                @* زر التقديم *@
+                             @if(!Model.AppliedIds.Contains(Opportunity.OpportunityID) &&
+                              @Opportunity.Status == @Models.TrainingOpportunity.Opportunity.Open &&  (
+                              Model.CurrentTraining?.EndDate == null || Opportunity.StartDate > Model.CurrentTraining.EndDate
+                              )){
+  
                               <a asp-page="/Student/Applications/Create" asp-route-OpportunityId="@Opportunity.OpportunityID" 
                               class="bg-primary text-white text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-primary/90">تقديم </a>
-
-                              }                               
+                              }    
+                                @* زر عرض التفاصيل *@
                                 <a asp-page="/Student/AvaliabelOpportunitie/Details" asp-route-id="@Opportunity.OpportunityID" class="text-primary text-xs font-bold hover:underline whitespace-nowrap">عرض التفاصيل</a>
+                             
+                                @* زر الغاء التقديم  *@
+                                @{      
+                                   var app = Model.applications.FirstOrDefault(x => x.OpportunityID == Opportunity.OpportunityID);
+                                 }
+                                 @if (
+                                 app != null && 
+                                 app.Status != Models.TrainingApplication.ApplicationStatus.Placed &&
+                                 app.Status != Models.TrainingApplication.ApplicationStatus.Withdrawn 
+                                 ){
                                 <a asp-page="/Student/Applications/Cancel" asp-route-id="@Opportunity.OpportunityID" class="text-primary text-xs font-bold hover:underline whitespace-nowrap">الغاء التقديم </a>
+                                 }
 
                              </div>
                         </td>

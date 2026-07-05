@@ -14,16 +14,14 @@ namespace Project.Pages.Student.Applications
         private readonly ApplicationDbContext _context;
         private readonly UserManager<AspNetUser> _userManager;
 
-        public CancelModel(
-            ApplicationDbContext context,
-            UserManager<AspNetUser> userManager)
-        {
+        public CancelModel( ApplicationDbContext context,  UserManager<AspNetUser> userManager){
+        
             _context = context;
             _userManager = userManager;
         }
 
         public TrainingApplication Application { get; set; } = default!;
-
+        public bool IsAgree { get; set;  }
         public async Task<IActionResult> OnGetAsync(int id)
         {
             var user = await _userManager.GetUserAsync(User);
@@ -41,7 +39,24 @@ namespace Project.Pages.Student.Applications
 
             return Page();
         }
+        public async Task<IActionResult> OnPostAsync (int id) {
 
+            var user = await _userManager.GetUserAsync(User);
+            var curentStudent = await _context.Students.FirstOrDefaultAsync(s => s.UserID == user.Id);
+
+            if (!IsAgree) // false 
+            {
+                ModelState.AddModelError(nameof(IsAgree), " يجب الموافقة لإكمال الإلغاء ⚠️ ");
+                return Page();
+            }
+            // true
+            var application = _context.TrainingApplications.FirstOrDefault(x=>x.OpportunityID == id && x.StudentID== curentStudent.StudentID);
+            if (application == null)
+                return NotFound();
+            application.Status = Models.TrainingApplication.ApplicationStatus.Withdrawn;
+            await _context.SaveChangesAsync();
+            return RedirectToPage("/Student/AvaliabelOpportunities");
+        }
 
     }
 }
