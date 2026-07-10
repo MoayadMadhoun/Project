@@ -36,12 +36,14 @@ namespace Project.Pages.Institution.ViewModels
         public int TermId { get; set; }
 
         public int? RequestId { get; set; }
+        [Required(ErrorMessage = "يجب اختيار تخصص واحد على الأقل.")]
         public List<int> SelectedSpecialties { get; set; } = new();
-
+        [Required(ErrorMessage = "يجب اختيار مهارة واحدة على الأقل.")]
         public List<int> SelectedSkills { get; set; } = new();
 
         public Dictionary<int, bool> SkillTypes { get; set; } = new();
 
+        public bool IsRequestBased { get; set; } = false; // false = فرصة مباشرة, true = استجابة لطلب
 
         [Required(ErrorMessage = "حالة الفرصة مطلوبة")]
         public Opportunity Status { get; set; } = Opportunity.Open;

@@ -1,0 +1,643 @@
+﻿@page "{requestId:int}"
+@model Project.Pages.Institution.OpportunityRequests.DetailsModel
+
+@{
+    ViewData["Title"] = "تفاصيل طلب الجامعة";
+    ViewData["UserType"] = "Institution";
+    ViewData["PortalTitle"] = "بوابة المؤسسة";
+    ViewData["PortalSubtitle"] = "إدارة التدريب الميداني";
+    ViewData["SearchPlaceholder"] = "بحث...";
+}
+
+<div class="card border-0 shadow-sm mb-4">
+
+    <div class="card-body p-5 text-white"
+         style="background:linear-gradient(135deg,#18B394,#14967A);border-radius:24px;">
+
+        <div class="d-flex justify-content-between align-items-center">
+
+            <div>
+
+                <div class="mb-2">
+
+                    @if (Model.IsInvitation)
+                    {
+                        <span class="badge bg-warning text-dark px-3 py-2">
+
+                            <i class="bi bi-envelope-fill me-1"></i>
+
+                            دعوة موجهة
+
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-primary px-3 py-2">
+
+                            <i class="bi bi-globe2 me-1"></i>
+
+                            طلب عام
+
+                        </span>
+                    }
+
+                </div>
+
+                <h1 class="fw-bold mb-3">
+
+                    @Model.Request.Title
+
+                </h1>
+
+                <p class="fs-5 opacity-75 mb-0">
+
+                    @Model.Request.University.Name
+
+                </p>
+
+            </div>
+
+            <div>
+
+                <div class="bg-white bg-opacity-25 rounded-circle
+                    d-flex align-items-center justify-content-center"
+                     style="width:90px;height:90px;">
+
+                    <i class="bi bi-building fs-1"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <a asp-page="Index"
+       class="btn btn-light">
+
+        <i class="bi bi-arrow-left"></i>
+
+        رجوع
+
+    </a>
+
+    @if (!Model.HasResponded)
+    {
+        <a asp-page="/Institution/OpportunityRequests/Response"
+           asp-route-requestId="@Model.Request.RequestID"
+           class="btn btn-success">
+
+            <i class="bi bi-reply-fill"></i>
+
+            إنشاء فرصة تدريب
+
+        </a>
+    }
+    else
+    {
+        <button class="btn btn-outline-success"
+                disabled>
+
+            <i class="bi bi-check-circle-fill"></i>
+
+            تمت الاستجابة لهذا الطلب
+
+        </button>
+    }
+
+</div>
+
+<div class="row mb-4">
+
+    <div class="col-lg-3">
+
+        <div class="card border-0 shadow-sm rounded-4">
+
+            <div class="card-body text-center">
+
+                <i class="bi bi-people-fill
+                text-success fs-2"></i>
+
+                <div class="text-muted mt-2">
+
+                    المقاعد المطلوبة
+
+                </div>
+
+                <h3 class="fw-bold mt-2">
+
+                    @Model.Request.RequestedSeats
+
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3">
+
+        <div class="card border-0 shadow-sm rounded-4">
+
+            <div class="card-body text-center">
+
+                <i class="bi bi-calendar-event
+                text-primary fs-2"></i>
+
+                <div class="text-muted mt-2">
+
+                    الفترة التدريبية
+
+                </div>
+
+                <h6 class="fw-bold mt-2">
+
+                    @Model.Request.TrainingTerm.Name
+
+                </h6>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3">
+
+        <div class="card border-0 shadow-sm rounded-4">
+
+            <div class="card-body text-center">
+
+                <i class="bi bi-clock-history
+                text-warning fs-2"></i>
+
+                <div class="text-muted mt-2">
+
+                    تاريخ الإنشاء
+
+                </div>
+
+                <h6 class="fw-bold mt-2">
+
+                    @Model.Request.CreatedAt.ToString("dd/MM/yyyy")
+
+                </h6>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3">
+
+        <div class="card border-0 shadow-sm rounded-4">
+
+            <div class="card-body text-center">
+
+                <i class="bi bi-hourglass-split
+                text-danger fs-2"></i>
+
+                <div class="text-muted mt-2">
+
+                    آخر موعد للتقديم
+
+                </div>
+
+                <h6 class="fw-bold mt-2">
+
+                    @(Model.Request.ApplicationDeadline?.ToString("dd/MM/yyyy") ?? "-")
+
+                </h6>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+
+    <div class="card-header bg-white py-3">
+
+        <h5 class="fw-bold mb-0">
+
+            <i class="bi bi-card-text text-success me-2"></i>
+
+            وصف الطلب
+
+        </h5>
+
+    </div>
+
+    <div class="card-body">
+
+        @if (!string.IsNullOrWhiteSpace(Model.Request.Description))
+        {
+            <p class="mb-0 lh-lg">
+
+                @Model.Request.Description
+
+            </p>
+        }
+        else
+        {
+            <span class="text-muted">
+
+                لا يوجد وصف لهذا الطلب.
+
+            </span>
+        }
+
+    </div>
+
+</div>
+
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+
+    <div class="card-header bg-white py-3">
+
+        <h5 class="fw-bold mb-0">
+
+            <i class="bi bi-building text-success me-2"></i>
+
+            الجهة الطالبة
+
+        </h5>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row">
+
+            <div class="col-md-4">
+
+                <label class="text-muted">
+
+                    الجامعة
+
+                </label>
+
+                <div class="fw-semibold fs-5">
+
+                    @Model.Request.University.Name
+
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <label class="text-muted">
+
+                    القسم
+
+                </label>
+
+                <div class="fw-semibold fs-5">
+
+                    @(Model.Request.Department?.Name ?? "-")
+
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <label class="text-muted">
+
+                    منشئ الطلب
+
+                </label>
+
+                <div class="fw-semibold fs-5">
+
+                    @(Model.Request.UniversityAdmin?.FullName ??
+                        Model.Request.DepartmentHead?.FullName)
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+
+    <div class="card-header bg-white py-3">
+
+        <h5 class="fw-bold mb-0">
+
+            <i class="bi bi-calendar-range text-success me-2"></i>
+
+            فترة التدريب
+
+        </h5>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row text-center">
+
+            <div class="col-md-4">
+
+                <div class="p-4 rounded-4 bg-light">
+
+                    <i class="bi bi-play-circle-fill
+                    text-success fs-2"></i>
+
+                    <div class="mt-3 text-muted">
+
+                        تاريخ البداية
+
+                    </div>
+
+                    <h5 class="fw-bold mt-2">
+
+                        @Model.Request.PreferredStartDate?.ToString("dd/MM/yyyy")
+
+                    </h5>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <div class="p-4 rounded-4 bg-light">
+
+                    <i class="bi bi-stop-circle-fill
+                    text-danger fs-2"></i>
+
+                    <div class="mt-3 text-muted">
+
+                        تاريخ النهاية
+
+                    </div>
+
+                    <h5 class="fw-bold mt-2">
+
+                        @Model.Request.PreferredEndDate?.ToString("dd/MM/yyyy")
+
+                    </h5>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <div class="p-4 rounded-4 bg-light">
+
+                    <i class="bi bi-calendar-check-fill
+                    text-primary fs-2"></i>
+
+                    <div class="mt-3 text-muted">
+
+                        الفترة التدريبية
+
+                    </div>
+
+                    <h5 class="fw-bold mt-2">
+
+                        @Model.Request.TrainingTerm.Name
+
+                    </h5>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+                <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+    <div class="card-header bg-white py-3">
+
+        <h5 class="fw-bold mb-0">
+
+            <i class="bi bi-mortarboard-fill text-success me-2"></i>
+
+            التخصصات المطلوبة
+
+        </h5>
+
+    </div>
+
+    <div class="card-body">
+
+        @if (Model.Request.Specialties.Any())
+        {
+            <div class="d-flex flex-wrap gap-2">
+
+                @foreach (var specialty in Model.Request.Specialties)
+                {
+                    <span class="badge rounded-pill px-4 py-3
+                                 bg-success-subtle
+                                 text-success
+                                 border">
+
+                        <i class="bi bi-bookmark-check-fill me-1"></i>
+
+                        @specialty.Specialty.Name
+
+                    </span>
+                }
+
+            </div>
+        }
+        else
+        {
+            <div class="text-muted">
+
+                لا توجد تخصصات مطلوبة.
+
+            </div>
+        }
+
+    </div>
+
+</div>
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+
+    <div class="card-header bg-white py-3">
+
+        <h5 class="fw-bold mb-0">
+
+            <i class="bi bi-stars text-success me-2"></i>
+
+            المهارات المطلوبة
+
+        </h5>
+
+    </div>
+
+    <div class="card-body">
+
+        @if (Model.Request.Skills.Any())
+        {
+            <div class="row">
+
+                @foreach (var skill in Model.Request.Skills)
+                {
+                    <div class="col-lg-4 mb-3">
+
+                        <div class="border rounded-4 p-3 h-100">
+
+                            <div class="d-flex justify-content-between align-items-center">
+
+                                <div>
+
+                                    <div class="fw-semibold">
+
+                                        @skill.Skill.Name
+
+                                    </div>
+
+                                </div>
+
+                                @if (skill.IsRequired)
+                                {
+                                    <span class="badge bg-danger">
+
+                                        إلزامية
+
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">
+
+                                        مفضلة
+
+                                    </span>
+                                }
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+        }
+        else
+        {
+            <div class="text-muted">
+
+                لا توجد مهارات مطلوبة.
+
+            </div>
+        }
+
+    </div>
+
+</div>
+<div class="card border-0 shadow-sm rounded-4 mb-5">
+
+    <div class="card-header bg-white py-3">
+
+        <h5 class="fw-bold mb-0">
+
+            <i class="bi bi-chat-left-text-fill text-success me-2"></i>
+
+            ملاحظات الجامعة
+
+        </h5>
+
+    </div>
+
+    <div class="card-body">
+
+        @if (!string.IsNullOrWhiteSpace(Model.Request.Notes))
+        {
+            <div class="lh-lg">
+
+                @Model.Request.Notes
+
+            </div>
+        }
+        else
+        {
+            <span class="text-muted">
+
+                لا توجد ملاحظات إضافية.
+
+            </span>
+        }
+
+    </div>
+
+</div>
+<div class="card border-0 shadow rounded-4 mb-5">
+
+    <div class="card-body p-5">
+
+        <div class="row align-items-center">
+
+            <div class="col-lg-8">
+
+                <h3 class="fw-bold">
+
+                    هل ترغب بالاستجابة لهذا الطلب؟
+
+                </h3>
+
+                <p class="text-muted mb-0">
+
+                    عند الاستجابة سيتم إنشاء فرصة تدريب مرتبطة بهذا الطلب، ويمكن للجامعة متابعة جميع مراحل التنفيذ من خلال النظام.
+
+                </p>
+
+            </div>
+
+            <div class="col-lg-4 text-end">
+
+                @if (Model.HasResponded)
+                {
+                    <button class="btn btn-outline-success btn-lg px-5" disabled>
+
+                        <i class="bi bi-check-circle-fill me-2"></i>
+
+                        تمت الاستجابة
+
+                    </button>
+                }
+                else
+                {
+                    <a asp-page="/Institution/OpportunityRequests/Response"
+                       asp-route-requestId="@Model.Request.RequestID"
+                       class="btn btn-success btn-lg px-5">
+
+                        <i class="bi bi-send-fill me-2"></i>
+
+                        إنشاء فرصة تدريب
+
+                    </a>
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

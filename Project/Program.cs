@@ -53,6 +53,7 @@ namespace Project
             builder.Services.AddScoped<OptService>();
             builder.Services.AddScoped<CreateUserService>();
             builder.Services.AddScoped<TrainingRequestService>();
+            builder.Services.AddScoped<TrainingTermService>();
 
             builder.Services.AddKeyedScoped<IUploadFils, UploadDocxFile >("file");
             builder.Services.AddRazorPages();

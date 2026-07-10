@@ -82,6 +82,23 @@ public class CreateModel : PageModel
                 "يجب أن يكون تاريخ النهاية بعد تاريخ البداية");
         }
 
+        // التحقق من اختيار تخصص واحد على الأقل
+        if (Input.SelectedSpecialties == null || !Input.SelectedSpecialties.Any())
+        {
+            ModelState.AddModelError(
+                nameof(Input.SelectedSpecialties),
+                "يجب اختيار تخصص واحد على الأقل.");
+        }
+
+        // التحقق من اختيار مهارة واحدة على الأقل
+        if (Input.SelectedSkills == null || !Input.SelectedSkills.Any())
+        {
+            ModelState.AddModelError(
+                nameof(Input.SelectedSkills),
+                "يجب اختيار مهارة واحدة على الأقل.");
+        }
+
+
         if (!ModelState.IsValid)
         {
             await LoadPageDataAsync();
@@ -172,7 +189,7 @@ public class CreateModel : PageModel
 
         TempData["SuccessMessage"] = "تمت إضافة الفرصة التدريبية بنجاح";
 
-        return RedirectToPage("../AvailableOpportunities");
+        return RedirectToPage("/Institution/AvailableOpportunities");
     }
 
     private async Task LoadPageDataAsync()

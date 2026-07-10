@@ -238,7 +238,7 @@
     .btn-primary,
     .nav-pills .nav-link.active,
     .nav-pills .show > .nav-link {
-        background-color: #006b58 !important;
+        background-color: #006b50 !important;
         border-color: #005141 !important;
     }
 
@@ -327,7 +327,7 @@
     <div class="hidden fixed inset-0 bg-black/50 z-40 transition-opacity duration-300 lg:hidden" id="mobile-overlay"></div>
 
     @* ===== TopNavBar ===== *@
-    <header class="fixed top-0 left-0 z-50 flex items-center h-16 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md shadow-sm border-b border-slate-100 dark:border-slate-800 lg:right-[280px] right-0 px-4 md:px-6 justify-between">
+    <header class="fixed top-0 left-0 z-50 flex items-center h-16 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md shadow-sm border-b border-slate-100 dark:border-slate-800 lg:right-[260px] right-0 px-4 md:px-6 justify-between">
         <div class="flex items-center gap-sm lg:hidden">
             <button class="p-2 text-slate-600 hover:bg-slate-100 rounded-lg" id="menu-toggle">
                 <span class="material-symbols-outlined">menu</span>
@@ -407,6 +407,9 @@
                     <a class="@NavClass("/Institution/AvailableOpportunities", "Opportunities")" asp-page="/Institution/AvailableOpportunities">
                         <span class="material-symbols-outlined">explore</span>الفرص التدريبية
                     </a>
+                    <a class="@NavClass("/Institution/OpportunityRequests/", "OpportunityRequests")" asp-page="/Institution/OpportunityRequests/index">
+                        <span class="material-symbols-outlined">domain</span>طلبات الجامعات
+                    </a>
                     <a class="@NavClass("/Institution/TrainingRequests", "TrainingRequests")" asp-page="/Institution/TrainingRequests">
                         <span class="material-symbols-outlined">group</span>طلبات الطلبة
                     </a>
@@ -422,7 +425,7 @@
                 <a class="@NavClass("/Institution/Reports", "Reports")" asp-page="/Institution/Reports">
                     <span class="material-symbols-outlined">description</span>التقارير
                 </a>
-                <a class="@NavClass("/Institution/Index", "Evaluations")" asp-page="/Institution/Evaluations">
+                <a class="@NavClass("/Institution/Evaluations", "Evaluations")" asp-page="/Institution/Evaluations">
                     <span class="material-symbols-outlined">grading</span>التقييمات
                 </a>
                 <a class="@NavClass("/Institution/Attendance", "Attendance")" asp-page="/Institution/Attendance">

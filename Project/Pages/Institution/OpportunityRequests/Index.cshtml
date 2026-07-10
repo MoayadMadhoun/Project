@@ -1,0 +1,315 @@
+﻿@page
+@model Project.Pages.Institution.OpportunityRequests.IndexModel
+@{
+    ViewData["Title"] = "طلبات الجامعات";
+    ViewData["UserType"] = "Institution";
+    ViewData["PortalTitle"] = "بوابة المؤسسة";
+    ViewData["PortalSubtitle"] = "إدارة التدريب الميداني";
+    ViewData["SearchPlaceholder"] = "ابحث عن جامعة أو طلب...";
+    ViewData["ActivePage"] = "TrainingRequests";
+}
+<link rel="stylesheet" href="~/Styles/opportunities.css">
+
+<div dir="rtl">
+
+    @* ===== Hero Section ===== *@
+    <section class="mb-lg md:mb-xl relative rounded-xl md:rounded-2xl overflow-hidden bg-primary-container p-6 md:p-xl text-on-primary">
+        <div class="relative z-10 max-w-2xl text-right">
+            <h1 class="font-h1 text-2xl md:text-h1 mb-md">طلبات الجامعات</h1>
+            <p class="font-body-lg text-sm md:text-body-lg opacity-90">
+                استعرض جميع طلبات التدريب المنشورة من الجامعات، أو تابع الدعوات الموجهة لمؤسستك وقم بالاستجابة لها.
+            </p>
+        </div>
+        <div class="absolute -bottom-10 -left-10 w-48 h-48 md:w-64 md:h-64 bg-white/10 rounded-full blur-3xl"></div>
+        <div class="absolute -top-20 -left-20 w-64 h-64 md:w-80 md:h-80 bg-secondary-fixed-dim/20 rounded-full blur-3xl"></div>
+    </section>
+
+    @* ===== Stats Cards ===== *@
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-lg">
+
+        <div class="bg-surface-container-lowest rounded-xl border border-green-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] p-4 text-center">
+            <div class="text-2xl font-bold text-green-600 mb-1">@Model.PublicRequestsCount</div>
+            <div class="text-xs text-slate-500 font-label-caps">الطلبات العامة</div>
+        </div>
+
+        <div class="bg-surface-container-lowest rounded-xl border border-blue-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] p-4 text-center">
+            <div class="text-2xl font-bold text-blue-600 mb-1">@Model.InvitationCount</div>
+            <div class="text-xs text-slate-500 font-label-caps">الدعوات الموجهة</div>
+        </div>
+
+        <div class="bg-surface-container-lowest rounded-xl border border-amber-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] p-4 text-center">
+            <div class="text-2xl font-bold text-amber-600 mb-1">@Model.NewInvitationsCount</div>
+            <div class="text-xs text-slate-500 font-label-caps">دعوات جديدة</div>
+        </div>
+
+        <div class="bg-surface-container-lowest rounded-xl border border-green-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] p-4 text-center">
+            <div class="text-2xl font-bold text-green-600 mb-1">@Model.RespondedCount</div>
+            <div class="text-xs text-slate-500 font-label-caps">تمت الاستجابة</div>
+        </div>
+
+    </div>
+
+    @* ===== Tabs ===== *@
+    @* ===== Tabs ===== *@
+    <ul class="flex gap-2 mb-lg list-none p-0 m-0" id="requestTabs" role="tablist">
+        <li class="nav-item">
+            <button class="nav-link active px-5 py-2.5 rounded-xl text-sm font-bold transition-colors"
+                    style="--active-bg: rgb(26 188 156); --active-color: white;"
+                    data-bs-toggle="pill"
+                    data-bs-target="#publicRequests"
+                    role="tab">
+                <i class="bi bi-globe2 me-1"></i> الطلبات العامة
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link px-5 py-2.5 rounded-xl text-sm font-bold transition-colors"
+                    data-bs-toggle="pill"
+                    data-bs-target="#myInvitations"
+                    role="tab">
+                <i class="bi bi-envelope-paper me-1"></i> الدعوات الموجهة
+            </button>
+        </li>
+    </ul>
+    <div class="tab-content">
+
+        @* ===== Public Requests Tab ===== *@
+        <div class="tab-pane fade show active" id="publicRequests">
+            <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] overflow-hidden">
+
+                <div class="p-4 md:p-lg border-b border-slate-100">
+                    <h3 class="font-h3 text-lg md:text-h3 text-slate-900">جميع الطلبات المنشورة</h3>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-right border-collapse min-w-[960px]">
+                        <thead class="bg-surface-container-low">
+                            <tr>
+                                <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الجامعة</th>
+                                <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">عنوان الطلب</th>
+                                <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">التخصصات</th>
+                                <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">المهارات</th>
+                                <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">المقاعد</th>
+                                <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الفترة</th>
+                                <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">تاريخ الإنشاء</th>
+                                <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-50">
+                            @if (Model.PublicRequests.Any())
+                            {
+                                foreach (var item in Model.PublicRequests)
+                                {
+                                    <tr class="hover:bg-slate-50 transition-colors">
+
+                                        <td class="px-4 py-3 text-sm text-slate-900 font-bold">@item.University.Name</td>
+
+                                        <td class="px-4 py-3 text-sm">
+                                            <div class="font-bold text-slate-900">@item.Title</div>
+                                            <div class="text-xs text-slate-400 mt-0.5">
+                                                @(item.Description?.Length > 60
+                                                    ? item.Description.Substring(0, 60) + "..."
+                                                    : item.Description)
+                                            </div>
+                                        </td>
+
+                                        <td class="px-4 py-3">
+                                            <div class="flex flex-wrap gap-1">
+                                                @foreach (var specialty in item.Specialties.Take(3))
+                                                {
+                                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-700">
+                                                        @specialty.Specialty.Name
+                                                    </span>
+                                                }
+                                                @if (item.Specialties.Count > 3)
+                                                {
+                                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-600">
+                                                        +@(item.Specialties.Count - 3)
+                                                    </span>
+                                                }
+                                            </div>
+                                        </td>
+
+                                        <td class="px-4 py-3">
+                                            <div class="flex flex-wrap gap-1">
+                                                @foreach (var skill in item.Skills.Take(3))
+                                                {
+                                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold @(skill.IsRequired ? "bg-red-100 text-red-700" : "bg-slate-100 text-slate-600")">
+                                                        @skill.Skill.Name
+                                                    </span>
+                                                }
+                                                @if (item.Skills.Count > 3)
+                                                {
+                                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-600">
+                                                        +@(item.Skills.Count - 3)
+                                                    </span>
+                                                }
+                                            </div>
+                                        </td>
+
+                                        <td class="px-4 py-3">
+                                            <span class="px-3 py-1 rounded-full text-[11px] font-bold bg-green-100 text-green-700">
+                                                @item.RequestedSeats
+                                            </span>
+                                        </td>
+
+                                        <td class="px-4 py-3 text-sm text-slate-600 whitespace-nowrap">@item.TrainingTerm.Name</td>
+
+                                        <td class="px-4 py-3 text-sm text-slate-600 whitespace-nowrap">@item.CreatedAt.ToString("yyyy/MM/dd")</td>
+
+                                        <td class="px-4 py-3">
+                                            <div class="flex gap-1">
+                                                <a asp-page="Details"
+                                                   asp-route-requestId="@item.RequestID"
+                                                   class="btn border border-primary text-primary text-xs font-bold px-2 py-2 rounded hover:bg-blue-50 flex items-center gap-1"
+                                                   title="عرض">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                                <a asp-page="/Institution/OpportunityRequests/Response"
+                                                   asp-route-requestId="@item.RequestID"
+                                                   class="btn border border-success text-success text-xs font-bold px-2 py-2 rounded hover:bg-emerald-50 flex items-center gap-1">
+                                                    <i class="bi bi-reply-fill"></i>
+                                                    استجابة
+                                                </a>
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="8" class="px-4 py-12 text-center">
+                                        <i class="bi bi-inbox text-slate-300 text-4xl block mb-3"></i>
+                                        <p class="text-sm text-slate-400">لا توجد طلبات منشورة حالياً.</p>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+        @* ===== Invitations Tab ===== *@
+        <div class="tab-pane fade" id="myInvitations">
+            <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] overflow-hidden">
+
+                <div class="p-4 md:p-lg border-b border-slate-100">
+                    <h3 class="font-h3 text-lg md:text-h3 text-slate-900">الدعوات الموجهة لمؤسستي</h3>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-right border-collapse min-w-[800px]">
+                        <thead class="bg-surface-container-low">
+                            <tr>
+                                <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الجامعة</th>
+                                <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">عنوان الطلب</th>
+                                <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الفترة</th>
+                                <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">تاريخ الإرسال</th>
+                                <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الحالة</th>
+                                <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-50">
+                            @if (Model.MyInvitations.Any())
+                            {
+                                foreach (var item in Model.MyInvitations)
+                                {
+                                    <tr class="hover:bg-slate-50 transition-colors">
+
+                                        <td class="px-4 py-3 text-sm text-slate-900 font-bold">@item.Request.University.Name</td>
+
+                                        <td class="px-4 py-3 text-sm text-slate-600">@item.Request.Title</td>
+
+                                        <td class="px-4 py-3 text-sm text-slate-600">@item.Request.TrainingTerm.Name</td>
+
+                                        <td class="px-4 py-3 text-sm text-slate-600 whitespace-nowrap">@item.SentAt.ToString("yyyy/MM/dd")</td>
+
+                                        <td class="px-4 md:px-lg py-4 md:py-md">
+                                            @{
+                                                var (badgeBg, badgeLabel) = item.Status switch
+                                                {
+                                                    Models.OpportunityRequestInstitution.OpportunityRequestInstitutionStatus.Invited  => ("bg-blue-100 text-blue-700",   "دعوة جديدة"),
+                                                    Models.OpportunityRequestInstitution.OpportunityRequestInstitutionStatus.Viewed   => ("bg-amber-100 text-amber-700", "تمت المشاهدة"),
+                                                    Models.OpportunityRequestInstitution.OpportunityRequestInstitutionStatus.Reponded => ("bg-green-100 text-green-700", "تمت الاستجابة"),
+                                                    Models.OpportunityRequestInstitution.OpportunityRequestInstitutionStatus.Declined => ("bg-red-100 text-red-700",     "مرفوض"),
+                                                    _ => ("bg-slate-100 text-slate-600", "—")
+                                                };
+                                            }
+                                            <span class="px-3 py-1 rounded-full text-[11px] font-bold @badgeBg">@badgeLabel</span>
+                                        </td>
+
+                                        <td class="px-4 py-3">
+                                            <div class="flex gap-1">
+                                                <a asp-page="Details"
+                                                   asp-route-requestId="@item.RequestID"
+                                                   class="btn border border-primary text-primary text-xs font-bold px-2 py-2 rounded hover:bg-blue-50 flex items-center gap-1"
+                                                   title="عرض">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                                @if (item.Status != Models.OpportunityRequestInstitution.OpportunityRequestInstitutionStatus.Reponded)
+                                                {
+                                                    <a asp-page="/Institution/OpportunityRequests/Response"
+                                                       asp-route-requestId="@item.RequestID"
+                                                       class="btn border border-success text-success text-xs font-bold px-2 py-2 rounded hover:bg-emerald-50 flex items-center gap-1">
+                                                        <i class="bi bi-reply-fill"></i>
+                                                        استجابة
+                                                    </a>
+                                                }
+                                                else
+                                                {
+                                                    <span class="btn border border-slate-200 text-slate-400 text-xs font-bold px-2 py-2 rounded flex items-center gap-1 cursor-not-allowed opacity-60">
+                                                        <i class="bi bi-check-circle"></i>
+                                                        تمت
+                                                    </span>
+                                                }
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="6" class="px-4 py-12 text-center">
+                                        <i class="bi bi-envelope-open text-slate-300 text-4xl block mb-3"></i>
+                                        <p class="text-sm text-slate-400">لا توجد دعوات موجهة لمؤسستك.</p>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+@section Styles {
+    <style>
+        /* Tabs styling to match visual identity */
+        #requestTabs .nav-link {
+            background-color: #f1f5f9;
+            color: #475569;
+            border: none;
+            border-radius: 0.75rem;
+        }
+
+            #requestTabs .nav-link:hover {
+                background-color: #e2e8f0;
+                color: #334155;
+            }
+
+            #requestTabs .nav-link.active {
+                background-color: #1abc9c !important;
+                color: #ffffff !important;
+                border: none;
+            }
+    </style>
+}
