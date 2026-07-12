@@ -40,6 +40,7 @@ namespace Project.Services
                     Message = "البريد الإلكتروني مستخدم مسبقاً"
                 };
             }
+            var commited = false;
 
             await using var transaction = await _context.Database.BeginTransactionAsync();
             try
@@ -114,6 +115,7 @@ namespace Project.Services
                 await _context.SaveChangesAsync();
 
                 await transaction.CommitAsync();
+                commited = true;
 
                 var body = $@"
                 <h2>مرحباً {user.FullName}</h2>
@@ -149,7 +151,11 @@ namespace Project.Services
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync();
+                if (!commited)
+                {
+                    await transaction.RollbackAsync();
+                }
+              
                 return new ServiceResult
                 {
                     Success = false,

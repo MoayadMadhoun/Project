@@ -29,7 +29,7 @@ public class CreateModel : PageModel
     public int InstitutionId { get; set; }
     public string CurrentOfficerId { get; set; }
     public List<SelectListItem> Terms { get; set; }
-    public SelectList Specialties { get; set; }
+    public SelectList Specialties { get; set; } = new SelectList(Enumerable.Empty<SelectListItem>());
 
     public List<Skill> Skills { get; set; } = [];
 
@@ -60,13 +60,13 @@ public class CreateModel : PageModel
         // التحقق من التواريخ
 
         if (Input.StartDate != default &&
-            Input.StartDate.Date < DateTime.Today)
+            Input.StartDate.Date < DateTime.Today )
         {
             ModelState.AddModelError(
                 nameof(Input.StartDate),
                 "لا يمكن اختيار تاريخ بداية في الماضي");
         }
-
+        
         if (Input.EndDate != default &&
             Input.EndDate.Date < DateTime.Today)
         {
@@ -101,6 +101,17 @@ public class CreateModel : PageModel
 
         if (!ModelState.IsValid)
         {
+            Specialties = new SelectList(
+           await _context.Specialties
+               .Where(x => x.IsActive)
+               .OrderBy(x => x.Name)
+               .ToListAsync(),
+           "SpecialtyID",
+           "Name");
+
+            Skills = await _context.Skills
+                .OrderBy(x => x.Name)
+                .ToListAsync();
             await LoadPageDataAsync();
             return Page();
         }
