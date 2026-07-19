@@ -68,13 +68,16 @@
             <div class="bg-surface-container-lowest rounded-xl border border-slate-100 p-6">
                 <h5 class="font-h3 text-slate-900 mb-md">التخصصات المستهدفة</h5>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-sm">
-                    @foreach (var item in Model.Specialties)
-                    {
+                    @if(Model.Specialties.Any()){
+                        @foreach (var item in Model.Specialties)
+                        {
                         <label class="flex items-center gap-2 p-2 bg-slate-50 rounded-lg cursor-pointer">
                             <input type="checkbox" name="Input.SelectedSpecialties" value="@item.Value" class="rounded text-primary" checked="@(Model.Input.SelectedSpecialties.Contains(int.Parse(item.Value)))" />
                             <span class="text-sm text-slate-700">@item.Text</span>
                         </label>
+                        }
                     }
+                    
                 </div>
             </div>
 
@@ -129,7 +132,7 @@
         @* Actions *@
         <div class="flex gap-3 pb-lg">
             <button type="submit" class="bg-primary text-white font-bold px-8 py-3 rounded-xl hover:bg-primary/90 transition-colors">حفظ التعديلات</button>
-            <a asp-page="Index" class="bg-white border border-slate-200 text-slate-600 font-bold px-8 py-3 rounded-xl hover:bg-slate-50 transition-colors">إلغاء</a>
+            <a asp-page="/Institution/AvailableOpportunities" class="bg-white border border-slate-200 text-slate-600 font-bold px-8 py-3 rounded-xl hover:bg-slate-50 transition-colors">إلغاء</a>
         </div>
     </div>
 </form>

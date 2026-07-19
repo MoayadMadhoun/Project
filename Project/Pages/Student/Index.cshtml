@@ -18,10 +18,10 @@
             استعد لرحلة التدريب الميداني، تابع طلباتك التدريبية، ارفع تقاريرك، وتواصل مع المشرفين بسهولة.
         </p>
         <div class="flex flex-col sm:flex-row gap-md">
-            <button class="w-full sm:w-auto bg-white text-primary font-button px-xl py-3 rounded-xl shadow-lg hover:bg-surface-container transition-colors">استعراض الفرص</button>
+            <a asp-page="/Student/AvaliabelOpportunities" class="w-full sm:w-auto bg-white text-primary font-button px-xl py-3 rounded-xl shadow-lg hover:bg-surface-container transition-colors">استعراض الفرص</a>
             @if (!Model.ProfileStatus)
             {
-                <button class="w-full sm:w-auto bg-primary/20 backdrop-blur-md border border-white/30 text-white font-button px-xl py-3 rounded-xl hover:bg-primary/30 transition-colors">إكمال الملف الشخصي</button>
+                <a asp-page="/Student/Profile" class="w-full sm:w-auto bg-primary/20 backdrop-blur-md border border-white/30 text-white font-button px-xl py-3 rounded-xl hover:bg-primary/30 transition-colors">إكمال الملف الشخصي</a>
             }
         </div>
     </div>

@@ -29,7 +29,7 @@
         @if (User.IsInRole("UniversityTrainingAdmin"))
         {
             <h1 class="font-h1 text-2xl md:text-h1 mb-md">
-                مرحباً بك، جامعة @Model.CurrentUniversity.Name
+                مرحباً بك،  @Model.CurrentUniversity.Name
             </h1>
         }
         else if (User.IsInRole("DepartmentHead"))

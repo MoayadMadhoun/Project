@@ -116,24 +116,98 @@ namespace Project.Services
                 await transaction.CommitAsync();
 
                 var body = $@"
-                <h2>مرحباً {user.FullName}</h2>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='UTF-8'>
+</head>
 
-                <p>تم إنشاء حسابك بنجاح.</p>
+<body style='margin:0;padding:0;background:#f4f7fb;font-family:Segoe UI,Arial,sans-serif;'>
 
-                <p>
-                    البريد الإلكتروني:
-                    {user.Email}
-                </p>
+<table width='100%' cellpadding='0' cellspacing='0' style='padding:40px 0;background:#f4f7fb;'>
+<tr>
+<td align='center'>
 
-                <p>
-                    كلمة المرور:
-                    {password}
-                </p>
+<table width='600' cellpadding='0' cellspacing='0'
+style='background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.08);'>
 
-                <p>
-                    كود التفعيل:
-                    <strong>{otp}</strong>
-                </p>";
+<tr>
+<td style='background:#00b793;padding:30px;text-align:center;'>
+
+<h1 style='margin:0;color:white;'>Spaceara</h1>
+
+</td>
+</tr>
+
+<tr>
+<td style='padding:40px;'>
+
+<h2 style='margin-top:0;color:#1e293b;'>
+مرحباً {user.FullName}
+</h2>
+
+<p style='font-size:16px;color:#475569;line-height:1.8;'>
+تم إنشاء حسابك بنجاح.
+</p>
+
+<div style='background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:20px;margin-top:20px;'>
+
+<p style='margin:0 0 15px;color:#1e293b;font-size:16px;'>
+<strong>البريد الإلكتروني:</strong><br>
+{user.Email}
+</p>
+
+<p style='margin:0 0 15px;color:#1e293b;font-size:16px;'>
+<strong>كلمة المرور:</strong><br>
+{password}
+</p>
+
+</div>
+
+<p style='margin-top:30px;font-size:16px;color:#475569;'>
+كود التفعيل:
+</p>
+
+<div style='text-align:center;margin-top:15px;'>
+
+<div style='display:inline-block;
+background:#e8fffa;
+border:2px dashed #00b793;
+padding:18px 40px;
+border-radius:12px;'>
+
+<span style='font-size:34px;
+font-weight:bold;
+letter-spacing:8px;
+color:#00b793;'>
+{otp}
+</span>
+
+</div>
+
+</div>
+
+</td>
+</tr>
+
+<tr>
+<td style='background:#f8fafc;border-top:1px solid #e2e8f0;padding:20px;text-align:center;'>
+
+<p style='margin:0;color:#64748b;font-size:14px;'>
+© {DateTime.Now.Year} Spaceara. All rights reserved.
+</p>
+
+</td>
+</tr>
+
+</table>
+
+</td>
+</tr>
+</table>
+
+</body>
+</html>";
 
                 await _emailSender.SendEmailAsync(
                     user.Email,

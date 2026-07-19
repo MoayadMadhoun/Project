@@ -12,7 +12,7 @@ using Project.Repostory;
 
 namespace Project.Pages.University
 {
-    [Authorize(Roles = "UniversityTrainingAdmin, DepartmentHead")]
+    [Authorize(Roles = "UniversityTrainingAdmin, DepartmentHead ,UniversitySupervisor")]
     public class AttendanceModel : PageModel
     {
         private readonly UniversityRepository _universityRepo;

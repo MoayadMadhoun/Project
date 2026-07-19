@@ -286,9 +286,126 @@ namespace Project.Areas.Identity.Pages.Account
                         IsUsed = false
 
                     });
+                   
                     await _dbContext.SaveChangesAsync();
-                    await _emailSender.SendEmailAsync(Input.Email, " 🚀 Verify your Spaceara account", $"Dear<b> {user.FullName }</b><br />,Welcome to Spaceara – the smart hub connecting students, universities, and training institutions!<br />  Please use the 6-digit verification code below to confirm your email address and activate your account:<br /><h2>  Verification Code : {otp}</h2><br />  ⏳ Important: This code is valid for 10 minutes only.<br /> If you didn't request this email, you can safely ignore it.<br /> Your account security is our priority.<br /><h2> Best regards, The Spaceara Team</h2>");
 
+                    var emailBody = $@"
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+<title>Verify Your Spaceara Account</title>
+</head>
+
+<body style='margin:0;padding:0;background-color:#f4f7fb;font-family:Segoe UI,Arial,sans-serif;'>
+
+<table width='100%' cellpadding='0' cellspacing='0' style='background:#f4f7fb;padding:40px 0;'>
+<tr>
+<td align='center'>
+
+<table width='600' cellpadding='0' cellspacing='0'
+style='background:#ffffff;border-radius:16px;overflow:hidden;
+box-shadow:0 8px 24px rgba(0,0,0,.08);'>
+
+<!-- Header -->
+<tr>
+<td style='background:#00b793;padding:35px;text-align:center;'>
+
+<h1 style='margin:0;color:#ffffff;font-size:34px;font-weight:bold;'>
+ Spaceara
+</h1>
+
+<p style='margin-top:10px;color:#d9fff8;font-size:16px;'>
+Field Training Management Platform
+</p>
+
+</td>
+</tr>
+
+<!-- Content -->
+<tr>
+<td style='padding:40px;'>
+
+<h2 style='margin-top:0;color:#1e293b;'>
+Hello {user.FullName},
+</h2>
+
+<p style='font-size:16px;color:#475569;line-height:1.8;'>
+Welcome to <strong style='color:#00b793;'>Spaceara</strong> —
+the smart platform connecting
+students, universities, and training institutions.
+</p>
+
+<p style='font-size:16px;color:#475569;line-height:1.8;'>
+Please use the verification code below to activate your account:
+</p>
+
+<div style='margin:35px 0;text-align:center;'>
+
+<div style='display:inline-block;
+background:#e8fffa;
+border:2px dashed #00b793;
+padding:18px 40px;
+border-radius:12px;'>
+
+<span style='font-size:34px;
+font-weight:bold;
+letter-spacing:8px;
+color:#00b793;'>
+{otp}
+</span>
+
+</div>
+
+</div>
+
+<p style='font-size:15px;color:#ef4444;font-weight:600;'>
+⏳ This verification code will expire in 10 minutes.
+</p>
+
+<p style='font-size:15px;color:#64748b;line-height:1.8;'>
+If you didn't create a Spaceara account, you can safely ignore this email.
+No further action is required.
+</p>
+
+</td>
+</tr>
+
+<!-- Footer -->
+<tr>
+<td style='background:#f8fafc;padding:30px;text-align:center;border-top:1px solid #e2e8f0;'>
+
+<p style='margin:0;color:#334155;font-size:16px;font-weight:bold;'>
+Thank you for choosing Spaceara ❤️
+</p>
+
+<p style='margin:12px 0 0;color:#64748b;font-size:14px;'>
+Connecting Students • Universities • Training Institutions
+</p>
+
+<p style='margin-top:18px;color:#94a3b8;font-size:13px;'>
+© {DateTime.Now.Year} Spaceara. All rights reserved.
+</p>
+
+</td>
+</tr>
+
+</table>
+
+</td>
+</tr>
+</table>
+
+</body>
+</html>
+";
+
+                    await _emailSender.SendEmailAsync(
+                        Input.Email,
+                        " Verify your Spaceara Account",
+                        emailBody
+                    );
                     return RedirectToPage("/Account/VerifyCodeEmail", new { email = Input.Email,accountType=AccountType });
 
 

@@ -26,7 +26,7 @@ namespace Project.Pages.Institution.AvailableOpportunities
         }
 
         [BindProperty]
-        public AddTrainingOpportunityVM Input { get; set; }
+        public EditTrainingOpportunityVM Input { get; set; }
 
         public TrainingInstitution? CurrentInstitution { get; set; }
 
@@ -67,7 +67,7 @@ namespace Project.Pages.Institution.AvailableOpportunities
             CreatedAt =
                 opportunity.CreatedAt;
 
-            Input = new AddTrainingOpportunityVM
+            Input = new EditTrainingOpportunityVM
             {
                 Title = opportunity.Title,
                 Description = opportunity.Description ?? "",
@@ -79,7 +79,7 @@ namespace Project.Pages.Institution.AvailableOpportunities
                 RequestId = opportunity.RequestID,
 
                 Status =
-                    (AddTrainingOpportunityVM.Opportunity)
+                    (EditTrainingOpportunityVM.Opportunity)
                     ((int)opportunity.Status),
 
                 SelectedSpecialties =

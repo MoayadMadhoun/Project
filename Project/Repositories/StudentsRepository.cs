@@ -37,8 +37,17 @@ namespace Project.Repositories
         }
         public async Task<Student?> GetStudentByUserId(string userId)
         {
+            return await _context.Students
 
-            return await StudentDetails().FirstOrDefaultAsync(s => s.UserID == userId);
+                .Include(x => x.Specialty)
+
+                .Include(x => x.Department)
+                    .ThenInclude(x => x.University)
+
+                .Include(x => x.Skills)
+                    .ThenInclude(x => x.Skill)
+
+                .FirstOrDefaultAsync(x => x.UserID == userId);
         }
         // get student By Id 
         public async Task<Student?> GetStudentById(int studentId)
@@ -552,6 +561,26 @@ namespace Project.Repositories
                 .Include(s=>s.Applications)
                 .ThenInclude(a=>a.TrainingOpportunity)
                 .Where(s => s.UniversityID == UniversityId).AsQueryable();
+        }
+        public async Task<List<Specialty>> GetSpecialtiesAsync()
+        {
+            return await _context.Specialties
+
+                .Where(x => x.IsActive)
+
+                .OrderBy(x => x.Name)
+
+                .ToListAsync();
+        }
+        public async Task<List<Skill>> GetSkillsAsync()
+        {
+            return await _context.Skills
+
+                .Where(x => x.IsActive)
+
+                .OrderBy(x => x.Name)
+
+                .ToListAsync();
         }
 
         public async Task SaveChangesAsync()

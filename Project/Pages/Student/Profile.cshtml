@@ -1,156 +1,520 @@
 ﻿@page
 @model Project.Pages.Student.ProfileModel
-
 @{
     ViewData["Title"] = "الملف الشخصي";
     ViewData["UserType"] = "Student";
+    ViewData["ActivePage"] = "Profile";
+
+    string LevelBadgeClass(string? level) => level switch
+    {
+        "Intermediate" => "bg-blue-100 text-blue-700",
+        "Advanced" => "bg-green-100 text-green-700",
+        _ => "bg-slate-100 text-slate-600"
+    };
+
+    string LevelText(int level) => level switch
+    {
+        1 => "الأول",
+        2 => "الثاني",
+        3 => "الثالث",
+        4 => "الرابع",
+        5 => "الخامس",
+        _ => "—"
+    };
 }
+<link rel="stylesheet" href="~/Styles/opportunities.css">
 
-<div class="container-fluid">
+<div dir="rtl">
 
+    @* ===== Alerts ===== *@
     @if (TempData["Success"] != null)
     {
-        <div class="alert alert-success">
-            @TempData["Success"]
+        <div class="mb-lg px-4 py-3 rounded-xl bg-green-50 border border-green-200 text-green-700 text-sm font-bold flex items-center gap-2">
+            <i class="bi bi-check-circle-fill"></i> @TempData["Success"]
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="mb-lg px-4 py-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-700 text-sm font-bold flex items-center gap-2">
+            <i class="bi bi-exclamation-triangle-fill"></i> @TempData["Error"]
+        </div>
+    }
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="mb-lg px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm">
+            <ul class="mb-0 list-disc list-inside">
+                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    <li>@error.ErrorMessage</li>
+                }
+            </ul>
         </div>
     }
 
-    <!-- Hero -->
+    @* ===== Hero Section ===== *@
+    <section class="mb-lg md:mb-xl relative rounded-xl md:rounded-2xl overflow-hidden bg-primary-container p-6 md:p-xl text-on-primary">
+        <div class="relative z-10 flex flex-col md:flex-row items-center md:items-start gap-6 text-right">
 
-    <div class="card border-0 shadow-sm mb-4">
-
-        <div class="card-body p-5 text-white"
-             style="background:#1ab29a;border-radius:24px;">
-
-            <div class="d-flex justify-content-between align-items-center">
-
-                <div>
-
-                    <h2 class="fw-bold mb-3">
-                        الملف الشخصي
-                    </h2>
-
-                    <p class="mb-0">
-                        إدارة بياناتك الشخصية
-                    </p>
-
-                </div>
-
-                <div class="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center"
-                     style="width:90px;height:90px;">
-
-                    <i class="bi bi-person-circle fs-1"></i>
-
-                </div>
-
+            <div class="flex-shrink-0">
+                <img src="@(string.IsNullOrWhiteSpace(Model.CurrentStudent.ProfileImagePath) ? "./images/default.jpg" : Model.CurrentStudent.ProfileImagePath)"
+                     class="w-28 h-28 rounded-full border-4 border-white/40 shadow-lg object-cover" />
             </div>
+
+            <div class="flex-1">
+                <h1 class="font-h1 text-2xl md:text-h1 mb-1">@Model.CurrentStudent.Name</h1>
+                <p class="opacity-75 text-sm mb-3">@Model.CurrentStudent.Department?.University?.Name</p>
+                <div class="flex flex-wrap gap-2 mb-2">
+                    <span class="px-3 py-1 rounded-full text-xs font-bold bg-white/20 text-white">@Model.CurrentStudent.Department?.Name</span>
+                    <span class="px-3 py-1 rounded-full text-xs font-bold bg-white/20 text-white">@Model.CurrentStudent.Specialty?.Name</span>
+                    <span class="px-3 py-1 rounded-full text-xs font-bold bg-white/20 text-white">GPA @Model.CurrentStudent.GPA</span>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <span class="px-3 py-1 rounded-full text-xs font-bold bg-white/10 text-white">
+                        <i class="bi bi-stars me-1"></i>@(Model.CurrentStudent.Skills?.Count ?? 0) مهارة
+                    </span>
+                    <span class="px-3 py-1 rounded-full text-xs font-bold bg-white/10 text-white">
+                        <i class="bi bi-briefcase me-1"></i>@Model.PortfolioCount عنصر Portfolio
+                    </span>
+                </div>
+            </div>
+
+            @if (Model.CanEdit)
+            {
+                <div class="flex-shrink-0">
+                    <label class="bg-white text-primary font-button px-4 py-2 rounded-xl shadow-lg hover:bg-surface-container transition-colors cursor-pointer text-sm font-bold" form="profileForm">
+                        <i class="bi bi-camera me-1"></i> تغيير الصورة
+                        <input type="file" form="profileForm" name="ProfileImage" accept=".jpg,.jpeg,.png" hidden>
+                    </label>
+                </div>
+            }
 
         </div>
+        <div class="absolute -bottom-10 -left-10 w-48 h-48 md:w-64 md:h-64 bg-white/10 rounded-full blur-3xl"></div>
+        <div class="absolute -top-20 -left-20 w-64 h-64 md:w-80 md:h-80 bg-secondary-fixed-dim/20 rounded-full blur-3xl"></div>
+    </section>
 
-    </div>
+    @* ══════════════════════════════════════════
+       وضع التعديل
+    ══════════════════════════════════════════ *@
+    @if (Model.CanEdit)
+    {
+        <form id="profileForm" method="post" enctype="multipart/form-data">
 
-    <form method="post">
+            <input type="hidden" asp-for="CurrentStudent.StudentID" />
+            <input type="hidden" asp-for="CurrentStudent.UserID" />
+            <input type="hidden" asp-for="CurrentStudent.DepartmentID" />
+            <input type="hidden" asp-for="CurrentStudent.UniversityID" />
 
-        <input asp-for="CurrentStudent.StudentID" type="hidden" />
-        <input asp-for="CurrentStudent.UserID" type="hidden" />
-
-        <div class="card border-0 shadow-sm rounded-4">
-
-            <div class="card-header bg-white">
-
-                <h5 class="fw-bold mb-0">
-                    بيانات الطالب
-                </h5>
-
+            @* اكتمال الملف الشخصي *@
+            <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] overflow-hidden mb-lg">
+                <div class="p-4 md:p-lg border-b border-slate-100">
+                    <h3 class="font-h3 text-lg md:text-h3 text-slate-900">
+                        <i class="bi bi-graph-up-arrow text-primary me-2"></i>
+                        اكتمال الملف الشخصي
+                    </h3>
+                </div>
+                <div class="p-4 md:p-lg">
+                    <div class="flex justify-between mb-2">
+                        <span class="text-sm font-bold text-slate-700">نسبة الاكتمال</span>
+                        <span class="text-sm font-bold text-primary">@Model.ProfileCompletionPercentage%</span>
+                    </div>
+                    <div class="w-full bg-slate-100 rounded-full h-3 mb-4">
+                        <div class="bg-primary-container h-3 rounded-full transition-all"
+                             style="width:@(Model.ProfileCompletionPercentage)%"></div>
+                    </div>
+                    @if (Model.MissingProfileItems.Any())
+                    {
+                        <ul class="space-y-1">
+                            @foreach (var item in Model.MissingProfileItems)
+                            {
+                                <li class="text-sm text-amber-700 flex items-center gap-2">
+                                    <i class="bi bi-exclamation-circle"></i> @item
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <div class="text-sm text-green-600 font-bold flex items-center gap-2">
+                            <i class="bi bi-check-circle-fill"></i> ملفك الشخصي مكتمل بالكامل.
+                        </div>
+                    }
+                </div>
             </div>
 
-            <div class="card-body">
+            @* المعلومات الشخصية *@
+            <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] overflow-hidden mb-lg">
+                <div class="p-4 md:p-lg border-b border-slate-100">
+                    <h3 class="font-h3 text-lg md:text-h3 text-slate-900">
+                        <i class="bi bi-person text-primary me-2"></i> المعلومات الشخصية
+                    </h3>
+                </div>
+                <div class="p-4 md:p-lg">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="flex flex-col gap-1">
+                            <label class="text-sm font-bold text-slate-700">الاسم الكامل</label>
+                            <input asp-for="CurrentStudent.Name"
+                                   class="w-full px-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20" />
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="text-sm font-bold text-slate-700">البريد الإلكتروني</label>
+                            <input value="@User.Identity?.Name" readonly
+                                   class="w-full px-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm text-slate-400 cursor-not-allowed" />
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="text-sm font-bold text-slate-700">رقم الهاتف</label>
+                            <input asp-for="CurrentStudent.PhoneNumber"
+                                   class="w-full px-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20" />
+                        </div>
+                        <div class="flex flex-col gap-1 md:col-span-2">
+                            <label class="text-sm font-bold text-slate-700">نبذة شخصية</label>
+                            <textarea asp-for="CurrentStudent.Bio" rows="6" maxlength="500"
+                                      class="w-full px-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20 resize-none"></textarea>
+                            <div class="text-xs text-slate-400 text-left">500 حرف كحد أقصى</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                <div class="row g-4">
+            @* البيانات الأكاديمية *@
+            <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] overflow-hidden mb-lg">
+                <div class="p-4 md:p-lg border-b border-slate-100">
+                    <h3 class="font-h3 text-lg md:text-h3 text-slate-900">
+                        <i class="bi bi-mortarboard-fill text-primary me-2"></i> البيانات الأكاديمية
+                    </h3>
+                </div>
+                <div class="p-4 md:p-lg">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="flex flex-col gap-1">
+                            <label class="text-sm font-bold text-slate-700">الرقم الجامعي</label>
+                            <input asp-for="CurrentStudent.StudentNumber" readonly
+                                   class="w-full px-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm text-slate-400 cursor-not-allowed" />
+                            <input type="hidden" asp-for="CurrentStudent.StudentNumber" />
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="text-sm font-bold text-slate-700">الجامعة</label>
+                            <input value="@Model.CurrentStudent.Department?.University?.Name" readonly
+                                   class="w-full px-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm text-slate-400 cursor-not-allowed" />
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="text-sm font-bold text-slate-700">القسم</label>
+                            <input value="@Model.CurrentStudent.Department?.Name" readonly
+                                   class="w-full px-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm text-slate-400 cursor-not-allowed" />
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="text-sm font-bold text-slate-700">التخصص</label>
+                            <select asp-for="CurrentStudent.SpecialtyID" asp-items="Model.Specialties"
+                                    class="w-full bg-slate-100 border-none rounded-xl text-sm font-bold text-slate-700 py-2.5 px-4 focus:ring-2 focus:ring-primary/20 cursor-pointer">
+                                <option value="">اختر التخصص</option>
+                            </select>
+                            <span class="text-xs text-red-500" asp-validation-for="CurrentStudent.SpecialtyID"></span>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="text-sm font-bold text-slate-700">المستوى الدراسي</label>
+                            <select asp-for="CurrentStudent.Level"
+                                    class="w-full bg-slate-100 border-none rounded-xl text-sm font-bold text-slate-700 py-2.5 px-4 focus:ring-2 focus:ring-primary/20 cursor-pointer">
+                                <option value="1">الأول</option>
+                                <option value="2">الثاني</option>
+                                <option value="3">الثالث</option>
+                                <option value="4">الرابع</option>
+                                <option value="5">الخامس</option>
+                            </select>
+                            <span class="text-xs text-red-500" asp-validation-for="CurrentStudent.Level"></span>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="text-sm font-bold text-slate-700">المعدل التراكمي</label>
+                            <input asp-for="CurrentStudent.GPA" readonly
+                                   class="w-full px-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm text-slate-400 cursor-not-allowed" />
+                        </div>
+                        <div class="flex flex-col gap-1 md:col-span-2">
+                            <label class="text-sm font-bold text-slate-700">الحالة الأكاديمية</label>
+                            <input asp-for="CurrentStudent.Status" readonly
+                                   class="w-full px-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm text-slate-400 cursor-not-allowed" />
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                    <div class="col-md-6">
+            @* الصورة الشخصية والسيرة الذاتية *@
+            <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] overflow-hidden mb-lg">
+                <div class="p-4 md:p-lg border-b border-slate-100">
+                    <h3 class="font-h3 text-lg md:text-h3 text-slate-900">
+                        <i class="bi bi-file-earmark-person text-primary me-2"></i> الصورة والسيرة الذاتية
+                    </h3>
+                </div>
+                <div class="p-4 md:p-lg grid grid-cols-1 md:grid-cols-2 gap-8">
 
-                        <label class="form-label">
-                            الاسم
-                        </label>
-
-                        <input asp-for="CurrentStudent.Name"
-                               class="form-control" />
-
+                    <div class="flex flex-col items-center gap-4">
+                        <h4 class="text-sm font-bold text-slate-700 self-start">الصورة الشخصية</h4>
+                        <img src="@(string.IsNullOrEmpty(Model.CurrentStudent.ProfileImagePath) ? "/images/default.jpg" : Model.CurrentStudent.ProfileImagePath)"
+                             class="w-36 h-36 rounded-full shadow border-4 border-white object-cover" />
+                        <div class="w-full flex flex-col gap-1">
+                            <input asp-for="ProfileImage" type="file" accept=".jpg,.jpeg,.png"
+                                   class="w-full px-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm" />
+                            <span class="text-xs text-slate-400">JPG أو PNG - حتى 5MB</span>
+                            <span class="text-xs text-red-500" asp-validation-for="ProfileImage"></span>
+                        </div>
                     </div>
 
-                    <div class="col-md-6">
-
-                        <label class="form-label">
-                            الرقم الجامعي
-                        </label>
-
-                        <input asp-for="CurrentStudent.StudentNumber"
-                               class="form-control"
-                               readonly />
-
-                    </div>
-
-                    <div class="col-md-6">
-
-                        <label class="form-label">
-                            رقم الهاتف
-                        </label>
-
-                        <input asp-for="CurrentStudent.PhoneNumber"
-                               class="form-control" />
-
-                    </div>
-
-                    <div class="col-md-6">
-
-                        <label class="form-label">
-                            المعدل التراكمي
-                        </label>
-
-                        <input asp-for="CurrentStudent.GPA"
-                               class="form-control"
-                               readonly />
-
-                    </div>
-
-                    <div class="col-12">
-
-                        <label class="form-label">
-                            نبذة شخصية
-                        </label>
-
-                        <textarea asp-for="CurrentStudent.Bio"
-                                  rows="5"
-                                  class="form-control">
-                        </textarea>
-
+                    <div class="flex flex-col gap-4">
+                        <h4 class="text-sm font-bold text-slate-700">السيرة الذاتية</h4>
+                        @if (!string.IsNullOrEmpty(Model.CurrentStudent.CVPath))
+                        {
+                            <div class="px-4 py-3 rounded-xl bg-green-50 border border-green-200 text-green-700 text-sm font-bold flex items-center gap-2">
+                                <i class="bi bi-check-circle-fill"></i> تم رفع السيرة الذاتية.
+                            </div>
+                            <a href="@Model.CurrentStudent.CVPath" target="_blank"
+                               class="btn border border-primary text-primary text-sm font-bold px-4 py-2 rounded hover:bg-blue-50 flex items-center gap-2 w-fit">
+                                <i class="bi bi-download"></i> تنزيل CV
+                            </a>
+                        }
+                        else
+                        {
+                            <div class="px-4 py-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-700 text-sm font-bold">
+                                لم يتم رفع CV حتى الآن.
+                            </div>
+                        }
+                        <div class="flex flex-col gap-1">
+                            <input asp-for="CVFile" type="file" accept=".pdf,.doc,.docx"
+                                   class="w-full px-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm" />
+                            <span class="text-xs text-slate-400">PDF أو Word - حتى 10MB</span>
+                            <span class="text-xs text-red-500" asp-validation-for="CVFile"></span>
+                        </div>
                     </div>
 
                 </div>
-
             </div>
 
-            <div class="card-footer bg-white">
-
+            @* زر الحفظ *@
+            <div class="flex justify-start mb-lg">
                 <button type="submit"
-                        class="btn btn-success px-5">
-
-                    <i class="bi bi-check-circle"></i>
-
-                    حفظ التعديلات
-
+                        class="bg-primary-container text-white font-button px-xl py-3 rounded-xl hover:bg-primary/90 transition-colors flex items-center gap-2">
+                    <i class="bi bi-save"></i> حفظ التعديلات
                 </button>
-
             </div>
 
+            @* المهارات *@
+            <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] overflow-hidden mb-lg">
+                <div class="p-4 md:p-lg border-b border-slate-100 flex justify-between items-center">
+                    <h3 class="font-h3 text-lg md:text-h3 text-slate-900">
+                        <i class="bi bi-stars text-amber-500 me-2"></i> المهارات
+                    </h3>
+                    <button type="button"
+                            class="bg-primary-container text-white font-button px-4 py-2 rounded-xl text-sm hover:bg-primary/90 transition-colors"
+                            data-bs-toggle="modal" data-bs-target="#addSkillModal">
+                        <i class="bi bi-plus-circle me-1"></i> إضافة مهارة
+                    </button>
+                </div>
+                <div class="p-4 md:p-lg">
+                    @if (Model.CurrentStudent.Skills != null && Model.CurrentStudent.Skills.Any())
+                    {
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            @foreach (var item in Model.CurrentStudent.Skills)
+                            {
+                                <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 flex flex-col justify-between gap-3">
+                                    <div>
+                                        <h4 class="text-sm font-bold text-slate-900 mb-1">@item.Skill.Name</h4>
+                                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold @LevelBadgeClass(item.Level.ToString())">
+                                            @item.Level
+                                        </span>
+                                    </div>
+                                    <form method="post" asp-page-handler="DeleteSkill"
+                                          onsubmit="return confirm('هل أنت متأكد من حذف هذه المهارة؟');">
+                                        <input type="hidden" name="studentSkillId" value="@item.StudentSkillID" />
+                                        <button type="submit"
+                                                class="btn border border-danger text-danger text-xs font-bold px-3 py-1.5 rounded hover:bg-rose-50 flex items-center gap-1 w-full justify-center">
+                                            <i class="bi bi-trash"></i> حذف
+                                        </button>
+                                    </form>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-12">
+                            <i class="bi bi-stars text-slate-300 text-4xl block mb-3"></i>
+                            <h5 class="text-slate-500 font-bold mb-1">لا توجد مهارات حتى الآن</h5>
+                            <p class="text-sm text-slate-400">أضف مهاراتك لتظهر للمؤسسات وتحصل على فرص تدريب مناسبة.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+
+        </form>
+
+        @* Modal إضافة مهارة *@
+        <div class="modal fade" id="addSkillModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content rounded-xl border-0 shadow-lg">
+                    <form method="post" asp-page-handler="AddSkill">
+                        <div class="modal-header border-b border-slate-100">
+                            <h5 class="modal-title font-bold text-slate-900">إضافة مهارة</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body flex flex-col gap-4 p-4">
+                            <div class="flex flex-col gap-1">
+                                <label class="text-sm font-bold text-slate-700">المهارة</label>
+                                <select class="w-full bg-slate-100 border-none rounded-xl text-sm font-bold text-slate-700 py-2.5 px-4 focus:ring-2 focus:ring-primary/20"
+                                        asp-for="NewSkill.SkillID" asp-items="Model.Skills">
+                                    <option value="">اختر المهارة</option>
+                                </select>
+                            </div>
+                            <div class="flex flex-col gap-1">
+                                <label class="text-sm font-bold text-slate-700">المستوى</label>
+                                <select asp-for="NewSkill.Level"
+                                        class="w-full bg-slate-100 border-none rounded-xl text-sm font-bold text-slate-700 py-2.5 px-4 focus:ring-2 focus:ring-primary/20">
+                                    <option value="Beginner">Beginner</option>
+                                    <option value="Intermediate">Intermediate</option>
+                                    <option value="Advanced">Advanced</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer border-t border-slate-100 flex gap-2 justify-start">
+                            <button type="submit"
+                                    class="bg-primary-container text-white font-button px-6 py-2.5 rounded-xl hover:bg-primary/90 transition-colors text-sm">
+                                إضافة
+                            </button>
+                            <button type="button"
+                                    class="bg-slate-100 text-slate-600 font-button px-6 py-2.5 rounded-xl hover:bg-slate-200 transition-colors text-sm"
+                                    data-bs-dismiss="modal">
+                                إلغاء
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        @* ══════════════════════════════════════════
+           وضع العرض (Read Only)
+        ══════════════════════════════════════════ *@
+
+        <div class="mb-lg px-4 py-3 rounded-xl bg-blue-50 border border-blue-200 text-blue-700 text-sm font-bold flex items-center gap-2">
+            <i class="bi bi-eye"></i> أنت تعرض ملف @Model.CurrentStudent.Name الشخصي.
         </div>
 
-    </form>
+        @* المعلومات الشخصية *@
+        <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] overflow-hidden mb-lg">
+            <div class="p-4 md:p-lg border-b border-slate-100">
+                <h3 class="font-h3 text-lg md:text-h3 text-slate-900">
+                    <i class="bi bi-person text-primary me-2"></i> المعلومات الشخصية
+                </h3>
+            </div>
+            <div class="p-4 md:p-lg grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="flex flex-col gap-1">
+                    <span class="text-xs text-slate-500 font-label-caps">الاسم الكامل</span>
+                    <span class="text-sm font-bold text-slate-900">@Model.CurrentStudent.Name</span>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <span class="text-xs text-slate-500 font-label-caps">رقم الهاتف</span>
+                    <span class="text-sm font-bold text-slate-900">
+                        @(string.IsNullOrWhiteSpace(Model.CurrentStudent.PhoneNumber) ? "غير متوفر" : Model.CurrentStudent.PhoneNumber)
+                    </span>
+                </div>
+                <div class="flex flex-col gap-1 md:col-span-2">
+                    <span class="text-xs text-slate-500 font-label-caps">نبذة شخصية</span>
+                    <p class="text-sm text-slate-700">
+                        @(string.IsNullOrWhiteSpace(Model.CurrentStudent.Bio) ? "لا توجد نبذة شخصية." : Model.CurrentStudent.Bio)
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        @* البيانات الأكاديمية *@
+        <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] overflow-hidden mb-lg">
+            <div class="p-4 md:p-lg border-b border-slate-100">
+                <h3 class="font-h3 text-lg md:text-h3 text-slate-900">
+                    <i class="bi bi-mortarboard-fill text-primary me-2"></i> البيانات الأكاديمية
+                </h3>
+            </div>
+            <div class="p-4 md:p-lg grid grid-cols-2 md:grid-cols-3 gap-6">
+                <div class="flex flex-col gap-1">
+                    <span class="text-xs text-slate-500 font-label-caps">الرقم الجامعي</span>
+                    <span class="text-sm font-bold text-slate-900">@Model.CurrentStudent.StudentNumber</span>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <span class="text-xs text-slate-500 font-label-caps">الجامعة</span>
+                    <span class="text-sm font-bold text-slate-900">@(Model.CurrentStudent.Department?.University?.Name ?? "—")</span>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <span class="text-xs text-slate-500 font-label-caps">القسم</span>
+                    <span class="text-sm font-bold text-slate-900">@(Model.CurrentStudent.Department?.Name ?? "—")</span>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <span class="text-xs text-slate-500 font-label-caps">التخصص</span>
+                    <span class="text-sm font-bold text-slate-900">@(Model.CurrentStudent.Specialty?.Name ?? "—")</span>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <span class="text-xs text-slate-500 font-label-caps">المعدل التراكمي</span>
+                    <span class="text-sm font-bold text-slate-900">@Model.CurrentStudent.GPA</span>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <span class="text-xs text-slate-500 font-label-caps">الحالة الأكاديمية</span>
+                    <span class="text-sm font-bold text-slate-900">@Model.CurrentStudent.Status</span>
+                </div>
+            </div>
+        </div>
+
+        @* السيرة الذاتية *@
+        <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] overflow-hidden mb-lg">
+            <div class="p-4 md:p-lg border-b border-slate-100">
+                <h3 class="font-h3 text-lg md:text-h3 text-slate-900">
+                    <i class="bi bi-file-earmark-person text-primary me-2"></i> السيرة الذاتية
+                </h3>
+            </div>
+            <div class="p-4 md:p-lg">
+                @if (!string.IsNullOrEmpty(Model.CurrentStudent.CVPath))
+                {
+                    <a href="@Model.CurrentStudent.CVPath" target="_blank"
+                       class="btn border border-primary text-primary text-sm font-bold px-4 py-2 rounded hover:bg-blue-50 flex items-center gap-2 w-fit">
+                        <i class="bi bi-download"></i> تنزيل CV
+                    </a>
+                }
+                else
+                {
+                    <p class="text-sm text-slate-400">لم يقم الطالب برفع سيرة ذاتية حتى الآن.</p>
+                }
+            </div>
+        </div>
+
+        @* المهارات *@
+        <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] overflow-hidden mb-lg">
+            <div class="p-4 md:p-lg border-b border-slate-100">
+                <h3 class="font-h3 text-lg md:text-h3 text-slate-900">
+                    <i class="bi bi-stars text-amber-500 me-2"></i> المهارات
+                </h3>
+            </div>
+            <div class="p-4 md:p-lg">
+                @if (Model.CurrentStudent.Skills != null && Model.CurrentStudent.Skills.Any())
+                {
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        @foreach (var item in Model.CurrentStudent.Skills)
+                        {
+                            <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+                                <h4 class="text-sm font-bold text-slate-900 mb-2">@item.Skill.Name</h4>
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold @LevelBadgeClass(item.Level.ToString())">
+                                    @item.Level
+                                </span>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-12">
+                        <i class="bi bi-stars text-slate-300 text-4xl block mb-3"></i>
+                        <p class="text-sm text-slate-400">لا توجد مهارات مضافة.</p>
+                    </div>
+                }
+            </div>
+        </div>
+    }
 
 </div>
 
-@section Scripts
-{
+@section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
