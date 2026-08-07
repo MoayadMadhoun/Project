@@ -1,42 +1,108 @@
 ﻿@page
 @model EmailModel
 @{
-    ViewData["Title"] = "Manage Email";
+    ViewData["Title"] = "تغيير البريد الإلكتروني";
     ViewData["ActivePage"] = ManageNavPages.Email;
 }
+<link rel="stylesheet" href="~/Styles/opportunities.css">
 
-<h3>@ViewData["Title"]</h3>
-<partial name="_StatusMessage" for="StatusMessage" />
-<div class="row">
-    <div class="col-md-6">
-        <form id="email-form" method="post">
-            <div asp-validation-summary="All" class="text-danger" role="alert"></div>
-            @if (Model.IsEmailConfirmed)
-            {
-                <div class="form-floating mb-3 input-group">
-                    <input asp-for="Email" class="form-control" placeholder="Please enter your email." disabled />
-                        <div class="input-group-append">
-                            <span class="h-100 input-group-text text-success font-weight-bold">✓</span>
+<div dir="rtl">
+
+    @* ===== Hero Section ===== *@
+    <section class="mb-lg md:mb-xl relative rounded-xl md:rounded-2xl overflow-hidden bg-primary-container p-6 md:p-xl text-on-primary">
+        <div class="relative z-10 max-w-2xl text-right">
+            <h1 class="font-h1 text-2xl md:text-h1 mb-md">البريد الإلكتروني</h1>
+            <p class="font-body-lg text-sm md:text-body-lg opacity-90 mb-lg">
+                إدارة البريد الإلكتروني الخاص بحسابك
+            </p>
+        </div>
+        <div class="absolute -bottom-10 -left-10 w-48 h-48 md:w-64 md:h-64 bg-white/10 rounded-full blur-3xl"></div>
+        <div class="absolute -top-20 -left-20 w-64 h-64 md:w-80 md:h-80 bg-secondary-fixed-dim/20 rounded-full blur-3xl"></div>
+    </section>
+
+    @* ===== Status Message ===== *@
+    <partial name="_StatusMessage" for="StatusMessage" />
+
+    @* ===== Form Card ===== *@
+    <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] overflow-hidden">
+
+        <div class="p-4 md:p-lg border-b border-slate-100">
+            <h3 class="font-h3 text-lg md:text-h3 text-slate-900">بيانات البريد الإلكتروني</h3>
+        </div>
+
+        <div class="p-4 md:p-lg">
+            <form id="email-form" method="post">
+                <div asp-validation-summary="ModelOnly"
+                     style="{@Model.ErrorMessage == null ? display:none; : display:block;}"
+                     class="mb-lg px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm">
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                    @* البريد الحالي *@
+                    @if (Model.IsEmailConfirmed)
+                    {
+                        <div class="flex flex-col gap-1">
+                            <label asp-for="Email"
+                                   class="text-sm font-bold text-slate-700"></label>
+                            <div class="relative">
+                                <input asp-for="Email"
+                                       class="w-full px-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm text-slate-400 cursor-not-allowed pr-10"
+                                       disabled />
+                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-green-600">
+                                    <i class="bi bi-patch-check-fill"></i>
+                                </span>
+                            </div>
+                            <span class="text-xs text-green-600 font-bold">
+                                <i class="bi bi-check-circle-fill me-1"></i> البريد الإلكتروني موثق
+                            </span>
                         </div>
-                    <label asp-for="Email" class="form-label"></label>
+                    }
+                    else
+                    {
+                        <div class="flex flex-col gap-1">
+                            <label asp-for="Email"
+                                   class="text-sm font-bold text-slate-700"></label>
+                            <input asp-for="Email"
+                                   class="w-full px-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm text-slate-400 cursor-not-allowed"
+                                   disabled />
+                            <button id="email-verification"
+                                    type="submit"
+                                    asp-page-handler="SendVerificationEmail"
+                                    class="self-start text-primary text-xs font-bold hover:underline mt-1">
+                                إرسال رسالة التحقق
+                            </button>
+                        </div>
+                    }
+
+                    @* البريد الجديد *@
+                    <div class="flex flex-col gap-1">
+                        <label asp-for="Input.NewEmail"
+                               class="text-sm font-bold text-slate-700"></label>
+                        <input asp-for="Input.NewEmail"
+                               class="w-full px-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20"
+                               placeholder="أدخل البريد الإلكتروني الجديد" />
+                        <span asp-validation-for="Input.NewEmail"
+                              class="text-xs text-red-500"></span>
+                    </div>
+
                 </div>
-            }
-            else
-            {
-                <div class="form-floating mb-3">
-                    <input asp-for="Email" class="form-control" placeholder="Please enter your email." disabled />
-                    <label asp-for="Email" class="form-label"></label>
-                    <button id="email-verification" type="submit" asp-page-handler="SendVerificationEmail" class="btn btn-link">Send verification email</button>
+
+                <div class="mt-6 flex justify-start">
+                    <button id="change-email-button"
+                            type="submit"
+                            asp-page-handler="ChangeEmail"
+                            class="bg-primary-container text-white font-button px-xl py-3 rounded-xl hover:bg-primary/90 transition-colors flex items-center gap-2">
+                        <i class="bi bi-envelope-check-fill"></i>
+                        حفظ البريد الإلكتروني
+                    </button>
                 </div>
-            }
-            <div class="form-floating mb-3">
-                <input asp-for="Input.NewEmail" class="form-control" autocomplete="email" aria-required="true" placeholder="Please enter new email." />
-                <label asp-for="Input.NewEmail" class="form-label"></label>
-                <span asp-validation-for="Input.NewEmail" class="text-danger"></span>
-            </div>
-            <button id="change-email-button" type="submit" asp-page-handler="ChangeEmail" class="w-100 btn btn-lg btn-primary">Change email</button>
-        </form>
+
+            </form>
+        </div>
+
     </div>
+
 </div>
 
 @section Scripts {

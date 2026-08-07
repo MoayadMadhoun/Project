@@ -1,0 +1,277 @@
+﻿@page "{RequestId}"
+@model Project.Pages.University.TrainingRequests.DeleteModel
+
+@{
+    ViewData["Title"] = "حذف طلب فرصة تدريب";
+    ViewData["UserType"] = "University";
+    ViewData["PortalTitle"] = "بوابة الجامعة";
+    ViewData["PortalSubtitle"] = "إدارة التدريب الميداني";
+    ViewData["SearchPlaceholder"] = "بحث عن طلاب، مؤسسات...";
+}
+
+<form method="post">
+
+    <!-- Hero -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body p-5 text-white"
+             style="background:#dc3545;border-radius:24px;">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+
+                    <h1 class="fw-bold mb-3">
+                        حذف طلب فرصة تدريب
+                    </h1>
+
+                    <p class="mb-0 fs-5 opacity-75">
+                        أنت على وشك حذف طلب فرصة تدريب من النظام.
+                    </p>
+
+                </div>
+
+                <div class="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center"
+                     style="width:90px;height:90px;">
+
+                    <i class="bi bi-trash fs-1"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Warning -->
+
+    <div class="alert alert-danger border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="d-flex align-items-center">
+
+            <i class="bi bi-exclamation-triangle-fill fs-2 me-3"></i>
+
+            <div>
+
+                <h5 class="mb-1">
+                    تنبيه هام
+                </h5>
+
+                <p class="mb-0">
+                    لا يمكن التراجع عن عملية الحذف بعد تنفيذها.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Request Information -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                بيانات الطلب
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-4">
+
+                <div class="col-md-3">
+
+                    <label class="text-muted">
+                        رقم الطلب
+                    </label>
+
+                    <div class="fw-semibold">
+                        @Model.TrainingOpportunityRequest?.RequestID
+                    </div>
+
+                </div>
+
+                <div class="col-md-5">
+
+                    <label class="text-muted">
+                        عنوان الطلب
+                    </label>
+
+                    <div class="fw-semibold">
+                        @(Model.TrainingOpportunityRequest?.Title??"_")
+                    </div>
+
+                </div>
+
+                <div class="col-md-2">
+
+                    <label class="text-muted">
+                        المقاعد المطلوبة
+                    </label>
+
+                    <div class="fw-semibold">
+                        @Model.TrainingOpportunityRequest?.RequestedSeats
+                    </div>
+
+                </div>
+
+                <div class="col-md-2">
+
+                    <label class="text-muted">
+                        الحالة
+                    </label>
+
+                    <div>
+
+                        <span class="badge bg-success">
+                            @Model.TrainingOpportunityRequest?.Status
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Training Period -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                فترة التدريب
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-md-4">
+
+                    <label class="text-muted">
+                        الفترة التدريبية
+                    </label>
+
+                    <div class="fw-semibold">
+                        @Model.TrainingOpportunityRequest?.TrainingTerm.Name
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label class="text-muted">
+                        تاريخ البداية
+                    </label>
+
+                    <div class="fw-semibold">
+                        @Model.TrainingOpportunityRequest?.PreferredStartDate
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label class="text-muted">
+                        تاريخ النهاية
+                    </label>
+
+                    <div class="fw-semibold">
+                        @Model.TrainingOpportunityRequest?.PreferredEndDate
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Notes -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                الملاحظات
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <p class="mb-0 text-muted">
+
+                @Model.TrainingOpportunityRequest?.Notes
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- Confirmation -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-body">
+
+            <div class="form-check">
+
+                <input class="form-check-input"
+                       type="checkbox"
+                       id="confirmDelete">
+
+                <label class="form-check-label fw-semibold"
+                       for="confirmDelete">
+
+                    أؤكد أنني أرغب بحذف هذا الطلب بشكل نهائي.
+
+                </label>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Buttons -->
+
+    <div class="d-flex gap-2 mb-5">
+
+        <button type="submit"
+                class="btn btn-danger px-5">
+
+            <i class="bi bi-trash me-1"></i>
+
+            حذف الطلب
+
+        </button>
+
+        <a asp-page="/University/AvailabelOpportunities"
+           class="btn btn-light px-5">
+
+            <i class="bi bi-arrow-right-circle me-1"></i>
+
+            رجوع
+
+        </a>
+
+    </div>
+
+</form>

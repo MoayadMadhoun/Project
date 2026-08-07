@@ -9,19 +9,19 @@ namespace Project.Models
         public int OpportunityID { get; set; }
         //InstitutionID FK
         [Required(ErrorMessage = "Institution is required")]
-        [ForeignKey(nameof(InstitutionID))]
+        
         public int InstitutionID { get; set; }
-        public TrainingInstitution TrainingInstitution { get; set; } = new TrainingInstitution();
+        [ForeignKey(nameof(InstitutionID))]
+        public TrainingInstitution TrainingInstitution { get; set; } 
         //TermID Fk
         [Required(ErrorMessage = "Training term is required")]
-        [ForeignKey(nameof(TermID))]
+        
         public int TermID { get; set; }
-        public TrainingTerm TrainingTerm { get; set; } = new TrainingTerm();
+        [ForeignKey(nameof(TermID))]
+        public TrainingTerm TrainingTerm { get; set; } = null!;
         //RequestID FK
-        [Required(ErrorMessage = "Request is required")]
-
-        [ForeignKey(nameof(RequestID))]
         public int? RequestID { get; set; }
+        [ForeignKey(nameof(RequestID))]
         public TrainingOpportunityRequest? Request { get; set; }
         [Required(ErrorMessage = "Title is required")]
         [MaxLength(200, ErrorMessage = "Title can't be more than 200 characters")]
@@ -40,15 +40,27 @@ namespace Project.Models
         public string? Location { get; set; }
         //InstitutionOfficerID FK
         [Required(ErrorMessage = "InstitutionOfficer is required")]
-        [ForeignKey(nameof(InstitutionOfficerID))]
+        
         public string InstitutionOfficerID { get; set; } = string.Empty;
-        public AspNetUser InstitutionOfficer { get; set; } = new AspNetUser();
+        [ForeignKey(nameof(InstitutionOfficerID))]
+        public AspNetUser InstitutionOfficer { get; set; } = null!;
         [Column(TypeName = "nvarchar(50)")]
         public Opportunity Status { get; set; } = Opportunity.Open;
         public enum Opportunity
         {
-            Open, Closed, Concelled
+            [Display(Name = "مفتوحة")]
+            Open =1,
+            [Display(Name = "مغلقة")]
+            Closed =2,
+            [Display(Name = "منتهية")]
+            Cancelled =3
         }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
+        
+        public ICollection<TrainingPlacement> TrainingPlacement { get; set; }=new List<TrainingPlacement>();
+
+        public ICollection<OpportunitySpecialty> OpportunitySpecialties{ get; set; } = new List<OpportunitySpecialty>();
+
+        public ICollection<OpportunitySkill> OpportunitySkills { get; set; } = new List<OpportunitySkill>();
     }
 }

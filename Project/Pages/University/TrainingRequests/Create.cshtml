@@ -1,0 +1,252 @@
+﻿@page
+@model Project.Pages.University.TrainingRequests.CreateModel
+@{
+    ViewData["Title"] = "طلب فرصة تدريب";
+    ViewData["UserType"] = "University";
+    ViewData["PortalTitle"] = "بوابة الجامعة";
+    ViewData["PortalSubtitle"] = "إدارة التدريب الميداني";
+    ViewData["SearchPlaceholder"] = "بحث عن طلاب، مؤسسات...";
+    ViewData["ActivePage"] = "Opportunities";
+}
+<link rel="stylesheet" href="~/Styles/opportunities.css">
+
+<div dir="rtl">
+    <form method="post">
+
+        @* ===== Hero Section ===== *@
+        <section class="mb-lg md:mb-xl relative rounded-xl md:rounded-2xl overflow-hidden bg-primary-container p-6 md:p-xl text-on-primary">
+            <div class="relative z-10 max-w-2xl text-right">
+                <h1 class="font-h1 text-2xl md:text-h1 mb-md">طلب فرصة تدريب</h1>
+                <p class="font-body-lg text-sm md:text-body-lg opacity-90 mb-lg">
+                    إنشاء طلب جديد للحصول على فرص تدريبية من المؤسسات للطلبة خلال فترة تدريب محددة.
+                </p>
+            </div>
+            <div class="absolute -bottom-10 -left-10 w-48 h-48 md:w-64 md:h-64 bg-white/10 rounded-full blur-3xl"></div>
+            <div class="absolute -top-20 -left-20 w-64 h-64 md:w-80 md:h-80 bg-secondary-fixed-dim/20 rounded-full blur-3xl"></div>
+        </section>
+
+        @* ===== بيانات الطلب ===== *@
+        <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] overflow-hidden mb-lg">
+            <div class="p-4 md:p-lg border-b border-slate-100">
+                <h3 class="font-h3 text-lg md:text-h3 text-slate-900">بيانات الطلب</h3>
+            </div>
+            <div class="p-4 md:p-lg">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+
+                    <div class="flex flex-col gap-1 md:col-span-8">
+                        <label class="text-sm font-bold text-slate-700">عنوان الطلب</label>
+                        <input asp-for="TrainingRequest.Title" type="text"
+                               class="w-full px-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20"
+                               placeholder="مثال: فرص تدريب لطلبة هندسة البرمجيات" />
+                        <span class="text-xs text-red-500" asp-validation-for="TrainingRequest.Title"></span>
+                    </div>
+
+                    <div class="flex flex-col gap-1 md:col-span-4">
+                        <label class="text-sm font-bold text-slate-700">عدد المقاعد المطلوبة</label>
+                        <input asp-for="TrainingRequest.RequestedSeats" type="number"
+                               class="w-full px-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20"
+                               placeholder="30" />
+                        <span class="text-xs text-red-500" asp-validation-for="TrainingRequest.RequestedSeats"></span>
+                    </div>
+
+                    <div class="flex flex-col gap-1 md:col-span-4">
+                        <label class="text-sm font-bold text-slate-700">المؤسسة</label>
+                        <select asp-items="Model.InstitutionsList" asp-for="TrainingRequest.InstitutionID"
+                                class="w-full bg-slate-100 border-none rounded-xl text-sm font-bold text-slate-700 py-2.5 px-4 focus:ring-2 focus:ring-primary/20 cursor-pointer">
+                            <option value="">اختر المؤسسة</option>
+                        </select>
+                        <span class="text-xs text-red-500" asp-validation-for="TrainingRequest.InstitutionID"></span>
+                    </div>
+
+                    <div class="flex flex-col gap-1 md:col-span-12">
+                        <label class="text-sm font-bold text-slate-700">وصف الطلب</label>
+                        <textarea asp-for="TrainingRequest.Description" rows="5"
+                                  class="w-full px-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20 resize-none"
+                                  placeholder="أدخل وصفاً تفصيلياً للفرص التدريبية المطلوبة ومتطلبات التدريب..."></textarea>
+                        <span class="text-xs text-red-500" asp-validation-for="TrainingRequest.Description"></span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        @* ===== فترة التدريب ===== *@
+        <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] overflow-hidden mb-lg">
+            <div class="p-4 md:p-lg border-b border-slate-100">
+                <h3 class="font-h3 text-lg md:text-h3 text-slate-900">فترة التدريب</h3>
+            </div>
+            <div class="p-4 md:p-lg">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-bold text-slate-700">فترة التدريب</label>
+                        <select asp-items="Model.TrainingTermsList" asp-for="TrainingRequest.TermID"
+                                class="w-full bg-slate-100 border-none rounded-xl text-sm font-bold text-slate-700 py-2.5 px-4 focus:ring-2 focus:ring-primary/20 cursor-pointer">
+                            <option value="">اختر الفصل</option>
+                        </select>
+                        <span class="text-xs text-red-500" asp-validation-for="TrainingRequest.TermID"></span>
+                    </div>
+
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-bold text-slate-700">تاريخ البداية المفضل</label>
+                        <input asp-for="TrainingRequest.PreferredStartDate" type="date"
+                               class="w-full px-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20" />
+                        <span class="text-xs text-red-500" asp-validation-for="TrainingRequest.PreferredStartDate"></span>
+                    </div>
+
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-bold text-slate-700">تاريخ النهاية المفضل</label>
+                        <input asp-for="TrainingRequest.PreferredEndDate" type="date"
+                               class="w-full px-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20" />
+                        <span class="text-xs text-red-500" asp-validation-for="TrainingRequest.PreferredEndDate"></span>
+                    </div>
+
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-bold text-slate-700">آخر موعد لتقديم الطلبة</label>
+                        <input asp-for="TrainingRequest.ApplicationDeadline" type="date"
+                               class="w-full px-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20" />
+                        <span class="text-xs text-red-500" asp-validation-for="TrainingRequest.ApplicationDeadline"></span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        @* ===== التخصصات المطلوبة ===== *@
+        <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] overflow-hidden mb-lg">
+            <div class="p-4 md:p-lg border-b border-slate-100">
+                <h3 class="font-h3 text-lg md:text-h3 text-slate-900">
+                    <i class="bi bi-mortarboard-fill text-primary me-2"></i>
+                    التخصصات المطلوبة
+                </h3>
+            </div>
+            <div class="p-4 md:p-lg">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    @foreach (var specialty in Model.SpecialtiesList)
+                    {
+                        <label for="sp_@specialty.Value"
+                               class="flex items-center gap-3 p-3 bg-slate-50 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-100 transition-colors">
+                            <input class="w-4 h-4 accent-primary cursor-pointer"
+                                   type="checkbox"
+                                   name="TrainingRequest.SelectedSpecialties"
+                                   value="@specialty.Value"
+                                   id="sp_@specialty.Value" />
+                            <span class="text-sm font-bold text-slate-700">@specialty.Text</span>
+                        </label>
+                    }
+                </div>
+            </div>
+        </div>
+
+        @* ===== المهارات المطلوبة ===== *@
+        <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] overflow-hidden mb-lg">
+            <div class="p-4 md:p-lg border-b border-slate-100">
+                <h3 class="font-h3 text-lg md:text-h3 text-slate-900">
+                    <i class="bi bi-lightbulb-fill text-amber-500 me-2"></i>
+                    المهارات المطلوبة
+                </h3>
+            </div>
+            <div class="p-4 md:p-lg">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    @for (int i = 0; i < Model.TrainingRequest.Skills.Count; i++)
+                    {
+                        <div class="flex items-center justify-between p-3 bg-slate-50 border border-slate-200 rounded-xl">
+                            <div class="flex items-center gap-3">
+                                <input asp-for="TrainingRequest.Skills[i].Selected"
+                                       class="w-4 h-4 accent-primary cursor-pointer" />
+                                <input type="hidden" asp-for="TrainingRequest.Skills[i].SkillId" />
+                                <input type="hidden" asp-for="TrainingRequest.Skills[i].SkillName" />
+                                <span class="text-sm font-bold text-slate-700">
+                                    @Model.TrainingRequest.Skills[i].SkillName
+                                </span>
+                            </div>
+                            <select asp-for="TrainingRequest.Skills[i].IsRequired"
+                                    class="bg-slate-100 border-none rounded-lg text-xs font-bold text-slate-700 py-1.5 px-3 focus:ring-2 focus:ring-primary/20 cursor-pointer">
+                                <option value="true">أساسية</option>
+                                <option value="false">مفضلة</option>
+                            </select>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        @* ===== نطاق الطلب ===== *@
+        <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] overflow-hidden mb-lg">
+            <div class="p-4 md:p-lg border-b border-slate-100">
+                <h3 class="font-h3 text-lg md:text-h3 text-slate-900">نطاق الطلب</h3>
+            </div>
+            <div class="p-4 md:p-lg">
+                <div class="flex items-center gap-4 p-4 bg-slate-50 border border-slate-200 rounded-xl">
+                    <span class="material-symbols-outlined text-primary text-3xl">business</span>
+                    <div>
+                        <div class="text-sm font-bold text-slate-900">الجامعة الحالية</div>
+                        <div class="text-sm text-slate-500">سيتم ربط الطلب تلقائياً بالجامعة الحالية وفقاً لصلاحيات المستخدم.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @* ===== حالة الطلب ===== *@
+        <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] overflow-hidden mb-lg">
+            <div class="p-4 md:p-lg border-b border-slate-100">
+                <h3 class="font-h3 text-lg md:text-h3 text-slate-900">حالة الطلب</h3>
+            </div>
+            <div class="p-4 md:p-lg">
+                <select asp-for="TrainingRequest.Status"
+                        class="w-full md:w-1/3 bg-slate-100 border-none rounded-xl text-sm font-bold text-slate-700 py-2.5 px-4 focus:ring-2 focus:ring-primary/20 cursor-pointer">
+                    <option value="0">مسودة</option>
+                    <option value="1">منشور</option>
+                    <option value="2">مغلق</option>
+                    <option value="3">ملغى</option>
+                </select>
+                <span class="text-xs text-red-500" asp-validation-for="TrainingRequest.Status"></span>
+            </div>
+        </div>
+
+        @* ===== ملاحظات إضافية ===== *@
+        <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] overflow-hidden mb-lg">
+            <div class="p-4 md:p-lg border-b border-slate-100">
+                <h3 class="font-h3 text-lg md:text-h3 text-slate-900">ملاحظات إضافية</h3>
+            </div>
+            <div class="p-4 md:p-lg">
+                <textarea asp-for="TrainingRequest.Notes" rows="4"
+                          class="w-full px-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20 resize-none"
+                          placeholder="أدخل أي ملاحظات أو متطلبات إضافية للمؤسسات (اختياري)..."></textarea>
+                <span class="text-xs text-red-500" asp-validation-for="TrainingRequest.Notes"></span>
+            </div>
+        </div>
+
+        @* ===== ملاحظة مهمة ===== *@
+        <div class="bg-surface-container-lowest rounded-xl border border-blue-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] overflow-hidden mb-lg">
+            <div class="p-4 md:p-lg flex items-start gap-4">
+                <span class="material-symbols-outlined text-primary text-3xl mt-0.5">info</span>
+                <div>
+                    <div class="text-sm font-bold text-slate-900 mb-1">ملاحظة مهمة</div>
+                    <p class="text-sm text-slate-500 mb-0">
+                        يتم تحديد الجامعة تلقائياً من حساب المستخدم الحالي، كما يتم تحديد منشئ الطلب تلقائياً سواء كان مسؤول التدريب العام أو رئيس القسم حسب الصلاحيات الممنوحة له.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        @* ===== Buttons ===== *@
+        <div class="flex gap-3 mb-lg">
+            <button type="submit"
+                    class="bg-primary-container text-white font-button px-xl py-3 rounded-xl hover:bg-primary/90 transition-colors flex items-center gap-2">
+                <i class="bi bi-send"></i>
+                نشر الطلب
+            </button>
+            <a asp-page="/University/AvailabelOpportunities"
+               class="bg-slate-100 text-slate-600 font-button px-xl py-3 rounded-xl hover:bg-slate-200 transition-colors flex items-center gap-2">
+                <i class="bi bi-x-circle"></i>
+                إلغاء
+            </a>
+        </div>
+
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial.cshtml" />
+}

@@ -1,0 +1,261 @@
+﻿@page
+@model Project.Pages.Student.EvaluationsModel
+@{
+    ViewData["Title"] = "التقييمات";
+    ViewData["UserType"] = "Student";
+    ViewData["UserName"] = "أحمد محمد";
+    ViewData["PortalTitle"] = "بوابة الطالب";
+    ViewData["PortalSubtitle"] = "إدارة التدريب الأكاديمي";
+    ViewData["SearchPlaceholder"] = "بحث في المنصة...";
+    ViewData["ActivePage"] = "Evaluations";
+}
+<link rel="stylesheet" href="~/Styles/opportunities.css">
+
+<div dir="rtl">
+
+    @* ===== Hero Section ===== *@
+    <section class="mb-lg md:mb-xl relative rounded-xl md:rounded-2xl overflow-hidden bg-primary-container p-6 md:p-xl text-on-primary">
+        <div class="relative z-10 max-w-2xl text-right">
+            <h1 class="font-h1 text-2xl md:text-h1 mb-md">التقييمات</h1>
+            <p class="font-body-lg text-sm md:text-body-lg opacity-90">
+                عرض جميع التقييمات التي حصلت عليها خلال فترة التدريب
+            </p>
+        </div>
+        <div class="absolute -bottom-10 -left-10 w-48 h-48 md:w-64 md:h-64 bg-white/10 rounded-full blur-3xl"></div>
+        <div class="absolute -top-20 -left-20 w-64 h-64 md:w-80 md:h-80 bg-secondary-fixed-dim/20 rounded-full blur-3xl"></div>
+    </section>
+
+    @* ===== Filters Bar ===== *@
+    <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] p-4 mb-lg">
+        <form method="get" class="flex flex-wrap gap-3 items-center justify-end">
+
+            <div class="relative flex-1 min-w-[180px]">
+                <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+                <input asp-for="SearchTerm"
+                       class="w-full pr-10 pl-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20"
+                       placeholder="ابحث في التقييمات..." />
+            </div>
+
+            <select asp-for="EvaluationStatus"
+                    class="bg-slate-100 border-none rounded-xl text-sm font-bold text-slate-700 py-2.5 px-4 focus:ring-2 focus:ring-primary/20 cursor-pointer">
+                <option value="">كل الحالات</option>
+                <option value="0">مسودة</option>
+                <option value="1">تم التسليم</option>
+                <option value="2">معتمد</option>
+                <option value="3">مرفوض</option>
+            </select>
+
+            <select asp-for="EvaluationType"
+                    class="bg-slate-100 border-none rounded-xl text-sm font-bold text-slate-700 py-2.5 px-4 focus:ring-2 focus:ring-primary/20 cursor-pointer">
+                <option value="">كل الأنواع</option>
+                <option value="0">جامعي نصفي</option>
+                <option value="1">جامعي نهائي</option>
+                <option value="2">مؤسسة نصفي</option>
+                <option value="3">مؤسسة نهائي</option>
+            </select>
+
+            <select asp-for="EvaluatorType"
+                    class="bg-slate-100 border-none rounded-xl text-sm font-bold text-slate-700 py-2.5 px-4 focus:ring-2 focus:ring-primary/20 cursor-pointer">
+                <option value="">كل الجهات</option>
+                <option value="1">الجامعة</option>
+                <option value="2">المؤسسة</option>
+            </select>
+
+            <button type="submit"
+                    class="bg-primary-container text-white font-button px-6 py-2.5 rounded-xl hover:bg-primary/90 transition-colors">
+                بحث
+            </button>
+
+        </form>
+    </div>
+
+    @* ===== Evaluations Table ===== *@
+    <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] overflow-hidden">
+
+        <div class="p-4 md:p-lg border-b border-slate-100 flex justify-between items-center">
+            <h3 class="font-h3 text-lg md:text-h3 text-slate-900">قائمة التقييمات</h3>
+            <span class="text-sm text-slate-500 font-body-sm">جميع التقييمات التي حصلت عليها خلال فترة التدريب</span>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-right border-collapse min-w-[960px]">
+                <thead class="bg-surface-container-low">
+                    <tr>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">#</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">نوع التقييم</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">التدريب المرتبط</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الجهة المقيمة</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">تاريخ التقييم</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الدرجة</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الملاحظات</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">ملف PDF</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الحالة</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50">
+
+                    @if (!Model.Evaluations.Any())
+                    {
+                        <tr>
+                            <td colspan="9" class="px-4 py-12 text-center text-sm text-slate-400">
+                                لا توجد تقييمات
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        int index = ((Model.PageIndex - 1) * Model.PageSize) + 1;
+
+                        foreach (var item in Model.Evaluations)
+                        {
+                            <tr class="hover:bg-slate-50 transition-colors">
+
+                                <td class="px-4 py-3 text-sm text-slate-400 font-bold">@index</td>
+
+                                <td class="px-4 py-3 text-sm">
+                                    @{
+                                        var (typeBg, typeLabel) = item.Type switch
+                                        {
+                                            Models.StudentEvaluation.EvaluationType.UniversityMid => ("bg-blue-100 text-blue-700", "جامعي نصفي"),
+                                            Models.StudentEvaluation.EvaluationType.UniversityFinal => ("bg-green-100 text-green-700", "جامعي نهائي"),
+                                            Models.StudentEvaluation.EvaluationType.InstitutionMid => ("bg-amber-100 text-amber-700", "مؤسسة نصفي"),
+                                            Models.StudentEvaluation.EvaluationType.InstitutionFinal => ("bg-purple-100 text-purple-700", "مؤسسة نهائي"),
+                                            _ => ("bg-slate-100 text-slate-600", "—")
+                                        };
+                                    }
+                                    <span class="px-3 py-1 rounded-full text-[11px] font-bold @typeBg">@typeLabel</span>
+                                </td>
+
+                                <td class="px-4 py-3 text-sm text-slate-600">
+                                    @item.TrainingPlacement.TrainingOpportunity.Title
+                                </td>
+
+                                <td class="px-4 py-3 text-sm text-slate-600">
+                                    @(item.UniversitySupervisor != null
+                                        ? item.UniversitySupervisor.FullName
+                                        : item.InstitutionSupervisor?.FullName ?? "—")
+                                </td>
+
+                                <td class="px-4 py-3 text-sm text-slate-600 whitespace-nowrap">
+                                    @item.EvaluationDate.ToString("yyyy-MM-dd")
+                                </td>
+
+                                <td class="px-4 py-3 text-sm font-bold whitespace-nowrap">
+                                    <span class="text-primary">@item.Score</span>
+                                    <span class="text-slate-400 font-normal"> / @item.MaxScore</span>
+                                    <span class="text-xs text-slate-400 font-normal mr-1">
+                                        (@(((item.Score * 100) / item.MaxScore).ToString("0.0"))%)
+                                    </span>
+                                </td>
+
+                                <td class="px-4 py-3 text-sm text-slate-600">
+                                    @(string.IsNullOrWhiteSpace(item.Notes) ? "—" : item.Notes)
+                                </td>
+
+                                <td class="px-4 py-3">
+                                    @if (!string.IsNullOrEmpty(item.EvaluationPdfPath))
+                                    {
+                                        <a asp-page-handler="OpenPdf"
+                                           asp-route-evaluationId="@item.EvaluationID"
+                                           class="btn border border-primary text-primary text-xs font-bold px-2 py-2 rounded hover:bg-blue-50 flex items-center gap-1 w-fit">
+                                            <i class="bi bi-file-earmark-pdf-fill"></i>
+                                            عرض
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-slate-400 text-sm">—</span>
+                                    }
+                                </td>
+
+                                <td class="px-4 md:px-lg py-4 md:py-md">
+                                    @{
+                                        var (statusBg, statusLabel) = item.Status switch
+                                        {
+                                            Models.StudentEvaluation.StudentEvaluationStatus.Approved => ("bg-green-100 text-green-700", "معتمد"),
+                                            Models.StudentEvaluation.StudentEvaluationStatus.Submitted => ("bg-blue-100 text-blue-700", "تم التسليم"),
+                                            Models.StudentEvaluation.StudentEvaluationStatus.Rejected => ("bg-red-100 text-red-700", "مرفوض"),
+                                            _ => ("bg-slate-100 text-slate-600", "مسودة")
+                                        };
+                                    }
+                                    <span class="px-3 py-1 rounded-full text-[11px] font-bold @statusBg">@statusLabel</span>
+                                </td>
+
+                            </tr>
+                            index++;
+                        }
+                    }
+
+                </tbody>
+            </table>
+        </div>
+
+        @* ===== Pagination ===== *@
+        <div class="p-4 md:p-lg flex flex-col md:flex-row items-center justify-between gap-4 border-t border-slate-100">
+
+            <div class="flex items-center gap-2">
+                <label class="text-xs text-slate-500 font-label-caps" for="pp-ev">النتائج:</label>
+                <form method="get">
+                    <input type="hidden" name="SearchTerm" value="@Model.SearchTerm" />
+                    <input type="hidden" name="EvaluationType" value="@Model.EvaluationType" />
+                    <input type="hidden" name="EvaluationStatus" value="@Model.EvaluationStatus" />
+                    <input type="hidden" name="EvaluatorType" value="@Model.EvaluatorType" />
+                    <input type="hidden" name="PageIndex" value="@Model.PageIndex" />
+                    <select asp-for="@Model.PageSize"
+                            onchange="this.form.submit()"
+                            id="pp-ev"
+                            class="bg-slate-100 border-none rounded-lg text-xs font-bold text-slate-700 py-1.5 pr-8 pl-3 focus:ring-2 focus:ring-primary/20 appearance-none cursor-pointer">
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                    </select>
+                </form>
+            </div>
+
+            <nav class="flex items-center gap-2">
+                @if (Model.Evaluations.HasPrevPage)
+                {
+                    <a asp-route-EvaluationType="@Model.EvaluationType"
+                       asp-route-SearchTerm="@Model.SearchTerm"
+                       asp-route-EvaluationStatus="@Model.EvaluationStatus"
+                       asp-route-EvaluatorType="@Model.EvaluatorType"
+                       asp-route-PageSize="@Model.PageSize"
+                       asp-route-PageIndex="@(Model.PageIndex - 1)"
+                       class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:bg-slate-50">
+                        <span class="material-symbols-outlined">chevron_right</span>
+                    </a>
+                }
+
+                @for (int i = 1; i <= Model.Evaluations.TotalPages; i++)
+                {
+                    <a asp-route-EvaluationType="@Model.EvaluationType"
+                       asp-route-SearchTerm="@Model.SearchTerm"
+                       asp-route-EvaluationStatus="@Model.EvaluationStatus"
+                       asp-route-EvaluatorType="@Model.EvaluatorType"
+                       asp-route-PageSize="@Model.PageSize"
+                       asp-route-PageIndex="@i"
+                       class="w-8 h-8 flex items-center justify-center rounded-lg text-sm font-bold
+                        @(i == Model.PageIndex ? "bg-primary-container text-white" : "border border-slate-200 text-slate-600 hover:bg-slate-50")">
+                        @i
+                    </a>
+                }
+
+                @if (Model.Evaluations.HasNextPage)
+                {
+                    <a asp-route-EvaluationType="@Model.EvaluationType"
+                       asp-route-SearchTerm="@Model.SearchTerm"
+                       asp-route-EvaluationStatus="@Model.EvaluationStatus"
+                       asp-route-EvaluatorType="@Model.EvaluatorType"
+                       asp-route-PageSize="@Model.PageSize"
+                       asp-route-PageIndex="@(Model.PageIndex + 1)"
+                       class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:bg-slate-50">
+                        <span class="material-symbols-outlined">chevron_left</span>
+                    </a>
+                }
+            </nav>
+
+        </div>
+
+    </div>
+
+</div>

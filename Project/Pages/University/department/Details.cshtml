@@ -1,0 +1,271 @@
+﻿@page "{departmentId}"
+@model Project.Pages.University.department.DetailsModel
+
+@{
+    ViewData["Title"] = "تفاصيل القسم";
+    ViewData["UserType"] = "University";
+    ViewData["PortalTitle"] = "بوابة الجامعة";
+    ViewData["PortalSubtitle"] = "إدارة التدريب الميداني";
+    ViewData["SearchPlaceholder"] = "بحث عن طلاب، مؤسسات...";
+}
+
+<!-- Hero Section -->
+
+<div class="card border-0 shadow-sm mb-4">
+
+    <div class="card-body p-5 text-white"
+         style="background:#1ab29a;border-radius:24px;">
+
+        <div class="d-flex justify-content-between align-items-center">
+
+            <div>
+
+                <h1 class="fw-bold mb-3">
+                    تفاصيل القسم
+                </h1>
+
+                <p class="mb-0 fs-5 opacity-75">
+                    عرض كافة المعلومات المتعلقة بالقسم الأكاديمي.
+                </p>
+
+            </div>
+
+            <div class="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center"
+                 style="width:90px;height:90px;">
+
+                <i class="bi bi-diagram-3 fs-1"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Department Information -->
+
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+
+    <div class="card-header bg-white">
+
+        <h5 class="fw-bold mb-0">
+            بيانات القسم
+        </h5>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row">
+
+            <div class="col-md-4 mb-3">
+
+                <label class="text-muted">
+                    اسم القسم
+                </label>
+
+                <div class="fw-semibold fs-5">
+                   @(Model.Department?.Name??"-")
+                </div>
+
+            </div>
+
+            <div class="col-md-4 mb-3">
+
+                <label class="text-muted">
+                    الحالة
+                </label>
+
+                <div>
+                    <span class="badge bg-success">
+                        @(Model.Department.IsActive?"نشط": "غير نشط")
+                    </span>
+                </div>
+
+            </div>
+
+            <div class="col-md-4 mb-3">
+
+                <label class="text-muted">
+                    رقم القسم
+                </label>
+
+                <div class="fw-semibold">
+                   
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Head of Department -->
+
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+
+    <div class="card-header bg-white">
+
+        <h5 class="fw-bold mb-0">
+            رئيس القسم
+        </h5>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row">
+
+            <div class="col-md-4 mb-3">
+
+                <label class="text-muted">
+                    الاسم
+                </label>
+
+                <div class="fw-semibold">
+                  @(Model.DepartmentHead?.FullName??"-")
+                </div>
+
+            </div>
+
+            <div class="col-md-4 mb-3">
+
+                <label class="text-muted">
+                    البريد الإلكتروني
+                </label>
+
+                <div class="fw-semibold">
+                    @(Model.DepartmentHead?.Email ?? "-")
+                </div>
+
+            </div>
+
+            <div class="col-md-4 mb-3">
+
+                <label class="text-muted">
+                    رقم الهاتف
+                </label>
+
+                <div class="fw-semibold">
+                    @(Model.DepartmentHead?.PhoneNumber ?? "-")
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Statistics -->
+
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+
+    <div class="card-header bg-white">
+
+        <h5 class="fw-bold mb-0">
+            إحصائيات القسم
+        </h5>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row text-center">
+
+            <div class="col-md-4">
+
+                <h2 class="fw-bold text-primary">
+                    @Model.Department.Specialties.Count()
+                </h2>
+
+                <div class="text-muted">
+                    التخصصات
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <h2 class="fw-bold text-success">
+                    @Model.Department.Students.Count()
+                </h2>
+
+                <div class="text-muted">
+                    الطلبة
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <h2 class="fw-bold text-warning">
+                    @Model.Department.University.TrainingOpportunityRequests.Count()
+                </h2>
+
+                <div class="text-muted">
+                    فرص التدريب الحالية
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Specialties -->
+
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+
+    <div class="card-header bg-white">
+
+        <h5 class="fw-bold mb-0">
+            التخصصات التابعة للقسم
+        </h5>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="d-flex flex-wrap gap-2">
+            @foreach(var sp in Model.Department.Specialties)
+            {
+                
+            
+            <span class="badge bg-light text-dark border px-3 py-2">
+               @(sp?.Name??"-")
+            </span>
+
+            }
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Buttons -->
+
+<div class="d-flex gap-2 mb-5">
+
+    <a asp-page="/University/department/update" asp-route-departmentId="@Model.Department.DepartmentID"
+       class="btn btn-success px-5">
+        <i class="bi bi-pencil-square me-1"></i>
+        تعديل القسم
+    </a>
+
+    <a asp-page="/University/Departments"
+       class="btn btn-light px-5">
+
+        <i class="bi bi-arrow-right-circle me-1"></i>
+
+        رجوع
+
+    </a>
+
+</div>

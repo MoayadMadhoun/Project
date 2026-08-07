@@ -1,0 +1,13 @@
+﻿
+select:not([class*="w-full"]) {
+    width: 100%;
+    max-width: 180px;
+    text-align: center;
+    text-align-last: center;
+    direction: rtl;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-position: left 12px center;
+    padding-left: 35px;
+}

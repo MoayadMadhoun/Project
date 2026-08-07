@@ -9,21 +9,25 @@ namespace Project.Models
         public int ReportID { get; set; }
 
         [Required(ErrorMessage = "Placement is required")]
-        [ForeignKey(nameof(PlacementID))]
+        
         public int PlacementID { get; set; }
-        public TrainingPlacement Placement { get; set; } = new TrainingPlacement(); 
+        [ForeignKey(nameof(PlacementID))]
+        public TrainingPlacement Placement { get; set; } = null!; 
 
         [Required(ErrorMessage = "Student is required")]
-        [ForeignKey(nameof(StudentID))]
+        
         public int StudentID { get; set; }
-
-        public Student Student { get; set; }= new Student();
+        [ForeignKey(nameof(StudentID))]
+        public Student Student { get; set; }= null!;
 
         [Column(TypeName = "nvarchar(50)")]
         public ReportType Type { get; set; }
         public enum ReportType
         {
-            Weekly, Final
+            [Display(Name ="اسبوعي")]
+            Weekly,
+            [Display(Name = "نهائي")]
+            Final
         }
 
         [Required(ErrorMessage = "Title is required")]
@@ -43,12 +47,22 @@ namespace Project.Models
         public StudentReportStatus Status { get; set; } = StudentReportStatus.Submitted;
         public enum StudentReportStatus
         {
-            Submitted, Reviewed, Approved, Rejected
+            [Display(Name = "لم يتم التسليم")]
+            NotSubmitted,
+            [Display(Name = "قيد المراجعة")]
+            Submitted, 
+            [Display(Name = "تمت المراجعة")] 
+            Reviewed, 
+            [Display(Name = "مقبول")]
+            Approved,
+            [Display(Name = "مرفوض")]
+            Rejected
         }
 
         public string? UniversitySupervisorID { get; set; }
-        [ForeignKey(nameof(UniversitySupervisorID))]
+        
         public AspNetUser? UniversitySupervisor { get; set; }
+        [ForeignKey(nameof(UniversitySupervisorID))]
 
         [MaxLength(1000, ErrorMessage = "Review notes cannot be more than 1000 characters")]
         public string? ReviewNotes { get; set; }

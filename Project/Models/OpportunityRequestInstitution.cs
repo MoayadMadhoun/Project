@@ -21,14 +21,16 @@ namespace Project.Models
         public string? Notes { get; set; }
         //RequestID FK
         [Required(ErrorMessage = "Request is required")]
-        [ForeignKey(nameof(RequestID))]
+        
         public int RequestID { get; set; }
-        public TrainingOpportunityRequest Request { get; set; } = new TrainingOpportunityRequest();         
+        [ForeignKey(nameof(RequestID))]
+        public TrainingOpportunityRequest Request { get; set; } = null! ;         
 
         [Required(ErrorMessage = "Institution is required")]
-        [ForeignKey(nameof(InstitutionID))]
+        
         public int InstitutionID { get; set; }
-        public TrainingInstitution TrainingInstitution { get; set; } = new TrainingInstitution();
+        [ForeignKey(nameof(InstitutionID))]
+        public TrainingInstitution TrainingInstitution { get; set; } = null!;
 
 
     }

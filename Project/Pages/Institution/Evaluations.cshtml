@@ -1,0 +1,213 @@
+﻿@page
+@using Project.Models
+@model Project.Pages.Institution.EvaluationsModel
+@{
+    ViewData["Title"] = "التقييمات";
+    ViewData["UserType"] = "Institution";
+    ViewData["ActivePage"] = "Evaluations";
+
+    int index = ((Model.PageIndex - 1) * Model.PageSize) + 1;
+    var total = Model.Evaluations?.Count() ?? 0;
+    var approvedCount = Model.Evaluations?.Count(x => x.Status == StudentEvaluation.StudentEvaluationStatus.Approved) ?? 0;
+    var rejectedCount = Model.Evaluations?.Count(x => x.Status == StudentEvaluation.StudentEvaluationStatus.Rejected) ?? 0;
+    var submittedCount = Model.Evaluations?.Count(x => x.Status == StudentEvaluation.StudentEvaluationStatus.Submitted) ?? 0;
+    var average = total > 0 ? Model.Evaluations.Average(x => (double)(x.Score * 100 / x.MaxScore)) : 0;
+}
+<link rel="stylesheet" href="~/Styles/opportunities.css">
+
+<div dir="rtl">
+
+    @* ===== Hero Section ===== *@
+    <section class="mb-lg md:mb-xl relative rounded-xl md:rounded-2xl overflow-hidden bg-primary-container p-6 md:p-xl text-on-primary">
+        <div class="relative z-10 max-w-2xl text-right">
+            @if (!string.IsNullOrEmpty(Model.CurrentStudentName))
+            {
+                <h1 class="font-h1 text-2xl md:text-h1 mb-md">
+                    تقييمات الطالب: @Model.CurrentStudentName
+                </h1>
+            }
+            else
+            {
+                <h1 class="font-h1 text-2xl md:text-h1 mb-md">تقييمات الطلاب</h1>
+            }
+            <p class="font-body-lg text-sm md:text-body-lg opacity-90">
+                متابعة تقييمات المتدربين داخل المؤسسة
+            </p>
+        </div>
+        <div class="absolute -bottom-10 -left-10 w-48 h-48 md:w-64 md:h-64 bg-white/10 rounded-full blur-3xl"></div>
+        <div class="absolute -top-20 -left-20 w-64 h-64 md:w-80 md:h-80 bg-secondary-fixed-dim/20 rounded-full blur-3xl"></div>
+    </section>
+
+    @* ===== Stats Cards ===== *@
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-lg">
+
+        <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] p-4 text-center">
+            <div class="text-2xl font-bold text-slate-900 mb-1">@total</div>
+            <div class="text-xs text-slate-500 font-label-caps">إجمالي التقييمات</div>
+        </div>
+
+        <div class="bg-surface-container-lowest rounded-xl border border-green-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] p-4 text-center">
+            <div class="text-2xl font-bold text-green-600 mb-1">@approvedCount</div>
+            <div class="text-xs text-slate-500 font-label-caps">مقبولة</div>
+        </div>
+
+        <div class="bg-surface-container-lowest rounded-xl border border-red-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] p-4 text-center">
+            <div class="text-2xl font-bold text-red-600 mb-1">@rejectedCount</div>
+            <div class="text-xs text-slate-500 font-label-caps">مرفوضة</div>
+        </div>
+
+        <div class="bg-surface-container-lowest rounded-xl border border-blue-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] p-4 text-center">
+            <div class="text-2xl font-bold text-blue-600 mb-1">@average.ToString("0.0")%</div>
+            <div class="text-xs text-slate-500 font-label-caps">متوسط الدرجات</div>
+        </div>
+
+    </div>
+
+    @* ===== Filters Bar ===== *@
+    <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] p-4 mb-lg">
+        <form method="get" class="flex flex-wrap gap-3 items-center justify-end">
+
+            <div class="relative flex-1 min-w-[180px]">
+                <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+                <input asp-for="SearchTerm"
+                       class="w-full pr-10 pl-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20"
+                       placeholder="بحث باسم الطالب" />
+            </div>
+
+            <select asp-for="SelectedEvaluationTypeId"
+                    class="bg-slate-100 border-none rounded-xl text-sm font-bold text-slate-700 py-2.5 px-4 focus:ring-2 focus:ring-primary/20 cursor-pointer">
+                <option value="0">كل الأنواع</option>
+                <option value="0">University Mid</option>
+                <option value="1">University Final</option>
+                <option value="2">Institution Mid</option>
+                <option value="3">Institution Final</option>
+            </select>
+
+            <select asp-for="SelectedEvaluationStatusId"
+                    class="bg-slate-100 border-none rounded-xl text-sm font-bold text-slate-700 py-2.5 px-4 focus:ring-2 focus:ring-primary/20 cursor-pointer">
+                <option value="0">كل الحالات</option>
+                <option value="1">Submitted</option>
+                <option value="2">Approved</option>
+                <option value="3">Rejected</option>
+            </select>
+
+            <button type="submit"
+                    class="bg-primary-container text-white font-button px-6 py-2.5 rounded-xl hover:bg-primary/90 transition-colors">
+                بحث
+            </button>
+
+        </form>
+    </div>
+
+    @* ===== Evaluations Table ===== *@
+    <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] overflow-hidden">
+
+        <div class="p-4 md:p-lg border-b border-slate-100 flex justify-between items-center">
+            <h3 class="font-h3 text-lg md:text-h3 text-slate-900">قائمة التقييمات</h3>
+            <span class="text-sm text-slate-500 font-body-sm">
+                إجمالي <span class="font-bold text-slate-900">@total</span> تقييم
+            </span>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-right border-collapse min-w-[960px]">
+                <thead class="bg-surface-container-low">
+                    <tr>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">#</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الطالب</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">التدريب</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">النوع</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الدرجة</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">التاريخ</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الحالة</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الملف</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50">
+                    @foreach (var item in Model.Evaluations)
+                    {
+                        <tr class="hover:bg-slate-50 transition-colors">
+
+                            <td class="px-4 py-3 text-sm text-slate-400 font-bold">@(index++)</td>
+
+                            <td class="px-4 py-3 text-sm text-slate-900 font-bold">
+                                @item.TrainingPlacement.Student.Name
+                            </td>
+
+                            <td class="px-4 py-3 text-sm text-slate-600">
+                                @item.TrainingPlacement.TrainingOpportunity.Title
+                            </td>
+
+                            <td class="px-4 py-3 text-sm">
+                                <span class="px-3 py-1 rounded-full text-[11px] font-bold bg-blue-100 text-blue-700">
+                                    @item.Type
+                                </span>
+                            </td>
+
+                            <td class="px-4 py-3 text-sm font-bold whitespace-nowrap">
+                                <span class="text-primary">@item.Score</span>
+                                <span class="text-slate-400 font-normal"> / @item.MaxScore</span>
+                                <span class="text-xs text-slate-400 font-normal mr-1">
+                                    (@(((item.Score * 100) / item.MaxScore).ToString("0.0"))%)
+                                </span>
+                            </td>
+
+                            <td class="px-4 py-3 text-sm text-slate-600 whitespace-nowrap">
+                                @item.EvaluationDate.ToString("yyyy-MM-dd")
+                            </td>
+
+                            <td class="px-4 md:px-lg py-4 md:py-md">
+                                @{
+                                    var (badgeBg, badgeLabel) = item.Status switch
+                                    {
+                                        StudentEvaluation.StudentEvaluationStatus.Approved => ("bg-green-100 text-green-700", "مقبول"),
+                                        StudentEvaluation.StudentEvaluationStatus.Rejected => ("bg-red-100 text-red-700", "مرفوض"),
+                                        StudentEvaluation.StudentEvaluationStatus.Submitted => ("bg-amber-100 text-amber-700", "قيد المراجعة"),
+                                        _ => ("bg-slate-100 text-slate-600", "مسودة")
+                                    };
+                                }
+                                <span class="px-3 py-1 rounded-full text-[11px] font-bold @badgeBg">@badgeLabel</span>
+                            </td>
+
+                            <td class="px-4 py-3">
+                                @if (!string.IsNullOrEmpty(item.EvaluationPdfPath))
+                                {
+                                    <a asp-page-handler="OpenFile"
+                                       asp-route-id="@item.EvaluationID"
+                                       class="btn border border-primary text-primary text-xs font-bold px-2 py-2 rounded hover:bg-blue-50 flex items-center gap-1 w-fit">
+                                        <i class="bi bi-file-earmark-pdf-fill"></i>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <span class="text-slate-400 text-sm">—</span>
+                                }
+                            </td>
+
+                            <td class="px-4 py-3">
+                                <div class="flex gap-1">
+                                    <a asp-page="/Institution/Evaluations/Edit"
+                                       asp-route-id="@item.EvaluationID"
+                                       class="btn border border-warning text-warning text-xs font-bold px-2 py-2 rounded hover:bg-amber-50 flex items-center gap-1"
+                                       title="تعديل">
+                                        <i class="bi bi-pen"></i>
+                                    </a>
+                                    <a asp-page="/Institution/Evaluations/Delete"
+                                       asp-route-id="@item.EvaluationID"
+                                       class="btn border border-danger text-danger text-xs font-bold px-2 py-2 rounded hover:bg-rose-50 flex items-center gap-1"
+                                       title="حذف">
+                                        <i class="bi bi-trash3"></i>
+                                    </a>
+                                </div>
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</div>

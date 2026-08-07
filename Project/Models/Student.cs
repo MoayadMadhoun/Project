@@ -9,13 +9,14 @@ namespace Project.Models
         public int StudentID { get; set; }
         [Required(ErrorMessage = "Student Name is required")]
         [MaxLength(50, ErrorMessage = "Student Name can't be more than 200 characters")]
-        public string Name { get; set; }
-        [Required(ErrorMessage="Student number is required")]
+        public string Name { get; set; } = string.Empty;
+        [Required(ErrorMessage = "Student number is required")]
         [MaxLength(50, ErrorMessage = "Student number can't be more than 50 characters")]
-        public string StudentNumber {  get; set; }
+        public string StudentNumber { get; set; } = string.Empty;
         [MaxLength(20, ErrorMessage = "Level can't be more than 20 characters")]
         public string? Level { get; set; }
-        
+        public string? PhoneNumber { get; set; }
+
         public decimal? GPA { get; set; }
         [MaxLength(1000, ErrorMessage = "Bio can't be more than 1000 characters")]
         public string? Bio { get; set; }
@@ -27,28 +28,36 @@ namespace Project.Models
 
         public enum StudentStatus
         {
-            Active, Inactive,  Graduated
+            Active, Inactive, Graduated
         }
         //DeptID FK
         [Required(ErrorMessage = "Department is required")]
-        [ForeignKey(nameof(DepartmentID))]
+
         public int DepartmentID { get; set; }
-        public Department Department { get; set; }= new Department();   
+        [ForeignKey(nameof(DepartmentID))]
+        public Department Department { get; set; } 
         //SpecialtyID Fk
-        [ForeignKey(nameof(SpecialtyID))]
+
         public int? SpecialtyID { get; set; }
+        [ForeignKey(nameof(SpecialtyID))]
         public Specialty? Specialty { get; set; }
         //UserID FK
         [Required(ErrorMessage = "User account is required")]
+        public string UserID { get; set; } 
         [ForeignKey(nameof(UserID))]
-        public string UserID { get; set; } = string.Empty;
-        public AspNetUser User { get; set; }=new AspNetUser();  
+        public AspNetUser User { get; set; }
 
-        public ICollection<StudentSkill> Skills { get; set; } = new HashSet<StudentSkill>();                    
-        public ICollection<TrainingApplication> Applications { get; set; } = new HashSet<TrainingApplication>();    
-        
-        public ICollection<PortfolioItem> PortfolioItems { get; set; } = new HashSet<PortfolioItem>();
-        public ICollection<StudentReport> Reports { get; set; } = new HashSet<StudentReport>();
+        [ForeignKey("University")]
+        public int UniversityID { get; set; }
+        public University? University { get; set; }
+
+
+
+        public ICollection<StudentSkill> Skills { get; set; } = new List<StudentSkill>();
+        public ICollection<TrainingApplication> Applications { get; set; } = new List<TrainingApplication>();
+
+        public ICollection<PortfolioItem> PortfolioItems { get; set; } = new List<PortfolioItem>();
+        public ICollection<StudentReport> Reports { get; set; } = new List<StudentReport>();
 
 
 

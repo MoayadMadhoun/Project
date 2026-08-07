@@ -1,0 +1,71 @@
+﻿@model Project.Areas.Identity.Pages.Account.RegisterModel;
+
+<div class="row g-3">
+
+    <div class="col-12">
+        <div class="input-icon">
+            <i class="fa-solid fa-building-columns field-icon"></i>
+            <input asp-for="UniversityInput.FullName"
+                   class="form-control-s"
+                   style="padding-right:2.4rem"
+                   placeholder="اسم الجامعة" />
+        </div>
+        <span class="text-danger" asp-validation-for="UniversityInput.FullName"></span>
+    </div>
+
+    <div class="col-12">
+        <div class="input-icon">
+            <i class="fa-solid fa-location-dot field-icon"></i>
+            <input asp-for="UniversityInput.Address"
+                   class="form-control-s"
+                   style="padding-right:2.4rem"
+                   placeholder="عنوان المقر الرئيسي" />
+        </div>
+        <span class="text-danger" asp-validation-for="UniversityInput.Address"></span>
+    </div>
+
+    <div class="col-12">
+        <div class="input-icon">
+            <i class="fa-solid fa-envelope field-icon"></i>
+            <input asp-for="Input.Email"
+                   class="form-control-s"
+                   style="padding-right:2.4rem"
+                   placeholder="البريد الإلكتروني الرسمي" />
+        </div>
+        <span class="text-danger" asp-validation-for="Input.Email"></span>
+    </div>
+
+    <div class="col-6">
+        <div class="input-icon">
+            <i class="fa-solid fa-lock field-icon"></i>
+            <input asp-for="Input.Password"
+                   class="form-control-s"
+                   style="padding-right:2.4rem"
+                   placeholder="كلمة المرور" />
+        </div>
+        <span class="text-danger" asp-validation-for="Input.Password"></span>
+    </div>
+
+    <div class="col-6">
+        <div class="input-icon">
+            <i class="fa-solid fa-lock field-icon"></i>
+            <input asp-for="Input.ConfirmPassword"
+                   class="form-control-s"
+                   style="padding-right:2.4rem"
+                   placeholder="تأكيد كلمة المرور" />
+        </div>
+        <span class="text-danger" asp-validation-for="Input.ConfirmPassword"></span>
+    </div>
+
+    <div class="col-12">
+        <div class="input-icon">
+            <i class="fa-solid fa-phone field-icon"></i>
+            <input asp-for="UniversityInput.PhoneNumber"
+                   class="form-control-s"
+                   style="padding-right:2.4rem"
+                   placeholder="رقم الهاتف المباشر للجهة المسؤولة" />
+        </div>
+        <span class="text-danger" asp-validation-for="UniversityInput.PhoneNumber"></span>
+    </div>
+
+</div>

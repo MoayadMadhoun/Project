@@ -1,0 +1,237 @@
+﻿@page
+@model Project.Pages.Student.CurrentTrainingModel
+@{
+    ViewData["Title"] = "التدريب الحالي";
+    ViewData["UserType"] = "Student";
+    ViewData["UserName"] = "أحمد محمد";
+    ViewData["PortalTitle"] = "بوابة الطالب";
+    ViewData["PortalSubtitle"] = "إدارة التدريب الأكاديمي";
+    ViewData["SearchPlaceholder"] = "بحث عن شيء...";
+    ViewData["ActivePage"] = "CurrentTraining";
+}
+<link rel="stylesheet" href="~/Styles/opportunities.css">
+
+<div dir="rtl">
+
+    @if (Model.CurrentPlacement == null)
+    {
+        @* ===== No Training ===== *@
+        <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] p-12 text-center">
+            <span class="material-symbols-outlined text-slate-300 text-5xl mb-4 block">work_off</span>
+            <p class="text-slate-500 text-sm">لا يوجد تدريب حالي لك.</p>
+        </div>
+    }
+    else
+    {
+        @* ===== Hero Card ===== *@
+        <section class="mb-lg md:mb-xl relative rounded-xl md:rounded-2xl overflow-hidden bg-primary-container p-6 md:p-xl text-on-primary">
+            <div class="relative z-10 flex flex-col md:flex-row justify-between gap-6">
+
+                <div class="text-right">
+                    <h1 class="font-h1 text-2xl md:text-h1 mb-2">
+                        @(Model.CurrentPlacement?.TrainingOpportunity?.Title ?? "")
+                    </h1>
+                    <p class="font-body-lg text-sm md:text-body-lg opacity-80 mb-2">
+                        @(Model.CurrentPlacement?.TrainingInstitution?.Name ?? "")
+                    </p>
+                    @if (!string.IsNullOrEmpty(Model.CurrentPlacement?.TrainingOpportunity?.Location))
+                    {
+                        <div class="flex items-center gap-1 opacity-75 text-sm justify-end">
+                            <span>@Model.CurrentPlacement.TrainingOpportunity.Location</span>
+                            <i class="bi bi-geo-alt-fill"></i>
+                        </div>
+                    }
+                </div>
+
+                <div class="flex flex-col items-center gap-3 flex-shrink-0">
+                    <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
+                        <i class="bi bi-briefcase-fill text-2xl text-white"></i>
+                    </div>
+                    @{
+                        var (statusBg, statusLabel) = Model.CurrentPlacement?.Status switch
+                        {
+                            Models.TrainingPlacement.PlacementStatus.InProgress => ("bg-green-100 text-green-700", "نشط"),
+                            Models.TrainingPlacement.PlacementStatus.Assigned => ("bg-blue-100 text-blue-700", "تم التعيين"),
+                            Models.TrainingPlacement.PlacementStatus.Completed => ("bg-slate-100 text-slate-700", "مكتمل"),
+                            _ => ("bg-orange-100 text-orange-700", "غير محدد")
+                        };
+                    }
+                    <span class="px-3 py-1 rounded-full text-[11px] font-bold @statusBg">
+                        @if (Model.CurrentPlacement?.Status == Models.TrainingPlacement.PlacementStatus.InProgress)
+                        {
+                            <span class="inline-block w-2 h-2 bg-green-500 rounded-full ml-1 animate-pulse"></span>
+                        }
+                        @statusLabel
+                    </span>
+                </div>
+
+            </div>
+
+            @* Meta Info *@
+            <div class="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 pt-6 border-t border-white/20">
+                <div class="text-right">
+                    <div class="text-xs opacity-60 mb-1">المشرف في المؤسسة</div>
+                    <div class="text-sm font-bold">@(Model.CurrentPlacement?.InstitutionSupervisor?.FullName ?? "—")</div>
+                </div>
+                <div class="text-right">
+                    <div class="text-xs opacity-60 mb-1">مدة التدريب</div>
+                    <div class="text-sm font-bold">@Model.TrainingDuration</div>
+                </div>
+                <div class="text-right">
+                    <div class="text-xs opacity-60 mb-1">تاريخ البداية</div>
+                    <div class="text-sm font-bold">@(Model.CurrentPlacement?.TrainingTerm.StartDate.ToString("dd-MM-yyyy") ?? "—")</div>
+                </div>
+                <div class="text-right">
+                    <div class="text-xs opacity-60 mb-1">تاريخ النهاية</div>
+                    <div class="text-sm font-bold">@(Model.CurrentPlacement?.TrainingTerm.EndDate.ToString("dd-MM-yyyy") ?? "—")</div>
+                </div>
+            </div>
+
+            <div class="absolute -bottom-10 -left-10 w-48 h-48 md:w-64 md:h-64 bg-white/10 rounded-full blur-3xl"></div>
+            <div class="absolute -top-20 -left-20 w-64 h-64 md:w-80 md:h-80 bg-secondary-fixed-dim/20 rounded-full blur-3xl"></div>
+        </section>
+
+        @* ===== Quick Actions ===== *@
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-lg">
+
+            <a asp-page="/Student/Reports/Create"
+               asp-route-Id="@Model.CurrentPlacement?.PlacementID"
+               class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] p-4 flex flex-col items-center gap-2 text-center hover:shadow-md hover:-translate-y-1 transition-all no-underline">
+                <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                    <i class="bi bi-upload text-primary"></i>
+                </div>
+                <span class="text-sm font-bold text-slate-900">رفع تقرير</span>
+            </a>
+
+            <a asp-page="/Student/Reports/Index"
+               class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] p-4 flex flex-col items-center gap-2 text-center hover:shadow-md hover:-translate-y-1 transition-all no-underline">
+                <div class="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center">
+                    <i class="bi bi-file-earmark-text text-green-600"></i>
+                </div>
+                <span class="text-sm font-bold text-slate-900">التقارير</span>
+            </a>
+
+            <a asp-page="/Student/Attendance"
+               class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] p-4 flex flex-col items-center gap-2 text-center hover:shadow-md hover:-translate-y-1 transition-all no-underline">
+                <div class="w-10 h-10 bg-amber-50 rounded-lg flex items-center justify-center">
+                    <i class="bi bi-calendar-check text-amber-600"></i>
+                </div>
+                <span class="text-sm font-bold text-slate-900">الحضور</span>
+            </a>
+
+            <a asp-page="/Student/Evaluations"
+               class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] p-4 flex flex-col items-center gap-2 text-center hover:shadow-md hover:-translate-y-1 transition-all no-underline">
+                <div class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
+                    <i class="bi bi-star-fill text-blue-600"></i>
+                </div>
+                <span class="text-sm font-bold text-slate-900">التقييمات</span>
+            </a>
+
+        </div>
+
+        @* ===== Attendance Summary ===== *@
+        <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] overflow-hidden mb-lg">
+            <div class="p-4 md:p-lg border-b border-slate-100">
+                <h3 class="font-h3 text-lg md:text-h3 text-slate-900">ملخص الحضور</h3>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-px bg-slate-100">
+
+                <div class="bg-surface-container-lowest p-6 text-center">
+                    <div class="text-2xl font-bold text-green-600 mb-1">@Model.PresentCount</div>
+                    <div class="text-xs text-slate-500 font-label-caps">حضور</div>
+                </div>
+
+                <div class="bg-surface-container-lowest p-6 text-center">
+                    <div class="text-2xl font-bold text-red-600 mb-1">@Model.AbsentCount</div>
+                    <div class="text-xs text-slate-500 font-label-caps">غياب</div>
+                </div>
+
+                <div class="bg-surface-container-lowest p-6 text-center">
+                    <div class="text-2xl font-bold text-amber-600 mb-1">@Model.LateCount</div>
+                    <div class="text-xs text-slate-500 font-label-caps">تأخير</div>
+                </div>
+
+                <div class="bg-surface-container-lowest p-6 text-center">
+                    <div class="text-2xl font-bold text-blue-600 mb-1">@Model.ExcusedCount</div>
+                    <div class="text-xs text-slate-500 font-label-caps">بعذر</div>
+                </div>
+
+            </div>
+        </div>
+
+        @* ===== Recent Reports ===== *@
+        <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] overflow-hidden mb-lg">
+            <div class="p-4 md:p-lg border-b border-slate-100">
+                <h3 class="font-h3 text-lg md:text-h3 text-slate-900">آخر التقارير المرفوعة</h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-right border-collapse min-w-[600px]">
+                    <thead class="bg-surface-container-low">
+                        <tr>
+                            <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">العنوان</th>
+                            <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">النوع</th>
+                            <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">التاريخ</th>
+                            <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الحالة</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-50">
+                        @foreach (var report in Model.RecentReports)
+                        {
+                            <tr class="hover:bg-slate-50 transition-colors">
+                                <td class="px-4 py-3 text-sm text-slate-900 font-bold">@report.Title</td>
+                                <td class="px-4 py-3 text-sm text-slate-600">@report.Type</td>
+                                <td class="px-4 py-3 text-sm text-slate-600 whitespace-nowrap">@report.SubmittedAt.ToString("dd/MM/yyyy")</td>
+                                <td class="px-4 md:px-lg py-4 md:py-md">
+                                    <span class="px-3 py-1 rounded-full text-[11px] font-bold bg-green-100 text-green-700">
+                                        @report.Status
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        @* ===== Evaluations ===== *@
+        <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] overflow-hidden">
+            <div class="p-4 md:p-lg border-b border-slate-100">
+                <h3 class="font-h3 text-lg md:text-h3 text-slate-900">التقييمات</h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-right border-collapse min-w-[600px]">
+                    <thead class="bg-surface-container-low">
+                        <tr>
+                            <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">النوع</th>
+                            <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الدرجة</th>
+                            <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">التاريخ</th>
+                            <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الحالة</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-50">
+                        @foreach (var evaluation in Model.Evaluations)
+                        {
+                            <tr class="hover:bg-slate-50 transition-colors">
+                                <td class="px-4 py-3 text-sm text-slate-900 font-bold">@evaluation.Type</td>
+                                <td class="px-4 py-3 text-sm text-slate-900 font-bold whitespace-nowrap">
+                                    @evaluation.Score
+                                    <span class="text-slate-400 font-normal">/ @evaluation.MaxScore</span>
+                                    <span class="text-xs text-slate-400 font-normal mr-1">
+                                        (@(((evaluation.Score * 100) / evaluation.MaxScore).ToString("0.0"))%)
+                                    </span>
+                                </td>
+                                <td class="px-4 py-3 text-sm text-slate-600 whitespace-nowrap">@evaluation.EvaluationDate.ToString("dd/MM/yyyy")</td>
+                                <td class="px-4 md:px-lg py-4 md:py-md">
+                                    <span class="px-3 py-1 rounded-full text-[11px] font-bold bg-blue-100 text-blue-700">
+                                        @evaluation.Status
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+
+</div>

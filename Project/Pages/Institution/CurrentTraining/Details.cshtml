@@ -1,0 +1,156 @@
+@page "{id:int}"
+@model Project.Pages.Institution.CurrentTraining.DetailsModel
+@{
+    ViewData["Title"] = "تفاصيل التدريب";
+    ViewData["UserType"] = "Institution";
+    ViewData["PortalTitle"] = "بوابة المؤسسة";
+    ViewData["PortalSubtitle"] = "إدارة المتدربين والفرص";
+    ViewData["SearchPlaceholder"] = "بحث عن طلاب، طلبات...";
+    var training = Model.Details.Opportunity;
+}
+
+<div class="mb-4">
+    <a asp-page="/Institution/CurrentTraining" class="text-sm text-emerald-600 hover:underline flex items-center gap-1 w-fit">
+        <span class="material-symbols-outlined text-base">arrow_forward</span>
+        رجوع
+    </a>
+</div>
+
+<section class="mb-lg md:mb-xl relative rounded-xl md:rounded-2xl overflow-hidden bg-primary-container p-6 md:p-xl text-on-primary">
+    <div class="relative z-10 max-w-3xl text-right">
+        <div class="flex items-center gap-2 mb-3 flex-wrap">
+            <h1 class="font-h1 text-2xl md:text-h1">@training.Title</h1>
+            <span class="bg-green-50 text-green-700 text-xs font-semibold px-3 py-0.5 rounded-full">@Model.Details.StatusLabel</span>
+        </div>
+        <p class="font-body-lg text-sm md:text-body-lg opacity-90 mb-6 leading-relaxed">
+            @(training.Description ?? "لا يوجد وصف متاح لهذا التدريب.")
+        </p>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+            <div class="bg-white/10 rounded-xl p-3 text-center">
+                <p class="opacity-75 mb-1">تاريخ البداية</p>
+                <p class="font-semibold">@training.StartDate.ToString("dd-MM-yyyy")</p>
+            </div>
+            <div class="bg-white/10 rounded-xl p-3 text-center">
+                <p class="opacity-75 mb-1">تاريخ النهاية</p>
+                <p class="font-semibold">@training.EndDate.ToString("dd-MM-yyyy")</p>
+            </div>
+            <div class="bg-white/10 rounded-xl p-3 text-center">
+                <p class="opacity-75 mb-1">المقاعد المتاحة</p>
+                <p class="font-semibold">@Model.Details.AvailableSeats</p>
+            </div>
+            <div class="bg-white/10 rounded-xl p-3 text-center">
+                <p class="opacity-75 mb-1">الطلاب الملتحقون</p>
+                <p class="font-semibold">@Model.Details.EnrolledCount</p>
+            </div>
+        </div>
+    </div>
+    <div class="absolute -bottom-10 -left-10 w-48 h-48 md:w-64 md:h-64 bg-white/10 rounded-full blur-3xl"></div>
+    <div class="absolute -top-20 -left-20 w-64 h-64 md:w-80 md:h-80 bg-secondary-fixed-dim/20 rounded-full blur-3xl"></div>
+</section>
+
+<div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] p-6 mb-lg">
+    <h2 class="text-lg font-semibold text-slate-800 mb-6">معلومات التدريب</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-sm">
+        <div>
+            <p class="text-slate-400 mb-1">اسم الدورة</p>
+            <p class="font-medium text-slate-800">@training.Title</p>
+        </div>
+        <div>
+            <p class="text-slate-400 mb-1">التصنيف</p>
+            <p class="font-medium text-slate-800">@Model.Details.Category</p>
+        </div>
+        <div>
+            <p class="text-slate-400 mb-1">مدة التدريب</p>
+            <p class="font-medium text-slate-800">@Model.Details.DurationText</p>
+        </div>
+        <div>
+            <p class="text-slate-400 mb-1">إجمالي المقاعد</p>
+            <p class="font-medium text-slate-800">@training.Capacity</p>
+        </div>
+        <div>
+            <p class="text-slate-400 mb-1">عدد الملتحقين</p>
+            <p class="font-medium text-slate-800">@Model.Details.EnrolledCount</p>
+        </div>
+        <div>
+            <p class="text-slate-400 mb-1">نسبة الامتلاء</p>
+            <p class="font-medium text-slate-800">@Model.Details.FillRatePercent%</p>
+        </div>
+        <div>
+            <p class="text-slate-400 mb-1">المشرف المسؤول</p>
+            <p class="font-medium text-slate-800">@(string.IsNullOrWhiteSpace(Model.Details.SupervisorName) ? "غير محدد" : Model.Details.SupervisorName)</p>
+        </div>
+        <div>
+            <p class="text-slate-400 mb-1">الموقع</p>
+            <p class="font-medium text-slate-800">@(training.Location ?? "غير محدد")</p>
+        </div>
+        <div>
+            <p class="text-slate-400 mb-1">تاريخ البداية</p>
+            <p class="font-medium text-slate-800">@training.StartDate.ToString("dd-MM-yyyy")</p>
+        </div>
+        <div>
+            <p class="text-slate-400 mb-1">تاريخ النهاية</p>
+            <p class="font-medium text-slate-800">@training.EndDate.ToString("dd-MM-yyyy")</p>
+        </div>
+        <div class="md:col-span-2">
+            <p class="text-slate-400 mb-1">الفئة المستهدفة</p>
+            <p class="font-medium text-slate-800">@Model.Details.TargetGroup</p>
+        </div>
+        @if (Model.Details.Technologies.Any())
+        {
+            <div class="md:col-span-3">
+                <p class="text-slate-400 mb-2">التقنيات المستخدمة</p>
+                <div class="flex flex-wrap gap-2">
+                    @foreach (var tech in Model.Details.Technologies)
+                    {
+                        <span class="bg-emerald-50 text-emerald-700 text-xs font-medium px-3 py-1 rounded-full">@tech</span>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] p-6">
+    <h2 class="text-lg font-semibold text-slate-800 mb-6">الطلاب الملتحقون</h2>
+
+    @if (!Model.Details.EnrolledTrainees.Any())
+    {
+        <p class="text-slate-500 text-sm">لا يوجد طلاب ملتحقون بهذا التدريب حالياً.</p>
+    }
+    else
+    {
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            @foreach (var trainee in Model.Details.EnrolledTrainees)
+            {
+                <div class="bg-white border border-slate-200 rounded-xl p-5 hover:shadow-sm transition-shadow text-right">
+                    <div class="flex items-center gap-3 mb-4">
+                        <img src="@(string.IsNullOrWhiteSpace(trainee.ProfileImagePath)
+                                         ? "/images/default-user.jpg"
+                                         : trainee.ProfileImagePath)"
+                             alt="@trainee.Name"
+                             class="w-12 h-12 rounded-full object-cover" />
+                        <div>
+                            <p class="font-semibold text-slate-800">@trainee.Name</p>
+                            <p class="text-xs text-slate-400">@trainee.Major</p>
+                        </div>
+                    </div>
+                    @if (!string.IsNullOrWhiteSpace(trainee.AcademicYear))
+                    {
+                        <p class="text-sm text-slate-500 mb-4">
+                            <span class="text-slate-400">السنة الدراسية:</span> @trainee.AcademicYear
+                        </p>
+                    }
+                    <a asp-page="/Institution/CurrentTraining/StudentDetails"
+                       asp-route-placementId="@trainee.PlacementId"
+                       class="w-full inline-flex justify-center text-sm text-emerald-600 border border-emerald-200 rounded-lg py-2 hover:bg-emerald-50">
+
+                        متابعة الطالب
+
+                    </a>
+                </div>
+            }
+        </div>
+    }
+</div>
+

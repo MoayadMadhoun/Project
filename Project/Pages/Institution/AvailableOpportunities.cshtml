@@ -1,0 +1,173 @@
+﻿@page
+@using Microsoft.AspNetCore.Html
+@model Project.Pages.Institution.AvailableOpportunitiesModel
+@{
+    ViewData["Title"] = "إدارة الفرص التدريبية";
+    ViewData["UserType"] = "Institution";
+    ViewData["UserName"] = "شركة التقنية المتقدمة";
+    ViewData["PortalTitle"] = "بوابة المؤسسة";
+    ViewData["PortalSubtitle"] = "إدارة التدريب الميداني";
+    ViewData["SearchPlaceholder"] = "بحث عن فرصة تدريب...";
+    ViewData["ActivePage"] = "Opportunities";
+}
+<link rel="stylesheet" href="~/Styles/opportunities.css">
+@functions {
+    public IHtmlContent SortingIcon(string column, string currentSort)
+    {
+        if (currentSort == column)
+            return new HtmlString("<i class=\"bi bi-caret-up-fill text-primary text-xs\"></i>");
+        if (currentSort == column + "_desc")
+            return new HtmlString("<i class=\"bi bi-caret-down-fill text-primary text-xs\"></i>");
+        return new HtmlString("<i class=\"bi bi-arrow-down-up text-slate-400 text-xs\"></i>");
+    }
+}
+
+@* ===== Hero Section ===== *@
+<section class="mb-lg md:mb-xl relative rounded-xl md:rounded-2xl overflow-hidden bg-primary-container p-6 md:p-xl text-on-primary">
+    <div class="relative z-10 max-w-2xl text-right">
+        <h1 class="font-h1 text-2xl md:text-h1 mb-md">إدارة الفرص التدريبية</h1>
+        <p class="font-body-lg text-sm md:text-body-lg opacity-90 mb-lg md:mb-xl">
+            قم بإدارة فرص التدريب الخاصة بمؤسستك. أضف فرص جديدة، وعدّل أو احذف الفرص الحالية بسهولة.
+        </p>
+        <a class="w-full sm:w-auto bg-white text-primary font-button px-xl py-3 rounded-xl shadow-lg hover:bg-surface-container transition-colors"
+           asp-page="/Institution/TrainingOppertunities/create">
+            + إضافة فرصة تدريب
+        </a>
+    </div>
+    <div class="absolute -bottom-10 -left-10 w-48 h-48 md:w-64 md:h-64 bg-white/10 rounded-full blur-3xl"></div>
+    <div class="absolute -top-20 -left-20 w-64 h-64 md:w-80 md:h-80 bg-secondary-fixed-dim/20 rounded-full blur-3xl"></div>
+</section>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="bg-green-50 border border-green-200 text-green-700 p-4 rounded-xl mb-6 flex justify-between items-center">
+        <div class="flex items-center">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            @TempData["SuccessMessage"]
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@* ===== Filters Bar ===== *@
+<div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] p-4 md:px-lg md:py-4 mb-lg md:mb-xl">
+    <form method="get" class="flex flex-wrap items-center gap-3 justify-end">
+        <input type="hidden" name="PageSize" value="@Model.PageSize" />
+        <input type="hidden" name="PageIndex" value="@Model.PageIndex" />
+        <input type="hidden" name="SortOrder" value="@Model.SortOrder" />
+
+        <div class="relative flex-1 min-w-[180px]">
+            <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+            <input asp-for="SearchTerm" class="w-full pr-10 pl-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20" placeholder="ابحث عن فرصة..." type="text" />
+        </div>
+
+        <select asp-items="Model.Specialities" asp-for="SpecialtyId" class="bg-slate-100 border-none rounded-xl text-sm font-bold text-slate-700 py-2.5 px-4 focus:ring-2 focus:ring-primary/20 cursor-pointer">
+            <option value="">التخصص</option>
+        </select>
+
+        <select asp-for="StatusId" class="bg-slate-100 border-none rounded-xl text-sm font-bold text-slate-700 py-2.5 px-4 focus:ring-2 focus:ring-primary/20 cursor-pointer">
+            <option value="0">حالة الفرصة</option>
+            <option value="1">مفتوحة</option>
+            <option value="2">منتهية</option>
+            <option value="3">مغلقة</option>
+        </select>
+
+        <select asp-for="PeriodMonths" class="bg-slate-100 border-none rounded-xl text-sm font-bold text-slate-700 py-2.5 px-4 focus:ring-2 focus:ring-primary/20 cursor-pointer">
+            <option value="0">فترة التدريب</option>
+            <option value="1">شهر واحد</option>
+            <option value="2">شهرين</option>
+            <option value="3">3 أشهر</option>
+            <option value="4">4 أشهر</option>
+        </select>
+
+        <button type="submit" class="bg-primary-container text-white font-button px-6 py-2.5 rounded-xl hover:bg-primary/90 transition-colors">بحث</button>
+    </form>
+</div>
+
+@* ===== Opportunities Table ===== *@
+<div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] overflow-hidden">
+    <div class="p-4 md:p-lg border-b border-slate-100 flex justify-between items-center">
+        <h3 class="font-h3 text-lg md:text-h3 text-slate-900">الفرص التدريبية الخاصة بالمؤسسة</h3>
+        <a class="text-primary text-sm font-bold hover:underline no-underline" asp-route-PageSize="@Model.TrainingOpportunities.TotalCount">عرض الكل</a>
+    </div>
+
+    <div class="overflow-x-auto">
+        <table class="w-full text-right border-collapse min-w-[1100px]">
+            <thead class="bg-surface-container-low">
+                <tr>
+                    <th class="px-4 md:px-lg py-3 md:py-md text-slate-500 font-label-caps text-label-caps">عنوان الفرصة</th>
+                    <th class="px-4 md:px-lg py-3 md:py-md text-slate-500 font-label-caps text-label-caps">التخصص</th>
+                    <th class="px-4 md:px-lg py-3 md:py-md text-slate-500 font-label-caps text-label-caps">
+                        <a class="flex items-center gap-1 text-slate-500 hover:text-primary transition-colors no-underline" asp-route-SortOrder="@(Model.SortOrder == "Capacity" ? "Capacity_desc" : "Capacity")">
+                            المقاعد @SortingIcon("Capacity", Model.SortOrder)
+                        </a>
+                    </th>
+                    <th class="px-4 md:px-lg py-3 md:py-md text-slate-500 font-label-caps text-label-caps">الموقع</th>
+                    <th class="px-4 md:px-lg py-3 md:py-md text-slate-500 font-label-caps text-label-caps">فترة التدريب</th>
+                    <th class="px-4 md:px-lg py-3 md:py-md text-slate-500 font-label-caps text-label-caps">
+                        <a class="flex items-center gap-1 text-slate-500 hover:text-primary transition-colors no-underline" asp-route-SortOrder="@(Model.SortOrder == "Status" ? "Status_desc" : "Status")">
+                            حالة الفرصة @SortingIcon("Status", Model.SortOrder)
+                        </a>
+                    </th>
+                    <th class="px-4 md:px-lg py-3 md:py-md text-slate-500 font-label-caps text-label-caps">
+                        <a class="flex items-center gap-1 text-slate-500 hover:text-primary transition-colors no-underline" asp-route-SortOrder="@(Model.SortOrder == "CreatedAt" ? "CreatedAt_desc" : "CreatedAt")">
+                            تاريخ الانشاء @SortingIcon("CreatedAt", Model.SortOrder)
+                        </a>
+                    </th>
+                    <th class="px-4 md:px-lg py-3 md:py-md text-slate-500 font-label-caps text-label-caps">طلبات المتقدمين</th>
+                    <th class="px-4 md:px-lg py-3 md:py-md text-slate-500 font-label-caps text-label-caps">الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-50">
+                @foreach (var opportunity in Model.TrainingOpportunities)
+                {
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-4 md:px-lg py-4 md:py-md text-sm text-slate-900 font-bold">@opportunity.Title</td>
+                        <td class="px-4 md:px-lg py-4 md:py-md text-sm text-slate-600">
+                            @foreach (var sp in opportunity.OpportunitySpecialties)
+                            {
+                                <span>@sp.Specialty.Name </span>
+                            }
+                        </td>
+                        <td class="px-4 md:px-lg py-4 md:py-md text-sm text-slate-600">@opportunity.Capacity</td>
+                        <td class="px-4 md:px-lg py-4 md:py-md text-sm text-slate-600">@opportunity.Location</td>
+                        <td class="px-4 md:px-lg py-4 md:py-md text-sm text-slate-600 whitespace-nowrap">@opportunity.StartDate.ToString("yyyy-MM-dd") ← @opportunity.EndDate.ToString("yyyy-MM-dd")</td>
+                        <td class="px-4 md:px-lg py-4 md:py-md">
+                            <span class="px-3 py-1 rounded-full text-[11px] font-bold @(opportunity.Status == Models.TrainingOpportunity.Opportunity.Open ? "bg-green-100 text-green-700" : "bg-orange-100 text-orange-700")">
+                                @opportunity.Status.ToString()
+                            </span>
+                        </td>
+                        <td class="px-4 md:px-lg py-4 md:py-md text-sm text-slate-600">@opportunity.CreatedAt.ToString("yyyy-MM-dd")</td>
+                        <td class="px-4 md:px-lg py-4 md:py-md"><a asp-page="/Institution/TrainingRequests" class="text-primary text-sm font-bold hover:underline">عرض الطلبات</a></td>
+                        <td class="px-4 md:px-lg py-4 md:py-md">
+                            <div class="flex gap-4">
+                                <a asp-page="TrainingOppertunities/Edit" asp-route-id="@opportunity.OpportunityID" class="text-primary hover:text-primary/80"><span class="material-symbols-outlined text-base">edit</span></a>
+                                <a asp-page="TrainingOppertunities/Delete" asp-route-id="@opportunity.OpportunityID" class="text-red-500 hover:text-red-700"><span class="material-symbols-outlined text-base">delete</span></a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @* ===== Pagination ===== *@
+    <div class="p-4 md:p-lg flex flex-col md:flex-row items-center justify-between gap-4 border-t border-slate-100">
+        <div class="flex flex-col sm:flex-row items-center gap-4">
+            <p class="text-sm text-slate-500">عرض <span class="font-bold text-slate-900">@Model.TrainingOpportunities.Count</span> من أصل <span class="font-bold text-slate-900">@Model.TrainingOpportunities.TotalCount</span></p>
+            <form>
+                <select asp-for="PageSize" onchange="this.form.submit()" class="bg-slate-100 border-none rounded-lg text-xs font-bold text-slate-700 py-1.5 px-3 focus:ring-2 focus:ring-primary/20 cursor-pointer">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                </select>
+            </form>
+        </div>
+        <nav class="flex items-center gap-2">
+            @for (int i = 1; i <= Model.TrainingOpportunities.TotalPages; i++)
+            {
+                <a asp-route-PageIndex="@i" class="w-8 h-8 flex items-center justify-center rounded-lg text-sm font-bold @(Model.PageIndex == i ? "bg-primary-container text-white" : "border border-slate-200 text-slate-600 hover:bg-slate-50")">@i</a>
+            }
+        </nav>
+    </div>
+</div>

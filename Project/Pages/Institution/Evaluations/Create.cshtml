@@ -1,0 +1,45 @@
+﻿@page "{placementId:int}"
+@model Project.Pages.Institution.Evaluations.CreateModel
+
+<h3 class="mb-4">تقييم الطالب</h3>
+
+<form method="post" enctype="multipart/form-data">
+
+    <input asp-for="Input.PlacementID" type="hidden" />
+
+    <div class="mb-3">
+        <label>الدرجة</label>
+        <input asp-for="Input.Score" class="form-control" />
+        <span class="text-danger" asp-validation-for="Input.Score"></span>
+
+    </div>
+
+    <div class="mb-3">
+        <label>الدرجة الكلية</label>
+        <input asp-for="Input.MaxScore" class="form-control" />
+        <span class="text-danger" asp-validation-for="Input.MaxScore"></span>
+
+    </div>
+
+    <div class="mb-3">
+        <label>ملاحظات</label>
+        <textarea asp-for="Input.Notes"
+                  class="form-control"
+                  rows="6"></textarea>
+        <span class="text-danger" asp-validation-for="Input.Notes"></span>
+
+    </div>
+
+    <div class="mb-3">
+        <label>ملف التقييم (PDF)</label>
+        <input asp-for="EvaluationFile"
+               type="file"
+               class="form-control" />
+        <span class="text-danger" asp-validation-for="EvaluationFile"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">
+        حفظ التقييم
+    </button>
+
+</form>

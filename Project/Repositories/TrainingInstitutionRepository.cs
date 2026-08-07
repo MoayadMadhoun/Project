@@ -36,14 +36,14 @@ namespace Project.Repository
             .AsNoTracking()
             .ToListAsync();
 
-        public async Task<TrainingInstitution?> GetByIdAsync(int InstituationID)
+        public async Task<TrainingInstitution?> GetByIdAsync(int? InstituationID)
         {
             return await _dbContext
                 .TrainingInstitutions
                 .Include(ti => ti.TrainingOpportunities)
                 .FirstOrDefaultAsync(ti => ti.InstituationID == InstituationID);
         }
-
+          
         //To Performance in Soft Delete { Take The University Without Include}
         public async Task<TrainingInstitution?> GetByIdModifyAsync(int InstituationID)
         {
@@ -54,12 +54,12 @@ namespace Project.Repository
 
 
 
-        public async Task<string?> GetTypeInstitution(int InstituationID)
+        public async Task<Enum?> GetTypeInstitution(int InstituationID)
         {
             return await _dbContext
                 .TrainingInstitutions
                 .Where(ti => ti.InstituationID == InstituationID)
-                .Select(ti => ti.Type)
+                .Select(ti => ti.InstitutionType)
                 .FirstOrDefaultAsync();
         }
 
@@ -207,18 +207,128 @@ namespace Project.Repository
 
 
         }
+        //Get Applications for Institution
+        public IQueryable<TrainingApplication> GetApplicationsForInstitution(int? InstituationID)
+        {
+            return _dbContext.TrainingApplications
+                .Include(a => a.Student)
+                .ThenInclude(s => s.Department)
+                .ThenInclude(d => d.University)
+                .Include(a => a.TrainingOpportunity)
+                .Where(a => a.TrainingOpportunity.InstitutionID == InstituationID)
+                .AsNoTracking().AsQueryable();
+        }
+        public IQueryable<TrainingOpportunity> GetTrainingOpportunitiesQueryable(int? InstituationID)
+        {
+            return _dbContext.TrainingOpportunities
+                .Include(tr=>tr.OpportunitySpecialties)
+                .ThenInclude(s=>s.Specialty)
+                .Where(t=>t.InstitutionID== InstituationID)
+                .AsNoTracking().AsQueryable();
+        }
+        public IQueryable<AspNetUser> GetSupervisorsForInstitution(int? InstitutionId)
+        {
+            return _dbContext.Users
+                .Include(u => u.RoleScope)
+                .ThenInclude(rs => rs.Department)
+                .Where(u => u.RoleScope.Role.Name == "InstitutionSupervisor" && u.RoleScope.InstitutionID == InstitutionId)
+                .AsNoTracking().AsQueryable();
+        }
+        public IQueryable<TrainingOpportunity> GetCurrentTrainingsForInstitution(int institutionId)
+        {
+            var today = DateTime.Today;
 
+            return _dbContext.TrainingOpportunities
+                .Include(x => x.TrainingPlacement)
+                .Where(x =>
+                    x.InstitutionID == institutionId &&
+                    x.StartDate <= today &&
+                    x.EndDate >= today)
+                .AsNoTracking();
+        }
 
+        public IQueryable<TrainingOpportunity> GetTrainingsForInstitution(int institutionId)
+        {
+            return _dbContext.TrainingOpportunities
+                .Include(x => x.TrainingPlacement)
+                .Where(x => x.InstitutionID == institutionId)
+                .OrderByDescending(x => x.CreatedAt)
+                .AsNoTracking();
+        }
+        public IQueryable<AttendanceRecord> GetAttendanceForInstitution(int institutionId)
+        {
+            return _dbContext.AttendanceRecords
 
+                .Include(a => a.TrainingPlacement)
+                    .ThenInclude(p => p.Student)
 
-       
+                .Include(a => a.TrainingPlacement)
+                    .ThenInclude(p => p.TrainingOpportunity)
 
+                .Include(a => a.InstitutionSupervisor)
 
-        
+                .Where(a => a.TrainingPlacement.InstitutionID == institutionId)
 
+                .AsNoTracking();
+        }
+        public IQueryable<StudentEvaluation> GetEvaluationsForInstitution(int institutionId)
+        {
+            return _dbContext.StudentEvaluations
+                .Include(e => e.TrainingPlacement)
+                    .ThenInclude(p => p.Student)
 
+                .Include(e => e.TrainingPlacement)
+                    .ThenInclude(p => p.TrainingOpportunity)
+
+                .Include(e => e.InstitutionSupervisor)
+
+                .Where(e => e.TrainingPlacement.InstitutionID == institutionId)
+                .AsNoTracking();
+        }
+        public async Task<TrainingOpportunity?> GetTrainingOpportunityDetailsForInstitutionAsync(int opportunityId, int institutionId)
+        {
+            return await _dbContext.TrainingOpportunities
+                .Include(to => to.TrainingPlacement)
+                    .ThenInclude(tp => tp.Student)
+                        .ThenInclude(s => s.Specialty)
+                .Include(to => to.TrainingPlacement)
+                    .ThenInclude(tp => tp.Student)
+                        .ThenInclude(s => s.Department)
+                .Include(to => to.TrainingPlacement)
+                    .ThenInclude(tp => tp.InstitutionSupervisor)
+                .Include(to => to.OpportunitySpecialties)
+                    .ThenInclude(os => os.Specialty)
+                .Include(to => to.OpportunitySkills)
+                    .ThenInclude(os => os.Skill)
+                .Include(to => to.Request)
+                    .ThenInclude(r => r!.Specialties)
+                        .ThenInclude(rs => rs.Specialty)
+                .Include(to => to.Request)
+                    .ThenInclude(r => r!.Skills)
+                        .ThenInclude(rs => rs.Skill)
+                .Include(to => to.InstitutionOfficer)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(to => to.OpportunityID == opportunityId && to.InstitutionID == institutionId);
+        }
+
+        public async Task<bool> HasActivePlacementsForInstitutionAsync(int opportunityId, int institutionId)
+        {
+            return await _dbContext.TrainingPlacements
+                .AsNoTracking()
+                .AnyAsync(tp =>
+                    tp.OpportunityID == opportunityId &&
+                    tp.InstitutionID == institutionId &&
+                    tp.Status == TrainingPlacement.PlacementStatus.InProgress);
+        }
+
+        public async Task<List<string>> GetOpportunitySkillNamesAsync(int opportunityId)
+        {
+            return await _dbContext.OpportunitySkills
+                .Where(os => os.OpportunityID == opportunityId)
+                .Select(os => os.Skill.Name)
+                .AsNoTracking()
+                .ToListAsync();
+        }
     }
-
-
 }
 

@@ -10,36 +10,43 @@ namespace Project.Models
         public int PlacementID { get; set; }
         //OpportunityID FK
         [Required(ErrorMessage= "Training opportunity is required") ]
-        [ForeignKey(nameof(OpportunityID))]
+        
         public int OpportunityID { get; set; }
-        public TrainingOpportunity TrainingOpportunity { get; set; }= new TrainingOpportunity();
+        [ForeignKey(nameof(OpportunityID))]
+        public TrainingOpportunity TrainingOpportunity { get; set; }= null!;
         //TrainingApplication FK
         [Required(ErrorMessage = "Training application is required")]
-        [ForeignKey(nameof(ApplicationID))]
+        
         public int ApplicationID { get; set; }
-        public TrainingApplication TrainingApplication { get; set; } = new TrainingApplication();   
+        [ForeignKey(nameof(ApplicationID))]
+        public TrainingApplication TrainingApplication { get; set; } = null!;   
         //StudentID FK
         [Required(ErrorMessage = "Student is required")]
-        [ForeignKey(nameof(StudentID))]
+        
         public int StudentID { get; set; }
-        public Student Student { get; set; } = new Student();
+        [ForeignKey(nameof(StudentID))]
+        public Student Student { get; set; } = null!;
         //InstitutionID FK
         [Required(ErrorMessage = "Institution opportunity is required")]
-        [ForeignKey(nameof(InstitutionID))]
+        
         public int InstitutionID { get; set; }
-        public TrainingInstitution TrainingInstitution { get; set; } = new TrainingInstitution();
+        [ForeignKey(nameof(InstitutionID))]
+        public TrainingInstitution TrainingInstitution { get; set; } = null!;
         //TermID FK
         [Required(ErrorMessage = "Training Term is required")]
-        [ForeignKey(nameof(TermID))]
+        
         public int TermID { get; set; }
-        public TrainingTerm TrainingTerm { get; set; } = new TrainingTerm();
+        [ForeignKey(nameof(TermID))]
+        public TrainingTerm TrainingTerm { get; set; } = null!;
         //
-        [ForeignKey(nameof(UniversitySupervisorID))]
+        
         public string? UniversitySupervisorID { get; set; }
+        [ForeignKey(nameof(UniversitySupervisorID))]
         public AspNetUser? UniversitySupervisor { get; set; }
         //
-        [ForeignKey(nameof(InstitutionSupervisorID))]
+        
         public string? InstitutionSupervisorID {get; set;}
+        [ForeignKey(nameof(InstitutionSupervisorID))]
         public AspNetUser? InstitutionSupervisor { get; set; }
         [Required(ErrorMessage = "Start date is required")]
         public DateTime StartDate { get; set; }
@@ -54,9 +61,9 @@ namespace Project.Models
         [MaxLength(1000, ErrorMessage = "Notes can't be more than 1000 characters")]
         public string? Notes { get; set; }
 
-        public ICollection<AttendanceRecord> AttendanceRecords { get; set; } = new HashSet<AttendanceRecord>();     
-        public ICollection<FieldVisit> FieldVisits { get; set; } = new HashSet<FieldVisit>();
-        public ICollection<StudentEvaluation> StudentEvaluations { get; set; } = new HashSet<StudentEvaluation>();
-        public ICollection<StudentReport> StudentReports { get; set; } = new HashSet<StudentReport>();
+        public ICollection<AttendanceRecord> AttendanceRecords { get; set; } = new List<AttendanceRecord>();     
+        public ICollection<FieldVisit> FieldVisits { get; set; } = new List<FieldVisit>();
+        public ICollection<StudentEvaluation> StudentEvaluations { get; set; } = new List<StudentEvaluation>();
+        public ICollection<StudentReport> StudentReports { get; set; } = new List<StudentReport>();
     }
 }

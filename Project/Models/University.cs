@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Project.Models
 {
@@ -17,8 +18,18 @@ namespace Project.Models
         public string? PhoneNumber { get; set;  }
         [EmailAddress(ErrorMessage="Invalid email format")]
         public string? Email { get; set; }
-        public bool IsActive { get; set; }
-        public ICollection<Department> Departments { get; set; } = new HashSet<Department>();
-        public ICollection<TrainingOpportunityRequest> TrainingOpportunityRequests { get; set; } = new HashSet<TrainingOpportunityRequest>();
+        public bool IsActive { get; set; } 
+        public ICollection<Department> Departments { get; set; } = new List<Department>();
+        public ICollection<TrainingOpportunityRequest> TrainingOpportunityRequests { get; set; } = new List<TrainingOpportunityRequest>();
+
+        public ICollection<Student?> Students { get; set; }
+
+        //UserID FK
+        [Required(ErrorMessage = "User account is required")]
+        [ForeignKey(nameof(UserID))]
+        public string UserID { get; set; } = string.Empty;
+        public AspNetUser User { get; set; } = null!;
+
+
     }
 }

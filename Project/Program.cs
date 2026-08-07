@@ -1,7 +1,13 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Project.Data;
 using Project.Models;
+using Project.Options;
+using Project.Repositories;
+using Project.Repository;
+using Project.Repostory;
+using Project.Services;
 
 namespace Project
 {
@@ -17,12 +23,39 @@ namespace Project
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            builder.Services.AddDefaultIdentity<AspNetUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            builder.Services.AddDefaultIdentity<AspNetUser>(options => {
+                    options.SignIn.RequireConfirmedAccount = false;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequireLowercase = false;
+                    options.Password.RequireUppercase = false;
+
+            })
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultUI()
                 .AddDefaultTokenProviders();
 
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Identity/Account/Login";
+                options.AccessDeniedPath = "/AccessDenied";
+            });
+
+            builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection("SMTP"));
+            builder.Services.AddTransient<IEmailSender, EmailSender>();
+
+            builder.Services.AddScoped<TrainingInstitutionRepository>();
+            builder.Services.AddScoped<UniversityRepository>();
+            builder.Services.AddScoped<StudentsRepository>();
+            builder.Services.AddScoped<DepartmentRepository>();
+            builder.Services.AddScoped<SpecialtyRepository>();
+            builder.Services.AddScoped<TrainingOpportunityRepository>();
+            builder.Services.AddScoped<OptService>();
+            builder.Services.AddScoped<CreateUserService>();
+            builder.Services.AddScoped<TrainingRequestService>();
+            builder.Services.AddScoped<TrainingTermService>();
+
+            builder.Services.AddKeyedScoped<IUploadFils, UploadDocxFile >("file");
             builder.Services.AddRazorPages();
 
             var app = builder.Build();
@@ -42,6 +75,7 @@ namespace Project
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

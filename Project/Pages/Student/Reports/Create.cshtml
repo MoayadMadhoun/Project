@@ -1,0 +1,260 @@
+﻿@page "{id?}"
+@using Project.Models
+@model CreateModel
+@{
+    ViewData["Title"] = "رفع تقرير";
+    ViewData["UserType"] = "Student";
+}
+
+<form method="post" enctype="multipart/form-data">
+    <input asp-for="VM.StudentId" type="hidden" />
+    <!-- Hero -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body p-5 text-white"
+             style="background:#2563eb;border-radius:24px;">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+
+                    <h1 class="fw-bold mb-3">
+                        رفع تقرير التدريب
+                    </h1>
+
+                    <p class="mb-0 fs-5 opacity-75">
+                        قم بإرسال تقريرك الأسبوعي أو النهائي لمراجعته من قبل المشرف الأكاديمي.
+                    </p>
+
+                </div>
+
+                <div class="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center"
+                     style="width:90px;height:90px;">
+
+                    <i class="bi bi-file-earmark-arrow-up fs-1"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Training Info -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                معلومات التدريب
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-md-4">
+
+                    <label class="text-muted">
+                        فرصة التدريب
+                    </label>
+
+                    <div class="fw-semibold">
+                        @Model.VM.OpportunityTitle
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label class="text-muted">
+                        المؤسسة
+                    </label>
+
+                    <<div class="fw-semibold">
+                        @Model.VM.InstitutionName
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+
+                    <label class="text-muted">
+                        المشرف الأكاديمي
+                    </label>
+
+                    <div class="fw-semibold">
+                        @Model.VM.UniversitySupervisorName
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Report Details -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                بيانات التقرير
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-4">
+
+                <div class="col-md-4">
+
+                    <label asp-for="VM.Type" class="form-label"></label>
+
+                    <select asp-for="VM.Type"
+                            asp-items="Html.GetEnumSelectList<StudentReport.ReportType>()"
+                            class="form-select">
+                    </select>
+
+                    <span asp-validation-for="VM.Type"
+                          class="text-danger"></span>
+
+                </div>
+
+                <div class="col-md-8">
+
+                    <label class="form-label">
+                        عنوان التقرير
+                    </label>
+
+                    <input asp-for="VM.Title"
+                           class="form-control" />
+
+                    <span asp-validation-for="VM.Title"
+                          class="text-danger"></span>
+
+                </div>
+
+                <div class="col-md-12">
+
+                    <label class="form-label">
+                        محتوى التقرير
+                    </label>
+
+                    <textarea asp-for="VM.Content"
+                              rows="8"
+                              class="form-control"></textarea>
+
+                    <span asp-validation-for="VM.Content"
+                          class="text-danger"></span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Upload File -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                ملف التقرير
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="border rounded-4 p-5 text-center">
+
+                <i class="bi bi-cloud-arrow-up fs-1 text-primary"></i>
+
+                <h5 class="mt-3">
+                    رفع ملف التقرير
+                </h5>
+
+                <p class="text-muted">
+                    PDF أو DOCX بحد أقصى 20MB
+                </p>
+                <input asp-for="VM.ReportFile"
+                       type="file"
+                       class="form-control" />
+
+                <span asp-validation-for="VM.ReportFile"
+                      class="text-danger"></span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Notes -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                ملاحظات هامة
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <ul class="mb-0">
+
+                <li>تأكد من كتابة عنوان واضح للتقرير.</li>
+
+                <li>يجب أن يعكس التقرير الأعمال المنجزة خلال فترة التدريب.</li>
+
+                <li>يمكن رفع ملف إضافي يحتوي على صور أو مرفقات داعمة.</li>
+
+                <li>بعد الإرسال ستصبح حالة التقرير "قيد المراجعة".</li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+    <!-- Buttons -->
+
+    <div class="d-flex gap-2 mb-5">
+
+        <button type="submit"
+                class="btn btn-primary px-5">
+
+            <i class="bi bi-send me-2"></i>
+            إرسال التقرير
+
+        </button>
+
+        <a href="#"
+           class="btn btn-light px-5">
+
+            إلغاء
+
+        </a>
+
+    </div>
+
+</form>
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Project.Data;
 using Project.Models;
@@ -18,14 +19,14 @@ namespace Project.Repostory
         public IQueryable<University> GetAllQueryable() => _dbContext
             .Universities.Include(u => u.Departments)
             .AsNoTracking();
-            
+
 
 
         // CRUD Methode ....
 
         public async Task<List<University>> GetAllAsync() => await _dbContext
             .Universities
-            .Include(u=>u.Departments)
+            .Include(u => u.Departments)
             .AsNoTracking()
             .ToListAsync();
 
@@ -49,9 +50,9 @@ namespace Project.Repostory
         {
             university.IsActive = true;
 
-           await _dbContext.Universities.AddAsync(university);
+            await _dbContext.Universities.AddAsync(university);
 
-           await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
 
         }
 
@@ -74,7 +75,7 @@ namespace Project.Repostory
             if (university is null)
                 return false;
 
-            if(!university.IsActive)
+            if (!university.IsActive)
                 return false;
 
 
@@ -93,10 +94,10 @@ namespace Project.Repostory
         {
             var university = await GetByIdModifyAsync(UniversityID);
 
-            if(university is not null )
+            if (university is not null)
             {
 
-                _dbContext.Universities.Remove(university); 
+                _dbContext.Universities.Remove(university);
                 await _dbContext.SaveChangesAsync();
             }
             else
@@ -127,7 +128,7 @@ namespace Project.Repostory
         }
 
         public async Task<IEnumerable<University>> GetByStatusAsync(bool isActive)
-        {           
+        {
 
             return await _dbContext.Universities
                 .Where(u => u.IsActive == isActive)
@@ -135,7 +136,7 @@ namespace Project.Repostory
 
         }
 
-        
+
         // Count 
         public async Task<int> GetTotalCountAsync()
         {
@@ -145,13 +146,13 @@ namespace Project.Repostory
 
         public async Task<int> GetActiveCountAsync()
         {
-            
-            return await _dbContext.Universities.CountAsync(u=>u.IsActive);
+
+            return await _dbContext.Universities.CountAsync(u => u.IsActive);
         }
 
         public async Task<int> GetInActiveCountAsync()
         {
-            return await _dbContext.Universities.CountAsync(u=>!u.IsActive);
+            return await _dbContext.Universities.CountAsync(u => !u.IsActive);
         }
 
 
@@ -169,6 +170,94 @@ namespace Project.Repostory
         }
 
 
+        public async Task<SelectList> CreateUniversitySelectList()
+        {
+            return new SelectList(await GetByStatusAsync(true), "UniversityID", "Name");
+
+            //return new SelectList(await GetByStatusAsync(true), nameof(University.UniversityID), nameof(University.Name));
+        }
+        public IQueryable<StudentEvaluation> GetUniversityEvaluations()
+        {
+            return _dbContext.StudentEvaluations
+
+                .Include(e => e.TrainingPlacement)
+                    .ThenInclude(p => p.Student)
+                        .ThenInclude(s => s.Department)
+
+                .Include(e => e.TrainingPlacement)
+                    .ThenInclude(p => p.Student)
+                        .ThenInclude(s => s.Specialty)
+
+                .Include(e => e.TrainingPlacement)
+                    .ThenInclude(p => p.TrainingInstitution)
+
+                .Include(e => e.TrainingPlacement)
+                    .ThenInclude(p => p.TrainingOpportunity)
+
+                .Include(e => e.UniversitySupervisor)
+
+                .AsNoTracking();
+        }
+        public IQueryable<TrainingApplication> GetApplicationsForUniversity(int universityId)
+        {
+            return _dbContext.TrainingApplications
+                .Where(a => a.Student.Department.University.UniversityID == universityId)
+                .Include(a => a.Student)
+                .ThenInclude(s => s.Department)
+                .ThenInclude(d => d.University)
+                .Where(app => app.Student.Department.UniversityID== universityId)
+                .Include(a => a.TrainingOpportunity)
+                .ThenInclude(t=>t.TrainingInstitution)
+                .AsNoTracking().AsQueryable();
+        }
+        //include institution
+        public IQueryable<TrainingOpportunityRequest> GetOpportunityRequestForUniversity(int? UniversityId)
+        {
+            return _dbContext.TrainingOpportunityRequests
+                .Include(r => r.Specialties)
+                .ThenInclude(rs => rs.Specialty)
+                .Include(r => r.OpportunityRequests)
+                .ThenInclude(ti => ti.TrainingInstitution)
+                .Where(or => or.UniversityID == UniversityId)
+                .AsNoTracking().AsQueryable();
+        }
+        public IQueryable<AspNetUser> GetDepartmentHeadsForUniversity(int? UniversityId)
+        {
+            return _dbContext.Users
+                .Include(u => u.RoleScope)
+                .ThenInclude(rs => rs.Department)
+                .Where(u=>u.RoleScope.Role.Name=="DepartmentHead" && u.RoleScope.UniversityID==UniversityId)
+                .AsNoTracking().AsQueryable();
+        }
+
+        public async Task<AspNetUser?> GetDpartmentHeadByUserId(string UserId)
+        {
+            return await _dbContext.Users
+                .Include(u => u.RoleScope)
+                    .ThenInclude(rs => rs.Department)
+                .Include(u => u.RoleScope)
+                    .ThenInclude(rs => rs.University)
+                .FirstOrDefaultAsync(u => u.Id == UserId);
+        }
+        public async Task<AspNetUser?> GetUniversitySuperVisorByUserId(string UserId)
+        {
+            return await _dbContext.Users
+             .Include(u => u.RoleScope)
+                 .ThenInclude(rs => rs.University)
+             
+             .FirstOrDefaultAsync(u => u.Id == UserId);
+        }
+        public IQueryable<AspNetUser> GetUniversitySuperVisorBy()
+        {
+            return _dbContext.Users
+                .Include(u => u.RoleScope)
+                    .ThenInclude(rs => rs.Role)
+                .Include(u => u.RoleScope)
+                    .ThenInclude(rs => rs.University)
+                .Where(u => u.RoleScope != null &&
+                            u.RoleScope.Role.Name == "UniversitySupervisor")
+                .AsNoTracking();
+        }
 
     }
 }

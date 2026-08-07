@@ -1,0 +1,118 @@
+﻿@page
+@model Project.Pages.Institution.ProfileModel
+@{
+
+    ViewData["Title"] = "لوحة تحكم المؤسسة";
+    ViewData["UserType"] = "Institution";
+    ViewData["UserName"] = "شركة التقنية المتقدمة";
+    ViewData["PortalTitle"] = "بوابة المؤسسة";
+    ViewData["PortalSubtitle"] = "صفحة المعلومات";
+    ViewData["SearchPlaceholder"] = "بحث عن طلاب، طلبات...";
+}
+<link rel="stylesheet" href="~/Styles/Profile.css" />
+<div class="w-full mx-auto">
+
+    <!-- Back button -->
+    <a href="#" class="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-700 mb-5 transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg>
+        رجوع
+    </a>
+    <a href="c:\users\badar\source\repos\project\project\pages\institution\profile.cshtml.cs">c:\users\badar\source\repos\project\project\pages\institution\profile.cshtml.cs</a>
+    <a href="c:\users\badar\source\repos\project\project\pages\institution\profile.cshtml">c:\users\badar\source\repos\project\project\pages\institution\profile.cshtml</a>
+    <!-- Header Banner -->
+    @* ===== Hero Section  ===== *@
+
+    <section class="mb-lg md:mb-xl relative rounded-xl md:rounded-2xl overflow-hidden bg-primary-container p-6 md:p-xl text-on-primary">
+        <div class="relative z-10 max-w-2xl text-right flex items-center mx-4 mt-5 gap-4">
+            <div class="w-20 h-14 rounded-xl flex items-center justify-center flex-shrink-0 mb-4 ml-2" style="background: rgba(255,255,255,0.15);">
+                <svg class="w-20 h-7 text-white" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+            </div>
+            <div>
+                <h1 class="font-h1 text-2xl md:text-h1 mb-md">بيانات المؤسسة</h1>
+                <p class="font-body-lg text-sm md:text-body-lg opacity-90 mb-lg">
+                    عرض وتعديل بيانات المؤسسة والمعلومات الأساسية
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+   
+
+    <!-- ─── Section 1: Basic Info ─── -->
+<form method="post">
+    <div class="section-card">
+        <div class="flex items-center justify-between mb-1">
+            <h3 class="font-h3 text-2xl md:text-h1 mb-md">المعلومات الأساسية</h3>
+        </div>
+        <p class="section-subtitle">المعلومات التعريفية الخاصة بالمؤسسة</p>
+
+        <div class="grid-2 mb-4">
+            <div>
+                <label class="field-label ">اسم المتعلم</label>
+                <input asp-for="InstitutionProfile.ContactPersonName" class="field-input" type="text"  />
+                <span class="text-danger" asp-validation-for="InstitutionProfile.ContactPersonName"></span>
+            </div>
+            <div>
+                    <label class="field-label required">اسم المؤسسة</label>
+                <input asp-for="InstitutionProfile.Name" class="field-input" type="text"   />
+            </div>
+        </div>
+
+        <div class="grid-2 mb-4">
+            <div>
+                <label class="field-label ">نوع المؤسسة</label>
+                <select asp-items="Model.InstitutionTypeList" asp-for="InstitutionProfile.InstitutionType" class="field-input">
+                    <option value="">نوع المؤسسة</option>
+                </select>
+                    <span class="text-danger" asp-validation-for="InstitutionProfile.InstitutionType"></span>
+            </div>
+           
+        </div>
+       
+    </div>
+
+    <!-- ─── Section 2: Contact Info ─── -->
+    <div class="section-card">
+        <p class="section-title">معلومات الاتصال</p>
+        <p class="section-subtitle">بيانات التواصل الخاصة بالمؤسسة</p>
+
+        <div class="grid-2 mb-4">
+            <div>
+                <label class="field-label">البريد الإلكتروني الرسمي</label>
+                <input asp-for="InstitutionProfile.Email" class="field-input" type="email" />
+                    <span class="text-danger" asp-validation-for="InstitutionProfile.Email"></span>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div>
+                <label class="field-label">الجوال الرسمي</label>
+                <div class="flex gap-2">
+                    <input asp-for="InstitutionProfile.PhoneNumber" class="field-input" type="text" style="flex:1" />
+                </div>
+                <span class="text-danger" asp-validation-for="InstitutionProfile.PhoneNumber"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ─── Section 3: Address ─── -->
+    <div class="section-card">
+        <p class="section-title">العنوان والموقع</p>
+        <div>
+            <label class="field-label">العنوان التفصيلي</label>
+            <input asp-for="InstitutionProfile.Address"  class="field-input" type="text" />
+                <span class="text-danger" asp-validation-for="InstitutionProfile.Address"></span>
+        </div>
+    </div>
+        <div class="mt-4 pt-4 border-t border-slate-100">
+            <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold px-6 py-2.5 rounded-lg transition-colors">
+                حفظ التغييرات
+            </button>
+        </div>
+
+    </form>
+</div>
+

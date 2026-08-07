@@ -1,0 +1,97 @@
+﻿
+
+@page
+@model Project.Pages.Auth.ChooseAccountTypeModel
+@{
+    ViewData["Title"] = "اختر نوع حسابك";
+    Layout = "_NLayout";
+}
+
+
+<div class="container px-0 ">
+    <div class="text-center">
+        <h3 class="fw-bold ">اختر نوع حسابك</h3>
+        <p class=" fs-5 mb-5 ">
+            حدد نوع الحساب الذي ترغب في إنشائه لبدء رحلتك في نظام إدارة التدريب الميداني
+        </p>
+    </div>
+    <div class=" row g-3 justify-content-center mt-5">
+        <div class="col-12 col-md-4">
+            <div class="card h-100 text-center p-4 border-0">
+                <div class="icon-circle circle-institution mx-auto">
+                    <i class="bi bi-building fs-1 ico-in"></i>
+                </div>
+                <h4 class="fw-bold ico-in">حساب جهة تدريب</h4>
+                <p class="text-muted mt-3">
+                    سجل كجهة تدريب لنشر الفرص التدريبية وإدارة المتدربين وعمليات التقييم
+                </p>
+                <a asp-area="Identity"
+                   asp-page="/Account/Register"
+                   asp-route-accountType="Institution"
+                    class="btn  w-100 mt-auto " style="background-color:#4e6076;color:white;">
+                    <i class="bi bi-arrow-left me-2"></i> متابعة
+                </a>
+            </div>
+        </div>
+        <div class="col-12 col-md-4">
+            <div class="card h-100 text-center p-4 border-0">
+                <div class="icon-circle circle-un bg-primary bg-opacity-10 mx-auto">
+                    <i class="bi bi-bank fs-1 ico-un"></i>
+                </div>
+                <h4 class="fw-bold ico-un">حساب جامعة </h4>
+                <p class="text-muted mt-3">
+                    سجل كجامعة لإدارة ترشيحات الطلاب والإشراف على الشراكات الأكاديمية
+                </p>
+                <a asp-area="Identity"
+                   asp-page="/Account/Register"
+                   asp-route-accountType="University"
+                    class="btn  btn-custom w-100 mt-auto " style="background-color:#006397; color:white;">
+                    <i class="bi bi-arrow-left me-2"></i> متابعة
+                </a>
+            </div>
+        </div>
+        <div class="col-12 col-md-4">
+            <div class="card h-100 text-center border-0 p-4">
+                <div class="icon-circle circle-std bg-success bg-opacity-10 mx-auto">
+                    <i class="bi bi-mortarboard fs-1 ico-std"></i>
+                </div>
+                <h4 class="fw-bold ico-std"> حساب طالب </h4>
+                <p class="text-muted mt-3">
+                    سجل كطالب للتقديم على الفرص التدريبية وبناء ملفك الشخصي المهني
+                </p>
+                <a asp-area="Identity"
+                   asp-page="/Account/Register"
+                   asp-route-accountType="Student"
+                   class="btn w-100 mt-auto"
+                   style="background-color:#006b59;color:white;">
+
+                    <i class="bi bi-arrow-left me-2"></i>
+                    متابعة
+
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="text-center mt-4">
+        <p class="text-muted">
+            لديك حساب بالفعل؟
+            <a asp-area="Identity"
+               asp-page="/Account/Login"
+               class="ico-std  ">
+
+                سجل دخولك من هنا
+
+            </a>
+        </p>
+    </div>
+
+</div>
+
+
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/choose-Account-Type.css" />
+        
+}
+
+               

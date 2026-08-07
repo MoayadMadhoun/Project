@@ -1,0 +1,123 @@
+﻿@page
+@using Microsoft.AspNetCore.Html
+@model Project.Pages.Institution.TrainingRequestsModel
+@{
+    ViewData["Title"] = "إدارة الفرص التدريبية";
+    ViewData["UserType"] = "Institution";
+    ViewData["UserName"] = "شركة التقنية المتقدمة";
+    ViewData["PortalTitle"] = "بوابة المؤسسة";
+    ViewData["PortalSubtitle"] = "إدارة التدريب الميداني";
+    ViewData["SearchPlaceholder"] = "بحث عن فرصة تدريب...";
+    ViewData["ActivePage"] = "TrainingRequests";
+}
+<link rel="stylesheet" href="~/css/opportunities.css">
+@functions {
+    public IHtmlContent SortingIcon(string column, string currentSort)
+    {
+        if (currentSort == column)
+            return new HtmlString("<i class=\"bi bi-caret-up-fill text-primary text-xs\"></i>");
+        if (currentSort == column + "_desc")
+            return new HtmlString("<i class=\"bi bi-caret-down-fill text-primary text-xs\"></i>");
+        return new HtmlString("<i class=\"bi bi-arrow-down-up text-slate-400 text-xs\"></i>");
+    }
+}
+
+@* ===== Hero Section ===== *@
+<section class="mb-lg md:mb-xl relative rounded-xl md:rounded-2xl overflow-hidden bg-primary-container p-6 md:p-xl text-on-primary">
+    <div class="relative z-10 max-w-2xl text-right">
+        <h1 class="font-h1 text-2xl md:text-h1 mb-md">إدارة الطلبات التدريبية</h1>
+        <p class="font-body-lg text-sm md:text-body-lg opacity-90 mb-0">
+            متابعة واعتماد طلبات التدريب المقدمة من طلبة القسم والبت فيها بالموافقه أو الرفض.
+        </p>
+    </div>
+    <div class="absolute -bottom-10 -left-10 w-48 h-48 md:w-64 md:h-64 bg-white/10 rounded-full blur-3xl"></div>
+    <div class="absolute -top-20 -left-20 w-64 h-64 md:w-80 md:h-80 bg-secondary-fixed-dim/20 rounded-full blur-3xl"></div>
+</section>
+
+@* ===== Filters Bar ===== *@
+<div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] p-4 md:px-lg md:py-4 mb-lg">
+    <form method="get" class="flex flex-wrap items-center gap-3 justify-end">
+        <input type="hidden" name="PageSize" value="@Model.PageSize" />
+        <input type="hidden" name="PageIndex" value="1" />
+        <input type="hidden" name="SortOrder" value="@Model.SortOrder" />
+
+        <div class="relative flex-1 min-w-[220px]">
+            <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+            <input asp-for="SearchTerm" class="w-full pr-10 pl-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20" placeholder="ابحث عن طالب أو مؤسسة..." type="text" />
+        </div>
+
+        <select asp-for="ApplicationStatusId" class="bg-slate-100 border-none rounded-xl text-sm font-bold text-slate-700 py-2.5 px-4 focus:ring-2 focus:ring-primary/20 cursor-pointer">
+            <option value="">حالة الطلب</option>
+            <option value="0">قيد المراجعة</option>
+            <option value="1">مرفوض من المؤسسة</option>
+            <option value="2">معتمد من المؤسسة</option>
+        </select>
+
+        <button type="submit" class="bg-primary-container text-white font-button px-6 py-2.5 rounded-xl hover:bg-primary/90 transition-colors">بحث</button>
+    </form>
+</div>
+
+@* ===== Requests Table ===== *@
+<div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] overflow-hidden">
+    <div class="p-4 md:p-lg border-b border-slate-100 flex justify-between items-center">
+        <h3 class="font-h3 text-lg md:text-h3 text-slate-900">طلبات التدريب لطلبة القسم</h3>
+        <a class="text-primary text-sm font-bold hover:underline no-underline" asp-route-PageSize="@Model.TrainingRequests.TotalCount">عرض الكل</a>
+    </div>
+
+    <div class="overflow-x-auto">
+        <table class="w-full text-right border-collapse min-w-[1000px]">
+            <thead class="bg-surface-container-low">
+                <tr>
+                    <th class="px-4 md:px-lg py-3 text-slate-500 font-label-caps text-label-caps">
+                        <a class="flex items-center gap-1 text-slate-500 hover:text-primary transition-colors no-underline" asp-route-SortOrder="@(Model.SortOrder == "Name" ? "Name_desc" : "Name")">
+                            الطالب @SortingIcon("Name", Model.SortOrder)
+                        </a>
+                    </th>
+                    <th class="px-4 md:px-lg py-3 text-slate-500 font-label-caps text-label-caps">الرقم الجامعي</th>
+                    <th class="px-4 md:px-lg py-3 text-slate-500 font-label-caps text-label-caps">تاريخ التقديم</th>
+                    <th class="px-4 md:px-lg py-3 text-slate-500 font-label-caps text-label-caps">الحالة</th>
+                    <th class="px-4 md:px-lg py-3 text-slate-500 font-label-caps text-label-caps">الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-50">
+                @foreach (var TR in Model.TrainingRequests)
+                {
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-4 md:px-lg py-4 text-sm text-slate-900 font-bold">@TR.Student.Name</td>
+                        <td class="px-4 md:px-lg py-4 text-sm text-slate-600">@TR.Student.StudentNumber</td>
+                        <td class="px-4 md:px-lg py-4 text-sm text-slate-600">@TR.AppliedAt.ToString("yyyy-MM-dd")</td>
+                        <td class="px-4 md:px-lg py-4">
+                            <span class="px-3 py-1 rounded-full text-[11px] font-bold @(TR.InstitutionDecision == Models.TrainingApplication.Decision.Approved ? "bg-green-100 text-green-700" : TR.InstitutionDecision == Models.TrainingApplication.Decision.Rejected ? "bg-red-100 text-red-700" : "bg-amber-100 text-amber-700")">
+                                @(TR.InstitutionDecision == Models.TrainingApplication.Decision.Rejected ? "مرفوض" : TR.InstitutionDecision == Models.TrainingApplication.Decision.Approved ? "مقبول" : "قيد المراجعة")
+                            </span>
+                        </td>
+                        <td class="px-4 md:px-lg py-4">
+                            <div class="flex gap-2">
+                                <a asp-page="/Student/Profile" asp-route-studentId="@TR.Student.UserID" class="flex items-center gap-1 text-slate-600 border border-slate-200 px-3 py-1 rounded-lg text-xs font-bold hover:bg-slate-50">
+                                    <span class="material-symbols-outlined text-sm">visibility</span> عرض الملف
+                                </a>
+                                <a asp-route-ApproveApplicationId="@TR.ApplicationID" class="flex items-center gap-1 text-green-600 border border-green-200 px-3 py-1 rounded-lg text-xs font-bold hover:bg-green-50">
+                                    <span class="material-symbols-outlined text-sm">check</span> قبول
+                                </a>
+                                <a asp-route-RejectApplicationId="@TR.ApplicationID" class="flex items-center gap-1 text-red-600 border border-red-200 px-3 py-1 rounded-lg text-xs font-bold hover:bg-red-50">
+                                    <span class="material-symbols-outlined text-sm">close</span> رفض
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @* ===== Pagination Footer ===== *@
+    <div class="p-4 md:p-lg flex flex-col md:flex-row items-center justify-between gap-4 border-t border-slate-100">
+        <p class="text-sm text-slate-500 font-bold">عرض @Model.TrainingRequests.Count من أصل @Model.TrainingRequests.TotalCount</p>
+        <nav class="flex items-center gap-2">
+            @for (int i = 1; i <= Model.TrainingRequests.TotalPages; i++)
+            {
+                <a asp-route-PageIndex="@i" class="w-8 h-8 flex items-center justify-center rounded-lg text-sm font-bold @(Model.PageIndex == i ? "bg-primary-container text-white" : "border border-slate-200 text-slate-600 hover:bg-slate-50")">@i</a>
+            }
+        </nav>
+    </div>
+</div>

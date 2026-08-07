@@ -1,0 +1,294 @@
+﻿@page "{id:int}"
+@model Project.Pages.University.Specialties.DetailsModel
+
+@{
+    ViewData["Title"] = "تفاصيل التخصص";
+}
+
+<div class="card border-0 shadow-sm mb-4">
+
+    <div class="card-body p-5 text-white"
+         style="background:#1ab29a;border-radius:24px;">
+
+        <div class="d-flex justify-content-between align-items-center">
+
+            <div>
+
+                <h1 class="fw-bold mb-3">
+                    تفاصيل التخصص
+                </h1>
+
+                <p class="mb-0 fs-5 opacity-75">
+                    عرض كافة معلومات التخصص الأكاديمي.
+                </p>
+
+            </div>
+
+            <div class="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center"
+                 style="width:90px;height:90px;">
+
+                <i class="bi bi-mortarboard-fill fs-1"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+
+    <div class="card-header bg-white">
+
+        <h5 class="fw-bold mb-0">
+            بيانات التخصص
+        </h5>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row g-4">
+
+            <div class="col-md-6">
+
+                <label class="text-muted">
+                    اسم التخصص
+                </label>
+
+                <div class="fw-semibold">
+                    @Model.Specialty.Name
+                </div>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <label class="text-muted">
+                    القسم
+                </label>
+
+                <div class="fw-semibold">
+                    @Model.Specialty.Department?.Name
+                </div>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <label class="text-muted">
+                    التصنيف
+                </label>
+
+                <div class="fw-semibold">
+                    @(string.IsNullOrWhiteSpace(Model.Specialty.Category)
+                        ? "-"
+                        : Model.Specialty.Category)
+                </div>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <label class="text-muted">
+                    الحالة
+                </label>
+
+                <div>
+
+                    @if (Model.Specialty.IsActive)
+                    {
+                        <span class="badge bg-success">
+                            نشط
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">
+                            غير نشط
+                        </span>
+                    }
+
+                </div>
+
+            </div>
+
+            <div class="col-md-12">
+
+                <label class="text-muted">
+                    الوصف
+                </label>
+
+                <div class="fw-semibold">
+
+                    @(string.IsNullOrWhiteSpace(Model.Specialty.Description)
+                        ? "لا يوجد وصف"
+                        : Model.Specialty.Description)
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="row g-3 mb-4">
+
+    <div class="col-md-4">
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body text-center">
+
+                <i class="bi bi-people-fill text-primary fs-1"></i>
+
+                <h6 class="mt-2">
+                    الطلبة
+                </h6>
+
+                <h2 class="fw-bold text-primary">
+                    @Model.StudentCount
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-4">
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body text-center">
+
+                <i class="bi bi-briefcase-fill text-success fs-1"></i>
+
+                <h6 class="mt-2">
+                    فرص التدريب
+                </h6>
+
+                <h2 class="fw-bold text-success">
+                    @Model.OpportunityCount
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-4">
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body text-center">
+
+                <i class="bi bi-file-earmark-text-fill text-warning fs-1"></i>
+
+                <h6 class="mt-2">
+                    طلبات التدريب
+                </h6>
+
+                <h2 class="fw-bold text-warning">
+                    @Model.RequestCount
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+
+    <div class="card-header bg-white">
+
+        <h5 class="fw-bold mb-0">
+            الطلبة المرتبطون بالتخصص
+        </h5>
+
+    </div>
+
+    <div class="table-responsive">
+
+        <table class="table table-hover align-middle mb-0">
+
+            <thead class="table-light">
+
+                <tr>
+
+                    <th>الاسم</th>
+
+                    <th>البريد الإلكتروني</th>
+                    <th>رقم الهاتف </th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                @if (Model.Specialty.Students.Any())
+                {
+                    @foreach (var student in Model.Specialty.Students)
+                    {
+                        <tr>
+
+                            <td>@student.Name</td>
+
+                            <td>@student.User?.Email</td>
+                            <td>@student.PhoneNumber</td>
+
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+
+                        <td colspan="2"
+                            class="text-center text-muted">
+
+                            لا يوجد طلبة مرتبطون بهذا التخصص
+
+                        </td>
+
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<div class="d-flex gap-2">
+
+    <a asp-page="Edit"
+       asp-route-id="@Model.Specialty.SpecialtyID"
+       class="btn btn-success px-5">
+
+        <i class="bi bi-pencil-square me-1"></i>
+
+        تعديل
+
+    </a>
+
+    <a asp-page="Index"
+       class="btn btn-light px-5">
+
+        رجوع
+
+    </a>
+
+</div>
+

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Project.Models
 {
@@ -16,8 +17,13 @@ namespace Project.Models
         public string? Category { get; set; }
         public bool IsActive { get; set; }
 
-        public ICollection<Student> Students { get; set; } = new HashSet<Student>();
-        public ICollection<OpportunitySpecialty> OpportunitySpecialties { get; set; } = new HashSet<OpportunitySpecialty>();
-        public ICollection<RequestSpecialty> RequestSpecialties { get; set; } = new HashSet<RequestSpecialty>();
+        [ForeignKey("Department")]
+        public int DepartmentID { get; set; }
+
+        public Department Department { get; set; }
+
+        public ICollection<Student> Students { get; set; } = new List<Student>();
+        public ICollection<OpportunitySpecialty> OpportunitySpecialties { get; set; } = new List<OpportunitySpecialty>();
+        public ICollection<RequestSpecialty> RequestSpecialties { get; set; } = new List<RequestSpecialty>();
     }
 }

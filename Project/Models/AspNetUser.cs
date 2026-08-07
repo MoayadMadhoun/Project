@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Project.Models.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -16,6 +17,13 @@ namespace Project.Models
 
         public Student? Student { get; set; }
         public AspNetRoleScope? RoleScope { get; set; }
+
+        public University? University { get; set; }
+
+        public TrainingInstitution? TrainingInstitution { get; set; }
+
+        public string? ProfileImagePath { get; set; }
+        public AccountType AccountType { get; set; }
 
     }
 }

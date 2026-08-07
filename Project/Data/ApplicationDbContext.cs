@@ -34,50 +34,180 @@ public class ApplicationDbContext : IdentityDbContext<AspNetUser>
     public DbSet<TrainingTerm> TrainingTerms { get; set; }
     public DbSet<University> Universities { get; set; }
 
+    public DbSet<EmailVerificationCode> EmailVerificationCodes { get; set; }
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
 
-        //Uniqe Constrains
+        // =========================
+        // UNIQUE CONSTRAINTS
+        // =========================
 
         builder.Entity<Specialty>()
-            .HasIndex(s => s.Name).IsUnique();
+            .HasIndex(s => s.Name)
+            .IsUnique();
 
         builder.Entity<Skill>()
-            .HasIndex(s => s.Name).IsUnique();
+            .HasIndex(s => s.Name)
+            .IsUnique();
 
         builder.Entity<Student>()
-            .HasIndex(s => s.UserID).IsUnique();
+            .HasIndex(s => s.UserID)
+            .IsUnique();
 
         builder.Entity<Student>()
-            .HasIndex(s => s.StudentNumber).IsUnique();
+            .HasIndex(s => s.StudentNumber)
+            .IsUnique();
 
         builder.Entity<StudentSkill>()
-            .HasIndex(ss => new { ss.StudentID, ss.SkillID }).IsUnique();
+            .HasIndex(ss => new { ss.StudentID, ss.SkillID })
+            .IsUnique();
 
         builder.Entity<RequestSpecialty>()
-            .HasIndex(rs => new { rs.RequestID, rs.SpecialtyID }).IsUnique();
+            .HasIndex(rs => new { rs.RequestID, rs.SpecialtyID })
+            .IsUnique();
 
         builder.Entity<RequestSkill>()
-            .HasIndex(rs => new { rs.RequestID, rs.SkillID }).IsUnique();
+            .HasIndex(rs => new { rs.RequestID, rs.SkillID })
+            .IsUnique();
 
         builder.Entity<OpportunitySpecialty>()
-            .HasIndex(os => new { os.OpportunityID, os.SpecialtyID }).IsUnique();
+            .HasIndex(os => new { os.OpportunityID, os.SpecialtyID })
+            .IsUnique();
 
         builder.Entity<OpportunitySkill>()
-            .HasIndex(os => new { os.OpportunityID, os.SkillID }).IsUnique();
+            .HasIndex(os => new { os.OpportunityID, os.SkillID })
+            .IsUnique();
 
         builder.Entity<TrainingApplication>()
-            .HasIndex(a => new { a.OpportunityID, a.StudentID }).IsUnique();
+            .HasIndex(a => new { a.OpportunityID, a.StudentID })
+            .IsUnique();
 
         builder.Entity<TrainingPlacement>()
-            .HasIndex(p => p.ApplicationID).IsUnique();
+            .HasIndex(p => p.ApplicationID)
+            .IsUnique();
 
         builder.Entity<AttendanceRecord>()
-            .HasIndex(a => new { a.PlacementID, a.AttendanceDate }).IsUnique();
+            .HasIndex(a => new { a.PlacementID, a.AttendanceDate })
+            .IsUnique();
+
+        // =========================
+        // ENUM TO STRING CONVERSIONS
+        // =========================
+
+        builder.Entity<Student>()
+            .Property(s => s.Status)
+            .HasConversion<string>()
+            .HasMaxLength(50);
+
+        builder.Entity<FieldVisit>()
+            .Property(s => s.Type)
+            .HasConversion<string>()
+            .HasMaxLength(50);
+
+        builder.Entity<StudentReport>()
+            .Property(s => s.Status)
+            .HasConversion<string>()
+            .HasMaxLength(50);
+
+        builder.Entity<StudentReport>()
+            .Property(s => s.Type)
+            .HasConversion<string>()
+            .HasMaxLength(50);
+
+        builder.Entity<TrainingApplication>()
+            .Property(s => s.Status)
+            .HasConversion<string>()
+            .HasMaxLength(50);
+
+        builder.Entity<TrainingApplication>()
+            .Property(s => s.DepartmentDecision)
+            .HasConversion<string>()
+            .HasMaxLength(50);
+
+        builder.Entity<TrainingApplication>()
+            .Property(s => s.UniversityAdminDecision)
+            .HasConversion<string>()
+            .HasMaxLength(50);
+
+        builder.Entity<TrainingApplication>()
+            .Property(s => s.InstitutionDecision)
+            .HasConversion<string>()
+            .HasMaxLength(50);
+
+        builder.Entity<TrainingOpportunity>()
+            .Property(s => s.Status)
+            .HasConversion<string>()
+            .HasMaxLength(50);
 
 
-        // RELATIONSHIPS — disable cascade where multiple FK paths would cause cycles
+        builder.Entity<TrainingOpportunityRequest>()
+            .Property(r => r.Status)
+            .HasConversion<string>()
+            .HasMaxLength(50);
+
+        builder.Entity<TrainingPlacement>()
+            .Property(s => s.Status)
+            .HasConversion<string>()
+            .HasMaxLength(50);
+
+        builder.Entity<AttendanceRecord>()
+            .Property(a => a.Status)
+            .HasConversion<string>()
+            .HasMaxLength(50);
+
+        builder.Entity<PortfolioItem>()
+            .Property(p => p.Type)
+            .HasConversion<string>()
+            .HasMaxLength(50);
+
+        builder.Entity<OpportunityRequestInstitution>()
+            .Property(r => r.Status)
+            .HasConversion<string>()
+            .HasMaxLength(50);
+
+        builder.Entity<StudentSkill>()
+            .Property(s => s.Level)
+            .HasConversion<string>()
+            .HasMaxLength(50);
+
+        builder.Entity<StudentEvaluation>()
+            .Property(s => s.Type)
+            .HasConversion<string>()
+            .HasMaxLength(50);
+
+        builder.Entity<StudentEvaluation>()
+            .Property(s => s.Status)
+            .HasConversion<string>()
+            .HasMaxLength(50);
+
+        // =========================
+        // DECIMAL PRECISION
+        // =========================
+
+        builder.Entity<Student>()
+            .Property(x => x.GPA)
+            .HasPrecision(5, 2);
+
+        builder.Entity<StudentEvaluation>()
+            .Property(x => x.Score)
+            .HasPrecision(5, 2);
+
+        builder.Entity<StudentEvaluation>()
+            .Property(x => x.MaxScore)
+            .HasPrecision(5, 2);
+
+        builder.Entity<FieldVisit>()
+            .Property(x => x.Score)
+            .HasPrecision(5, 2);
+
+        builder.Entity<FieldVisit>()
+            .Property(x => x.MaxScore)
+            .HasPrecision(5, 2);
+
+        // =========================
+        // RELATIONSHIPS
+        // =========================
 
         builder.Entity<TrainingOpportunity>()
             .HasOne(o => o.TrainingTerm)
@@ -85,161 +215,182 @@ public class ApplicationDbContext : IdentityDbContext<AspNetUser>
             .HasForeignKey(o => o.TermID)
             .OnDelete(DeleteBehavior.Restrict);
 
-        // TrainingOpportunityRequest ->  UniversityAdmin
         builder.Entity<TrainingOpportunityRequest>()
             .HasOne(r => r.UniversityAdmin)
             .WithMany()
             .HasForeignKey(r => r.UniversityAdminID)
             .OnDelete(DeleteBehavior.Restrict);
 
-        // TrainingOpportunityRequest -> DepartmentHead
         builder.Entity<TrainingOpportunityRequest>()
             .HasOne(r => r.DepartmentHead)
             .WithMany()
             .HasForeignKey(r => r.DepartmentHeadID)
             .OnDelete(DeleteBehavior.Restrict);
 
-        // TrainingApplication -> DepartmentHead
         builder.Entity<TrainingApplication>()
             .HasOne(a => a.DepartmentHead)
             .WithMany()
             .HasForeignKey(a => a.DepartmentHeadID)
             .OnDelete(DeleteBehavior.Restrict);
 
-        // TrainingApplication -> UniversityAdmin
         builder.Entity<TrainingApplication>()
             .HasOne(a => a.UniversityAdmin)
             .WithMany()
             .HasForeignKey(a => a.UniversityAdminID)
             .OnDelete(DeleteBehavior.Restrict);
 
-        // TrainingApplication -> InstitutionOfficer
         builder.Entity<TrainingApplication>()
             .HasOne(a => a.InstitutionOfficer)
             .WithMany()
             .HasForeignKey(a => a.InstitutionOfficerID)
             .OnDelete(DeleteBehavior.Restrict);
 
-        // TrainingPlacement -> UniversitySupervisor
-        builder.Entity<TrainingPlacement>()
-            .HasOne(p => p.UniversitySupervisor)
-            .WithMany()
-            .HasForeignKey(p => p.UniversitySupervisorID)
+        builder.Entity<TrainingApplication>()
+            .HasOne(a => a.Student)
+            .WithMany(s => s.Applications)
+            .HasForeignKey(a => a.StudentID)
             .OnDelete(DeleteBehavior.Restrict);
 
-        // TrainingPlacement -> InstitutionSupervisor
+        builder.Entity<TrainingApplication>()
+            .HasOne(a => a.TrainingOpportunity)
+            .WithMany()
+            .HasForeignKey(a => a.OpportunityID)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<TrainingPlacement>()
+        .HasOne(p => p.TrainingOpportunity)
+        .WithMany(o => o.TrainingPlacement)
+        .HasForeignKey(p => p.OpportunityID)
+        .OnDelete(DeleteBehavior.Restrict);
+
         builder.Entity<TrainingPlacement>()
             .HasOne(p => p.InstitutionSupervisor)
             .WithMany()
             .HasForeignKey(p => p.InstitutionSupervisorID)
             .OnDelete(DeleteBehavior.Restrict);
 
-        // TrainingPlacement -> Student (restrict to avoid cycle via Application)
         builder.Entity<TrainingPlacement>()
             .HasOne(p => p.Student)
             .WithMany()
             .HasForeignKey(p => p.StudentID)
             .OnDelete(DeleteBehavior.Restrict);
 
-        // TrainingPlacement -> Opportunity (restrict)
-        builder.Entity<TrainingPlacement>()
-            .HasOne(p => p.TrainingOpportunity)
-            .WithMany()
-            .HasForeignKey(p => p.OpportunityID)
-            .OnDelete(DeleteBehavior.Restrict);
 
-        // TrainingPlacement -> Institution (restrict)
         builder.Entity<TrainingPlacement>()
             .HasOne(p => p.TrainingInstitution)
             .WithMany()
             .HasForeignKey(p => p.InstitutionID)
             .OnDelete(DeleteBehavior.Restrict);
 
-        // TrainingPlacement -> Term (restrict)
         builder.Entity<TrainingPlacement>()
             .HasOne(p => p.TrainingTerm)
             .WithMany()
             .HasForeignKey(p => p.TermID)
             .OnDelete(DeleteBehavior.Restrict);
 
-        // AttendanceRecord -> InstitutionSupervisor
         builder.Entity<AttendanceRecord>()
             .HasOne(a => a.InstitutionSupervisor)
             .WithMany()
             .HasForeignKey(a => a.InstitutionSupervisorID)
             .OnDelete(DeleteBehavior.Restrict);
 
-        // FieldVisit -> UniversitySupervisor
         builder.Entity<FieldVisit>()
             .HasOne(v => v.UniversitySupervisor)
             .WithMany()
             .HasForeignKey(v => v.UniversitySupervisorID)
             .OnDelete(DeleteBehavior.Restrict);
 
-        // StudentEvaluation -> UniversitySupervisor
         builder.Entity<StudentEvaluation>()
             .HasOne(e => e.UniversitySupervisor)
             .WithMany()
             .HasForeignKey(e => e.UniversitySupervisorID)
             .OnDelete(DeleteBehavior.Restrict);
 
-        // StudentEvaluation -> InstitutionSupervisor
         builder.Entity<StudentEvaluation>()
             .HasOne(e => e.InstitutionSupervisor)
             .WithMany()
             .HasForeignKey(e => e.InstitutionSupervisorID)
             .OnDelete(DeleteBehavior.Restrict);
 
-        // StudentReport -> UniversitySupervisor
         builder.Entity<StudentReport>()
             .HasOne(r => r.UniversitySupervisor)
             .WithMany()
             .HasForeignKey(r => r.UniversitySupervisorID)
             .OnDelete(DeleteBehavior.Restrict);
 
-        // StudentReport -> Student (restrict to avoid cycle via Placement)
         builder.Entity<StudentReport>()
             .HasOne(r => r.Student)
             .WithMany(s => s.Reports)
             .HasForeignKey(r => r.StudentID)
             .OnDelete(DeleteBehavior.Restrict);
 
-        // TrainingOpportunity -> InstitutionOfficer
         builder.Entity<TrainingOpportunity>()
             .HasOne(o => o.InstitutionOfficer)
             .WithMany()
             .HasForeignKey(o => o.InstitutionOfficerID)
             .OnDelete(DeleteBehavior.Restrict);
-
-        // UserRoleScope -> Role
         builder.Entity<AspNetRoleScope>()
             .HasOne(s => s.Role)
             .WithMany()
             .HasForeignKey(s => s.RoleID)
             .OnDelete(DeleteBehavior.Restrict);
 
-        // UserRoleScope -> University
         builder.Entity<AspNetRoleScope>()
             .HasOne(s => s.University)
             .WithMany()
             .HasForeignKey(s => s.UniversityID)
             .OnDelete(DeleteBehavior.Restrict);
 
-        // UserRoleScope -> Department
         builder.Entity<AspNetRoleScope>()
             .HasOne(s => s.Department)
             .WithMany()
             .HasForeignKey(s => s.DepartmentID)
             .OnDelete(DeleteBehavior.Restrict);
 
-        // UserRoleScope -> Institution
         builder.Entity<AspNetRoleScope>()
             .HasOne(s => s.TrainingInstitution)
             .WithMany()
             .HasForeignKey(s => s.InstitutionID)
             .OnDelete(DeleteBehavior.Restrict);
 
+        builder.Entity<Student>()
+            .HasOne(s => s.Department)
+            .WithMany(d => d.Students)
+            .HasForeignKey(s => s.DepartmentID)
+            .OnDelete(DeleteBehavior.NoAction);
 
+        builder.Entity<Department>()
+            .HasOne(d => d.University)
+            .WithMany(u => u.Departments)
+            .HasForeignKey(d => d.UniversityID)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        builder.Entity<OpportunityRequestInstitution>()
+            .HasOne(o => o.TrainingInstitution)
+            .WithMany()
+            .HasForeignKey(o => o.InstitutionID)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Student>()
+            .HasOne(s => s.University)
+            .WithMany(u => u.Students)
+            .HasForeignKey(s => s.UniversityID)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        builder.Entity<Specialty>()
+        .HasOne(s => s.Department)
+        .WithMany(d => d.Specialties)
+        .HasForeignKey(s => s.DepartmentID)
+        .OnDelete(DeleteBehavior.NoAction);
+
+        builder.Entity<TrainingInstitution>()
+            .Property(x => x.InstitutionType)
+            .HasConversion<string>()
+            .HasMaxLength(50);
+
+        // =========================
+        // SEED ROLES
+        // =========================
 
         var roles = new[]
         {
@@ -286,6 +437,7 @@ public class ApplicationDbContext : IdentityDbContext<AspNetUser>
                 ConcurrencyStamp = "6"
             }
         };
+
         builder.Entity<IdentityRole>().HasData(roles);
     }
 }

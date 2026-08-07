@@ -1,0 +1,259 @@
+﻿@page "{id:int}"
+@model Project.Pages.University.StudentDetailsModel
+
+@{
+    ViewData["Title"] = "تفاصيل الطالب";
+}
+
+<div class="container-fluid">
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body text-white p-5"
+             style="background:#1ab29a;border-radius:20px;">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+
+                    <h2 class="fw-bold">
+                        @Model.Student.Name
+                    </h2>
+
+                    <p class="mb-0">
+                        الرقم الجامعي :
+                        @Model.Student.StudentNumber
+                    </p>
+
+                </div>
+
+                <div>
+
+                    <i class="bi bi-person-circle"
+                       style="font-size:70px;"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- معلومات الطالب -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+       
+        <div class="card-header text-white" style="background:#1ab29a;">
+
+            <h5 class="mb-0">
+                بيانات الطالب
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-md-6 mb-3">
+                    <strong>الاسم:</strong>
+                    @Model.Student.Name
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <strong>الرقم الجامعي:</strong>
+                    @Model.Student.StudentNumber
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <strong>القسم:</strong>
+                    @(Model.Student.Department?.Name ?? "-")
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <strong>التخصص:</strong>
+                    @(Model.Student.Specialty?.Name ?? "-")
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <strong>المعدل:</strong>
+                    @(Model.Student.GPA ?? 0)
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <strong>رقم الهاتف:</strong>
+                    @(Model.Student.PhoneNumber ?? "-")
+                </div>
+
+                <div class="col-md-12">
+                    <strong>نبذة:</strong>
+                    @(Model.Student.Bio ?? "-")
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- الإحصائيات -->
+
+    <div class="row mb-4">
+
+        <div class="col-md-4">
+
+            <div class="card border-0 shadow-sm text-center">
+
+                <div class="card-body">
+
+                    <i class="bi bi-calendar-check-fill text-success fs-1"></i>
+
+                    <h3>@Model.AttendanceCount</h3>
+
+                    <p class="mb-0">
+                        سجلات الحضور
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="card border-0 shadow-sm text-center">
+
+                <div class="card-body">
+
+                    <i class="bi bi-clipboard-data-fill text-warning fs-1"></i>
+
+                    <h3>@Model.EvaluationCount</h3>
+
+                    <p class="mb-0">
+                        التقييمات
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="card border-0 shadow-sm text-center">
+
+                <div class="card-body">
+
+                    <i class="bi bi-file-earmark-text-fill text-info fs-1"></i>
+
+                    <h3>@Model.ReportCount</h3>
+
+                    <p class="mb-0">
+                        التقارير
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- التدريب الحالي -->
+    @if (Model.Placement != null)
+    {
+        <div class="card border-0 shadow-sm mb-4">
+
+            <div class="card-header text-white" style="background:#1ab29a;">
+
+                <h5 class="mb-0">
+                    التدريب الحالي
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+
+                        <strong>الفرصة التدريبية:</strong>
+
+                        @Model.Placement.TrainingOpportunity.Title
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <strong>المؤسسة:</strong>
+
+                        @Model.Placement.TrainingInstitution.Name
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <strong>تاريخ البداية:</strong>
+
+                        @Model.Placement.StartDate.ToShortDateString()
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <strong>تاريخ النهاية:</strong>
+
+                        @Model.Placement.EndDate.ToShortDateString()
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    }
+
+    <!-- الأزرار -->
+
+    <div class="d-flex gap-2">
+
+        <a asp-page="/University/Attendance"
+           asp-route-studentId="@Model.Student.StudentID"
+           class="btn btn-success">
+
+            <i class="bi bi-calendar-check-fill"></i>
+
+            الحضور
+
+        </a>
+
+        <a asp-page="/University/Evaluations"
+           asp-route-studentId="@Model.Student.StudentID"
+           class="btn btn-warning text-white">
+
+            <i class="bi bi-clipboard-data-fill"></i>
+
+            التقييمات
+
+        </a>
+
+        <a asp-page="/University/Reports/Index"
+           asp-route-studentId="@Model.Student.StudentID"
+           class="btn btn-info text-white">
+
+            <i class="bi bi-file-earmark-text-fill"></i>
+
+            التقارير
+
+        </a>
+
+    </div>
+
+</div>

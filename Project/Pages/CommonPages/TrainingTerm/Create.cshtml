@@ -1,0 +1,435 @@
+﻿@page
+@model Project.Pages.CommonPages.TrainingTerm.CreateModel
+@{
+    ViewData["Title"] = "إضافة فترة تدريب";
+    ViewData["UserType"] = "Admin";
+    ViewData["PortalTitle"] = "إدارة فترات التدريب";
+    ViewData["PortalSubtitle"] = "إنشاء فترة تدريب جديدة";
+}
+
+<form method="post">
+
+    <!-- Hero -->
+    <div class="card border-0 shadow-sm overflow-hidden mb-4">
+
+        <div class="card-body p-5 text-white"
+             style="background:linear-gradient(135deg,#0F2D52,#18B394);">
+
+            <div class="row align-items-center">
+
+                <div class="col-lg-9">
+
+                    <span class="badge bg-light text-dark mb-3 px-3 py-2">
+
+                        <i class="bi bi-calendar-event me-2"></i>
+
+                        Training Term
+
+                    </span>
+
+                    <h1 class="fw-bold mb-3">
+
+                        إنشاء فترة تدريب جديدة
+
+                    </h1>
+
+                    <p class="opacity-75 fs-5 mb-0">
+
+                        قم بإضافة فترة تدريب جديدة ليتم استخدامها
+                        عند إنشاء الفرص التدريبية وطلبات التدريب.
+
+                    </p>
+
+                </div>
+
+                <div class="col-lg-3 text-center">
+
+                    <i class="bi bi-calendar2-plus"
+                       style="font-size:90px;"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="row g-4">
+
+        <!-- ========================== -->
+        <!-- Form -->
+        <!-- ========================== -->
+
+        <div class="col-lg-8">
+
+            <div class="card border-0 shadow-sm rounded-4">
+
+                <div class="card-header bg-white py-3">
+
+                    <h5 class="fw-bold mb-0">
+
+                        بيانات الفترة
+
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <div asp-validation-summary="All"
+                         class="alert alert-danger"></div>
+
+                    <!-- Name -->
+
+                    <div class="mb-4">
+
+                        <label asp-for="Input.Name"
+                               class="form-label fw-semibold">
+
+                            اسم الفترة
+
+                        </label>
+
+                        <input asp-for="Input.Name"
+                               class="form-control form-control-lg"
+                               id="termName"
+                               placeholder="مثال: الفصل الأول 2026" />
+
+                        <span asp-validation-for="Input.Name"
+                              class="text-danger"></span>
+
+                    </div>
+
+                    <!-- Academic Year -->
+
+                    <div class="mb-4">
+
+                        <label asp-for="Input.AcademicYear"
+                               class="form-label fw-semibold">
+
+                            السنة الأكاديمية
+
+                        </label>
+
+                        <input asp-for="Input.AcademicYear"
+                               id="academicYear"
+                               class="form-control form-control-lg"
+                               placeholder="2025/2026" />
+
+                        <span asp-validation-for="Input.AcademicYear"
+                              class="text-danger"></span>
+
+                    </div>
+
+                    <div class="row">
+
+                        <!-- Start -->
+
+                        <div class="col-md-6">
+
+                            <div class="mb-4">
+
+                                <label asp-for="Input.StartDate"
+                                       class="form-label fw-semibold">
+
+                                    تاريخ البداية
+
+                                </label>
+
+                                <input asp-for="Input.StartDate"
+                                       id="startDate"
+                                       type="date"
+                                       class="form-control form-control-lg" />
+
+                                <span asp-validation-for="Input.StartDate"
+                                      class="text-danger"></span>
+
+                            </div>
+
+                        </div>
+
+                        <!-- End -->
+
+                        <div class="col-md-6">
+
+                            <div class="mb-4">
+
+                                <label asp-for="Input.EndDate"
+                                       class="form-label fw-semibold">
+
+                                    تاريخ النهاية
+
+                                </label>
+
+                                <input asp-for="Input.EndDate"
+                                       id="endDate"
+                                       type="date"
+                                       class="form-control form-control-lg" />
+
+                                <span asp-validation-for="Input.EndDate"
+                                      class="text-danger"></span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Active -->
+
+                    <div class="form-check form-switch mt-3">
+
+                        <input asp-for="Input.IsActive"
+                               class="form-check-input"
+                               id="isActive" />
+
+                        <label asp-for="Input.IsActive"
+                               class="form-check-label fw-semibold">
+
+                            تفعيل الفترة مباشرة
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ========================== -->
+        <!-- Summary -->
+        <!-- ========================== -->
+
+        <div class="col-lg-4">
+
+            <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+                <div class="card-header bg-white">
+
+                    <h6 class="fw-bold mb-0">
+
+                        ملخص الفترة
+
+                    </h6>
+
+                </div>
+
+                <div class="card-body">
+
+                    <div class="mb-3">
+
+                        <small class="text-muted">
+
+                            اسم الفترة
+
+                        </small>
+
+                        <h6 id="previewName">-</h6>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <small class="text-muted">
+
+                            السنة الأكاديمية
+
+                        </small>
+
+                        <h6 id="previewYear">-</h6>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <small class="text-muted">
+
+                            مدة الفترة
+
+                        </small>
+
+                        <h6 id="previewDuration">
+
+                            -
+
+                        </h6>
+
+                    </div>
+
+                    <div>
+
+                        <small class="text-muted">
+
+                            الحالة
+
+                        </small>
+
+                        <h6 id="previewStatus">
+
+                            غير مفعلة
+
+                        </h6>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Warning -->
+
+            <div class="alert alert-warning rounded-4">
+
+                <h6 class="fw-bold">
+
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+
+                    ملاحظات
+
+                </h6>
+
+                <ul class="mb-0">
+
+                    <li>يجب أن يكون تاريخ النهاية بعد البداية.</li>
+
+                    <li>يفضل وجود فترة تدريب مفعلة واحدة فقط.</li>
+
+                    <li>سيتم استخدام هذه الفترة في الفرص التدريبية.</li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </div>
+    <!-- ========================== -->
+    <!-- Actions -->
+    <!-- ========================== -->
+
+    <div class="card border-0 shadow-sm rounded-4 mt-4">
+
+        <div class="card-body">
+
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+
+                <a asp-page="Index"
+                   class="btn btn-light btn-lg px-4">
+
+                    <i class="bi bi-arrow-right-circle me-2"></i>
+
+                    رجوع
+
+                </a>
+
+                <div>
+
+                    <button type="reset"
+                            class="btn btn-outline-secondary btn-lg px-4 me-2">
+
+                        <i class="bi bi-arrow-clockwise me-2"></i>
+
+                        إعادة تعيين
+
+                    </button>
+
+                    <button type="submit"
+                            class="btn btn-success btn-lg px-5">
+
+                        <i class="bi bi-check-circle me-2"></i>
+
+                        إنشاء الفترة
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</form>
+
+
+@section Scripts{
+
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+
+        const termName=document.getElementById("termName");
+        const academicYear=document.getElementById("academicYear");
+        const startDate=document.getElementById("startDate");
+        const endDate=document.getElementById("endDate");
+        const isActive=document.getElementById("isActive");
+
+        const previewName=document.getElementById("previewName");
+        const previewYear=document.getElementById("previewYear");
+        const previewDuration=document.getElementById("previewDuration");
+        const previewStatus=document.getElementById("previewStatus");
+
+        function updatePreview(){
+
+        previewName.textContent=
+        termName.value || "-";
+
+        previewYear.textContent=
+        academicYear.value || "-";
+
+        previewStatus.textContent=
+        isActive.checked ?
+        "مفعلة" :
+        "غير مفعلة";
+
+        if(startDate.value && endDate.value){
+
+        const start=new Date(startDate.value);
+
+        const end=new Date(endDate.value);
+
+        const diff=Math.ceil(
+        (end-start)/(1000*60*60*24));
+
+        if(diff>=0){
+
+        previewDuration.textContent=
+        diff+" يوم";
+
+        }
+        else{
+
+        previewDuration.textContent=
+        "تاريخ غير صحيح";
+
+        }
+
+        }
+        else{
+
+        previewDuration.textContent="-";
+
+        }
+
+        }
+
+        termName.addEventListener("input",updatePreview);
+
+        academicYear.addEventListener("input",updatePreview);
+
+        startDate.addEventListener("change",updatePreview);
+
+        endDate.addEventListener("change",updatePreview);
+
+        isActive.addEventListener("change",updatePreview);
+
+        updatePreview();
+
+    </script>
+
+}

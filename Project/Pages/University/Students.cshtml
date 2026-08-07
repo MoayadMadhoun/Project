@@ -1,0 +1,294 @@
+﻿@page
+@using Microsoft.AspNetCore.Html
+@model Project.Pages.University.StudentsModel
+@{
+    ViewData["Title"] = "الطلبة";
+    Layout = "_Layout";
+    ViewData["UserType"] = "University";
+    ViewData["PortalTitle"] = "بوابة الجامعة";
+    ViewData["PortalSubtitle"] = "إدارة التدريب الميداني";
+    ViewData["SearchPlaceholder"] = "بحث عن طلاب، مؤسسات، فرص...";
+    ViewData["ActivePage"] = "Students";
+    int SIndex = 1;
+}
+@functions {
+    public IHtmlContent SortingIcon(string column, string currentSort)
+    {
+        if (currentSort == column)
+            return new HtmlString("<i class=\"bi bi-caret-up-fill text-primary text-xs\"></i>");
+        if (currentSort == column + "_desc")
+            return new HtmlString("<i class=\"bi bi-caret-down-fill text-primary text-xs\"></i>");
+        return new HtmlString("<i class=\"bi bi-arrow-down-up text-slate-400 text-xs\"></i>");
+    }
+}
+<link rel="stylesheet" href="~/Styles/opportunities.css">
+
+<div dir="rtl">
+
+    @* ===== Hero Section ===== *@
+    <section class="mb-lg md:mb-xl relative rounded-xl md:rounded-2xl overflow-hidden bg-primary-container p-6 md:p-xl text-on-primary">
+        <div class="relative z-10 max-w-2xl text-right">
+            <h1 class="font-h1 text-2xl md:text-h1 mb-md">إدارة الطلبة</h1>
+            <p class="font-body-lg text-sm md:text-body-lg opacity-90 mb-lg">
+                متابعة وإدارة طلاب الجامعة المسجلين في نظام التدريب الميداني
+            </p>
+        </div>
+        <div class="absolute -bottom-10 -left-10 w-48 h-48 md:w-64 md:h-64 bg-white/10 rounded-full blur-3xl"></div>
+        <div class="absolute -top-20 -left-20 w-64 h-64 md:w-80 md:h-80 bg-secondary-fixed-dim/20 rounded-full blur-3xl"></div>
+    </section>
+
+    @* ===== Filters Bar ===== *@
+    <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] p-4 mb-lg">
+        <form method="get" class="flex flex-wrap gap-3 items-center justify-end">
+
+            <input type="hidden" name="PageIndex" value="1" />
+            <input type="hidden" name="SortOrder" value="@Model.SortOrder" />
+
+            <div class="relative flex-1 min-w-[180px]">
+                <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+                <input asp-for="SearchTerm"
+                       class="w-full pr-10 pl-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20"
+                       placeholder="ابحث عن طالب..."
+                       type="text" />
+            </div>
+
+            @if (!User.IsInRole("DepartmentHead"))
+            {
+                <select asp-for="SelectedDepartmentId"
+                        asp-items="Model.DepartmentsList"
+                        class="bg-slate-100 border-none rounded-xl text-sm font-bold text-slate-700 py-2.5 px-4 focus:ring-2 focus:ring-primary/20 cursor-pointer">
+                    <option value="-1">جميع الأقسام</option>
+                </select>
+            }
+
+            <select asp-for="SelectedSpecialityId"
+                    asp-items="Model.SpecialitiesList"
+                    class="bg-slate-100 border-none rounded-xl text-sm font-bold text-slate-700 py-2.5 px-4 focus:ring-2 focus:ring-primary/20 cursor-pointer">
+                <option value="-1">جميع التخصصات</option>
+            </select>
+
+            <select asp-for="IsTraining"
+                    class="bg-slate-100 border-none rounded-xl text-sm font-bold text-slate-700 py-2.5 px-4 focus:ring-2 focus:ring-primary/20 cursor-pointer">
+                <option value="">الكل</option>
+                <option value="true">ملتحق بتدريب</option>
+                <option value="false">غير ملتحق</option>
+            </select>
+
+            <button type="submit"
+                    class="bg-primary-container text-white font-button px-6 py-2.5 rounded-xl hover:bg-primary/90 transition-colors">
+                بحث
+            </button>
+
+        </form>
+    </div>
+
+    @* ===== Students Table ===== *@
+    <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] overflow-hidden">
+
+        <div class="p-4 md:p-lg border-b border-slate-100 flex justify-between items-center">
+            <h3 class="font-h3 text-lg md:text-h3 text-slate-900">
+                الطلبة المسجلون
+                <span class="mr-2 px-2 py-0.5 bg-primary-container text-white text-xs font-bold rounded-full">
+                    @Model.Students.TotalCount
+                </span>
+            </h3>
+            <span class="text-sm text-slate-500 font-body-sm">إجمالي @Model.Students.TotalCount طالب وطالبة</span>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-right border-collapse min-w-[1100px]">
+                <thead class="bg-surface-container-low">
+                    <tr>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps w-10">#</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">
+                            <a class="flex items-center gap-1 text-slate-500 hover:text-primary transition-colors no-underline"
+                               asp-route-PageSize="@Model.PageSize"
+                               asp-route-SearchTerm="@Model.SearchTerm"
+                               asp-route-SelectedDepartmentId="@Model.SelectedDepartmentId"
+                               asp-route-SelectedSpecialityId="@Model.SelectedSpecialityId"
+                               asp-route-IsTraining="@Model.IsTraining"
+                               asp-route-PageIndex="@Model.PageIndex"
+                               asp-route-SortOrder="@(Model.SortOrder == "Name" ? "Name_desc" : "Name")">
+                                الطالب @SortingIcon("Name", Model.SortOrder)
+                            </a>
+                        </th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الرقم الجامعي</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">التخصص</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">القسم</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">
+                            <a class="flex items-center gap-1 text-slate-500 hover:text-primary transition-colors no-underline"
+                               asp-route-PageSize="@Model.PageSize"
+                               asp-route-SearchTerm="@Model.SearchTerm"
+                               asp-route-SelectedDepartmentId="@Model.SelectedDepartmentId"
+                               asp-route-SelectedSpecialityId="@Model.SelectedSpecialityId"
+                               asp-route-IsTraining="@Model.IsTraining"
+                               asp-route-PageIndex="@Model.PageIndex"
+                               asp-route-SortOrder="@(Model.SortOrder == "GPA" ? "GPA_desc" : "GPA")">
+                                المعدل @SortingIcon("GPA", Model.SortOrder)
+                            </a>
+                        </th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">التدريب الحالي</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50">
+                    @foreach (var student in Model.Students)
+                    {
+                        <tr class="hover:bg-slate-50 transition-colors">
+
+                            <td class="px-4 py-3 text-sm text-slate-400 font-bold">@SIndex</td>
+
+                            <td class="px-4 py-3 text-sm text-slate-900 font-bold">@student.Name</td>
+
+                            <td class="px-4 py-3 text-sm text-slate-600 font-mono tracking-wide">@student.StudentNumber</td>
+
+                            <td class="px-4 py-3 text-sm">
+                                <span class="px-3 py-1 rounded-full text-[11px] font-bold bg-green-50 text-green-700 border border-green-100">
+                                    @student.Specialty?.Name
+                                </span>
+                            </td>
+
+                            <td class="px-1 py-3 text-sm">
+                                <span class="px-3 py-1 rounded-full text-[11px] font-bold text-blue-700 ">
+                                    @(student.Department?.Name ?? "—")
+                                </span>
+                            </td>
+
+                            <td class="px-4 py-3 text-sm fw-bold
+                                @(
+                                    !student.GPA.HasValue ? "text-slate-400" :
+                                    student.GPA >= 3.5m ? "text-emerald-600" :
+                                    student.GPA >= 2.5m ? "text-amber-600" :
+                                    "text-red-600"
+                                )">
+
+                                @(student.GPA?.ToString("0.00") ?? "-")
+
+                            </td>
+
+                            <td class="px-4 py-3 text-sm">
+                                @{
+                                    var placed = student.Applications?
+                                        .FirstOrDefault(a => a.Status == Models.TrainingApplication.ApplicationStatus.Placed);
+                                }
+                                <span class="px-3 py-1 rounded-full text-[11px] font-bold
+                                    @(placed != null ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-400")">
+                                    @(placed?.TrainingOpportunity?.Title ?? "لا يوجد تدريب")
+                                </span>
+                            </td>
+
+                            <td class="px-4 py-3">
+                                <div class="flex gap-1">
+                                    <a asp-page="/University/StudentDetails"
+                                       asp-route-id="@student.StudentID"
+                                       class="btn border border-primary text-primary text-xs font-bold px-2 py-2 rounded hover:bg-blue-50 flex items-center gap-1"
+                                       title="تفاصيل الطالب">
+                                        <i class="bi bi-person-vcard-fill"></i>
+                                    </a>
+                                    <a asp-page="/University/Attendance"
+                                       asp-route-studentId="@student.StudentID"
+                                       class="btn border border-success text-success text-xs font-bold px-2 py-2 rounded hover:bg-emerald-50 flex items-center gap-1"
+                                       title="الحضور">
+                                        <i class="bi bi-calendar-check-fill"></i>
+                                    </a>
+                                    <a asp-page="/University/Evaluations"
+                                       asp-route-studentId="@student.StudentID"
+                                       class="btn border border-warning text-warning text-xs font-bold px-2 py-2 rounded hover:bg-amber-50 flex items-center gap-1"
+                                       title="التقييمات">
+                                        <i class="bi bi-clipboard-data-fill"></i>
+                                    </a>
+                                    <a asp-page="/University/Reports/Index"
+                                       asp-route-studentId="@student.StudentID"
+                                       class="btn border border-info text-info text-xs font-bold px-2 py-2 rounded hover:bg-sky-50 flex items-center gap-1"
+                                       title="التقارير">
+                                        <i class="bi bi-file-earmark-text-fill"></i>
+                                    </a>
+                                </div>
+                            </td>
+
+                        </tr>
+                        @(SIndex++)
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @* ===== Pagination ===== *@
+        <div class="p-4 md:p-lg flex flex-col md:flex-row items-center justify-between gap-4 border-t border-slate-100">
+
+            <div class="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
+                <p class="text-sm text-slate-500 font-body-sm whitespace-nowrap">
+                    عرض <span class="font-bold text-slate-900">@Model.PageSize</span>
+                    من أصل <span class="font-bold text-slate-900">@Model.Students.TotalCount</span> طالب
+                </p>
+                <div class="flex items-center gap-2">
+                    <label class="text-xs text-slate-500 font-label-caps" for="per-page-students">النتائج:</label>
+                    <form>
+                        <input type="hidden" name="PageIndex" value="@Model.PageIndex" />
+                        <input type="hidden" name="SortOrder" value="@Model.SortOrder" />
+                        <input type="hidden" name="SearchTerm" value="@Model.SearchTerm" />
+                        <input type="hidden" name="SelectedDepartmentId" value="@Model.SelectedDepartmentId" />
+                        <input type="hidden" name="SelectedSpecialityId" value="@Model.SelectedSpecialityId" />
+                        <input type="hidden" name="IsTraining" value="@Model.IsTraining" />
+                        <select asp-for="PageSize"
+                                onchange="this.form.submit()"
+                                id="per-page-students"
+                                class="bg-slate-100 border-none rounded-lg text-xs font-bold text-slate-700 py-1.5 pr-8 pl-3 focus:ring-2 focus:ring-primary/20 appearance-none cursor-pointer">
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                        </select>
+                    </form>
+                </div>
+            </div>
+
+            <nav class="flex items-center gap-2">
+                @if (Model.Students.HasPrevPage)
+                {
+                    <a asp-route-PageIndex="@(Model.PageIndex - 1)"
+                       asp-route-SearchTerm="@Model.SearchTerm"
+                       asp-route-SortOrder="@Model.SortOrder"
+                       asp-route-PageSize="@Model.PageSize"
+                       asp-route-SelectedDepartmentId="@Model.SelectedDepartmentId"
+                       asp-route-SelectedSpecialityId="@Model.SelectedSpecialityId"
+                       asp-route-IsTraining="@Model.IsTraining"
+                       class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:bg-slate-50">
+                        <span class="material-symbols-outlined">chevron_right</span>
+                    </a>
+                }
+
+                @for (int i = 1; i <= Model.Students.TotalPages; i++)
+                {
+                    <a asp-route-PageIndex="@i"
+                       asp-route-SearchTerm="@Model.SearchTerm"
+                       asp-route-SortOrder="@Model.SortOrder"
+                       asp-route-PageSize="@Model.PageSize"
+                       asp-route-SelectedDepartmentId="@Model.SelectedDepartmentId"
+                       asp-route-SelectedSpecialityId="@Model.SelectedSpecialityId"
+                       asp-route-IsTraining="@Model.IsTraining"
+                       class="w-8 h-8 flex items-center justify-center rounded-lg text-sm font-bold
+                        @(Model.PageIndex == i ? "bg-primary-container text-white" : "border border-slate-200 text-slate-600 hover:bg-slate-50")">
+                        @i
+                    </a>
+                }
+
+                @if (Model.Students.HasNextPage)
+                {
+                    <a asp-route-PageIndex="@(Model.PageIndex + 1)"
+                       asp-route-SearchTerm="@Model.SearchTerm"
+                       asp-route-SortOrder="@Model.SortOrder"
+                       asp-route-PageSize="@Model.PageSize"
+                       asp-route-SelectedDepartmentId="@Model.SelectedDepartmentId"
+                       asp-route-SelectedSpecialityId="@Model.SelectedSpecialityId"
+                       asp-route-IsTraining="@Model.IsTraining"
+                       class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:bg-slate-50">
+                        <span class="material-symbols-outlined">chevron_left</span>
+                    </a>
+                }
+            </nav>
+
+        </div>
+
+    </div>
+
+</div>

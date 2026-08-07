@@ -1,0 +1,231 @@
+﻿@page "{id:int}"
+@model Project.Pages.University.Specialties.DeleteModel
+
+@{
+    ViewData["Title"] = "حذف التخصص";
+}
+
+<form method="post">
+
+    <input type="hidden" asp-for="SpecialtyID" />
+
+    <!-- Hero -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body p-5 text-white"
+             style="background:#dc3545;border-radius:24px;">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+
+                    <h1 class="fw-bold mb-3">
+                        حذف التخصص
+                    </h1>
+
+                    <p class="mb-0 fs-5 opacity-75">
+                        تأكيد حذف التخصص من النظام.
+                    </p>
+
+                </div>
+
+                <div class="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center"
+                     style="width:90px;height:90px;">
+
+                    <i class="bi bi-trash fs-1"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Warning -->
+
+    <div class="alert alert-danger shadow-sm">
+
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+
+        هل أنت متأكد من حذف هذا التخصص؟ لا يمكن التراجع عن هذه العملية.
+
+    </div>
+
+    <!-- Specialty Information -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                بيانات التخصص
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-4">
+
+                <div class="col-md-6">
+
+                    <label class="text-muted">
+                        اسم التخصص
+                    </label>
+
+                    <div class="fw-semibold">
+                        @Model.Specialty.Name
+                    </div>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <label class="text-muted">
+                        القسم
+                    </label>
+
+                    <div class="fw-semibold">
+                        @Model.Specialty.Department?.Name
+                    </div>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <label class="text-muted">
+                        التصنيف
+                    </label>
+
+                    <div class="fw-semibold">
+                        @Model.Specialty.Category
+                    </div>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <label class="text-muted">
+                        الحالة
+                    </label>
+
+                    <div>
+
+                        @if (Model.Specialty.IsActive)
+                        {
+                            <span class="badge bg-success">
+                                نشط
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">
+                                غير نشط
+                            </span>
+                        }
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-12">
+
+                    <label class="text-muted">
+                        الوصف
+                    </label>
+
+                    <div class="fw-semibold">
+                        @Model.Specialty.Description
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Statistics -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                البيانات المرتبطة
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row text-center">
+
+                <div class="col-md-4">
+
+                    <h6 class="text-muted">
+                        الطلبة
+                    </h6>
+
+                    <h3 class="fw-bold text-primary">
+                        @Model.StudentCount
+                    </h3>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <h6 class="text-muted">
+                        فرص التدريب
+                    </h6>
+
+                    <h3 class="fw-bold text-success">
+                        @Model.OpportunityCount
+                    </h3>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <h6 class="text-muted">
+                        طلبات الفرص
+                    </h6>
+
+                    <h3 class="fw-bold text-warning">
+                        @Model.RequestCount
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Buttons -->
+
+    <div class="d-flex gap-2">
+
+        <button type="submit"
+                class="btn btn-danger px-5">
+
+            <i class="bi bi-trash me-1"></i>
+
+            حذف التخصص
+
+        </button>
+
+        <a asp-page="Index"
+           class="btn btn-light px-5">
+
+            إلغاء
+
+        </a>
+
+    </div>
+
+</form>

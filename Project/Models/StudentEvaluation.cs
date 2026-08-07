@@ -8,14 +8,17 @@ namespace Project.Models
         [Key]
         public int EvaluationID { get; set; }
         [Required(ErrorMessage = "Placement is required")]
-        [ForeignKey(nameof(PlacementID))]
+       
         public int PlacementID { get; set; }
-        public TrainingPlacement TrainingPlacement { get; set; } = new TrainingPlacement();
-        [ForeignKey(nameof(UniversitySupervisorID))]
+        [ForeignKey(nameof(PlacementID))]
+        public TrainingPlacement TrainingPlacement { get; set; } = null!;
+        
         public string? UniversitySupervisorID { get; set; }
+        [ForeignKey(nameof(UniversitySupervisorID))]
         public AspNetUser? UniversitySupervisor { get; set; }
-        [ForeignKey(nameof(InstitutionSupervisorID))]
+        
         public string? InstitutionSupervisorID { get; set; }
+        [ForeignKey(nameof(InstitutionSupervisorID))]
         public AspNetUser? InstitutionSupervisor { get; set; }
 
         [Column(TypeName = "nvarchar(50)")]

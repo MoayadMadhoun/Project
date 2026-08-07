@@ -19,7 +19,7 @@ namespace Project.Models
         [Required(ErrorMessage = "End date is required")]
         public DateTime EndDate { get; set; }
         public bool IsActive {  get; set; }
-        public ICollection<TrainingOpportunity> Opportunities { get; set; }=new HashSet<TrainingOpportunity>();
+        public ICollection<TrainingOpportunity> Opportunities { get; set; }=new List<TrainingOpportunity>();
 
 
     }

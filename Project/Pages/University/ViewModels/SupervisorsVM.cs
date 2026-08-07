@@ -1,0 +1,31 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Project.Pages.University.ViewModels
+{
+    public class SupervisorsVM
+    {
+
+        public string? Id { get; set; }
+
+
+        [Required(ErrorMessage = "اسم رئيس القسم مطلوب")]
+        [StringLength(200,
+               MinimumLength = 2,
+               ErrorMessage = "اسم التخصص يجب أن يكون بين 2 و 200 حرف")]
+        public string Name { get; set; }
+
+
+        [Required(ErrorMessage = "الايميل مطلوب")]
+        [EmailAddress(ErrorMessage = "This is Email")]
+        public string Email { get; set; }
+
+
+
+        [Required(ErrorMessage = "رقم الهاتف مطلوب ")]
+        [StringLength(10, MinimumLength = 8, ErrorMessage = "الرقم يجب ان يكون من عشر خانات كحد ادنى ")]
+        [RegularExpression(@"^[0-9]+$", ErrorMessage = "يجب ان يحتوي على ارقام فقط )")]
+        public string? PhoneNumber { get; set; }
+        public string? UniversityName { get; set; }
+        public bool IsActive { get; set; }
+    }
+}

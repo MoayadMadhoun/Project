@@ -1,0 +1,302 @@
+﻿@page "{id:int}"
+@using Project.Models
+@model Project.Pages.Institution.Evaluations.EditModel
+
+@{
+    ViewData["Title"] = "تعديل التقييم";
+    ViewData["UserType"] = "Institution";
+}
+
+<div class="container-fluid">
+
+    <div class="mb-4">
+        <a asp-page="/Institution/Evaluations"
+           class="text-success text-decoration-none fw-semibold">
+
+            <i class="bi bi-arrow-right"></i>
+            الرجوع للتقييمات
+
+        </a>
+    </div>
+
+    <!-- Hero -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body text-white p-4"
+             style="background:#1ab29a;border-radius:20px;">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+
+                    <h3 class="fw-bold mb-2">
+                        تعديل تقييم الطالب
+                    </h3>
+
+                    <p class="mb-0 opacity-75">
+                        يمكنك تعديل بيانات التقييم أو استبدال ملف التقييم.
+                    </p>
+
+                </div>
+
+                <div class="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center"
+                     style="width:80px;height:80px;">
+
+                    <i class="bi bi-pencil-square fs-1"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <form method="post" enctype="multipart/form-data">
+
+        <input asp-for="Input.PlacementID" type="hidden" />
+
+        <!-- بيانات التقييم -->
+
+        <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+            <div class="card-header bg-white">
+
+                <h5 class="fw-bold mb-0">
+                    بيانات التقييم
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="row g-4">
+
+                    <div class="col-md-6">
+
+                        <label asp-for="Input.Type"
+                               class="form-label">
+
+                            نوع التقييم
+
+                        </label>
+
+                        <select asp-for="Input.Type"
+                                class="form-select">
+
+                            <option value="InstitutionMid">
+                                تقييم نصفي
+                            </option>
+
+                            <option value="InstitutionFinal">
+                                تقييم نهائي
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <label asp-for="Input.EvaluationDate"
+                               class="form-label">
+
+                            تاريخ التقييم
+
+                        </label>
+
+                        <input asp-for="Input.EvaluationDate"
+                               type="date"
+                               class="form-control" />
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <label asp-for="Input.Score"
+                               class="form-label">
+
+                            الدرجة
+
+                        </label>
+
+                        <input asp-for="Input.Score"
+                               class="form-control" />
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <label asp-for="Input.MaxScore"
+                               class="form-label">
+
+                            الدرجة الكلية
+
+                        </label>
+
+                        <input asp-for="Input.MaxScore"
+                               class="form-control" />
+
+                    </div>
+
+                    <div class="col-12">
+
+                        <label asp-for="Input.Notes"
+                               class="form-label">
+
+                            الملاحظات
+
+                        </label>
+
+                        <textarea asp-for="Input.Notes"
+                                  rows="6"
+                                  class="form-control">
+                        </textarea>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- الملف الحالي -->
+        @if (!string.IsNullOrEmpty(Model.Evaluation.EvaluationPdfPath))
+        {
+            <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+                <div class="card-header bg-white">
+
+                    <h5 class="fw-bold mb-0">
+                        الملف الحالي
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+
+                            <i class="bi bi-file-earmark-pdf text-danger fs-3"></i>
+
+                            <span class="ms-2">
+                                ملف التقييم المرفوع
+                            </span>
+
+                        </div>
+
+                        <a href="@Model.Evaluation.EvaluationPdfPath"
+                           target="_blank"
+                           class="btn btn-outline-primary">
+
+                            <i class="bi bi-eye"></i>
+
+                            عرض الملف
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+        }
+
+        <!-- رفع ملف جديد -->
+
+        <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+            <div class="card-header bg-white">
+
+                <h5 class="fw-bold mb-0">
+                    استبدال الملف
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="border rounded-4 p-5 text-center">
+
+                    <i class="bi bi-cloud-arrow-up fs-1 text-success"></i>
+
+                    <h5 class="mt-3">
+                        رفع ملف جديد
+                    </h5>
+
+                    <p class="text-muted">
+                        PDF أو DOC أو DOCX
+                    </p>
+
+                    <input asp-for="EvaluationFile"
+                           type="file"
+                           class="form-control" />
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ملاحظات -->
+
+        <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+            <div class="card-header bg-white">
+
+                <h5 class="fw-bold mb-0">
+                    ملاحظات
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <ul class="mb-0">
+
+                    <li>يمكن تعديل الدرجة أو الملاحظات في أي وقت.</li>
+
+                    <li>عند رفع ملف جديد سيتم استبدال الملف السابق.</li>
+
+                    <li>يجب التأكد من صحة البيانات قبل الحفظ.</li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+        <!-- Buttons -->
+
+        <div class="d-flex gap-2 mb-5">
+
+            <button type="submit"
+                    class="btn btn-success px-5">
+
+                <i class="bi bi-check-circle me-2"></i>
+
+                حفظ التعديلات
+
+            </button>
+
+            <a asp-page="/Institution/Evaluations"
+               class="btn btn-light px-5">
+
+                إلغاء
+
+            </a>
+
+        </div>
+
+    </form>
+
+</div>
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+}

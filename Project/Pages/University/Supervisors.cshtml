@@ -1,0 +1,920 @@
+﻿@page
+@model SupervisorsModel
+@{
+    ViewData["Title"] = "المشرفون";
+    ViewData["ActivePage"] = "Supervisors";
+    ViewData["Title"] = "لوحة تحكم الجامعة";
+    ViewData["UserType"] = "University";
+    ViewData["PortalTitle"] = "بوابة الجامعة";
+    ViewData["PortalSubtitle"] = "إدارة التدريب الميداني";
+    ViewData["SearchPlaceholder"] = "بحث عن طلاب، مؤسسات، فرص...";
+}
+
+@section Styles {
+    <style>
+        /* ══════════════════════════════
+               PAGE BANNER
+            ══════════════════════════════ */
+        .page-banner {
+            background: linear-gradient(135deg, #2ABFB0 0%, #1FA89A 100%);
+            border-radius: 16px;
+            padding: 32px 36px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 26px;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .page-banner::before {
+                content: '';
+                position: absolute;
+                top: -40px;
+                left: -40px;
+                width: 180px;
+                height: 180px;
+                border-radius: 50%;
+                background: rgba(255,255,255,.08);
+                pointer-events: none;
+            }
+
+            .page-banner::after {
+                content: '';
+                position: absolute;
+                bottom: -60px;
+                left: 40px;
+                width: 140px;
+                height: 140px;
+                border-radius: 50%;
+                background: rgba(255,255,255,.06);
+                pointer-events: none;
+            }
+
+        .banner-text {
+            color: #fff;
+        }
+
+            .banner-text h1 {
+                font-size: 1.8rem;
+                font-weight: 800;
+                margin-bottom: 8px;
+            }
+
+            .banner-text p {
+                font-size: .9rem;
+                opacity: .9;
+                line-height: 1.7;
+                max-width: 420px;
+                margin: 0;
+            }
+
+        .banner-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(255,255,255,.18);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #fff;
+            flex-shrink: 0;
+            z-index: 1;
+        }
+
+        /* ══════════════════════════════
+               FILTERS BAR
+            ══════════════════════════════ */
+        .filters-bar {
+            background: #fff;
+            border: 1px solid #E2ECF0;
+            border-radius: 14px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 22px;
+            flex-wrap: wrap;
+        }
+
+        .filter-search {
+            flex: 1;
+            min-width: 180px;
+            position: relative;
+        }
+
+            .filter-search input {
+                width: 100%;
+                border: 1.5px solid #E2ECF0;
+                border-radius: 10px;
+                padding: 9px 38px 9px 14px;
+                font-family: inherit;
+                font-size: .88rem;
+                color: #1B2A4A;
+                background: #F8FBFC;
+                transition: border-color .2s;
+                text-align: right;
+            }
+
+                .filter-search input:focus {
+                    outline: none;
+                    border-color: #2ABFB0;
+                    background: #fff;
+                }
+
+            .filter-search .si {
+                position: absolute;
+                right: 12px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #7A90A0;
+                pointer-events: none;
+            }
+
+        .filter-select {
+            border: 1.5px solid #E2ECF0;
+            border-radius: 10px;
+            padding: 9px 14px 9px 34px;
+            font-family: inherit;
+            font-size: .88rem;
+            color: #1B2A4A;
+            background: #F8FBFC;
+            cursor: pointer;
+            min-width: 155px;
+            transition: border-color .2s;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%237A90A0' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: left 12px center;
+        }
+
+            .filter-select:focus {
+                outline: none;
+                border-color: #2ABFB0;
+            }
+
+        .btn-filter {
+            border: 1.5px solid #E2ECF0;
+            border-radius: 10px;
+            padding: 9px 18px;
+            font-family: inherit;
+            font-size: .88rem;
+            font-weight: 600;
+            color: #1B2A4A;
+            background: #F8FBFC;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: border-color .2s, background .2s;
+            white-space: nowrap;
+        }
+
+            .btn-filter:hover {
+                border-color: #2ABFB0;
+                background: #E6F7F5;
+                color: #1FA89A;
+            }
+
+        /* ══════════════════════════════
+               TABLE CARD
+            ══════════════════════════════ */
+        .table-card {
+            background: #fff;
+            border: 1px solid #E2ECF0;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 16px rgba(0,0,0,.05);
+        }
+
+        .table-card-header {
+            padding: 18px 24px 14px;
+            border-bottom: 1px solid #E2ECF0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+            .table-card-header h2 {
+                font-size: 1.05rem;
+                font-weight: 800;
+                color: #1B2A4A;
+                margin: 0;
+            }
+
+        .tch-sub {
+            font-size: .82rem;
+            color: #7A90A0;
+            margin-top: 3px;
+        }
+
+        .btn-add {
+            background: linear-gradient(135deg, #2ABFB0, #1FA89A);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 9px 20px;
+            font-family: inherit;
+            font-size: .9rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: opacity .2s, transform .15s;
+            white-space: nowrap;
+        }
+
+            .btn-add:hover {
+                opacity: .88;
+                transform: translateY(-1px);
+                color: #fff;
+            }
+
+        /* Table */
+        .sup-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+            .sup-table thead tr {
+                background: #F8FBFC;
+                border-bottom: 1.5px solid #E2ECF0;
+            }
+
+            .sup-table th {
+                padding: 13px 18px;
+                font-size: .8rem;
+                font-weight: 700;
+                color: #7A90A0;
+                text-align: right;
+                white-space: nowrap;
+            }
+
+            .sup-table td {
+                padding: 14px 18px;
+                font-size: .875rem;
+                color: #1B2A4A;
+                text-align: right;
+                border-bottom: 1px solid #F0F5F8;
+                vertical-align: middle;
+            }
+
+            .sup-table tbody tr:last-child td {
+                border-bottom: none;
+            }
+
+            .sup-table tbody tr {
+                transition: background .12s;
+            }
+
+                .sup-table tbody tr:hover td {
+                    background: #FAFCFD;
+                }
+
+        .sup-name {
+            font-weight: 700;
+        }
+
+        .row-num {
+            color: #7A90A0;
+            font-size: .8rem;
+        }
+
+        .email-cell {
+            color: #1FA89A;
+            font-size: .82rem;
+            direction: ltr;
+            display: inline-block;
+        }
+
+        .dept-badge {
+            display: inline-block;
+            background: #EEF6FF;
+            color: #2B6CB0;
+            font-size: .74rem;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+
+        .spec-badge {
+            display: inline-block;
+            background: #E6F7F5;
+            color: #1FA89A;
+            font-size: .74rem;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+
+        /* Action buttons */
+        .action-btns {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .act-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: 1.5px solid #E2ECF0;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: .85rem;
+            color: #7A90A0;
+            text-decoration: none;
+            transition: border-color .15s, background .15s, color .15s;
+        }
+
+            .act-btn.view:hover {
+                color: #2ABFB0;
+                background: #E6F7F5;
+                border-color: #2ABFB0;
+            }
+
+            .act-btn.edit:hover {
+                color: #F5A623;
+                background: #FFF8EC;
+                border-color: #F5A623;
+            }
+
+            .act-btn.del:hover {
+                color: #E8554E;
+                background: #FFF0EF;
+                border-color: #E8554E;
+            }
+
+        /* ══════════════════════════════
+               TABLE FOOTER / PAGINATION
+            ══════════════════════════════ */
+        .table-footer {
+            padding: 14px 20px;
+            border-top: 1px solid #E2ECF0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .per-page {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: .82rem;
+            color: #7A90A0;
+        }
+
+            .per-page select {
+                border: 1.5px solid #E2ECF0;
+                border-radius: 8px;
+                padding: 5px 28px 5px 10px;
+                font-family: inherit;
+                font-size: .82rem;
+                color: #1B2A4A;
+                background: #F8FBFC;
+                appearance: none;
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%237A90A0' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+                background-repeat: no-repeat;
+                background-position: left 8px center;
+                cursor: pointer;
+            }
+
+        .showing-text {
+            font-size: .82rem;
+            color: #7A90A0;
+        }
+
+        .pagination-btns {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .pg-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            border: 1.5px solid #E2ECF0;
+            background: #fff;
+            font-family: inherit;
+            font-size: .85rem;
+            font-weight: 600;
+            color: #1B2A4A;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background .15s, border-color .15s, color .15s;
+            text-decoration: none;
+            line-height: 1;
+        }
+
+            .pg-btn:hover {
+                border-color: #2ABFB0;
+                color: #2ABFB0;
+                background: #E6F7F5;
+            }
+
+            .pg-btn.active {
+                background: #2ABFB0;
+                border-color: #2ABFB0;
+                color: #fff;
+            }
+
+            .pg-btn.disabled {
+                opacity: .35;
+                pointer-events: none;
+            }
+
+        .pg-dots {
+            font-size: .85rem;
+            color: #7A90A0;
+            padding: 0 4px;
+        }
+
+        /* ══════════════════════════════
+               MODALS
+            ══════════════════════════════ */
+        .modal-form label {
+            font-size: .875rem;
+            font-weight: 600;
+            color: #1B2A4A;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .modal-form .form-control,
+        .modal-form .form-select {
+            font-family: inherit;
+            font-size: .9rem;
+            border: 1.5px solid #E2ECF0;
+            border-radius: 10px;
+            padding: 10px 14px;
+            color: #1B2A4A;
+            text-align: right;
+        }
+
+            .modal-form .form-control:focus,
+            .modal-form .form-select:focus {
+                border-color: #2ABFB0;
+                box-shadow: 0 0 0 3px rgba(42,191,176,.15);
+            }
+
+        .btn-teal {
+            background: linear-gradient(135deg, #2ABFB0, #1FA89A);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 28px;
+            font-family: inherit;
+            font-size: .95rem;
+            font-weight: 700;
+            transition: opacity .2s;
+        }
+
+            .btn-teal:hover {
+                opacity: .88;
+                color: #fff;
+            }
+
+        /* Delete icon circle */
+        .del-circle {
+            width: 64px;
+            height: 64px;
+            background: #FFF0EF;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 1.5rem;
+            color: #E8554E;
+        }
+
+        /* Success TempData alert */
+        .alert-sp {
+            background: #E6F7F5;
+            border: 1.5px solid #9DDDD8;
+            color: #1FA89A;
+            border-radius: 12px;
+            padding: 12px 18px;
+            font-size: .9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* Empty state */
+        .empty-state {
+            padding: 60px 20px;
+            text-align: center;
+            color: #7A90A0;
+        }
+
+            .empty-state i {
+                font-size: 2.5rem;
+                display: block;
+                margin-bottom: 12px;
+                opacity: .5;
+            }
+
+            .empty-state p {
+                font-size: .9rem;
+                margin: 0;
+            }
+    </style>
+}
+
+@* ════════════════════════════
+   SUCCESS ALERT
+════════════════════════════ *@
+@if (TempData["Success"] != null)
+{
+    <div class="alert-sp">
+        <i class="bi bi-check-circle-fill"></i>
+        @TempData["Success"]
+    </div>
+}
+
+@* ════════════════════════════
+   PAGE BANNER
+════════════════════════════ *@
+<div class="page-banner">
+    <div class="banner-text">
+        <h1>المشرفون</h1>
+        <p>إدارة ومتابعة المشرفين الأكاديميين في الجامعة والإشراف على الطلاب والتدريب الميداني.</p>
+    </div>
+    <div class="banner-icon">
+        <i class="bi bi-person-badge"></i>
+    </div>
+</div>
+
+@* ════════════════════════════
+   FILTERS BAR
+════════════════════════════ *@
+<div class="filters-bar">
+    <div class="filter-search">
+        <i class="bi bi-search si"></i>
+        <input type="text"
+               name="SearchTerm"
+               value="@Model.SearchTerm"
+               placeholder="ابحث بالاسم أو البريد الإلكتروني"
+               class="form-control" />
+    </div>
+    @* <select class="filter-select" id="deptFilter">
+        <option value="">جميع الأقسام</option>
+        <option>تقنية المعلومات</option>
+        <option>علوم الحاسب</option>
+        <option>نظم المعلومات</option>
+        <option>الهندسة</option>
+        <option>علوم البيانات</option>
+    </select>
+    <select class="filter-select" id="specFilter">
+        <option value="">جميع التخصصات</option>
+        <option>هندسة البرمجيات</option>
+        <option>أمن سيبراني</option>
+        <option>تحليل البيانات</option>
+        <option>شبكات الحاسب</option>
+        <option>إدارة المشاريع</option>
+    </select> *@
+    <button class="btn-filter" id="applyFilter">
+        <i class="bi bi-sliders"></i> تصفية
+    </button>
+</div>
+
+@* ════════════════════════════
+   TABLE CARD
+════════════════════════════ *@
+<div class="table-card">
+
+    <div class="table-card-header">
+        <div>
+            <h2>قائمة المشرفين الأكاديميين</h2>
+            @* <div class="tch-sub">إجمالي 86 مشرف</div> *@
+        </div>
+        <a asp-page="/University/Supervisors/Create" class="btn-add">
+            <i class="bi bi-plus-lg"></i> إضافة مشرف
+        </a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="sup-table">
+            <thead>
+                <tr>
+                    <th style="width:50px">#</th>
+                    <th>اسم المشرف</th>
+                    <th>البريد الإلكتروني</th>
+                    @* <th>القسم</th>
+                    <th>التخصص</th> *@
+                    <th style="width:120px">الإجراءات</th>
+                </tr>
+            </thead>
+           
+            <tbody>
+
+                @{
+                    int rowNumber =
+                    ((Model.Supervisors.PageIndex - 1) * Model.PageSize) + 1;
+                }
+
+                @foreach (var supervisor in Model.Supervisors)
+                {
+                    <tr>
+
+                        <td>
+                            <span class="row-num">
+                                @rowNumber
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="sup-name">
+                                @supervisor.FullName
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="email-cell">
+                                @supervisor.Email
+                            </span>
+                        </td>
+
+                        <td>
+                            <div class="action-btns">
+
+                                <a asp-page="/University/Supervisors/Details" asp-route-id="@supervisor.Id" class="act-btn view">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+
+                                <a asp-page="/University/Supervisors/Edit" asp-route-id="@supervisor.Id" class="act-btn edit">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+
+                                <a asp-page="/University/Supervisors/Delete" asp-route-id="@supervisor.Id" class="act-btn del">
+                                    <i class="bi bi-trash3"></i>
+                                </a>
+
+                            </div>
+                        </td>
+
+                </tr>
+                
+
+                    rowNumber++;
+                }
+
+            </tbody>
+        </table>
+    </div>
+
+    <div class="table-footer">
+
+        <div class="per-page">
+            عرض
+
+            <select onchange="changePageSize(this.value)">
+                <option value="10" selected="@(Model.PageSize == 10)">
+                    10
+                </option>
+                
+
+                <option value="25" selected="@(Model.PageSize == 25)">
+                    25
+                </option>
+
+                <option value="50" selected="@(Model.PageSize == 50)">
+                    50
+                </option>
+            </select>
+        </div>
+
+        @{
+            var start =
+            ((Model.Supervisors.PageIndex - 1) * Model.PageSize) + 1;
+
+            var end =
+            Math.Min(start + Model.PageSize - 1,
+            Model.Supervisors.TotalCount);
+        }
+
+        @* <span class="showing-text">
+            عرض @start إلى @end من @Model.Supervisors.TotalCount مشرف
+        </span> *@
+
+        <div class="pagination-btns">
+
+            @if (Model.Supervisors.HasPrevPage)
+            {
+                <a asp-route-PageNumber="@(Model.PageNumber - 1)"
+                   asp-route-PageSize="@Model.PageSize"
+                   asp-route-SearchTerm="@Model.SearchTerm"
+                   class="pg-btn">
+
+                    <i class="bi bi-chevron-right"></i>
+
+                </a>
+            }
+            else
+            {
+                <span class="pg-btn disabled">
+                    <i class="bi bi-chevron-right"></i>
+                </span>
+            }
+
+            @{
+                int current = Model.Supervisors.PageIndex;
+                int total = Model.Supervisors.TotalPages;
+
+                int startPage = Math.Max(1, current - 1);
+                int endPage = Math.Min(total, current + 1);
+            }
+
+            @if (startPage > 1)
+            {
+                <a asp-route-PageNumber="1"
+                   asp-route-PageSize="@Model.PageSize"
+                   asp-route-SearchTerm="@Model.SearchTerm"
+                   class="pg-btn">
+
+                    1
+
+                </a>
+
+                @if (startPage > 2)
+                {
+                    <span class="pg-dots">...</span>
+                }
+            }
+
+            @for (int i = startPage; i <= endPage; i++)
+            {
+                <a asp-route-PageNumber="@i"
+                   asp-route-PageSize="@Model.PageSize"
+                   asp-route-SearchTerm="@Model.SearchTerm"
+                   class="pg-btn @(i == current ? "active" : "")">
+
+                    @i
+
+                </a>
+            }
+
+            @if (endPage < total)
+            {
+                @if (endPage < total - 1)
+                {
+                    <span class="pg-dots">...</span>
+                }
+
+                <a asp-route-PageNumber="@total"
+                   asp-route-PageSize="@Model.PageSize"
+                   asp-route-SearchTerm="@Model.SearchTerm"
+                   class="pg-btn">
+
+                    @total
+
+                </a>
+            }
+
+            @if (Model.Supervisors.HasNextPage)
+            {
+                <a asp-route-PageNumber="@(Model.PageNumber + 1)"
+                   asp-route-PageSize="@Model.PageSize"
+                   asp-route-SearchTerm="@Model.SearchTerm"
+                   class="pg-btn">
+
+                    <i class="bi bi-chevron-left"></i>
+
+                </a>
+            }
+            else
+            {
+                <span class="pg-btn disabled">
+                    <i class="bi bi-chevron-left"></i>
+                </span>
+            }
+
+        </div>
+
+    </div>
+
+</div><!-- /table-card -->
+@* ════════════════════════════
+   ADD SUPERVISOR MODAL
+════════════════════════════ *@
+@* <div class="modal fade" id="addModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4 shadow-lg">
+            <div class="modal-header border-0 pt-4 px-4 pb-0">
+                <h5 class="modal-title fw-bold">
+                    <i class="bi bi-person-plus-fill me-2" style="color:#2ABFB0"></i>
+                    إضافة مشرف جديد
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body px-4 pb-4 pt-3">
+                <form method="post" asp-page-handler="AddSupervisor" class="modal-form">
+                    @Html.AntiForgeryToken()
+                    <div class="mb-3">
+                        <label>اسم المشرف <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="Input.Name"
+                               placeholder="د. محمد بن عبدالله" required />
+                    </div>
+                    <div class="mb-3">
+                        <label>البريد الإلكتروني <span class="text-danger">*</span></label>
+                        <input type="email" class="form-control" name="Input.Email"
+                               placeholder="name@uot.edu.sa" required />
+                    </div>
+                    <div class="row g-3 mb-3">
+                        <div class="col-6">
+                            <label>القسم <span class="text-danger">*</span></label>
+                            <select class="form-select" name="Input.Department" required>
+                                <option value="">اختر القسم</option>
+                                <option>تقنية المعلومات</option>
+                                <option>علوم الحاسب</option>
+                                <option>نظم المعلومات</option>
+                                <option>الهندسة</option>
+                                <option>علوم البيانات</option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label>التخصص <span class="text-danger">*</span></label>
+                            <select class="form-select" name="Input.Specialization" required>
+                                <option value="">اختر التخصص</option>
+                                <option>هندسة البرمجيات</option>
+                                <option>أمن سيبراني</option>
+                                <option>تحليل البيانات</option>
+                                <option>شبكات الحاسب</option>
+                                <option>إدارة المشاريع</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2 justify-content-end mt-4">
+                        <button type="button" class="btn btn-light rounded-3 px-4"
+                                data-bs-dismiss="modal">
+                            إلغاء
+                        </button>
+                        <button type="submit" class="btn btn-teal rounded-3 px-4">
+                            <i class="bi bi-plus-lg me-1"></i> إضافة
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div> *@
+
+@* ════════════════════════════
+   DELETE CONFIRM MODAL
+════════════════════════════ *@
+@* <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content border-0 rounded-4 shadow-lg text-center p-4">
+            <div class="del-circle">
+                <i class="bi bi-trash3-fill"></i>
+            </div>
+            <h6 class="fw-bold mb-2">حذف المشرف</h6>
+            <p class="text-muted small mb-4" id="deleteConfirmText">هل أنت متأكد؟</p>
+            <form method="post" asp-page-handler="DeleteSupervisor">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="id" id="deleteId" />
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-light flex-fill rounded-3"
+                            data-bs-dismiss="modal">
+                        إلغاء
+                    </button>
+                    <button type="submit" class="btn flex-fill rounded-3 fw-bold text-white"
+                            style="background:#E8554E;border:none">
+                        حذف
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div> *@
+
+@section Scripts {
+   
+}
+<script>
+    function changePageSize(size) {
+
+        const url = new URL(window.location.href);
+
+        url.searchParams.set('PageSize', size);
+        url.searchParams.set('PageNumber', 1);
+
+        window.location.href = url.toString();
+    }
+</script>

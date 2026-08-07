@@ -1,0 +1,139 @@
+﻿@page "{placementId:int}"
+@model Project.Pages.Institution.Reports.CreateModel
+
+@{
+    ViewData["Title"] = "رفع تقرير";
+}
+
+<div class="container-fluid">
+
+
+
+    <div class="mb-4">
+        <a asp-page="/Institution/CurrentTraining/StudentDetails"
+           asp-route-placementId="@Model.PlacementID"
+           class="text-success text-decoration-none fw-semibold">
+
+            <i class="bi bi-arrow-right"></i>
+            الرجوع للطالب
+
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body text-white p-4"
+             style="background:#1ab29a;border-radius:20px;">
+
+            <h3 class="fw-bold mb-2">
+                رفع تقرير للطالب
+            </h3>
+
+            <div>
+                <strong>@Model.StudentName</strong>
+            </div>
+
+            <div>
+                @Model.OpportunityTitle
+            </div>
+
+        </div>
+
+    </div>
+
+    <form method="post" enctype="multipart/form-data">
+
+        
+        <input asp-for="Input.PlacementID" type="hidden" />
+        <input asp-for="Input.StudentID" type="hidden" />
+
+        <div class="card border-0 shadow-sm rounded-4">
+
+            <div class="card-body">
+
+                <div class="mb-3">
+
+                    <label asp-for="Input.Type" class="form-label">
+                        نوع التقرير
+                    </label>
+
+                    <select asp-for="Input.Type"
+                            class="form-select">
+
+                        <option value="Weekly">
+                            أسبوعي
+                        </option>
+
+                        <option value="Final">
+                            نهائي
+                        </option>
+
+                    </select>
+                    <span class="text-danger" asp-validation-for="Input.Type"></span>
+
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label asp-for="Input.Title" class="form-label">
+                        عنوان التقرير
+                    </label>
+
+                    <input asp-for="Input.Title"
+                           class="form-control" />
+
+                    <span asp-validation-for="Input.Title"
+                          class="text-danger"></span>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label asp-for="Input.Content"
+                           class="form-label">
+
+                        محتوى التقرير
+
+                    </label>
+
+                    <textarea asp-for="Input.Content"
+                              rows="8"
+                              class="form-control">
+                    </textarea>
+
+                    <span class="text-danger" asp-validation-for="Input.Content"></span>
+
+
+                </div>
+
+                <div class="mb-4">
+
+                    <label class="form-label">
+                        إرفاق ملف
+                    </label>
+
+                    <input asp-for="ReportFile"
+                           type="file"
+                           class="form-control" />
+
+                    <span class="text-danger" asp-validation-for="ReportFile"></span>
+
+                </div>
+
+                <button type="submit"
+                        class="btn btn-success px-5">
+
+                    <i class="bi bi-upload"></i>
+
+                    حفظ التقرير
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</div>

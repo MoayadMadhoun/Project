@@ -1,0 +1,280 @@
+﻿@page
+@model Project.Pages.Student.ReportsModel
+@using Models.Enums;
+@{
+    ViewData["Title"] = "التقارير";
+    ViewData["UserType"] = "Student";
+    ViewData["UserName"] = "أحمد محمد";
+    ViewData["PortalTitle"] = "بوابة الطالب";
+    ViewData["PortalSubtitle"] = "التقارير";
+    ViewData["SearchPlaceholder"] = "بحث عن التقارير...";
+    ViewData["ActivePage"] = "Reports";
+    int index = 0;
+}
+<link rel="stylesheet" href="~/Styles/opportunities.css">
+
+<div dir="rtl">
+
+    @* ===== Hero Section ===== *@
+    <section class="mb-lg md:mb-xl relative rounded-xl md:rounded-2xl overflow-hidden bg-primary-container p-6 md:p-xl text-on-primary">
+        <div class="relative z-10 max-w-2xl text-right">
+            <h1 class="font-h1 text-2xl md:text-h1 mb-md">التقارير</h1>
+            <p class="font-body-lg text-sm md:text-body-lg opacity-90 mb-lg">
+                إدارة ورفع التقارير الأسبوعية والنهائية ومتابعة مراجعتها من قبل مشرف التدريب
+            </p>
+            @* <a asp-page="/Student/Reports/Create"
+               class="w-full sm:w-auto bg-white text-primary font-button px-xl py-3 rounded-xl shadow-lg hover:bg-surface-container transition-colors inline-block text-center">
+                + رفع تقرير جديد
+            </a> *@
+        </div>
+        <div class="absolute -bottom-10 -left-10 w-48 h-48 md:w-64 md:h-64 bg-white/10 rounded-full blur-3xl"></div>
+        <div class="absolute -top-20 -left-20 w-64 h-64 md:w-80 md:h-80 bg-secondary-fixed-dim/20 rounded-full blur-3xl"></div>
+    </section>
+
+    @* ===== Filters Bar ===== *@
+    <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] p-4 mb-lg">
+        <form method="get" class="flex flex-wrap gap-3 items-center justify-end">
+
+            <div class="relative flex-1 min-w-[180px]">
+                <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+                <input asp-for="@Model.search"
+                       class="w-full pr-10 pl-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20"
+                       placeholder="ابحث عن تقرير..."
+                       type="text" />
+            </div>
+
+            <select asp-for="@Model.ReportType"
+                    asp-items="@Html.GetEnumSelectList<Models.StudentReport.ReportType>()"
+                    class="bg-slate-100 border-none rounded-xl text-sm font-bold text-slate-700 py-2.5 px-4 focus:ring-2 focus:ring-primary/20 cursor-pointer">
+                <option value="">كل الأنواع</option>
+            </select>
+
+            <select asp-for="@Model.Reportstatus"
+                    asp-items="@Html.GetEnumSelectList<Models.StudentReport.StudentReportStatus>()"
+                    class="bg-slate-100 border-none rounded-xl text-sm font-bold text-slate-700 py-2.5 px-4 focus:ring-2 focus:ring-primary/20 cursor-pointer">
+                <option value="">كل الحالات</option>
+            </select>
+
+            <button type="submit"
+                    class="bg-primary-container text-white font-button px-6 py-2.5 rounded-xl hover:bg-primary/90 transition-colors">
+                بحث
+            </button>
+
+        </form>
+    </div>
+
+    @* ===== Reports Table ===== *@
+    <div class="bg-surface-container-lowest rounded-xl border border-slate-100 shadow-[0_4px_20px_rgba(44,62,80,0.05)] overflow-hidden">
+
+        <div class="p-4 md:p-lg border-b border-slate-100 flex justify-between items-center">
+            <h3 class="font-h3 text-lg md:text-h3 text-slate-900">قائمة التقارير</h3>
+            <span class="text-sm text-slate-500 font-body-sm">جميع التقارير التي قمت برفعها خلال فترة التدريب</span>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-right border-collapse min-w-[960px]">
+                <thead class="bg-surface-container-low">
+                    <tr>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">#</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">عنوان التقرير</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">نوع التقرير</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الأسبوع</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">تاريخ التسليم</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الحالة</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">ملاحظات المشرف</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الملف</th>
+                        <th class="px-4 py-3 text-slate-500 font-label-caps text-label-caps">الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50">
+                    @foreach (var report in Model.StudentReports)
+                    {
+                        index++;
+                        <tr class="hover:bg-slate-50 transition-colors">
+
+                            <td class="px-4 py-3 text-sm text-slate-400 font-bold">@index</td>
+
+                            <td class="px-4 py-3 text-sm text-slate-900 font-bold">@report.Title</td>
+
+                            <td class="px-4 py-3 text-sm text-slate-600">@report.Type.GetDisplayName()</td>
+
+                            <td class="px-4 py-3 text-sm text-slate-600">
+                                @{
+                                    var days = (report.SubmittedAt - report.Placement.StartDate).Days;
+                                    var week = (days / 7) + 1;
+                                }
+                                الأسبوع @week
+                            </td>
+
+                            <td class="px-4 py-3 text-sm text-slate-600 whitespace-nowrap">
+                                @report.SubmittedAt.ToString("dd-MM-yyyy")
+                            </td>
+
+                            <td class="px-4 md:px-lg py-4 md:py-md">
+                                @{
+                                    var (badgeBg, badgeLabel2) = report.Status switch
+                                    {
+                                        Models.StudentReport.StudentReportStatus.Approved => ("bg-green-100 text-green-700", ""),
+                                        Models.StudentReport.StudentReportStatus.Rejected => ("bg-red-100 text-red-700", ""),
+                                        Models.StudentReport.StudentReportStatus.Reviewed => ("bg-blue-100 text-blue-700", ""),
+                                        Models.StudentReport.StudentReportStatus.Submitted => ("bg-amber-100 text-amber-700", ""),
+                                        Models.StudentReport.StudentReportStatus.NotSubmitted => ("bg-slate-100 text-slate-600", ""),
+                                        _ => ("bg-slate-100 text-slate-600", "")
+                                    };
+                                }
+                                <span class="px-3 py-1 rounded-full text-[11px] font-bold @badgeBg">
+                                    @report.Status.GetDisplayName()
+                                </span>
+                            </td>
+
+                            <td class="px-4 py-3 text-sm text-slate-600">
+                                @if (report.ReviewNotes is not null)
+                                {
+                                    <span>@report.ReviewNotes</span>
+                                }
+                                else
+                                {
+                                    <span class="text-slate-400">—</span>
+                                }
+                            </td>
+
+                            <td class="px-4 py-3">
+                                @if (!string.IsNullOrEmpty(report.FilePath))
+                                {
+                                    <a asp-page-handler="OpenFile"
+                                       asp-route-reportId="@report.ReportID"
+                                       title="عرض الملف"
+                                       class="btn border border-primary text-primary text-xs font-bold px-2 py-2 rounded hover:bg-blue-50 flex items-center gap-1 w-fit">
+                                        <i class="bi bi-file-earmark-pdf-fill"></i>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <span class="text-slate-400 text-sm">—</span>
+                                }
+                            </td>
+
+                            <td class="px-4 py-3">
+                                <div class="flex gap-1">
+                                    @if (report.Status == Models.StudentReport.StudentReportStatus.Submitted)
+                                    {
+                                        <a asp-page="/Student/Reports/Edit"
+                                           asp-route-reportId="@report.ReportID"
+                                           class="btn border border-warning text-warning text-xs font-bold px-2 py-2 rounded hover:bg-amber-50 flex items-center gap-1"
+                                           title="تعديل">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                        <a asp-page="/Student/Reports/Delete"
+                                           asp-route-reportId="@report.ReportID"
+                                           class="btn border border-danger text-danger text-xs font-bold px-2 py-2 rounded hover:bg-rose-50 flex items-center gap-1"
+                                           title="حذف">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </a>
+                                    }
+                                    @if (report.Status == Models.StudentReport.StudentReportStatus.NotSubmitted)
+                                    {
+                                        <a asp-page="/Student/Reports/Create"
+                                           asp-route-id="@report.StudentID"
+                                           class="btn border border-primary text-primary text-xs font-bold px-2 py-2 rounded hover:bg-blue-50 flex items-center gap-1">
+                                            <i class="bi bi-cloud-upload"></i>
+                                            رفع التقرير
+                                        </a>
+                                    }
+                                    @if (report.Status == Models.StudentReport.StudentReportStatus.Approved ||
+                                         report.Status == Models.StudentReport.StudentReportStatus.Rejected)
+                                    {
+                                        <span class="text-slate-400 text-sm">—</span>
+                                    }
+                                </div>
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @* ===== Pagination ===== *@
+        <div class="p-4 md:p-lg flex flex-col md:flex-row items-center justify-between gap-4 border-t border-slate-100">
+
+            <div class="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
+                <p class="text-sm text-slate-500 font-body-sm whitespace-nowrap">
+                    عرض <span class="font-bold text-slate-900">@Model.CurrentQuary</span>
+                    من أصل <span class="font-bold text-slate-900">@Model.TotalQuary</span> تقرير
+                </p>
+                <div class="flex items-center gap-2">
+                    <label class="text-xs text-slate-500 font-label-caps" for="pp-r">النتائج:</label>
+                    <form method="get">
+                        <input type="hidden" name="search" value="@Model.search" />
+                        <input type="hidden" name="ReportType" value="@Model.ReportType" />
+                        <input type="hidden" name="Reportstatus" value="@Model.Reportstatus" />
+                        <input type="hidden" name="PageIndex" value="@Model.PageIndex" />
+                        <select asp-for="@Model.PageSize"
+                                onchange="this.form.submit()"
+                                id="pp-r"
+                                class="bg-slate-100 border-none rounded-lg text-xs font-bold text-slate-700 py-1.5 pr-8 pl-3 focus:ring-2 focus:ring-primary/20 appearance-none cursor-pointer">
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                        </select>
+                    </form>
+                </div>
+            </div>
+
+            <nav class="flex items-center gap-2">
+                @if (Model.StudentReports.HasPrevPage)
+                {
+                    <a asp-route-ReportType="@Model.ReportType"
+                       asp-route-search="@Model.search"
+                       asp-route-Reportstatus="@Model.Reportstatus"
+                       asp-route-PageSize="@Model.PageSize"
+                       asp-route-PageIndex="@(Model.PageIndex - 1)"
+                       class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:bg-slate-50">
+                        <span class="material-symbols-outlined">chevron_right</span>
+                    </a>
+                }
+
+                @for (int i = 1; i <= Model.StudentReports.TotalPages; i++)
+                {
+                    <a asp-route-ReportType="@Model.ReportType"
+                       asp-route-search="@Model.search"
+                       asp-route-Reportstatus="@Model.Reportstatus"
+                       asp-route-PageSize="@Model.PageSize"
+                       asp-route-PageIndex="@i"
+                       class="w-8 h-8 flex items-center justify-center rounded-lg text-sm font-bold
+                        @(i == Model.PageIndex ? "bg-primary-container text-white" : "border border-slate-200 text-slate-600 hover:bg-slate-50")">
+                        @i
+                    </a>
+                }
+
+                @if (Model.StudentReports.HasNextPage)
+                {
+                    <a asp-route-ReportType="@Model.ReportType"
+                       asp-route-search="@Model.search"
+                       asp-route-Reportstatus="@Model.Reportstatus"
+                       asp-route-PageSize="@Model.PageSize"
+                       asp-route-PageIndex="@(Model.PageIndex + 1)"
+                       class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:bg-slate-50">
+                        <span class="material-symbols-outlined">chevron_left</span>
+                    </a>
+                }
+            </nav>
+
+        </div>
+
+        @* ===== Info Box ===== *@
+        <div class="mx-4 md:mx-lg mb-4 p-4 bg-blue-50 border border-blue-200 rounded-xl flex items-start gap-3">
+            <span class="material-symbols-outlined text-primary mt-0.5 flex-shrink-0">info</span>
+            <div>
+                <p class="text-sm font-bold text-slate-900 mb-2">تعليمات التقارير</p>
+                <ul class="text-sm text-slate-500 space-y-1 list-disc list-inside">
+                    <li>التقرير الأسبوعي يجب أن يتضمن ما تم إنجازه خلال هذا الأسبوع والتحديات التي واجهتك.</li>
+                    <li>التقرير النهائي يجب أن يتضمن ملخصاً كاملاً للتدريب والمهارات المكتسبة.</li>
+                    <li>سيتم تقييم التقارير من قبل مشرف التدريب في الجامعة.</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+</div>

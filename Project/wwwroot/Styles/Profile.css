@@ -1,0 +1,88 @@
+﻿
+input, select, textarea {
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+    input:focus, select:focus, textarea:focus {
+        outline: none;
+        border-color: #10b981;
+        box-shadow: 0 0 0 3px rgba(16,185,129,0.12);
+    }
+
+.section-card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 1.75rem;
+    margin-bottom: 1.25rem;
+}
+
+.section-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 4px;
+}
+
+.section-subtitle {
+    font-size: 12px;
+    color: #94a3b8;
+    margin-bottom: 1.25rem;
+}
+
+.field-label {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #475569;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.field-input {
+    width: 100%;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-size: 13.5px;
+    color: #1e293b;
+    background: #f8fafc;
+}
+
+    .field-input:disabled {
+        background: #f1f5f9;
+        color: #94a3b8;
+        cursor: not-allowed;
+    }
+
+.grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+}
+
+
+.required::after {
+    content: ' *';
+    color: #ef4444;
+}
+
+.upload-box {
+    border: 2px dashed #cbd5e1;
+    border-radius: 10px;
+    padding: 1.5rem;
+    text-align: center;
+    background: #f8fafc;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+    .upload-box:hover {
+        border-color: #10b981;
+        background: #f0fdf4;
+    }

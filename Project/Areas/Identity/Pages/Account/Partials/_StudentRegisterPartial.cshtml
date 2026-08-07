@@ -1,0 +1,159 @@
+﻿@model Project.Areas.Identity.Pages.Account.RegisterModel;
+
+<div class="row g-3">
+
+    <div class="col-6">
+        <div class="input-icon">
+            <i class="fa-solid fa-user field-icon"></i>
+            <input asp-for="StudentInput.FullName"
+                   class="form-control-s"
+                   style="padding-right:2.4rem"
+                   placeholder="الاسم الكامل" />
+        </div>
+        <span class="text-danger" asp-validation-for="StudentInput.FullName"></span>
+    </div>
+
+    <div class="col-6">
+        <div class="input-icon">
+            <i class="fa-solid fa-phone field-icon"></i>
+            <input asp-for="StudentInput.PhoneNumber"
+                   class="form-control-s"
+                   style="padding-right:2.4rem"
+                   placeholder="رقم الهاتف" />
+        </div>
+        <span class="text-danger" asp-validation-for="StudentInput.PhoneNumber"></span>
+    </div>
+
+    <div class="col-12">
+        <div class="input-icon">
+            <i class="fa-solid fa-envelope field-icon"></i>
+            <input asp-for="Input.Email"
+                   class="form-control-s"
+                   style="padding-right:2.4rem"
+                   placeholder="البريد الإلكتروني" />
+        </div>
+        <span class="text-danger" asp-validation-for="Input.Email"></span>
+    </div>
+
+    <div class="col-6">
+        <div class="input-icon">
+            <i class="fa-solid fa-lock field-icon"></i>
+            <input asp-for="Input.Password"
+                   class="form-control-s"
+                   style="padding-right:2.4rem"
+                   placeholder="كلمة المرور" />
+        </div>
+        <span class="text-danger" asp-validation-for="Input.Password"></span>
+    </div>
+
+    <div class="col-6">
+        <div class="input-icon">
+            <i class="fa-solid fa-lock field-icon"></i>
+            <input asp-for="Input.ConfirmPassword"
+                   class="form-control-s"
+                   style="padding-right:2.4rem"
+                   placeholder="تأكيد كلمة المرور" />
+        </div>
+        <span class="text-danger" asp-validation-for="Input.ConfirmPassword"></span>
+    </div>
+
+</div>
+
+<div class="section-box">
+
+    <div class="section-box-title">
+        <i class="bi bi-mortarboard-fill"></i>
+        البيانات الأكاديمية
+    </div>
+
+    <div class="row g-3">
+
+        <div class="col-6">
+            <div class="input-icon">
+                <i class="fa-solid fa-id-card field-icon"></i>
+                <input asp-for="StudentInput.StudentNumber"
+                       class="form-control-s"
+                       style="padding-right:2.4rem"
+                       placeholder="الرقم الجامعي" />
+            </div>
+            <span class="text-danger" asp-validation-for="StudentInput.StudentNumber"></span>
+        </div>
+
+        <div class="col-6">
+            <select asp-for="StudentInput.UniversityID"
+                    asp-items="Model.UniversityList"
+                    class="form-control-s"
+                    id="universitySelect">
+                <option value="">الجامعة</option>
+            </select>
+            <span class="text-danger" asp-validation-for="StudentInput.UniversityID"></span>
+        </div>
+
+        <div class="col-6">
+            <select asp-for="StudentInput.DepartmentID"
+                    class="form-control-s"
+                    id="departmentSelect">
+                <option value="">القسم</option>
+            </select>
+            <span class="text-danger" asp-validation-for="StudentInput.DepartmentID"></span>
+        </div>
+
+        <div class="col-6">
+            <div class="input-icon">
+                <i class="fa-solid fa-graduation-cap field-icon"></i>
+                <select asp-for="StudentInput.SpecialtyId"
+                        class="form-control-s"
+                        style="padding-right:2.4rem"
+                        id="specialtiesSelect">
+                    <option value="">التخصص</option>
+                </select>
+            </div>
+            <span class="text-danger" asp-validation-for="StudentInput.SpecialtyId"></span>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    document.getElementById("universitySelect").addEventListener("change", async function () {
+        const universityId = this.value;
+        const departmentSelect = document.getElementById("departmentSelect");
+        departmentSelect.innerHTML = '<option value="">اختر القسم</option>';
+        if (!universityId) return;
+        try {
+            const response = await fetch(`/Identity/Account/Register?handler=Departments&universityId=${universityId}`);
+            if (!response.ok) { console.error("خطأ في الطلب:", response.status); return; }
+            const departments = await response.json();
+            departments.forEach(dep => {
+                const option = document.createElement("option");
+                option.value = dep.id;
+                option.textContent = dep.name;
+                departmentSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error("Fetch Error:", error);
+            alert("حدث خطأ أثناء تحميل الأقسام");
+        }
+    });
+
+    document.getElementById("departmentSelect").addEventListener("change", async function () {
+        const departmentId = this.value;
+        const specialtiesSelect = document.getElementById("specialtiesSelect");
+        specialtiesSelect.innerHTML = '<option value="">اختر التخصص</option>';
+        if (!departmentId) return;
+        try {
+            const response = await fetch(`/Identity/Account/Register?handler=Specialties&departmentId=${departmentId}`);
+            if (!response.ok) { console.error("خطأ في الطلب:", response.status); return; }
+            const specialties = await response.json();
+            specialties.forEach(sp => {
+                const option = document.createElement("option");
+                option.value = sp.id;
+                option.textContent = sp.name;
+                specialtiesSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error("Fetch Error:", error);
+            alert("حدث خطأ أثناء تحميل التخصصات");
+        }
+    });
+</script>

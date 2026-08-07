@@ -1,0 +1,111 @@
+﻿@page
+@model Project.Pages.Institution.CurrentTraining.StudentDetailsModel
+
+@{
+    ViewData["Title"] = "متابعة الطالب";
+    ViewData["UserType"] = "Institution";
+    ViewData["PortalTitle"] = "بوابة المؤسسة";
+    ViewData["PortalSubtitle"] = "متابعة المتدربين";
+}
+
+@* ===== Navigation ===== *@
+<div class="mb-lg">
+    <a asp-page="/Institution/CurrentTraining" class="text-primary font-bold flex items-center gap-2 hover:underline">
+        <span class="material-symbols-outlined">arrow_forward</span>
+        الرجوع للتدريبات الحالية
+    </a>
+</div>
+
+@* ===== Hero Section ===== *@
+<section class="mb-lg relative rounded-2xl overflow-hidden bg-emerald-600 p-8 text-white">
+    <div class="relative z-10 flex flex-wrap justify-between items-center gap-6">
+        <div>
+            <h1 class="font-h1 text-3xl mb-2">@Model.StudentName</h1>
+            <p class="font-body-lg text-lg opacity-90 mb-1">@Model.OpportunityTitle</p>
+            <p class="opacity-80">@Model.InstitutionName</p>
+        </div>
+        <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center">
+            <span class="material-symbols-outlined text-4xl">person_check</span>
+        </div>
+    </div>
+    <div class="absolute -bottom-10 -left-10 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+</section>
+
+@* ===== Student Info Grid ===== *@
+<div class="grid grid-cols-1 md:grid-cols-2 gap-lg mb-lg">
+    <div class="bg-surface-container-lowest p-6 rounded-xl border border-slate-100 shadow-sm">
+        <h5 class="font-bold text-slate-900 mb-md border-b pb-2">معلومات الطالب</h5>
+        <div class="grid grid-cols-2 gap-y-4">
+            <div><label class="text-slate-500 text-xs">الاسم</label><div class="font-bold">@Model.StudentName</div></div>
+            <div><label class="text-slate-500 text-xs">الرقم الجامعي</label><div class="font-bold">@Model.StudentNumber</div></div>
+            <div><label class="text-slate-500 text-xs">التخصص</label><div class="font-bold">@Model.Specialty</div></div>
+            <div><label class="text-slate-500 text-xs">المعدل</label><div class="font-bold">@Model.GPA</div></div>
+            <div><label class="text-slate-500 text-xs">البريد الإلكتروني</label><div class="font-bold break-words">@Model.Email</div></div>
+            <div><label class="text-slate-500 text-xs">رقم الهاتف</label><div class="font-bold">@Model.PhoneNumber</div></div>
+        </div>
+    </div>
+
+    <div class="bg-surface-container-lowest p-6 rounded-xl border border-slate-100 shadow-sm">
+        <h5 class="font-bold text-slate-900 mb-md border-b pb-2">معلومات التدريب</h5>
+        <div class="grid grid-cols-2 gap-y-4">
+            <div><label class="text-slate-500 text-xs">الفرصة التدريبية</label><div class="font-bold">@Model.OpportunityTitle</div></div>
+            <div><label class="text-slate-500 text-xs">تاريخ البداية</label><div class="font-bold">@Model.StartDate.ToString("yyyy/MM/dd")</div></div>
+            <div><label class="text-slate-500 text-xs">تاريخ النهاية</label><div class="font-bold">@Model.EndDate.ToString("yyyy/MM/dd")</div></div>
+            <div><label class="text-slate-500 text-xs">المشرف المؤسسي</label><div class="font-bold">@Model.InstitutionSupervisor</div></div>
+            <div><label class="text-slate-500 text-xs">المشرف الجامعي</label><div class="font-bold">@Model.UniversitySupervisor</div></div>
+            <div><label class="text-slate-500 text-xs">الحالة</label><div class="font-bold text-green-600">نشط</div></div>
+        </div>
+    </div>
+</div>
+
+@* ===== Statistics Cards ===== *@
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-lg">
+    @{
+        var stats = new[] {
+            (Count: Model.ReportsCount, Label: "التقارير", Icon: "description", Color: "text-emerald-600"),
+            (Count: Model.EvaluationsCount, Label: "التقييمات", Icon: "star", Color: "text-amber-500"),
+            (Count: Model.AttendanceCount, Label: "أيام الحضور", Icon: "event_available", Color: "text-primary"),
+            (Count: Model.AbsentCount, Label: "أيام الغياب", Icon: "event_busy", Color: "text-red-500")
+        };
+    }
+    @foreach (var s in stats)
+    {
+        <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm text-center">
+            <span class="material-symbols-outlined text-3xl @s.Color">@s.Icon</span>
+            <h3 class="text-2xl font-bold mt-2">@s.Count</h3>
+            <p class="text-slate-500 text-sm">@s.Label</p>
+        </div>
+    }
+</div>
+
+@* ===== Quick Actions ===== *@
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-slate-100 shadow-sm mb-lg">
+    <h5 class="font-bold text-slate-900 mb-md">الإجراءات السريعة</h5>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <a asp-page="/Institution/Attendance/Create" asp-route-placementId="@Model.PlacementID" class="bg-green-600 text-white p-4 rounded-xl flex items-center justify-center gap-2 hover:bg-green-700 transition">
+            <span class="material-symbols-outlined">event_available</span> تسجيل حضور
+        </a>
+        <a asp-page="/Institution/Reports/Create" asp-route-placementId="@Model.PlacementID" class="bg-primary text-white p-4 rounded-xl flex items-center justify-center gap-2 hover:bg-blue-700 transition">
+            <span class="material-symbols-outlined">upload_file</span> رفع تقرير
+        </a>
+        <a asp-page="/Institution/Evaluations/Create" asp-route-placementId="@Model.PlacementID" class="bg-amber-500 text-white p-4 rounded-xl flex items-center justify-center gap-2 hover:bg-amber-600 transition">
+            <span class="material-symbols-outlined">star</span> تقييم الطالب
+        </a>
+    </div>
+</div>
+
+@* ===== Navigation Records ===== *@
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <a asp-page="/Institution/Reports" asp-route-studentId="@Model.StudentID" class="bg-white p-6 rounded-xl border border-slate-100 shadow-sm hover:border-primary transition flex items-center gap-4">
+        <span class="material-symbols-outlined text-4xl text-emerald-600">list_alt</span>
+        <div><h5 class="font-bold">عرض التقارير</h5><p class="text-slate-500 text-sm">مراجعة جميع تقارير الطالب</p></div>
+    </a>
+    <a asp-page="/Institution/Evaluations" asp-route-studentId="@Model.StudentID" class="bg-white p-6 rounded-xl border border-slate-100 shadow-sm hover:border-primary transition flex items-center gap-4">
+        <span class="material-symbols-outlined text-4xl text-emerald-600">star</span>
+        <div><h5 class="font-bold">عرض التقييمات</h5><p class="text-slate-500 text-sm">مراجعة جميع تقييمات الطالب</p></div>
+    </a>
+    <a asp-page="/Institution/Attendance" asp-route-studentId="@Model.StudentID" asp-route-placementId="@Model.PlacementID" class="bg-white p-6 rounded-xl border border-slate-100 shadow-sm hover:border-primary transition flex items-center gap-4">
+        <span class="material-symbols-outlined text-4xl text-primary">calendar_month</span>
+        <div><h5 class="font-bold">عرض الحضور</h5><p class="text-slate-500 text-sm">مراجعة سجلات الحضور والغياب</p></div>
+    </a>
+</div>

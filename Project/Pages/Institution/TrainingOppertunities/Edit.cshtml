@@ -1,0 +1,142 @@
+﻿@page "{id:int}"
+@model Project.Pages.Institution.AvailableOpportunities.EditModel
+
+@{
+    ViewData["Title"] = "تعديل فرصة تدريبية";
+}
+
+<form method="post">
+    <input type="hidden" asp-for="OpportunityId" />
+
+    @* ===== Hero Section ===== *@
+    <section class="mb-lg md:mb-xl relative rounded-xl md:rounded-2xl overflow-hidden bg-primary-container p-6 md:p-xl text-on-primary">
+        <div class="relative z-10 max-w-2xl text-right">
+            <h1 class="font-h1 text-2xl md:text-h1 mb-md">تعديل فرصة تدريبية</h1>
+            <p class="font-body-lg text-sm md:text-body-lg opacity-90 mb-0">
+                تعديل بيانات الفرصة والتخصصات والمهارات المطلوبة.
+            </p>
+        </div>
+        <div class="absolute -bottom-10 -left-10 w-48 h-48 md:w-64 md:h-64 bg-white/10 rounded-full blur-3xl"></div>
+        <div class="absolute -top-20 -left-20 w-64 h-64 md:w-80 md:h-80 bg-secondary-fixed-dim/20 rounded-full blur-3xl"></div>
+    </section>
+
+    @* ===== Info Cards ===== *@
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-lg">
+        <div class="bg-surface-container-lowest p-4 rounded-xl border border-slate-100 shadow-sm">
+            <label class="text-slate-500 text-xs font-label-caps mb-1 block">رقم الفرصة</label>
+            <div class="font-bold text-slate-900">#@Model.OpportunityId</div>
+        </div>
+        <div class="bg-surface-container-lowest p-4 rounded-xl border border-slate-100 shadow-sm">
+            <label class="text-slate-500 text-xs font-label-caps mb-1 block">المؤسسة</label>
+            <div class="font-bold text-slate-900">@Model.CurrentInstitution?.Name</div>
+        </div>
+        <div class="bg-surface-container-lowest p-4 rounded-xl border border-slate-100 shadow-sm">
+            <label class="text-slate-500 text-xs font-label-caps mb-1 block">تاريخ الإنشاء</label>
+            <div class="font-bold text-slate-900">@Model.CreatedAt.ToString("yyyy/MM/dd")</div>
+        </div>
+    </div>
+
+    @* ===== Form Sections ===== *@
+    <div class="space-y-lg">
+
+        @* Details Section *@
+        <div class="bg-surface-container-lowest rounded-xl border border-slate-100 p-6">
+            <h5 class="font-h3 text-slate-900 mb-md border-b pb-2">تفاصيل الفرصة</h5>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+                <div class="md:col-span-1">
+                    <label asp-for="Input.Title" class="block text-sm font-bold text-slate-700 mb-2"></label>
+                    <input asp-for="Input.Title" class="w-full p-3 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20" />
+                    <span asp-validation-for="Input.Title" class="text-red-500 text-xs mt-1"></span>
+                </div>
+                <div class="md:col-span-1">
+                    <label asp-for="Input.Capacity" class="block text-sm font-bold text-slate-700 mb-2"></label>
+                    <input asp-for="Input.Capacity" type="number" class="w-full p-3 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20" />
+                </div>
+                <div class="md:col-span-2">
+                    <label asp-for="Input.Location" class="block text-sm font-bold text-slate-700 mb-2"></label>
+                    <input asp-for="Input.Location" class="w-full p-3 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20" />
+                </div>
+                <div class="md:col-span-2">
+                    <label asp-for="Input.Description" class="block text-sm font-bold text-slate-700 mb-2"></label>
+                    <textarea asp-for="Input.Description" rows="5" class="w-full p-3 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20"></textarea>
+                </div>
+            </div>
+        </div>
+
+        @* Specialties & Skills Section *@
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-lg">
+            <div class="bg-surface-container-lowest rounded-xl border border-slate-100 p-6">
+                <h5 class="font-h3 text-slate-900 mb-md">التخصصات المستهدفة</h5>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-sm">
+                    @if(Model.Specialties.Any()){
+                        @foreach (var item in Model.Specialties)
+                        {
+                        <label class="flex items-center gap-2 p-2 bg-slate-50 rounded-lg cursor-pointer">
+                            <input type="checkbox" name="Input.SelectedSpecialties" value="@item.Value" class="rounded text-primary" checked="@(Model.Input.SelectedSpecialties.Contains(int.Parse(item.Value)))" />
+                            <span class="text-sm text-slate-700">@item.Text</span>
+                        </label>
+                        }
+                    }
+                    
+                </div>
+            </div>
+
+            <div class="bg-surface-container-lowest rounded-xl border border-slate-100 p-6">
+                <h5 class="font-h3 text-slate-900 mb-md">المهارات المطلوبة</h5>
+                <div class="space-y-sm">
+                    @foreach (var skill in Model.Skills)
+                    {
+                        bool required = Model.Input.SkillTypes.ContainsKey(skill.SkillID) && Model.Input.SkillTypes[skill.SkillID];
+                        <div class="flex items-center justify-between p-2 bg-slate-50 rounded-lg">
+                            <label class="flex items-center gap-2">
+                                <input type="checkbox" name="Input.SelectedSkills" value="@skill.SkillID" class="rounded text-primary" checked="@Model.Input.SelectedSkills.Contains(skill.SkillID)" />
+                                <span class="text-sm font-bold text-slate-700">@skill.Name</span>
+                            </label>
+                            <select name="Input.SkillTypes[@skill.SkillID]" class="bg-white text-xs border border-slate-200 rounded-lg py-1 px-2">
+                                <option value="true" selected="@required">أساسية</option>
+                                <option value="false" selected="@(!required)">مفضلة</option>
+                            </select>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        @* Period & Status *@
+        <div class="bg-surface-container-lowest rounded-xl border border-slate-100 p-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-md">
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">فترة التدريب</label>
+                    <select asp-for="Input.TermId" asp-items="Model.Terms" class="w-full p-3 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20"></select>
+                </div>
+                <div>
+                    <label asp-for="Input.StartDate" class="block text-sm font-bold text-slate-700 mb-2"></label>
+                    <input asp-for="Input.StartDate" type="date" class="w-full p-3 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20" />
+                </div>
+                <div>
+                    <label asp-for="Input.EndDate" class="block text-sm font-bold text-slate-700 mb-2"></label>
+                    <input asp-for="Input.EndDate" type="date" class="w-full p-3 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20" />
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">حالة الفرصة</label>
+                    <select asp-for="Input.Status" class="w-full p-3 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20">
+                        @foreach (var item in Html.GetEnumSelectList<ViewModels.AddTrainingOpportunityVM.Opportunity>())
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        @* Actions *@
+        <div class="flex gap-3 pb-lg">
+            <button type="submit" class="bg-primary text-white font-bold px-8 py-3 rounded-xl hover:bg-primary/90 transition-colors">حفظ التعديلات</button>
+            <a asp-page="/Institution/AvailableOpportunities" class="bg-white border border-slate-200 text-slate-600 font-bold px-8 py-3 rounded-xl hover:bg-slate-50 transition-colors">إلغاء</a>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

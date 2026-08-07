@@ -33,30 +33,35 @@ namespace Project.Models
         [MaxLength(1000, ErrorMessage = "Notes can't be more than 1000 characters")]
         public string? Notes { get; set; }
         //DeptID Fk
-        [ForeignKey(nameof(DepartmentID))]
+        
         public int? DepartmentID { get; set; }
+        [ForeignKey(nameof(DepartmentID))]
         public Department? Department { get; set; }
         //UniID FK
         [Required(ErrorMessage="University is required")]
-        [ForeignKey(nameof(UniversityID))]
+        
         public int UniversityID { get; set; }
-        public University University { get; set; }=new University();
+        [ForeignKey(nameof(UniversityID))]
+        public University University { get; set; }=null!;
         //TermID Fk
         [Required(ErrorMessage = "Training term is required")]
-        [ForeignKey(nameof(TermID))]
+        
         public int TermID { get; set; }
-        public TrainingTerm TrainingTerm { get; set; } = new TrainingTerm();
+        [ForeignKey(nameof(TermID))]
+        public TrainingTerm TrainingTerm { get; set; } = null!;
         //Only one of those can be set one should be null
+        
+        public string? UniversityAdminID { get; set; } = string.Empty;
         [ForeignKey(nameof(UniversityAdminID))]
-        public string UniversityAdminID { get; set; } = string.Empty;
-        public AspNetUser UniversityAdmin { get; set; } = new AspNetUser();
+        public AspNetUser? UniversityAdmin { get; set; } = null!;
+        public string? DepartmentHeadID { get; set; } = string.Empty;
         [ForeignKey(nameof(DepartmentHeadID))]
-        public string DepartmentHeadID { get; set; } = string.Empty;
-        public AspNetUser DepartmentHead { get; set; } = new AspNetUser();
+        public AspNetUser? DepartmentHead { get; set; } = null!;
 
-        public ICollection<OpportunityRequestInstitution> OpportunityRequests { get; set; } = new HashSet<OpportunityRequestInstitution>();
-        public ICollection<RequestSpecialty> Specialties { get; set; } = new HashSet<RequestSpecialty>();   
-        public ICollection<RequestSkill> Skills { get; set; }= new HashSet<RequestSkill>();
-        public ICollection<TrainingOpportunity> Opportunities { get; set; } = new HashSet<TrainingOpportunity>();
+        public ICollection<OpportunityRequestInstitution> OpportunityRequests { get; set; } = new List<OpportunityRequestInstitution>();
+        public ICollection<RequestSpecialty> Specialties { get; set; } = new List<RequestSpecialty>();   
+        public ICollection<RequestSkill> Skills { get; set; }= new List<RequestSkill>();
+        public ICollection<TrainingOpportunity> Opportunities { get; set; } = new List<TrainingOpportunity>();
+
     }
 }

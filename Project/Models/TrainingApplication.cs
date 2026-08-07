@@ -9,14 +9,16 @@ namespace Project.Models
         public int ApplicationID { get; set; }
         //OpportunityID Fk
         [Required(ErrorMessage= "Training opportunity is required")]
-        [ForeignKey(nameof(OpportunityID))]
+        
         public int OpportunityID { get; set; }
-        public TrainingOpportunity TrainingOpportunity { get; set; }= new TrainingOpportunity();
+        [ForeignKey(nameof(OpportunityID))]
+        public TrainingOpportunity TrainingOpportunity { get; set; }= null!;
         //StudentID FK
         [Required(ErrorMessage = "Student is required")]
-        [ForeignKey(nameof(StudentID))]
+        
         public int StudentID { get; set; }
-        public Student Student { get; set; }=new Student();
+        [ForeignKey(nameof(StudentID))]
+        public Student Student { get; set; }=null!;
 
         public DateTime AppliedAt { get; set; } = DateTime.Now;
         [MaxLength(1000, ErrorMessage = "Notes can't be more than 1000 characters")]
@@ -25,14 +27,29 @@ namespace Project.Models
         public ApplicationStatus Status { get; set; } = ApplicationStatus.Submitted ;
         public enum ApplicationStatus
         {
-            Submitted, DepartmentApproved, DepartmentRejected, UniversityApproved, UniversityRejected,
-            InstitutionRejected, Placed, Withdrawn
+            [Display(Name = "قيد مراجعة رئيس القسم")]
+            Submitted,
+            [Display(Name = "قيد مراجعة الجامعة")]
+            DepartmentApproved,
+            [Display(Name = "تم الرفض  من رئيس القسم")]
+            DepartmentRejected,
+            [Display(Name = "تمت الموافقة من الجامعة")]
+            UniversityApproved,
+            [Display(Name = "تم الرفض من الجامعة")]
+            UniversityRejected,
+            [Display(Name = "تم الرفض من المؤسسة")]
+            InstitutionRejected,
+            [Display(Name = "تم القبول")]
+            Placed,
+            [Display(Name = "تم سحب الطلب ")]
+            Withdrawn
         }
         [Column(TypeName = "nvarchar(50)")]
         public Decision DepartmentDecision { get; set; } = Decision.Pending ;
         //
-        [ForeignKey(nameof(DepartmentHeadID))]
+        
         public string? DepartmentHeadID { get; set; }
+        [ForeignKey(nameof(DepartmentHeadID))]
         public AspNetUser? DepartmentHead { get; set; }
         //
   
@@ -42,8 +59,9 @@ namespace Project.Models
         [Column(TypeName = "nvarchar(50)")]
         public Decision UniversityAdminDecision { get; set; } = Decision.Pending ;
         //
-        [ForeignKey(nameof(UniversityAdminID))]
+        
         public string? UniversityAdminID { get; set; }
+        [ForeignKey(nameof(UniversityAdminID))]
         public AspNetUser? UniversityAdmin { get; set; }
         //
         public DateTime? UniversityAdminReviewedAt { get; set; }
@@ -52,8 +70,9 @@ namespace Project.Models
         [Column(TypeName = "nvarchar(50)")]
         public Decision InstitutionDecision { get; set; } =  Decision.Pending ;
         //
-        [ForeignKey(nameof(InstitutionOfficerID))]
+       
         public string? InstitutionOfficerID { get; set; }
+        [ForeignKey(nameof(InstitutionOfficerID))]
         public AspNetUser? InstitutionOfficer { get; set; }
         //
         public DateTime? InstitutionReviewedAt { get; set; }

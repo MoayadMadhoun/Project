@@ -1,0 +1,110 @@
+﻿@page "{id:int}"
+@model Project.Pages.Student.Applications.CancelModel
+@{
+    ViewData["Title"] = "الغاء التقديم";
+}
+
+<div class="card shadow-sm border-0 rounded-4">
+
+    <div class="card-body">
+
+        <h4 class="fw-bold">
+
+            @Model.Application.TrainingOpportunity.Title
+
+        </h4>
+
+        <hr>
+
+        <div class="row">
+
+            <div class="col-md-6">
+
+                <strong>المؤسسة</strong>
+
+                <br>
+
+                @Model.Application.TrainingOpportunity.TrainingInstitution.Name
+
+            </div>
+
+            <div class="col-md-6">
+
+                <strong>الموقع</strong>
+
+                <br>
+
+                @Model.Application.TrainingOpportunity.Location
+
+            </div>
+
+            <div class="col-md-6 mt-3">
+
+                <strong>تاريخ البداية</strong>
+
+                <br>
+
+                @Model.Application.TrainingOpportunity.StartDate.ToString("dd/MM/yyyy")
+
+            </div>
+
+            <div class="col-md-6 mt-3">
+
+                <strong>تاريخ النهاية</strong>
+
+                <br>
+
+                @Model.Application.TrainingOpportunity.EndDate.ToString("dd/MM/yyyy")
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<form method="post">
+   
+<div class="form-check mt-4 mb-3">
+
+    <input class="form-check-input"
+           type="checkbox"
+           id="confirmCancel">
+
+    <label class="form-check-label"
+           for="confirmCancel">
+
+        أؤكد رغبتي في إلغاء التقدي
+        م على هذه الفرصة.
+    </label>
+    <span class="text-danger" asp-validation-for="@Model.IsAgree"></span>
+</div>
+
+<button asp-for="@Model.IsAgree"  id="btnCancel"
+        disabled
+        class="btn btn-danger btn-lg">
+
+    <i class="bi bi-trash3-fill"></i>
+
+    إلغاء التقديم
+
+</button>
+
+<a asp-page="MyApplications"
+   class="btn btn-light btn-lg">
+
+    رجوع
+
+</a>
+</form>
+<script>
+    const check = document.getElementById("confirmCancel");
+
+    const btn = document.getElementById("btnCancel");
+
+    check.addEventListener("change", function () {
+
+    btn.disabled = !this.checked;
+
+    });
+</script>
