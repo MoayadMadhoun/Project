@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Project.Data;
 using Project.Models;
+using Project.Models.Enums;
 using Project.Pages.Institution.ViewModels;
 using Project.Services;
 
@@ -14,15 +15,18 @@ public class CreateModel : PageModel
     private readonly ApplicationDbContext _context;
     private readonly UserManager<AspNetUser> _userManager;
     private readonly IUploadFils _uploadFile;
+    private readonly INotificationService _notificationService;
 
     public CreateModel(
         ApplicationDbContext context,
         UserManager<AspNetUser> userManager,
-        [FromKeyedServices("file")] IUploadFils uploadFile)
+        [FromKeyedServices("file")] IUploadFils uploadFile,
+        INotificationService notificationService)
     {
         _context = context;
         _userManager = userManager;
         _uploadFile = uploadFile;
+        _notificationService = notificationService;
     }
 
     [BindProperty]
@@ -107,6 +111,21 @@ public class CreateModel : PageModel
         _context.StudentEvaluations.Add(evaluation);
 
         await _context.SaveChangesAsync();
+
+        var studentUserId = await _context.Students
+            .Where(s => s.StudentID == placement.StudentID)
+            .Select(s => s.UserID)
+            .SingleAsync();
+        await _notificationService.NotifyStudentAsync(
+            studentUserId,
+            "تم إضافة تقييم جديد",
+            "تم إضافة تقييم جديد لأدائك في التدريب الميداني.",
+            NotificationType.Evaluation,
+            "/Student/Evaluations",
+            "fa-solid fa-star",
+            user?.Id,
+            evaluation.EvaluationID.ToString(),
+            nameof(StudentEvaluation));
 
         TempData["Success"] = "تم حفظ التقييم بنجاح";
 

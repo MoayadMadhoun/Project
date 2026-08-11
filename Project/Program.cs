@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Project.Data;
+using Project.Hubs;
 using Project.Models;
 using Project.Options;
 using Project.Repositories;
@@ -54,9 +55,20 @@ namespace Project
             builder.Services.AddScoped<CreateUserService>();
             builder.Services.AddScoped<TrainingRequestService>();
             builder.Services.AddScoped<TrainingTermService>();
+            builder.Services.AddScoped<INotificationService, NotificationService>();
+
+            builder.Services.AddSignalR();
+            builder.Services.AddControllers();
 
             builder.Services.AddKeyedScoped<IUploadFils, UploadDocxFile >("file");
             builder.Services.AddRazorPages();
+
+            // Configure Google authentication OAuth 2.0
+            builder.Services.AddAuthentication().AddGoogle(googleOptions =>
+            {
+                googleOptions.ClientId = builder.Configuration.GetSection("Authentication:Google:ClientId").Value!;
+                googleOptions.ClientSecret = builder.Configuration.GetSection("Authentication:Google:ClientSecret").Value!;
+            });
 
             var app = builder.Build();
 
@@ -82,6 +94,8 @@ namespace Project
             app.MapStaticAssets();
             app.MapRazorPages()
                .WithStaticAssets();
+            app.MapControllers();
+            app.MapHub<NotificationHub>("/hubs/notification");
 
             app.Run();
         }

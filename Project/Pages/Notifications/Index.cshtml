@@ -1,0 +1,231 @@
+@page "/Notifications"
+@model Project.Pages.Notifications.IndexModel
+@using Project.Models.Enums
+@{
+    ViewData["Title"] = "مركز التنبيهات والإشعارات";
+    ViewData["ActivePage"] = "Notifications";
+}
+
+<div class="max-w-6xl mx-auto space-y-6">
+    @* Page Header *@
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <div class="flex items-center gap-4">
+            <div class="w-14 h-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center">
+                <span class="material-symbols-outlined text-3xl">notifications_active</span>
+            </div>
+            <div>
+                <h1 class="text-2xl font-extrabold text-slate-900 dark:text-white">مركز التنبيهات والإشعارات</h1>
+                <p class="text-xs text-slate-500 mt-1">متابعة كافة المستجدات والطلبات والتقييمات الميدانية فور وقوعها</p>
+            </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3">
+            <button type="button" 
+                    onclick="SpacearaNotification.markAllAsRead(); setTimeout(() => location.reload(), 500);"
+                    class="px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold text-xs hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors flex items-center gap-2">
+                <span class="material-symbols-outlined text-base text-primary">done_all</span>
+                تحديد الكل كمقروء
+            </button>
+
+            <button type="button" 
+                    onclick="SpacearaNotificationPage.deleteAllRead()"
+                    class="px-4 py-2.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 font-bold text-xs hover:bg-rose-100 transition-colors flex items-center gap-2">
+                <span class="material-symbols-outlined text-base">delete_sweep</span>
+                حذف المقروء فقط
+            </button>
+        </div>
+    </div>
+
+    @* Search & Filter Controls *@
+    <form method="get" class="bg-white dark:bg-slate-900 p-5 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            @* Search *@
+            <div class="relative md:col-span-1">
+                <span class="material-symbols-outlined absolute right-3 top-3 text-slate-400">search</span>
+                <input type="text" 
+                       asp-for="Filter.SearchTerm"
+                       placeholder="البحث في العنوان أو النص..." 
+                       class="w-full pr-10 pl-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs focus:ring-2 focus:ring-primary/20" />
+            </div>
+
+            @* Status Filter *@
+            <div>
+                <select asp-for="Filter.IsRead" class="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs">
+                    <option value="">جميع الحالات (مقرؤة وغير مقروءة)</option>
+                    <option value="false">غير مقروء فقط</option>
+                    <option value="true">المقروء فقط</option>
+                </select>
+            </div>
+
+            @* Type Filter *@
+            <div>
+                <select asp-for="Filter.Type" class="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs">
+                    <option value="">جميع الأنواع والتصنيفات</option>
+                    @foreach (var typeVal in Enum.GetValues<NotificationType>())
+                    {
+                        <option value="@typeVal">@typeVal</option>
+                    }
+                </select>
+            </div>
+
+            @* Date Filter *@
+            <div>
+                <select asp-for="Filter.DateFilter" class="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs">
+                    <option value="all">كل الأوقات</option>
+                    <option value="today">اليوم</option>
+                    <option value="week">هذا الأسبوع</option>
+                    <option value="month">هذا الشهر</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="flex justify-end gap-2 pt-2">
+            <a asp-page="/Notifications/Index" class="px-4 py-2 rounded-xl text-slate-500 hover:bg-slate-100 text-xs font-bold">إعادة ضبط</a>
+            <button type="submit" class="px-6 py-2 rounded-xl bg-primary text-white font-bold text-xs hover:bg-teal-700 transition-colors">تطبيق الفلترة</button>
+        </div>
+    </form>
+
+    @* Bulk Operations Toolbar *@
+    <div class="flex items-center justify-between bg-slate-100 dark:bg-slate-800 px-5 py-3 rounded-2xl text-xs">
+        <div class="flex items-center gap-3">
+            <input type="checkbox" id="select-all-checkbox" onclick="SpacearaNotificationPage.toggleSelectAll(this)" class="w-4 h-4 text-primary rounded border-slate-300" />
+            <label for="select-all-checkbox" class="font-bold text-slate-700 dark:text-slate-300">تحديد الكل في هذه الصفحة</label>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <button type="button" onclick="SpacearaNotificationPage.deleteSelected()" class="text-rose-600 hover:text-rose-700 font-bold flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">delete</span>
+                حذف المحدد
+            </button>
+        </div>
+    </div>
+
+    @* Notifications List *@
+    <div id="page-notifications-container" class="space-y-4">
+        @if (Model.PagedResult.Items.Count == 0)
+        {
+            <div class="bg-white dark:bg-slate-900 p-12 text-center rounded-3xl border border-slate-200 dark:border-slate-800">
+                <div class="w-20 h-20 bg-slate-100 dark:bg-slate-800 rounded-3xl flex items-center justify-center mx-auto mb-4 text-slate-400">
+                    <span class="material-symbols-outlined text-4xl">notifications_paused</span>
+                </div>
+                <h3 class="text-base font-bold text-slate-800 dark:text-slate-200">لا توجد تنبيهات مطابقة لخيارات الفلترة</h3>
+                <p class="text-xs text-slate-400 mt-1">جرّب تغيير خيارات الفلترة أو إعادة ضبط شروط البحث.</p>
+            </div>
+        }
+        else
+        {
+            @foreach (var notif in Model.PagedResult.Items)
+            {
+                <partial name="_NotificationItem" model="notif" />
+            }
+        }
+    </div>
+
+    @* Pagination *@
+    @if (Model.PagedResult.TotalPages > 1)
+    {
+        <div class="flex items-center justify-between bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800">
+            <span class="text-xs text-slate-500">
+                عرض الصفحات @Model.PagedResult.Page من أصل @Model.PagedResult.TotalPages (إجمالي @Model.PagedResult.TotalCount تنبيه)
+            </span>
+
+            <div class="flex items-center gap-2">
+                @if (Model.PagedResult.HasPreviousPage)
+                {
+                    <a asp-page="/Notifications/Index" 
+                       asp-route-Page="@(Model.PagedResult.Page - 1)" 
+                       asp-route-SearchTerm="@Model.Filter.SearchTerm"
+                       asp-route-IsRead="@Model.Filter.IsRead"
+                       asp-route-Type="@Model.Filter.Type"
+                       asp-route-DateFilter="@Model.Filter.DateFilter"
+                       class="px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-bold hover:bg-slate-50">السابق</a>
+                }
+
+                @for (int i = 1; i <= Model.PagedResult.TotalPages; i++)
+                {
+                    <a asp-page="/Notifications/Index" 
+                       asp-route-Page="@i"
+                       asp-route-SearchTerm="@Model.Filter.SearchTerm"
+                       asp-route-IsRead="@Model.Filter.IsRead"
+                       asp-route-Type="@Model.Filter.Type"
+                       asp-route-DateFilter="@Model.Filter.DateFilter"
+                       class="px-3 py-1.5 rounded-xl text-xs font-bold @(i == Model.PagedResult.Page ? "bg-primary text-white" : "border border-slate-200 hover:bg-slate-50")">@i</a>
+                }
+
+                @if (Model.PagedResult.HasNextPage)
+                {
+                    <a asp-page="/Notifications/Index" 
+                       asp-route-Page="@(Model.PagedResult.Page + 1)"
+                       asp-route-SearchTerm="@Model.Filter.SearchTerm"
+                       asp-route-IsRead="@Model.Filter.IsRead"
+                       asp-route-Type="@Model.Filter.Type"
+                       asp-route-DateFilter="@Model.Filter.DateFilter"
+                       class="px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-bold hover:bg-slate-50">التالي</a>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        window.SpacearaNotificationPage = {
+            onNewNotification: function(notif) {
+                // If on page 1, reload or prepend item dynamically
+                location.reload();
+            },
+            toggleSelectAll: function(source) {
+                const checkboxes = document.querySelectorAll('.notif-select-checkbox');
+                checkboxes.forEach(cb => cb.checked = source.checked);
+            },
+            markAsRead: function(id) {
+                SpacearaNotification.markAsRead(id);
+                const item = document.getElementById(`page-notif-item-${id}`);
+                if (item) {
+                    item.classList.remove('bg-teal-50/20', 'border-l-4', 'border-l-primary');
+                }
+            },
+            deleteSingle: function(id) {
+                if (confirm('هل أنت تأكد من رغبتك في حذف هذا التنبيه؟')) {
+                    SpacearaNotification.deleteNotification(id);
+                    const item = document.getElementById(`page-notif-item-${id}`);
+                    if (item) item.remove();
+                }
+            },
+            deleteSelected: function() {
+                const selected = Array.from(document.querySelectorAll('.notif-select-checkbox:checked'))
+                    .map(cb => parseInt(cb.value, 10));
+
+                if (selected.length === 0) {
+                    alert('يرجى تحديد تنبيه واحد على الأقل للحذف.');
+                    return;
+                }
+
+                if (confirm(`هل أنت تأكد من حذف ${selected.length} تنبيهات محددة؟`)) {
+                    fetch('/api/notifications/delete-selected', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(selected)
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            location.reload();
+                        }
+                    });
+                }
+            },
+            deleteAllRead: function() {
+                if (confirm('هل أنت تأكد من حذف كافة التنبيهات المقروءة؟')) {
+                    fetch('/api/notifications/delete-all-read', { method: 'POST' })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.success) {
+                                location.reload();
+                            }
+                        });
+                }
+            }
+        };
+    </script>
+}

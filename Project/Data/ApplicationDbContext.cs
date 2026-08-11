@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Project.Models;
@@ -33,6 +33,7 @@ public class ApplicationDbContext : IdentityDbContext<AspNetUser>
     public DbSet<TrainingPlacement> TrainingPlacements { get; set; }
     public DbSet<TrainingTerm> TrainingTerms { get; set; }
     public DbSet<University> Universities { get; set; }
+    public DbSet<Notification> Notifications { get; set; }
 
     public DbSet<EmailVerificationCode> EmailVerificationCodes { get; set; }
     protected override void OnModelCreating(ModelBuilder builder)
@@ -180,6 +181,32 @@ public class ApplicationDbContext : IdentityDbContext<AspNetUser>
             .Property(s => s.Status)
             .HasConversion<string>()
             .HasMaxLength(50);
+
+        builder.Entity<Notification>()
+            .Property(n => n.Type)
+            .HasConversion<string>()
+            .HasMaxLength(50);
+
+        builder.Entity<Notification>()
+            .HasIndex(n => n.UserId);
+
+        builder.Entity<Notification>()
+            .HasIndex(n => n.IsRead);
+
+        builder.Entity<Notification>()
+            .HasIndex(n => n.CreatedAt);
+
+        builder.Entity<Notification>()
+            .HasOne(n => n.User)
+            .WithMany()
+            .HasForeignKey(n => n.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<Notification>()
+            .HasOne(n => n.Sender)
+            .WithMany()
+            .HasForeignKey(n => n.SenderId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         // =========================
         // DECIMAL PRECISION

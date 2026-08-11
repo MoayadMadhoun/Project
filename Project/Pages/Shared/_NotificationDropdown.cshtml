@@ -1,0 +1,86 @@
+@* ===== Modern Real-Time Notification Dropdown ===== *@
+<div class="relative inline-block text-right" id="notif-dropdown-wrapper">
+    @* Bell Trigger Button *@
+    <button type="button" 
+            id="notif-bell-btn"
+            class="relative p-2.5 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all duration-200 focus:outline-none"
+            aria-expanded="false"
+            data-bs-toggle="dropdown"
+            onclick="SpacearaNotification.fetchRecentNotifications()">
+        
+        <span id="notif-bell-icon" class="material-symbols-outlined text-2xl">notifications</span>
+        
+        @* Unread Count Badge *@
+        <span id="notif-unread-badge" 
+              class="hidden absolute -top-1 -right-1 flex items-center justify-center min-w-[20px] h-[20px] px-1 text-[11px] font-bold text-white bg-rose-500 rounded-full border-2 border-white dark:border-slate-900 shadow-sm">
+            0
+        </span>
+    </button>
+
+    @* Dropdown Menu Glassmorphism Container *@
+    <div class="dropdown-menu dropdown-menu-end notification-dropdown-menu p-0 mt-2 shadow-2xl" 
+         aria-labelledby="notif-bell-btn">
+        
+        @* Dropdown Header *@
+        <div class="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/70 dark:bg-slate-900/70">
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary text-xl">notifications_active</span>
+                <h3 class="text-sm font-bold text-slate-900 dark:text-white">التنبيهات والإشعارات</h3>
+                <span id="notif-header-badge" class="px-2 py-0.5 text-xs font-bold text-primary bg-primary/10 rounded-full">
+                    <span id="notif-unread-count-text">0</span> غير مقروء
+                </span>
+            </div>
+            
+            <button type="button" 
+                    onclick="SpacearaNotification.markAllAsRead()"
+                    class="text-xs font-bold text-primary hover:text-teal-700 transition-colors flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">done_all</span>
+                تحديد الكل كمقروء
+            </button>
+        </div>
+
+        @* Dropdown Scrollable Body *@
+        <div class="notification-scroll-area relative">
+            @* Skeleton Loader *@
+            <div id="notif-skeleton-loader" class="p-4 space-y-3 hidden">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 skeleton-box rounded-xl"></div>
+                    <div class="flex-1 space-y-2">
+                        <div class="h-3.5 skeleton-box w-3/4"></div>
+                        <div class="h-2.5 skeleton-box w-1/2"></div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 skeleton-box rounded-xl"></div>
+                    <div class="flex-1 space-y-2">
+                        <div class="h-3.5 skeleton-box w-2/3"></div>
+                        <div class="h-2.5 skeleton-box w-1/3"></div>
+                    </div>
+                </div>
+            </div>
+
+            @* Notifications List Container *@
+            <div id="notif-dropdown-list" class="divide-y divide-slate-100 dark:divide-slate-800">
+                @* Injected via JS *@
+            </div>
+
+            @* Empty State Illustration *@
+            <div id="notif-empty-state" class="hidden p-8 text-center">
+                <div class="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-2xl flex items-center justify-center mx-auto mb-3 text-slate-400">
+                    <span class="material-symbols-outlined text-3xl">notifications_off</span>
+                </div>
+                <h4 class="text-xs font-bold text-slate-700 dark:text-slate-300">لا توجد تنبيهات جديدة</h4>
+                <p class="text-[11px] text-slate-400 mt-1">ستظهر جميع التنبيهات والتحديثات الخاصة بك هنا فور وصولها.</p>
+            </div>
+        </div>
+
+        @* Dropdown Footer *@
+        <div class="p-3 border-t border-slate-100 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/70 text-center">
+            <a asp-page="/Notifications/Index" 
+               class="inline-flex items-center justify-center gap-1 text-xs font-bold text-primary hover:text-teal-700 transition-colors w-full py-1">
+                <span>عرض كافة التنبيهات</span>
+                <span class="material-symbols-outlined text-sm">arrow_left</span>
+            </a>
+        </div>
+    </div>
+</div>

@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Project.Data;
 using Project.Models;
 using Project.Repositories;
+using Project.Models.Enums;
+using Project.Services;
 using System.Security.Claims;
 
 namespace Project.Pages.Student.Applications
@@ -13,11 +15,13 @@ namespace Project.Pages.Student.Applications
         private readonly StudentsRepository studentsRepository;
 
         private readonly ApplicationDbContext _contex;
+        private readonly INotificationService _notificationService;
 
-        public CreateModel(StudentsRepository StudentsRepository, ApplicationDbContext contex)
+        public CreateModel(StudentsRepository StudentsRepository, ApplicationDbContext contex, INotificationService notificationService)
         {
             studentsRepository = StudentsRepository;
             _contex = contex;
+            _notificationService = notificationService;
         }
 
         [BindProperty]
@@ -101,6 +105,17 @@ namespace Project.Pages.Student.Applications
             if (!string.IsNullOrWhiteSpace(studentNotes)) newTrainingApplication.StudentNotes = studentNotes;
 
             await studentsRepository.AddTrainingApplication(newTrainingApplication);
+
+            await _notificationService.NotifyDepartmentHeadsAsync(
+                student.DepartmentID,
+                "طلب تدريب جديد",
+                $"قام الطالب {student.Name} بتقديم طلب تدريب جديد على فرصة {opportunity.Title}. يرجى مراجعة الطلب.",
+                NotificationType.Application,
+                "/University/DepartmentHeadTrainingRequests",
+                "fa-solid fa-file-circle-plus",
+                student.UserID,
+                newTrainingApplication.ApplicationID.ToString(),
+                nameof(TrainingApplication));
 
             return RedirectToPage("/Student/AvaliabelOpportunities");
 

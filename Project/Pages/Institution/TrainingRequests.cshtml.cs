@@ -6,6 +6,8 @@ using Project.Data;
 using Project.Extensions;
 using Project.Models;
 using Project.Repository;
+using Project.Models.Enums;
+using Project.Services;
 
 namespace Project.Pages.Institution
 {
@@ -14,6 +16,7 @@ namespace Project.Pages.Institution
         private readonly TrainingInstitutionRepository _institutionRepo;
         private readonly UserManager<AspNetUser> _userManager;
         private readonly ApplicationDbContext _dbContext;
+        private readonly INotificationService _notificationService;
 
         [BindProperty(SupportsGet = true)]
         public int PageIndex { get; set; } = 1;
@@ -34,11 +37,12 @@ namespace Project.Pages.Institution
         [BindProperty(SupportsGet = true)]
         public int RejectApplicationId { get; set; }
 
-        public TrainingRequestsModel(TrainingInstitutionRepository institutionRepo, UserManager<AspNetUser> userManager, ApplicationDbContext dbContext)
+        public TrainingRequestsModel(TrainingInstitutionRepository institutionRepo, UserManager<AspNetUser> userManager, ApplicationDbContext dbContext, INotificationService notificationService)
         {
             _institutionRepo = institutionRepo;
             _userManager = userManager;
             _dbContext = dbContext;
+            _notificationService = notificationService;
         }
         public async Task<IActionResult> OnGet()
         {
@@ -78,7 +82,9 @@ namespace Project.Pages.Institution
                 if (ApproveApplicationId > 0)
                 {
                     var currentApplication = await _dbContext.TrainingApplications
+                                 .Include(a => a.Student)
                                  .Include(a => a.TrainingOpportunity)
+                                    .ThenInclude(o => o.TrainingInstitution)
                                  .FirstOrDefaultAsync(a => a.ApplicationID == ApproveApplicationId);
 
 
@@ -90,7 +96,7 @@ namespace Project.Pages.Institution
 
                         currentApplication.InstitutionOfficerID = user.Id;
 
-                        currentApplication.InstitutionReviewedAt = DateTime.Now;
+                        currentApplication.InstitutionReviewedAt = DateTime.UtcNow;
 
                         var exists = await _dbContext.TrainingPlacements
                              .AnyAsync(p => p.ApplicationID == currentApplication.ApplicationID);
@@ -113,7 +119,35 @@ namespace Project.Pages.Institution
                         }
 
                         _dbContext.TrainingApplications.Update(currentApplication);
-                        _dbContext.SaveChanges();
+                        await _dbContext.SaveChangesAsync();
+
+                        await _notificationService.NotifyStudentAsync(
+                            currentApplication.Student.UserID,
+                            "تم قبولك في التدريب",
+                            $"تم قبول طلب التدريب الخاص بك لدى مؤسسة {currentApplication.TrainingOpportunity.TrainingInstitution.Name}.",
+                            NotificationType.Success,
+                            "/Student/MyApplications",
+                            "fa-solid fa-circle-check",
+                            user.Id,
+                            currentApplication.ApplicationID.ToString(),
+                            nameof(TrainingApplication));
+
+                        if (!exists)
+                        {
+                            const string title = "بدأ التدريب الميداني";
+                            var message = $"تم بدء التدريب الميداني الخاص بالطالب {currentApplication.Student.Name}.";
+                            var supervisorIds = await _dbContext.AspNetRoleScopes
+                                .Where(s => s.IsActive &&
+                                    ((s.Role.Name == "UniversitySupervisor" && s.UniversityID == currentApplication.Student.UniversityID) ||
+                                     (s.Role.Name == "InstitutionSupervisor" && s.InstitutionID == institutionID)))
+                                .Select(s => s.UserID)
+                                .Distinct()
+                                .ToListAsync();
+
+                            await _notificationService.NotifyStudentAsync(currentApplication.Student.UserID, title, message, NotificationType.Training, "/Student/CurrentTraining", "fa-solid fa-briefcase", user.Id, currentApplication.ApplicationID.ToString(), nameof(TrainingPlacement));
+                            await _notificationService.NotifyUsersAsync(supervisorIds, title, message, NotificationType.Training, "/Institution/CurrentTraining", "fa-solid fa-briefcase", user.Id, currentApplication.ApplicationID.ToString(), nameof(TrainingPlacement));
+                            await _notificationService.NotifyInstitutionTrainingOfficersAsync(institutionID, title, message, NotificationType.Training, "/Institution/CurrentTraining", "fa-solid fa-briefcase", user.Id, currentApplication.ApplicationID.ToString(), nameof(TrainingPlacement));
+                        }
                     }
 
                     if (currentApplication.InstitutionDecision == TrainingApplication.Decision.Approved)
@@ -123,13 +157,27 @@ namespace Project.Pages.Institution
                 }
                 if (RejectApplicationId > 0)
                 {
-                    var currentApplication = _dbContext.TrainingApplications.FirstOrDefault(a => a.ApplicationID == RejectApplicationId);
+                    var currentApplication = await _dbContext.TrainingApplications
+                        .Include(a => a.Student)
+                        .FirstOrDefaultAsync(a => a.ApplicationID == RejectApplicationId);
                     if (currentApplication != null)
                     {
                         currentApplication.InstitutionDecision = TrainingApplication.Decision.Rejected;
                         currentApplication.Status = TrainingApplication.ApplicationStatus.InstitutionRejected;
+                        currentApplication.InstitutionOfficerID = user.Id;
+                        currentApplication.InstitutionReviewedAt = DateTime.UtcNow;
                         _dbContext.TrainingApplications.Update(currentApplication);
-                        _dbContext.SaveChanges();
+                        await _dbContext.SaveChangesAsync();
+                        await _notificationService.NotifyStudentAsync(
+                            currentApplication.Student.UserID,
+                            "لم يتم قبول طلب التدريب",
+                            "نأسف، لم يتم قبول طلب التدريب من قبل المؤسسة.",
+                            NotificationType.Error,
+                            "/Student/MyApplications",
+                            "fa-solid fa-circle-xmark",
+                            user.Id,
+                            currentApplication.ApplicationID.ToString(),
+                            nameof(TrainingApplication));
                     }
                 }
 

@@ -8,6 +8,7 @@ using Project.Extensions;
 using Project.Models;
 using Project.Models.Enums;
 using Project.ViewModel;
+using Project.Services;
 
 namespace Project.Pages.University
 {
@@ -15,13 +16,16 @@ namespace Project.Pages.University
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<AspNetUser> _userManager;
+        private readonly INotificationService _notificationService;
 
         public DepartmentHeadTrainingRequestsModel(
             ApplicationDbContext context,
-            UserManager<AspNetUser> userManager)
+            UserManager<AspNetUser> userManager,
+            INotificationService notificationService)
         {
             _context = context;
             _userManager = userManager;
+            _notificationService = notificationService;
         }
 
         [BindProperty(SupportsGet = true)]
@@ -112,6 +116,7 @@ namespace Project.Pages.University
             var userId = _userManager.GetUserId(User);
 
             var app = await _context.TrainingApplications
+                .Include(x => x.Student)
                 .FirstOrDefaultAsync(x => x.ApplicationID == id);
 
             if (app == null) return NotFound();
@@ -119,9 +124,20 @@ namespace Project.Pages.University
             app.DepartmentDecision = TrainingApplication.Decision.Approved;
             app.Status = TrainingApplication.ApplicationStatus.DepartmentApproved;
             app.DepartmentHeadID = userId;
-            app.DepartmentReviewedAt = DateTime.Now;
+            app.DepartmentReviewedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
+
+            await _notificationService.NotifyUniversityTrainingAdminsAsync(
+                app.Student.UniversityID,
+                "تم اعتماد طلب التدريب من القسم",
+                $"قام رئيس القسم باعتماد طلب الطالب {app.Student.Name}. يرجى مراجعة الطلب لاعتماده.",
+                NotificationType.Application,
+                "/University/UniAdminTrainigRequests",
+                "fa-solid fa-user-check",
+                userId,
+                app.ApplicationID.ToString(),
+                nameof(TrainingApplication));
 
             return RedirectToPage();
         }
@@ -132,6 +148,7 @@ namespace Project.Pages.University
             var userId = _userManager.GetUserId(User);
 
             var app = await _context.TrainingApplications
+                .Include(x => x.Student)
                 .FirstOrDefaultAsync(x => x.ApplicationID == id);
 
             if (app == null) return NotFound();
@@ -139,9 +156,20 @@ namespace Project.Pages.University
             app.DepartmentDecision = TrainingApplication.Decision.Rejected;
             app.Status = TrainingApplication.ApplicationStatus.DepartmentRejected;
             app.DepartmentHeadID = userId;
-            app.DepartmentReviewedAt = DateTime.Now;
+            app.DepartmentReviewedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
+
+            await _notificationService.NotifyStudentAsync(
+                app.Student.UserID,
+                "تم رفض طلب التدريب",
+                "تم رفض طلب التدريب الخاص بك من رئيس القسم.",
+                NotificationType.Error,
+                "/Student/MyApplications",
+                "fa-solid fa-circle-xmark",
+                userId,
+                app.ApplicationID.ToString(),
+                nameof(TrainingApplication));
 
             return RedirectToPage();
         }
